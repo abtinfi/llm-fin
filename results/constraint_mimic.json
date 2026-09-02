@@ -10,30 +10,32 @@
   "ont_margin": 1.0,
   "ontology_graph": "data/umls/causal_graph.json",
   "ontology_required_margin": {
-    "metformin_renal": 1.25
+    "metformin_egfr30": 0.0,
+    "metformin_egfr45": 0.0,
+    "spironolactone_k5_5": 0.0
   },
   "train_on": "train",
-  "data": "data/medcalc",
-  "n_train_pairs": 140,
+  "data": "data/mimic",
+  "n_train_pairs": 19,
   "redacted_entropy": {
-    "n_test": 180,
-    "n_heldout": 60,
+    "n_test": 0,
+    "n_heldout": 0,
     "ln2": 0.6931471805599453,
-    "test_base": 0.6256090275943279,
-    "test_adapted": 0.652675416568915,
-    "heldout_base": 0.6700345615545908,
-    "heldout_adapted": 0.689809670050939
+    "test_base": NaN,
+    "test_adapted": NaN,
+    "heldout_base": NaN,
+    "heldout_adapted": NaN
   },
   "shuffled_control": false,
   "base": {
-    "test_acc": 0.5166666666666667,
-    "test_cc": 0.03333333333333333,
+    "test_acc": 0.5517241379310345,
+    "test_cc": 0.10344827586206896,
     "heldout_acc": 0.5,
     "heldout_cc": 0.0
   },
   "adapted": {
-    "test_acc": 0.4888888888888889,
-    "test_cc": 0.011111111111111112,
+    "test_acc": 0.5,
+    "test_cc": 0.06896551724137931,
     "heldout_acc": 0.5,
     "heldout_cc": 0.0
   }

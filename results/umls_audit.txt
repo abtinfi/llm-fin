@@ -1,4 +1,4 @@
-120 prompts from data/counterfactual_test.jsonl + data/medcalc/counterfactual_test.jsonl
+120 prompts from data/synthetic_control/counterfactual_test.jsonl + data/medcalc/counterfactual_test.jsonl
 
 concept        CUI         UMLS  cur  old hits  new hits  umls-only  note
 ------------------------------------------------------------------------------------------------

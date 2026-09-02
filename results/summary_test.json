@@ -212,7 +212,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -430,7 +430,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -648,7 +648,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -870,7 +870,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -1088,7 +1088,7 @@
     "adapter": "results/adapter_synth.npz",
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -1306,7 +1306,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -1528,7 +1528,7 @@
     "adapter": null,
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"
@@ -1750,7 +1750,7 @@
     "adapter": "results/adapter_synth.npz",
     "uq_signal": "decision_entropy",
     "gate": "rules",
-    "data": "data",
+    "data": "data/synthetic_control",
     "split": "test",
     "backend": "hf",
     "model": "BioMistral/BioMistral-7B"

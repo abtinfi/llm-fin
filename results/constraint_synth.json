@@ -20,7 +20,7 @@
     "statin_macrolide": 1.0
   },
   "train_on": "calib",
-  "data": "data",
+  "data": "data/synthetic_control",
   "n_train_pairs": 16,
   "redacted_entropy": {
     "n_test": 0,

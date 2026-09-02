@@ -16,6 +16,21 @@
       "note": "Real published clinical prose. This is the pipeline's 'real notes' arm and needs no data-use agreement.",
       "present": true
     },
+    "data/mimic": {
+      "what": "MIMIC-IV Real-Value Cohort, 142 items across 4 splits",
+      "_what_tmpl": "MIMIC-IV Real-Value Cohort, {n} items across 4 splits",
+      "origin": "Derived by src/build_mimic.py from MIMIC-IV Clinical Database Demo v2.2 (data/mimic_demo, hosp/labevents itemid 50912)",
+      "credentialed": false,
+      "note": "Open access under ODbL -- NO PhysioNet credentialing, no DUA. The only arm in this repository where BOTH sides of every counterfactual pair are real measured values. FOUR families (expanded 2026-09-02): metformin_egfr30 and metformin_egfr45 (attested_exact), spironolactone_k5_5 (construct_mismatch, flagged not hidden), warfarin_inr4 (attested_exact, HELD OUT -- 8 mechanistically-distinct patients excluded from every other family's pool). 71 pairs / 142 items total, up from 23 pairs single-family. Nothing is invented. Caveat carried in data/mimic/build_meta.json: arms are different TIMEPOINTS in the same patient, so the clinical state genuinely differed; the rendered note is minimal so prompts differ in one number only. metformin_egfr30/45 share the same underlying creatinine measurements -- not independent evidence.",
+      "present": true
+    },
+    "data/mimic_demo": {
+      "what": "MIMIC-IV Demo v2.2 source tables (6 of 22)",
+      "origin": "physionet.org/content/mimic-iv-demo/2.2/ -- open download",
+      "credentialed": false,
+      "note": "ODbL. Downloaded 2026-09-02. Git-ignored: it is not ours to vendor and src/build_mimic.py re-fetches it.",
+      "present": true
+    },
     "data/external": {
       "what": "MedCalc-Bench source CSVs (train + test)",
       "origin": "Third-party, redistributed by the MedCalc-Bench authors",
@@ -108,6 +123,31 @@
       "path": "results/acts/medcalc_heldout.npz",
       "present": true,
       "used_by": "steering.py activation cache"
+    },
+    {
+      "path": "data/mimic/counterfactual_test.jsonl",
+      "present": true,
+      "used_by": "run_eval.py --data data/mimic"
+    },
+    {
+      "path": "data/mimic/counterfactual_calib.jsonl",
+      "present": true,
+      "used_by": "mimic UQ calibration"
+    },
+    {
+      "path": "data/mimic/counterfactual_train.jsonl",
+      "present": true,
+      "used_by": "constraint_layer.py on mimic"
+    },
+    {
+      "path": "data/mimic/counterfactual_heldout.jsonl",
+      "present": true,
+      "used_by": "run_eval.py --data data/mimic --split heldout (warfarin_inr4)"
+    },
+    {
+      "path": "data/mimic/rag_corpus.jsonl",
+      "present": true,
+      "used_by": "mimic RAG variants"
     }
   ],
   "splits": {
@@ -213,6 +253,52 @@
       "incomplete_pairs": 0,
       "families": [
         "ondansetron_qt"
+      ],
+      "issues": []
+    },
+    "data/mimic/counterfactual_test.jsonl": {
+      "n_items": 58,
+      "n_pairs": 29,
+      "complete_pairs": 29,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
+      ],
+      "issues": []
+    },
+    "data/mimic/counterfactual_calib.jsonl": {
+      "n_items": 30,
+      "n_pairs": 15,
+      "complete_pairs": 15,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
+      ],
+      "issues": []
+    },
+    "data/mimic/counterfactual_train.jsonl": {
+      "n_items": 38,
+      "n_pairs": 19,
+      "complete_pairs": 19,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
+      ],
+      "issues": []
+    },
+    "data/mimic/counterfactual_heldout.jsonl": {
+      "n_items": 16,
+      "n_pairs": 8,
+      "complete_pairs": 8,
+      "incomplete_pairs": 0,
+      "families": [
+        "warfarin_inr4"
       ],
       "issues": []
     }

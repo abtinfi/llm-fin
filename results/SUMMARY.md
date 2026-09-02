@@ -10,29 +10,29 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 
 ### Causal Consistency and strict accuracy
 
-| Stage | synthetic test CC | synthetic held-out CC | real notes test CC | real notes held-out (QT) CC |
-|---|---|---|---|---|
-| (1) Base LLM | 0.219 | 0.250 | 0.011 | 0.000 |
-| (2) + RAG | 0.312 | 0.000 | 0.000 | 0.000 |
-| (3) + Symbolic Gate (NS-AI) | 0.672 | 0.500 | 0.989 | 1.000 |
-| (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 |
-| (5) Base + Gate only | 0.609 | 0.562 | 0.989 | 1.000 |
-| (6) Base + UQ only | 0.016 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | 0.453 | 0.375 | 0.000 | 0.767 |
-| (8) All four | 0.562 | 0.500 | 0.989 | 1.000 |
+| Stage | synthetic control test CC | synthetic control held-out CC | real notes test CC | real notes held-out (QT) CC | MIMIC-IV test CC | MIMIC-IV held-out (warfarin) CC |
+|---|---|---|---|---|---|---|
+| (1) Base LLM | 0.219 | 0.250 | 0.011 | 0.000 | 0.069 | 0.000 |
+| (2) + RAG | 0.312 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | 0.672 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (5) Base + Gate only | 0.609 | 0.562 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (6) Base + UQ only | 0.016 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | 0.453 | 0.375 | 0.022 | 0.767 | 0.069 | 0.000 |
+| (8) All four | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 
-| Stage | synthetic test acc | synthetic held-out acc | real notes test acc | real notes held-out (QT) acc |
-|---|---|---|---|---|
-| (1) Base LLM | 0.602 | 0.594 | 0.506 | 0.500 |
-| (2) + RAG | 0.648 | 0.500 | 0.494 | 0.500 |
-| (3) + Symbolic Gate (NS-AI) | 0.836 | 0.750 | 0.994 | 1.000 |
-| (4) + UQ Engine | 0.633 | 0.688 | 0.994 | 1.000 |
-| (5) Base + Gate only | 0.805 | 0.750 | 0.994 | 1.000 |
-| (6) Base + UQ only | 0.211 | 0.094 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | 0.727 | 0.656 | 0.489 | 0.883 |
-| (8) All four | 0.578 | 0.500 | 0.994 | 1.000 |
+| Stage | synthetic control test acc | synthetic control held-out acc | real notes test acc | real notes held-out (QT) acc | MIMIC-IV test acc | MIMIC-IV held-out (warfarin) acc |
+|---|---|---|---|---|---|---|
+| (1) Base LLM | 0.602 | 0.594 | 0.506 | 0.500 | 0.534 | 0.500 |
+| (2) + RAG | 0.648 | 0.500 | 0.494 | 0.500 | 0.500 | 0.500 |
+| (3) + Symbolic Gate (NS-AI) | 0.836 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
+| (4) + UQ Engine | 0.633 | 0.688 | 0.994 | 1.000 | 0.379 | 1.000 |
+| (5) Base + Gate only | 0.805 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
+| (6) Base + UQ only | 0.211 | 0.094 | 0.000 | 0.000 | 0.034 | 0.000 |
+| (7) Base + Constraint Layer only | 0.727 | 0.656 | 0.506 | 0.883 | 0.534 | 0.500 |
+| (8) All four | 0.578 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
 
-Split sizes — synthetic test: n=128, synthetic held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60.
+Split sizes — synthetic control test: n=128, synthetic control held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60, MIMIC-IV test: n=58, MIMIC-IV held-out (warfarin): n=16.
 
 Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly one contribution to the base model, which is the comparison the supervisor asked for; row 8 is everything at once. Per-table significance tests, bootstrap CIs and the gate-fired/gate-declined breakdown are in `results/table_*.md`.
 
@@ -42,8 +42,10 @@ Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly one contribu
 |---|---|---|---|---|---|
 | qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.033 | 0.044 |
 | qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.200** | 0.033 | 0.000 |
-| renal | 140 pairs (train) | 0.000 | **0.000** | 0.033 | 0.022 |
+| renal | 140 pairs (train) | 0.000 | **0.000** | 0.033 | 0.011 |
 | synth | 16 pairs (calib) | 0.312 | **0.375** | 0.234 | 0.469 |
+| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.069 |
+| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.034 |
 
 **L_uncertainty, measured rather than assumed.** Decision entropy on notes whose decisive number has been redacted (maximum is ln 2 = 0.6931 nats):
 
@@ -58,37 +60,37 @@ Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 
 ## 3. Aim 1: sparse autoencoder features
 
-**`sae_jumprelu_L20_fis.json`** — jumprelu, 16384 features, reconstruction FVU 0.131, L0 27.8, dead 10481/16384 (64.0%).
+**`sae_jumprelu_L20_fis.json`** — jumprelu, 16384 features, reconstruction FVU 0.081, L0 29.4, dead 10954/16384 (66.9%).
 
 | feature | concept | S_semantic | S_causal | FIS |
 |---|---|---|---|---|
-| #13297 | age | 0.363 | not run | 0.182 |
-| #8720 | creatinine | 0.351 | not run | 0.175 |
-| #13500 | age | 0.324 | not run | 0.162 |
-| #955 | drug | 0.278 | not run | 0.139 |
-| #1715 | age | 0.271 | not run | 0.136 |
-| #9854 | pregnancy | 0.267 | not run | 0.133 |
-| #14487 | asthma | 0.250 | not run | 0.125 |
-| #6997 | pregnancy | 0.235 | not run | 0.118 |
-| #11809 | pregnancy | 0.235 | not run | 0.118 |
-| #6872 | age | 0.231 | not run | 0.116 |
+| #15631 | creatinine | 0.451 | not run | 0.225 |
+| #955 | drug | 0.436 | not run | 0.218 |
+| #5010 | age | 0.432 | not run | 0.216 |
+| #15477 | age | 0.367 | not run | 0.183 |
+| #1640 | age | 0.359 | not run | 0.180 |
+| #13297 | age | 0.353 | not run | 0.176 |
+| #5011 | heart_rate | 0.323 | not run | 0.161 |
+| #14457 | drug | 0.305 | not run | 0.153 |
+| #10002 | age | 0.289 | not run | 0.144 |
+| #13592 | age | 0.273 | not run | 0.137 |
 
 *S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
 
-**`sae_topk_L20_fis.json`** — topk, 16384 features, reconstruction FVU 0.067, L0 31.9, dead 6442/16384 (39.3%).
+**`sae_topk_L20_fis.json`** — topk, 16384 features, reconstruction FVU 0.051, L0 31.7, dead 6851/16384 (41.8%).
 
 | feature | concept | S_semantic | S_causal | FIS |
 |---|---|---|---|---|
-| #14294 | qt_interval | 0.703 | 0.0000 | 0.351 |
-| #7626 | pregnancy | 0.615 | 0.0000 | 0.308 |
-| #14058 | creatinine | 0.603 | 0.0250 | 0.314 |
-| #11855 | age | 0.592 | 0.0191 | 0.305 |
-| #5438 | heart_rate | 0.586 | 0.0000 | 0.293 |
-| #2883 | drug | 0.541 | 0.0205 | 0.281 |
-| #7679 | asthma | 0.538 | 0.0000 | 0.269 |
-| #16231 | age | 0.520 | 0.0139 | 0.267 |
-| #7696 | age | 0.519 | not run | 0.260 |
-| #3446 | drug | 0.511 | not run | 0.256 |
+| #13369 | age | 0.693 | 0.0206 | 0.357 |
+| #13297 | age | 0.637 | 0.0100 | 0.324 |
+| #14628 | creatinine | 0.634 | 0.0198 | 0.327 |
+| #4693 | age | 0.602 | 0.0168 | 0.309 |
+| #1894 | qt_interval | 0.557 | 0.0000 | 0.279 |
+| #10721 | drug | 0.544 | 0.0573 | 0.301 |
+| #7589 | age | 0.514 | 0.0139 | 0.264 |
+| #7787 | age | 0.479 | 0.0047 | 0.242 |
+| #9404 | heart_rate | 0.470 | 0.0101 | 0.240 |
+| #13261 | qt_interval | 0.444 | 0.0000 | 0.222 |
 
 *S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
 
@@ -106,7 +108,7 @@ Their reports hold the detail. The three causal rows are computed from the post-
 | Is counterfactual consistency alone evidence of reasoning? | **No** — discrimination −0.013 [−0.037, +0.013] over 8,000 items | `results/mcqpairs.md` |
 | Is the decisive fact represented internally? | QT yes (pair-CC 0.976), creatinine no (0.042) | `results/aim123_internals.md` |
 | Does it causally drive the answer? | No — patching effects 0.0064 to 0.0221 logits, ~100x too small to flip a decision | `results/aim123_internals.md` |
-| ...and by SAE feature knock-out? | No — -0.0164 to 0.0250 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
+| ...and by SAE feature knock-out? | No — -0.0163 to 0.0573 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
 | ...and by feature injection (sufficiency)? | No — 0.0134 to 0.0833 logits | `results/rerun_fixes/COMPARISON.md` |
 
 See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.
@@ -145,7 +147,7 @@ Full sentences and sections: `results/threshold_provenance.md`.
 |---|---|---|---|---|
 | `data/synthetic_control` | templated vignette | invented | invented | Control arm. Shows what the pipeline does when the causal factor is stated cleanly and the label is guaranteed. |
 | `data/medcalc` | real PMC case-report prose | one arm real, one **edited** | 5 of 10 attested | Real clinical text. Half of every pair has its driving number changed to cross the threshold. |
-| `data/mimic` | minimal rendered note | **both arms real** | attested_exact | MIMIC-IV Real-Value Cohort, 46 items. 12 test pairs from real patients whose measured creatinines straddle eGFR 30. |
+| `data/mimic` | minimal rendered note | **both arms real** | attested_exact | MIMIC-IV Real-Value Cohort, 142 items. 29 test pairs from real patients whose measured creatinines straddle eGFR 30. |
 
 No arm dominates. `data/mimic` invents no number but its two arms are different **timepoints** in the same patient, so the clinical state genuinely differed; `data/medcalc` holds the timepoint fixed and fabricates a number instead. The paper should report both and say which trade each makes.
 

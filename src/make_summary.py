@@ -246,10 +246,12 @@ def main():
     L += ["## 1. The ablation, each contribution against the baseline\n"]
     L += ablation_block(
         "Causal Consistency and strict accuracy",
-        [("synthetic test", "summary_test.json"),
-         ("synthetic held-out", "summary_heldout.json"),
+        [("synthetic control test", "summary_test.json"),
+         ("synthetic control held-out", "summary_heldout.json"),
          ("real notes test", "summary_test_medcalc.json"),
-         ("real notes held-out (QT)", "summary_heldout_medcalc.json")])
+         ("real notes held-out (QT)", "summary_heldout_medcalc.json"),
+         ("MIMIC-IV test", "summary_test_mimic.json"),
+         ("MIMIC-IV held-out (warfarin)", "summary_heldout_mimic.json")])
     L += ["Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly "
           "one contribution to the base model, which is the comparison the "
           "supervisor asked for; row 8 is everything at once. Per-table "
@@ -259,7 +261,8 @@ def main():
     # ---------------- constraint layer ---------------------------------
     L += ["## 2. Aim 3: the trained Constraint-Aware Layer\n"]
     cl = {name: load(f"constraint_{name}.json")
-          for name in ("qt", "qt_shuffled", "renal", "synth")}
+          for name in ("qt", "qt_shuffled", "renal", "synth",
+                       "mimic", "mimic_shuffled")}
     if any(cl.values()):
         L += ["| Run | trained on | held-out CC before | after | test CC "
               "before | after |", "|---|---|---|---|---|---|"]
