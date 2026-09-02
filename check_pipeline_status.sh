@@ -16,6 +16,14 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
+# The claude native installer adds this exact line to ~/.bashrc:
+#   export PATH="$HOME/.local/bin:$PATH"
+# After a fresh reinstall following a reboot, this script may run
+# before that profile line is ever sourced (a non-interactive shell,
+# or a shell started before the reinstall happened) -- so define it
+# here too rather than assume it is already in effect.
+export PATH="$HOME/.local/bin:$PATH"
+
 PROMPT_FILE="logs/scaled/STATUS_CHECK_PROMPT.txt"
 
 # Scoped to read-only diagnostics plus the one write action the prompt may
