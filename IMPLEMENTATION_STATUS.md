@@ -82,7 +82,7 @@ represents one decisive quantity, not the other, and acts on neither.
 | Fixed-direction steering prototype (the simplest `P_causal`) | **DONE — null result, kept** | `src/steering.py` |
 | Ablation Matrix of §4.6 | **DONE, and extended** | 8 rows, not 4: rows 5–7 isolate each contribution against the baseline (`src/run_eval.py`, `src/make_table.py`) |
 | RQ3 — no degradation of language ability | **DONE** | perplexity 7.1622 → 7.0775 / 7.1266 (no degradation; both adapters sit slightly *below* base) |
-| **MIMIC-IV** for retrospective evaluation / scenario construction | **NOT IMPLEMENTED — but nothing is blocked by it** | No loader, data path or token check exists in `src/`; `python src/check_data.py` asserts this on every pipeline run. MIMIC-IV is an *unimplemented proposal element*, not a blocked dependency. The pipeline's real-clinical-text arm is `data/medcalc` (600 items, real PMC case-report prose, open access). Open-access **Demo v2.2** (100 patients, `labevents`/`prescriptions`, **no notes**) remains the honest next step for the §4.6 claim |
+| **MIMIC-IV** for retrospective evaluation / scenario construction | **NOT IMPLEMENTED — but nothing is blocked by it** | No loader, data path or token check exists in `src/`; `python src/check_data.py` asserts this on every pipeline run. MIMIC-IV is an *unimplemented proposal element*, not a blocked dependency. The pipeline's real-clinical-text arm is `data/medcalc` (680 items, real PMC case-report prose, open access). Open-access **Demo v2.2** (100 patients, `labevents`/`prescriptions`, **no notes**) remains the honest next step for the §4.6 claim |
 | Constraints seeded from **SNOMED CT / UMLS** | **NOT IMPLEMENTED** | `src/rules.py` holds 10 hand-written rule families; thresholds hand-transcribed |
 
 **Key result:** the layer works exactly where the probe predicted it would and
@@ -99,7 +99,7 @@ in the table (rows 3 and 7) and must not be conflated.
 | Proposal element | Status | Where |
 |---|---|---|
 | Synthetic counterfactual clinical benchmark | **DONE** | `src/build_dataset.py` — 128 test / 32 held-out / 32 calib, 10 rule families (2 held out), with build-time integrity checks that abort on failure |
-| The same on **real** clinical text | **DONE — beyond the proposal** | `src/build_medcalc.py` — 600 items from real PMC case-report notes |
+| The same on **real** clinical text | **DONE — beyond the proposal** | `src/build_medcalc.py` — 680 items from real PMC case-report notes |
 | Causal Consistency = correct counterfactuals / total | **DONE**, at **pair** level | `src/metrics.py` |
 | Predictive entropy, Eq. (2) | **DONE — and measured to be unusable** | AUROC **0.525** [0.511, 0.539] over 6,456 items (`results/bigbench_uq.md`) |
 | **Adaptive Conformal Inference** for the abstention threshold | **DONE** | `src/coverage_report.py`, `metrics.adaptive_conformal` |

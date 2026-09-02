@@ -9,7 +9,8 @@
       "present": true
     },
     "data/medcalc": {
-      "what": "Real clinical notes benchmark, 600 items",
+      "what": "Real clinical notes benchmark, 680 items across 5 splits",
+      "_what_tmpl": "Real clinical notes benchmark, {n} items across 5 splits",
       "origin": "Derived by src/build_medcalc.py from MedCalc-Bench PMC case-report notes (data/external/*.csv)",
       "credentialed": false,
       "note": "Real published clinical prose. This is the pipeline's 'real notes' arm and needs no data-use agreement.",

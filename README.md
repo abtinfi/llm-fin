@@ -6,7 +6,7 @@ dataset first, per the supervisor's two instructions:
 1. **Every contribution is measured against the baseline**, in one table, not
    only against the row above it.
 2. **Start small and simple, then scale.** Templated synthetic vignettes
-   (128 items) → real PMC clinical notes (600 items) → MedMCQA / MedQA /
+   (128 items) → real PMC clinical notes (680 items) → MedMCQA / MedQA /
    PubMedQA (6,456 items) for the UQ question.
 
 ## The table
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 # 1. build both benchmarks (integrity checks run at build time and abort on
 #    failure -- see "Data integrity" below)
 python src/build_dataset.py --out data                 # synthetic, 128 items
-python src/build_medcalc.py --out data/medcalc         # real notes, 600 items
+python src/build_medcalc.py --out data/medcalc         # real notes, 680 items
 
 # 2. plumbing check, no GPU needed -- results are NOT scientific
 python src/run_eval.py --backend mock --seeds 0
@@ -123,7 +123,7 @@ exits non-zero under `--strict`. It runs as stage 0 of `run_full_pipeline.sh`.
 | Source | Needs credentials? | What it is |
 |---|---|---|
 | `data/` | no | Synthetic vignettes, generated in-repo by `build_dataset.py` |
-| `data/medcalc/` | no | **Real clinical prose** — 600 items from MedCalc-Bench PMC case reports |
+| `data/medcalc/` | no | **Real clinical prose** — 680 items from MedCalc-Bench PMC case reports |
 | `data/external/` | no | MedCalc-Bench source CSVs; open download, git-ignored (54 MB) |
 | `data/umls/` | **to rebuild only** | Causal graph + cached UMLS responses. Running makes zero HTTP calls; rebuilding needs a free UTS key in `../.env` |
 
@@ -132,6 +132,10 @@ exits non-zero under `--strict`. It runs as stage 0 of `run_full_pipeline.sh`.
 an *unimplemented proposal element*, not a blocked one, and every Aim 1–4 stage
 runs without it. The real-clinical-text arm of every benchmark is
 `data/medcalc`, which is open access.
+
+(The repo previously said "600 items" in several places; the directory holds
+680. `check_data.py` now counts the splits instead of quoting a figure, so this
+particular drift cannot recur.)
 
 This distinction is worth keeping straight in the write-up. A synthetic note
 corpus would not close the §4.6 gap: evaluating on generated notes measures the

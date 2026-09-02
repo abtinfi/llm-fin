@@ -21,7 +21,7 @@ It is worth being exact, because the distinction matters for the write-up:
     §4.6 retrospective-evaluation claim, which no substitute dataset can
     supply on its own.
   * **The "real clinical text" arm already exists and is open access.**
-    `data/medcalc` is 600 items built by `src/build_medcalc.py` from
+    `data/medcalc` is 680 items built by `src/build_medcalc.py` from
     MedCalc-Bench PMC case-report notes. That is real clinical prose from
     published case reports, not templated text, and it is what every
     "real notes" column in `results/SUMMARY.md` is scored on.
@@ -70,7 +70,8 @@ SOURCES = {
         credentialed=False,
         note="No external dependency at all; rebuildable offline."),
     "data/medcalc": dict(
-        what="Real clinical notes benchmark, 600 items",
+        what=None,   # counted live -- see below; a hardcoded figure drifts
+        _what_tmpl="Real clinical notes benchmark, {n} items across 5 splits",
         origin="Derived by src/build_medcalc.py from MedCalc-Bench PMC "
                "case-report notes (data/external/*.csv)",
         credentialed=False,
@@ -214,6 +215,16 @@ def main():
     for name, meta in SOURCES.items():
         p = root / name
         present = p.exists()
+        # Counted, never hardcoded. The repo's prose said "600 items" while the
+        # directory held 680 -- the same class of drift as the 430-vs-180 defect
+        # in FIXES.md A4, and the reason make_summary.py regenerates from
+        # artifacts. A provenance report that states a stale number is worse
+        # than one that states none.
+        if meta.get("_what_tmpl"):
+            n = sum(sum(1 for _ in f.open())
+                    for f in sorted(p.glob("counterfactual_*.jsonl"))
+                    if "heldout_all" not in f.name) if present else 0
+            meta = {**meta, "what": meta["_what_tmpl"].format(n=n)}
         cred = meta["credentialed"]
         tag = {True: "CREDENTIALED", False: "open access",
                "rebuild-only": "open to run / key to rebuild"}[cred]
