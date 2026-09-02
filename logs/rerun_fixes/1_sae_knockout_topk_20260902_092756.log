@@ -1,0 +1,43 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  # 14294  S_sem=0.703  concept=qt_interval  fires on 36/150000 tokens
+  #  7626  S_sem=0.615  concept=pregnancy  fires on 8/150000 tokens
+  # 14058  S_sem=0.603  concept=creatinine  fires on 2149/150000 tokens
+  # 11855  S_sem=0.592  concept=age  fires on 1456/150000 tokens
+  #  5438  S_sem=0.586  concept=heart_rate  fires on 497/150000 tokens
+  #  2883  S_sem=0.541  concept=drug  fires on 467/150000 tokens
+  #  7679  S_sem=0.538  concept=asthma  fires on 46/150000 tokens
+  # 16231  S_sem=0.520  concept=age  fires on 1150/150000 tokens
+  #  7696  S_sem=0.519  concept=age  fires on 2000/150000 tokens
+  #  3446  S_sem=0.511  concept=drug  fires on 354/150000 tokens
+  #  4754  S_sem=0.501  concept=age  fires on 1005/150000 tokens
+  # 13369  S_sem=0.494  concept=age  fires on 493/150000 tokens
+  #  6550  S_sem=0.490  concept=age  fires on 1330/150000 tokens
+  # 11615  S_sem=0.480  concept=qt_interval  fires on 62/150000 tokens
+  # 11193  S_sem=0.477  concept=drug  fires on 526/150000 tokens
+  #  6673  S_sem=0.476  concept=heart_rate  fires on 330/150000 tokens
+  # 15148  S_sem=0.445  concept=drug  fires on 383/150000 tokens
+  #  9285  S_sem=0.444  concept=drug  fires on 443/150000 tokens
+  #  7910  S_sem=0.441  concept=age  fires on 518/150000 tokens
+  #    64  S_sem=0.438  concept=age  fires on 454/150000 tokens
+  # 13629  S_sem=0.435  concept=creatinine  fires on 7930/150000 tokens
+  # 14695  S_sem=0.418  concept=inr  fires on 41/150000 tokens
+  # 11033  S_sem=0.418  concept=creatinine  fires on 2621/150000 tokens
+  #  1713  S_sem=0.414  concept=age  fires on 671/150000 tokens
+  #  1052  S_sem=0.413  concept=age  fires on 310/150000 tokens
+  knock-out on 40 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   6%|▌         | 17/291 [00:00<00:01, 160.25it/s]Loading weights:  13%|█▎        | 38/291 [00:00<00:01, 180.20it/s]Loading weights:  23%|██▎       | 66/291 [00:00<00:01, 206.65it/s]Loading weights:  32%|███▏      | 94/291 [00:00<00:00, 225.92it/s]Loading weights:  42%|████▏     | 121/291 [00:00<00:00, 229.89it/s]Loading weights:  51%|█████     | 148/291 [00:00<00:00, 230.75it/s]Loading weights:  60%|██████    | 175/291 [00:00<00:00, 235.10it/s]Loading weights:  69%|██████▉   | 202/291 [00:00<00:00, 237.72it/s]Loading weights:  79%|███████▉  | 231/291 [00:00<00:00, 251.87it/s]Loading weights:  88%|████████▊ | 257/291 [00:01<00:00, 235.69it/s]Loading weights:  97%|█████████▋| 283/291 [00:01<00:00, 220.12it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 203.30it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  knock-out #14294: |Δ margin|=0.0000 (random control #13936: 0.0000, excess +0.0000)
+  knock-out #7626: |Δ margin|=0.0000 (random control #10435: 0.0031, excess -0.0031)
+  knock-out #14058: |Δ margin|=0.0266 (random control #8374: 0.0016, excess +0.0250)
+  knock-out #11855: |Δ margin|=0.0191 (random control #4420: 0.0000, excess +0.0191)
+  knock-out #5438: |Δ margin|=0.0059 (random control #5043: 0.0223, excess -0.0164)
+  knock-out #2883: |Δ margin|=0.0252 (random control #671: 0.0047, excess +0.0205)
+  knock-out #7679: |Δ margin|=0.0000 (random control #1232: 0.0016, excess -0.0016)
+  knock-out #16231: |Δ margin|=0.0154 (random control #270: 0.0016, excess +0.0139)
+
+wrote results/rerun_fixes/sae_topk_L20_fis.json

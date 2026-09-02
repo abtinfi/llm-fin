@@ -204,6 +204,26 @@ def section_patching(pairs, L):
         last = max(br)
         moved = [l for l in sorted(set(br) & set(nr))
                  if l != last and abs(br[l]["ace"] - nr[l]["ace"]) > 1e-9]
+
+        # Is this a clean A/B of the fix at all? The patching baselines were
+        # written 2026-08-20; data/medcalc was re-partitioned afterwards
+        # (FIXES.md A4), so a baseline scored on 80 pairs and a re-run scored
+        # on 86 differ by the DATA as well as by the fix. Saying so up front
+        # matters, because the "only the final row moved" regression check
+        # below is meaningless across different item sets and would otherwise
+        # read as the fix having gone wrong.
+        same_items = b.get("pairs_used") == n.get("pairs_used")
+        if not same_items:
+            L.append(f"> ⚠️ **Not a clean A/B.** The baseline used "
+                     f"{b.get('pairs_used')} pairs and this re-run used "
+                     f"{n.get('pairs_used')}. The patching baselines predate "
+                     f"the `data/medcalc` re-partition (FIXES.md A4), so these "
+                     f"two runs differ by the dataset as well as by the B3 "
+                     f"fix. **The re-run numbers are the valid ones**; the "
+                     f"row-by-row regression check below cannot be read as "
+                     f"evidence either way and is reported for completeness "
+                     f"only. To get a clean A/B, re-run the baseline command "
+                     f"on today's data with the fix reverted.\n")
         L.append(f"- pairs used: {b.get('pairs_used')} → "
                  f"{n.get('pairs_used')}")
         L.append(f"- identity control max |err|: "
@@ -215,7 +235,12 @@ def section_patching(pairs, L):
                      f"{fmt(br[last]['ace'])} → {fmt(nr[last]['ace'])}**, "
                      f"excess {fmt(br[last]['excess'])} → "
                      f"{fmt(nr[last]['excess'])}")
-        if moved:
+        if moved and not same_items:
+            L.append(f"- {len(moved)} non-final row(s) differ, which is "
+                     f"expected here: the item sets are not the same "
+                     f"(see the warning above), so this is not a regression "
+                     f"signal.")
+        elif moved:
             L.append(f"- ⚠️ **{len(moved)} non-final row(s) also moved** "
                      f"(layers {moved[:10]}). Expected zero — the fix should "
                      f"be confined to the last layer.")

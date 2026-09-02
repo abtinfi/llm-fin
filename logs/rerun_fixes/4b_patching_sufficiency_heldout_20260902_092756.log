@@ -1,0 +1,51 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+30 complete pairs in data/medcalc/counterfactual_heldout.jsonl
+SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
+
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   6%|▌         | 17/291 [00:00<00:01, 161.34it/s]Loading weights:  14%|█▍        | 41/291 [00:00<00:01, 205.86it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 203.41it/s]Loading weights:  32%|███▏      | 94/291 [00:00<00:00, 225.66it/s]Loading weights:  42%|████▏     | 121/291 [00:00<00:00, 233.66it/s]Loading weights:  50%|████▉     | 145/291 [00:00<00:00, 227.72it/s]Loading weights:  58%|█████▊    | 168/291 [00:00<00:00, 227.89it/s]Loading weights:  67%|██████▋   | 195/291 [00:00<00:00, 236.35it/s]Loading weights:  76%|███████▌  | 220/291 [00:00<00:00, 238.59it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 241.32it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 235.90it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 235.35it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  10/30 pairs
+  20/30 pairs
+  30/30 pairs
+
+usable pairs: 30
+alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
+
+ layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
+     0    0.50      -0.0042    -0.0083     0.0179     0.0042
+     0    1.00       0.0187     0.0167     0.0357     0.0021
+     0    2.00       0.0333     0.0292     0.0625     0.0042
+     0    4.00       0.0229    -0.0604     0.0268     0.0833
+     4    0.50      -0.0021    -0.0021     0.0179     0.0000
+     4    1.00       0.0125     0.0250     0.0089    -0.0125
+     4    2.00       0.0312     0.0437     0.0714    -0.0125
+     4    4.00       0.0479     0.0667     0.0848    -0.0187
+     8    0.50      -0.0021     0.0021     0.0179    -0.0042
+     8    1.00       0.0187     0.0250     0.0625    -0.0063
+     8    2.00       0.0688     0.0729     0.1071    -0.0042
+     8    4.00       0.1000     0.0792     0.1027     0.0208
+    12    0.50       0.0063    -0.0042     0.0312     0.0104
+    12    1.00       0.0167    -0.0167     0.0312     0.0333
+    12    2.00       0.0208     0.0229     0.0312    -0.0021
+    12    4.00       0.0187     0.0271     0.0402    -0.0083
+    16    0.50       0.0042    -0.0063     0.0000     0.0104
+    16    1.00      -0.0063    -0.0021     0.0045    -0.0042
+    16    2.00       0.0042     0.0063     0.0045    -0.0021
+    16    4.00       0.0063     0.0000     0.0179     0.0063
+    20    0.50       0.0167    -0.0021    -0.0089     0.0187
+    20    1.00       0.0167    -0.0063     0.0000     0.0229
+    20    2.00       0.0125     0.0083     0.0134     0.0042
+    20    4.00       0.0104     0.0187     0.0179    -0.0083
+    24    0.50       0.0083    -0.0083     0.0045     0.0167
+    24    1.00       0.0021    -0.0042     0.0000     0.0063
+    24    2.00       0.0042    -0.0042     0.0134     0.0083
+    24    4.00       0.0125     0.0021    -0.0134     0.0104
+    28    0.50       0.0083    -0.0021    -0.0089     0.0104
+    28    1.00       0.0125    -0.0104     0.0045     0.0229
+    28    2.00       0.0021    -0.0063    -0.0089     0.0083
+    28    4.00      -0.0042    -0.0125    -0.0312     0.0083
+
+largest excess over the matched random control: +0.0833 logits at layer 0, alpha=4.0
+monotone dose-response in 3/8 layers tested
+wrote results/rerun_fixes/sufficiency_medcalc_heldout.json

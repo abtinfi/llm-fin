@@ -1,0 +1,55 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+90 complete pairs in data/medcalc/counterfactual_test.jsonl
+SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
+
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   5%|▌         | 15/291 [00:00<00:01, 149.84it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 203.62it/s]Loading weights:  21%|██        | 61/291 [00:00<00:01, 200.10it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 195.30it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 207.17it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 203.76it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 213.54it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 213.30it/s]Loading weights:  71%|███████   | 206/291 [00:01<00:00, 210.33it/s]Loading weights:  78%|███████▊  | 228/291 [00:01<00:00, 212.74it/s]Loading weights:  86%|████████▌ | 250/291 [00:01<00:00, 193.91it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 196.90it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 207.78it/s]
+  10/40 pairs
+  20/40 pairs
+  30/40 pairs
+  40/40 pairs
+
+usable pairs: 40
+  skipped 3: different token length
+alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
+
+ layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
+     0    0.50      -0.0016     0.0061    -0.0147    -0.0077
+     0    1.00       0.0004     0.0083     0.0000    -0.0079
+     0    2.00       0.0002     0.0029     0.0037    -0.0027
+     0    4.00      -0.0017     0.0007    -0.0110    -0.0024
+     4    0.50       0.0065     0.0096     0.0000    -0.0031
+     4    1.00       0.0071     0.0028     0.0000     0.0043
+     4    2.00      -0.0033     0.0035     0.0221    -0.0068
+     4    4.00      -0.0014    -0.0042     0.0037     0.0028
+     8    0.50      -0.0050     0.0056     0.0110    -0.0106
+     8    1.00       0.0042     0.0125     0.0184    -0.0083
+     8    2.00       0.0023     0.0042    -0.0110    -0.0019
+     8    4.00       0.0039    -0.0032     0.0184     0.0072
+    12    0.50       0.0015     0.0008    -0.0037     0.0007
+    12    1.00       0.0040     0.0106    -0.0037    -0.0067
+    12    2.00      -0.0055     0.0044     0.0184    -0.0099
+    12    4.00      -0.0058    -0.0030     0.0000    -0.0028
+    16    0.50      -0.0069    -0.0022     0.0184    -0.0047
+    16    1.00       0.0038     0.0051     0.0110    -0.0013
+    16    2.00       0.0023     0.0038     0.0074    -0.0014
+    16    4.00       0.0042    -0.0028     0.0074     0.0070
+    20    0.50       0.0054     0.0031     0.0110     0.0023
+    20    1.00       0.0069     0.0030     0.0147     0.0039
+    20    2.00       0.0018     0.0029     0.0074    -0.0011
+    20    4.00      -0.0036    -0.0004     0.0074    -0.0032
+    24    0.50       0.0117     0.0055     0.0074     0.0062
+    24    1.00       0.0055     0.0021     0.0110     0.0034
+    24    2.00       0.0117    -0.0017     0.0074     0.0134
+    24    4.00       0.0005    -0.0002     0.0110     0.0007
+    28    0.50      -0.0052     0.0014     0.0000    -0.0066
+    28    1.00       0.0049    -0.0017     0.0147     0.0066
+    28    2.00       0.0075    -0.0029     0.0000     0.0104
+    28    4.00       0.0026     0.0057     0.0037    -0.0031
+
+largest excess over the matched random control: +0.0134 logits at layer 24, alpha=2.0
+monotone dose-response in 0/8 layers tested
+  -> injection does NOT produce the decision at any dose tested.
+     Read together with the necessity run: the edited quantity is neither
+     necessary nor sufficient for the answer on this model.
+wrote results/rerun_fixes/sufficiency_medcalc_test.json

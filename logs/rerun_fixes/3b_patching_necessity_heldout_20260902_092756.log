@@ -1,0 +1,57 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+85 complete pairs in data/medcalc/counterfactual_heldout_all.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.28it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 212.30it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 237.46it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 228.55it/s]Loading weights:  46%|████▋     | 135/291 [00:00<00:00, 257.65it/s]Loading weights:  56%|█████▌    | 162/291 [00:00<00:00, 258.59it/s]Loading weights:  65%|██████▍   | 189/291 [00:00<00:00, 245.39it/s]Loading weights:  74%|███████▎  | 214/291 [00:00<00:00, 236.29it/s]Loading weights:  82%|████████▏ | 239/291 [00:01<00:00, 235.08it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 231.77it/s]Loading weights:  99%|█████████▉| 289/291 [00:01<00:00, 227.18it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 235.09it/s]
+  10/85 pairs
+  20/85 pairs
+  30/85 pairs
+  40/85 pairs
+  50/85 pairs
+  60/85 pairs
+  70/85 pairs
+  80/85 pairs
+
+usable pairs: 85
+identity control, max |error|: 0.00e+00 (hook is correctly placed)
+
+clean margin gap between arms (unsafe - safe): +0.0051 logits
+  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
+
+ layer   ACE (logits)    control     excess
+     0         0.0022    -0.0044     0.0066
+     1        -0.0044    -0.0029    -0.0015
+     2         0.0022    -0.0037     0.0059
+     3        -0.0015     0.0015    -0.0029
+     4         0.0007     0.0007     0.0000
+     5         0.0081    -0.0029     0.0110
+     6        -0.0007    -0.0022     0.0015
+     7        -0.0007    -0.0022     0.0015
+     8         0.0044    -0.0051     0.0096
+     9         0.0051     0.0022     0.0029
+    10         0.0154    -0.0059     0.0213
+    11         0.0118    -0.0029     0.0147
+    12         0.0081    -0.0007     0.0088
+    13         0.0029    -0.0051     0.0081
+    14         0.0044    -0.0081     0.0125
+    15        -0.0051     0.0015    -0.0066
+    16         0.0000    -0.0015     0.0015
+    17         0.0029    -0.0044     0.0074
+    18         0.0074    -0.0051     0.0125
+    19         0.0140    -0.0081     0.0221
+    20         0.0096    -0.0007     0.0103
+    21         0.0037    -0.0022     0.0059
+    22         0.0088    -0.0015     0.0103
+    23         0.0037    -0.0007     0.0044
+    24        -0.0044    -0.0029    -0.0015
+    25         0.0022    -0.0007     0.0029
+    26         0.0029     0.0007     0.0022
+    27         0.0007    -0.0037     0.0044
+    28         0.0059    -0.0051     0.0110
+    29         0.0044     0.0007     0.0037
+    30         0.0007    -0.0015     0.0022
+    31         0.0000     0.0000     0.0000
+
+largest effect over control at layer 19: +0.0221 logits
+  -> the edited value has essentially no causal effect on the decision at ANY layer.
+     The quantity is not on a causal path to the answer.
+wrote results/rerun_fixes/patching_medcalc_heldout.json
