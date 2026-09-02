@@ -1,0 +1,18 @@
+{
+  "source": "MIMIC-IV Clinical Database Demo v2.2",
+  "licence": "ODbL",
+  "credentialed": false,
+  "url": "https://physionet.org/content/mimic-iv-demo/2.2/",
+  "itemid": "50912",
+  "threshold": 30.0,
+  "threshold_provenance": "openfda:attested_exact",
+  "pair_selection": "nearest",
+  "seed": 0,
+  "both_arms_real": true,
+  "caveat": "The two arms are different TIMEPOINTS in the same real patient, so the clinical state genuinely differed. The rendered note is minimal (age, sex, one creatinine, drug) so the prompts differ in exactly one number, and both numbers are real measurements.",
+  "counts": {
+    "test": 24,
+    "calib": 10,
+    "train": 12
+  }
+}

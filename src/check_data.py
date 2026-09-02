@@ -82,6 +82,27 @@ SOURCES = {
         credentialed=False,
         note="Real published clinical prose. This is the pipeline's 'real "
              "notes' arm and needs no data-use agreement."),
+    "data/mimic": dict(
+        what=None,
+        _what_tmpl="MIMIC-IV Real-Value Cohort, {n} items across 3 splits",
+        origin="Derived by src/build_mimic.py from MIMIC-IV Clinical Database "
+               "Demo v2.2 (data/mimic_demo, hosp/labevents itemid 50912)",
+        credentialed=False,
+        note="Open access under ODbL -- NO PhysioNet credentialing, no DUA. "
+             "The only arm in this repository where BOTH sides of every "
+             "counterfactual pair are real measured values: 23 of the 100 "
+             "demo patients have two real serum creatinines straddling the "
+             "eGFR-30 threshold. Nothing is invented. Caveat carried in "
+             "data/mimic/build_meta.json: the arms are different TIMEPOINTS "
+             "in the same patient, so the clinical state genuinely differed; "
+             "the rendered note is minimal so the prompts differ in one "
+             "number only."),
+    "data/mimic_demo": dict(
+        what="MIMIC-IV Demo v2.2 source tables (6 of 22)",
+        origin="physionet.org/content/mimic-iv-demo/2.2/ -- open download",
+        credentialed=False,
+        note="ODbL. Downloaded 2026-09-02. Git-ignored: it is not ours to "
+             "vendor and src/build_mimic.py re-fetches it."),
     "data/external": dict(
         what="MedCalc-Bench source CSVs (train + test)",
         origin="Third-party, redistributed by the MedCalc-Bench authors",
@@ -119,6 +140,15 @@ REQUIRED = [
     ("data/umls/causal_graph.json", "constraint_layer.py L_ontology"),
 ]
 
+# The MIMIC arm is OPTIONAL by design: it is rebuilt from a download, and the
+# pipeline must keep running for anyone who has not fetched it.
+MIMIC = [
+    ("data/mimic/counterfactual_test.jsonl", "run_eval.py --data data/mimic"),
+    ("data/mimic/counterfactual_calib.jsonl", "mimic UQ calibration"),
+    ("data/mimic/counterfactual_train.jsonl", "constraint_layer.py on mimic"),
+    ("data/mimic/rag_corpus.jsonl", "mimic RAG variants"),
+]
+
 OPTIONAL = [
     ("data/medcalc/counterfactual_heldout_all.jsonl",
      "patching.py / steering.py 85-pair QT continuity split"),
@@ -127,7 +157,7 @@ OPTIONAL = [
     ("data/external/medcalc_test_data_11_18_final.csv",
      "build_medcalc.py rebuild only"),
     ("results/acts/medcalc_heldout.npz", "steering.py activation cache"),
-]
+] + MIMIC
 
 
 def read_jsonl(p):

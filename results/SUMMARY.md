@@ -111,3 +111,41 @@ Their reports hold the detail. The three causal rows are computed from the post-
 
 See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.
 
+## 6. Threshold provenance — 5 of 10 attested by an FDA label
+
+`hardening.py` said these thresholds were INTERIM and must not be presented as sourced. `src/curate_thresholds.py` checked all ten against `data/openfda_raw.jsonl`. **No row is human-verified**: `curator` reads `auto:` throughout, so this is a machine audit awaiting a curator, not a completed curation.
+
+| family | threshold | source | status |
+|---|---|---|---|
+| `metformin_renal` | 30 | openfda | **attested_exact** |
+| `warfarin_inr` | 4.0 | openfda | **attested_exact** |
+| `acei_pregnancy` | True | openfda | **attested_qualitative** |
+| `betablocker_asthma` | True | openfda | **attested_qualitative** |
+| `statin_macrolide` | True | openfda | **attested_qualitative** |
+| `aspirin_reye` | 16 | UNSOURCED | **construct_mismatch** |
+| `spironolactone_hyperkalaemia` | 5.5 | UNSOURCED | **construct_mismatch** |
+| `nitrofurantoin_renal` | 30 | UNSOURCED | **absent** |
+| `nsaid_renal` | 30 | UNSOURCED | **absent** |
+| `ondansetron_qt` | 500 | UNSOURCED | **absent** |
+
+**`construct_mismatch` is the dangerous category.** A number IS present in the label and encodes something else:
+
+- `aspirin_reye` — the label's "children under 12 years: consult a doctor" is an OTC **dosing** instruction. The rule encodes the Reye's-syndrome contraindication (<16), which this label never mentions.
+- `spironolactone_hyperkalaemia` — the label's "serum potassium ≤5.0 mEq/L" is a heart-failure **initiation** criterion, not the contraindication ceiling (5.5) the rule encodes.
+
+Neither value is written into `constraint_value`; both are left for a human. A number that is present but means something else is more dangerous than no number at all.
+
+**`ondansetron_qt` has no grounding at either end.** Its 500 ms threshold is `absent` from the FDA labels, and the family is also absent from MED-RT, so the causal knowledge graph licenses no contraindication path for it (`results/aim3_constraint_layer.md`, `umls_grounding.py coverage`). This is the family carrying the Aim 3 result — held-out CC 0.000 → 0.767 — so that result rests on curation at both ends and must be reported as such.
+
+Full sentences and sections: `results/threshold_provenance.md`.
+
+## 7. The benchmark arms, and how much of each is invented
+
+| arm | text | numbers | threshold | note |
+|---|---|---|---|---|
+| `data/synthetic_control` | templated vignette | invented | invented | Control arm. Shows what the pipeline does when the causal factor is stated cleanly and the label is guaranteed. |
+| `data/medcalc` | real PMC case-report prose | one arm real, one **edited** | 5 of 10 attested | Real clinical text. Half of every pair has its driving number changed to cross the threshold. |
+| `data/mimic` | minimal rendered note | **both arms real** | attested_exact | MIMIC-IV Real-Value Cohort, 46 items. 12 test pairs from real patients whose measured creatinines straddle eGFR 30. |
+
+No arm dominates. `data/mimic` invents no number but its two arms are different **timepoints** in the same patient, so the clinical state genuinely differed; `data/medcalc` holds the timepoint fixed and fabricates a number instead. The paper should report both and say which trade each makes.
+

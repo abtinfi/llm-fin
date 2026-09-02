@@ -17,12 +17,33 @@ component the proposal names is missing; **NOT IMPLEMENTED** = no code exists.
 
 ## 1. One-line answer
 
+*Header updated 2026-09-02. Items (b) and (c) below were closed on
+2026-09-01/02 and the tables in §2 have been corrected; the remaining list in
+§4 is current.*
+
 The **experimental machinery of all four Aims exists and has been executed
-end-to-end**. What is missing is not the pipeline but three specific things the
-proposal names: (a) **human expert evaluation**, which nothing in this repo can
-substitute for; (b) **ontology grounding via UMLS/SNOMED CT**, which the API
-key just added to `.env` now unblocks; and (c) **causal sufficiency (feature
-injection)**, the other half of Aim 2.
+end-to-end**. The one thing still missing that nothing in this repository can
+substitute for is **human expert evaluation** — it blocks `S_human`, the
+"<30% pass" fallback trigger, the blind expert rating in Aim 2, and the
+"human-in-the-loop" half of Aim 4's title.
+
+What closed since this file was written: **causal sufficiency** (feature
+injection, `patching.py --mode sufficiency`), **ontology grounding** (`sae.py`
+now scores against CUI-anchored concepts; `L_ontology` reads the causal graph),
+and a **real-value MIMIC-IV arm** (`data/mimic`, Demo v2.2, open access).
+
+What those closures revealed is more useful than the closures themselves, and
+belongs in the write-up:
+
+- **Grounding is uneven and the headline features are the least grounded.**
+  `drug` and `inr` are genuinely UMLS-matched; `qt_interval` matches zero UMLS
+  atoms on real text and `age` has no CUI at all — and `age` is now the
+  top-scoring feature.
+- **Half the safety thresholds are not attested by an FDA label**, and two have
+  a number in the label that encodes a *different construct*
+  (`results/threshold_provenance.md`, SUMMARY.md §6).
+- **`ondansetron_qt` is grounded at neither end** — absent from openFDA and
+  absent from MED-RT — and it is the family carrying the Aim 3 result.
 
 Scientifically the pipeline has mostly produced **negative results**, and they
 are internally consistent: the model's decisions are not driven by the
@@ -41,7 +62,7 @@ representations the SAE finds, so the symbolic route does the work.
 | `FIS = α·S_semantic + β·S_causal + γ·S_human` | **PARTIAL — 2 of 3 terms** | `S_semantic` = max F1 of feature-fires vs concept-token, `S_causal` = knock-out effect. **`S_human` is forced to weight 0** — there are no expert annotators |
 | Activation maximisation | **DONE** in effect | top-activating tokens per feature reported in `results/aim1_sae.md` |
 | Sparse **concept probing classifiers** (distributed subspaces, not 1:1) | **DONE** | `src/probe.py` — StandardScaler → PCA(128) → logistic, 5-fold grouped by `pair_id`, with a within-pair label-permutation null |
-| Mapping features → **biomedical concepts** | **PARTIAL / weak** | concepts are **11 hand-written regexes** in `sae.py` (`creatinine`, `qt_interval`, `egfr`, `heart_rate`, `potassium`, `inr`, `age`, `drug`, `renal_disease`, `pregnancy`, `asthma`) — *not* UMLS CUIs or SNOMED codes |
+| Mapping features → **biomedical concepts** | **PARTIAL — now CUI-anchored, but see the caveat** | `sae.py` reads `umls_grounding.graph.concept_patterns()` since 2026-09-02 (`--concepts umls`, default). Re-scored end-to-end: best S_semantic 0.703→0.732, FIS 0.351→0.376. **The caveat is the finding:** grounding judged by *empirical* umls-only hits, not term counts — `drug` 376/376 and `inr` 18/18 are genuinely UMLS-matched, but `qt_interval` matches **0** UMLS atoms on real text and `age` has **no CUI at all** — and `age` is the new top feature and 10 of the top 25 |
 | Stability across **layers, prompts, and model seeds** | **NOT IMPLEMENTED** | one layer (20), one model, one seed. Probes do sweep all 33 layers, but the SAE does not |
 | Human expert evaluation of explanation usefulness | **NOT IMPLEMENTED** | requires clinicians |
 | The "<30% pass expert validation → trigger fallback" criterion | **NOT EVALUABLE** | it is defined in terms of expert validation, which does not exist here |
@@ -56,7 +77,7 @@ S_semantic 0.703). Semantic coherence is real; causal relevance is ~0.
 | Causal **necessity** (feature knock-out) | **DONE** | `sae.py::causal_knockout` — each top feature zeroed in the forward pass |
 | **Negative controls** (random features) | **DONE** | a firing-rate-matched random feature is knocked out for *every* scored feature |
 | **ACE** `E[Y\|do(F+Δf)] − E[Y\|do(F)]` | **DONE**, by layer | `src/patching.py` — activation patching at only the edited token positions, plus an identity control (exactly 0.0) and a random-position control |
-| Causal **sufficiency** (clamping features on counterfactual inputs) | **NOT IMPLEMENTED** | only knock-out exists; nothing clamps a feature *on* |
+| Causal **sufficiency** (clamping features on counterfactual inputs) | **DONE** (2026-09-02) | `src/patching.py --mode sufficiency`, dose sweep + alpha=0 control. Largest excess 0.0134 (test) / 0.0833 (held-out) logits — replicates the knock-out null. `results/rerun_fixes/sufficiency_medcalc_*.json` |
 | "Interventions modify behaviour without degrading perplexity" | **DONE** | `src/perplexity.py`, WikiText-2: base **7.1622** → QT adapter **7.0775**, synthetic adapter **7.1266** |
 | **Human evaluation** — experts blindly rate explanation correctness/usefulness | **NOT IMPLEMENTED** | requires clinicians |
 
@@ -82,8 +103,8 @@ represents one decisive quantity, not the other, and acts on neither.
 | Fixed-direction steering prototype (the simplest `P_causal`) | **DONE — null result, kept** | `src/steering.py` |
 | Ablation Matrix of §4.6 | **DONE, and extended** | 8 rows, not 4: rows 5–7 isolate each contribution against the baseline (`src/run_eval.py`, `src/make_table.py`) |
 | RQ3 — no degradation of language ability | **DONE** | perplexity 7.1622 → 7.0775 / 7.1266 (no degradation; both adapters sit slightly *below* base) |
-| **MIMIC-IV** for retrospective evaluation / scenario construction | **NOT IMPLEMENTED — but nothing is blocked by it** | No loader, data path or token check exists in `src/`; `python src/check_data.py` asserts this on every pipeline run. MIMIC-IV is an *unimplemented proposal element*, not a blocked dependency. The pipeline's real-clinical-text arm is `data/medcalc` (680 items, real PMC case-report prose, open access). Open-access **Demo v2.2** (100 patients, `labevents`/`prescriptions`, **no notes**) remains the honest next step for the §4.6 claim |
-| Constraints seeded from **SNOMED CT / UMLS** | **NOT IMPLEMENTED** | `src/rules.py` holds 10 hand-written rule families; thresholds hand-transcribed |
+| **MIMIC-IV** for retrospective evaluation / scenario construction | **PARTIAL — Demo v2.2 arm built 2026-09-02** | `src/build_mimic.py` loads MIMIC-IV Clinical Database Demo v2.2 (ODbL, open access, **no credentialing**) and builds `data/mimic` — 46 items / 23 pairs. **The only arm where both sides of every pair are real measured values**: 23 of the 100 demo patients have two real serum creatinines (itemid 50912) straddling eGFR 30, so no number is invented. Uses the one FDA-attested threshold in the project. Two limits: the demo carries **no free-text notes**, so the note is rendered from structured fields; and the arms are different *timepoints*, so the clinical state genuinely differed. The full credentialed MIMIC-IV, and any *retrospective* claim, remain out of reach |
+| Constraints seeded from **SNOMED CT / UMLS** | **PARTIAL** | The *qualitative* edge comes from MED-RT via `data/umls/causal_graph.json` (5/10 families attested). The *thresholds* are audited against FDA labels by `src/curate_thresholds.py`: **5 of 10 attested, 5 not**, including two `construct_mismatch` cases where a number is present and means something else. `ondansetron_qt` — the family carrying the Aim 3 result — is absent from BOTH openFDA and MED-RT. See `results/threshold_provenance.md` and SUMMARY.md §6 |
 
 **Key result:** the layer works exactly where the probe predicted it would and
 fails where the probe predicted it would fail — QT held-out CC **0.000 → 0.767**,
@@ -153,15 +174,27 @@ Ordered by how much of the proposal's claim each one blocks.
       "<30% pass" fallback trigger, the blind expert rating of explanation
       correctness (Aim 2), and the "human-in-the-loop" half of Aim 4's title.
       Nothing computational substitutes for this.
-- [ ] **Causal sufficiency — feature injection/clamping** (Aim 2, §4.5). Only
-      knock-out exists. Half of the proposal's two explicit causal tests.
+- [x] ~~**Causal sufficiency — feature injection/clamping** (Aim 2, §4.5).~~
+      Built and run 2026-09-02: `patching.py --mode sufficiency`, dose sweep
+      with an alpha=0 control. Largest excess 0.0134 / 0.0833 logits — it
+      replicates the knock-out null rather than overturning it.
 - [ ] **Token-to-Concept Attribution Layer** (§4.2), and its faithfulness
       evaluation via **sufficiency and comprehensiveness**. No code exists
       (`grep -rl "comprehensiveness\|attribution" src/` → nothing). The full
       conceptual bridge in §4.2 (Token → Activation → SAE feature → Probe →
       Concept → Causal-graph node → Explanation) is implemented up to "Probe"
       and stops there.
-- [ ] **UMLS/SNOMED grounding** — the four items in §3 above. Newly unblocked.
+- [x] ~~**UMLS/SNOMED grounding** — the four items in §3 above.~~ Closed
+      2026-09-01/02: the graph exists, `L_ontology` reads it, and `sae.py`
+      scores against CUI-anchored concepts. **Still open inside it:** the
+      grounding is uneven — see §1. Do not describe `qt_interval` or `age`
+      features as UMLS-matched.
+- [ ] **Thresholds for the 5 unattested families.** `metformin_renal` and
+      `warfarin_inr` are `attested_exact`; `nsaid_renal`,
+      `nitrofurantoin_renal` and `ondansetron_qt` are `absent`;
+      `aspirin_reye` and `spironolactone_hyperkalaemia` are
+      `construct_mismatch` — a number IS in the label and means something
+      else. Needs a curator, not a better parser.
 - [ ] **A causal graph object.** §4.2's SCM and Figure 1's "Causal Knowledge
       Graph" node do not exist as a data structure anywhere.
 

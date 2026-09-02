@@ -128,6 +128,103 @@ def _causal_spans(R):
     return out
 
 
+
+def _threshold_provenance(R):
+    """
+    Section 6: where each safety threshold comes from.
+
+    Read live from src/rules.py so a threshold that loses its attestation
+    cannot keep a stale label in this file. Checked by
+    src/curate_thresholds.py against data/openfda_raw.jsonl; the full
+    sentences are in results/threshold_provenance.md.
+    """
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        from rules import RULE_FAMILIES
+    except Exception as e:                                  # pragma: no cover
+        return ["## 6. Threshold provenance", "",
+                f"*(could not read src/rules.py: {e})*", ""]
+
+    order = {"attested_exact": 0, "attested_qualitative": 1,
+             "construct_mismatch": 2, "absent": 3}
+    fams = sorted(RULE_FAMILIES, key=lambda f: (order.get(f.threshold_status, 9),
+                                                f.name))
+    n_att = sum(1 for f in fams if f.threshold_source == "openfda")
+    L = ["## 6. Threshold provenance — %d of %d attested by an FDA label"
+         % (n_att, len(fams)), "",
+         "`hardening.py` said these thresholds were INTERIM and must not be "
+         "presented as sourced. `src/curate_thresholds.py` checked all ten "
+         "against `data/openfda_raw.jsonl`. **No row is human-verified**: "
+         "`curator` reads `auto:` throughout, so this is a machine audit "
+         "awaiting a curator, not a completed curation.", "",
+         "| family | threshold | source | status |",
+         "|---|---|---|---|"]
+    for f in fams:
+        t = f.constraint.get("threshold")
+        L.append(f"| `{f.name}` | {t} | {f.threshold_source} | "
+                 f"**{f.threshold_status}** |")
+    L += ["",
+          "**`construct_mismatch` is the dangerous category.** A number IS "
+          "present in the label and encodes something else:", "",
+          "- `aspirin_reye` — the label's \"children under 12 years: consult "
+          "a doctor\" is an OTC **dosing** instruction. The rule encodes the "
+          "Reye's-syndrome contraindication (<16), which this label never "
+          "mentions.",
+          "- `spironolactone_hyperkalaemia` — the label's \"serum potassium "
+          "\u22645.0 mEq/L\" is a heart-failure **initiation** criterion, not "
+          "the contraindication ceiling (5.5) the rule encodes.", "",
+          "Neither value is written into `constraint_value`; both are left "
+          "for a human. A number that is present but means something else is "
+          "more dangerous than no number at all.", "",
+          "**`ondansetron_qt` has no grounding at either end.** Its 500 ms "
+          "threshold is `absent` from the FDA labels, and the family is also "
+          "absent from MED-RT, so the causal knowledge graph licenses no "
+          "contraindication path for it (`results/aim3_constraint_layer.md`, "
+          "`umls_grounding.py coverage`). This is the family carrying the "
+          "Aim 3 result — held-out CC 0.000 \u2192 0.767 — so that result "
+          "rests on curation at both ends and must be reported as such.", "",
+          "Full sentences and sections: `results/threshold_provenance.md`.", ""]
+    return L
+
+
+def _benchmark_arms(R):
+    """Section 7: the three benchmark arms and how much of each is invented."""
+    import json
+    rows = [
+        ("`data/synthetic_control`", "templated vignette", "invented",
+         "invented", "Control arm. Shows what the pipeline does when the "
+         "causal factor is stated cleanly and the label is guaranteed."),
+        ("`data/medcalc`", "real PMC case-report prose", "one arm real, "
+         "one **edited**", "5 of 10 attested",
+         "Real clinical text. Half of every pair has its driving number "
+         "changed to cross the threshold."),
+    ]
+    meta_p = R.parent / "data" / "mimic" / "build_meta.json"
+    if meta_p.is_file():
+        m = json.loads(meta_p.read_text())
+        n = sum(m["counts"].values())
+        rows.append(("`data/mimic`", "minimal rendered note",
+                     "**both arms real**", "attested_exact",
+                     f"MIMIC-IV Real-Value Cohort, {n} items. "
+                     f"{m['counts']['test']//2} test pairs from real patients "
+                     f"whose measured creatinines straddle eGFR 30."))
+    L = ["## 7. The benchmark arms, and how much of each is invented", "",
+         "| arm | text | numbers | threshold | note |", "|---|---|---|---|---|"]
+    for r in rows:
+        L.append("| " + " | ".join(r) + " |")
+    L += ["",
+          "No arm dominates. `data/mimic` invents no number but its two arms "
+          "are different **timepoints** in the same patient, so the clinical "
+          "state genuinely differed; `data/medcalc` holds the timepoint fixed "
+          "and fabricates a number instead. The paper should report both and "
+          "say which trade each makes.", ""]
+    if not meta_p.is_file():
+        L += ["*(`data/mimic` not built — run `python src/build_mimic.py`.)*",
+              ""]
+    return L
+
+
 def main():
     L = ["# All experiments, side by side",
          "",
@@ -269,6 +366,9 @@ def main():
           "this repository, what each would have done to a reported number, "
           "and the before/after comparison showing no conclusion reversed.",
           ""]
+
+    L += _threshold_provenance(R)
+    L += _benchmark_arms(R)
 
     (R / "SUMMARY.md").write_text("\n".join(L) + "\n")
     print("\n".join(L))
