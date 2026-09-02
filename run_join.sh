@@ -6,39 +6,74 @@
 # CPU-only (reads the JSON artifacts), so it does not matter which GPU is free.
 set -x
 export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
-# Set for consistency with the GPU scripts. It is INERT here as the file
-# stands -- every stage below reads JSON artifacts on the CPU and none of them
-# imports torch -- but this file is where a GPU stage would be added, and the
-# allocator setting has to be in the environment before the process starts, not
-# after someone notices an OOM.
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/asosoft/abtin/paper/csai
 
+STATE_DIR=".pipeline_state/scaled_join"
+mkdir -p "$STATE_DIR"
+
 banner () { echo; echo "########## [JOIN] $* ##########"; echo; }
 
-banner "J1 tables"
-python src/make_table.py --split test  --out results/table_test_final.md
-python src/make_table.py --split heldout --out results/table_heldout_final.md
+FAILED=0
+
+stage () {
+  local name="$1"; shift
+  local marker="$STATE_DIR/${name}.done"
+  if [ -f "$marker" ]; then
+    echo "[JOIN][skip] $name already done ($marker)"
+    return 0
+  fi
+  banner "$name"
+  if "$@"; then
+    touch "$marker"
+    echo "[JOIN][ok] $name"
+  else
+    echo "[JOIN][FAILED] $name -- no marker written, will retry on next launch"
+    FAILED=$((FAILED + 1))
+  fi
+}
+
+stage J1_table_synth_test \
+  python src/make_table.py --split test  --out results/table_test_final.md
+stage J1_table_synth_heldout \
+  python src/make_table.py --split heldout --out results/table_heldout_final.md
 cp results/table_test_final.md results/table.md
-python src/make_table.py --split test --tag _medcalc \
+stage J1_table_medcalc_test \
+  python src/make_table.py --split test --tag _medcalc \
     --out results/table_medcalc_test.md
-python src/make_table.py --split heldout --tag _medcalc \
+stage J1_table_medcalc_heldout \
+  python src/make_table.py --split heldout --tag _medcalc \
     --out results/table_medcalc_heldout.md
+stage J1_table_mimic_test \
+  python src/make_table.py --split test --tag _mimic \
+    --out results/table_mimic_test.md
+stage J1_table_mimic_heldout \
+  python src/make_table.py --split heldout --tag _mimic \
+    --out results/table_mimic_heldout.md
 
-banner "J2 adaptive conformal + conditional coverage"
-for sp in test heldout; do
-  python src/coverage_report.py --split $sp --variant nsai_uq
-  python src/coverage_report.py --split $sp --variant uq
-  python src/coverage_report.py --split $sp --tag _medcalc --variant nsai_uq
-done
+stage J2_coverage \
+  bash -c '
+    set -ex
+    for sp in test heldout; do
+      python src/coverage_report.py --split $sp --variant nsai_uq
+      python src/coverage_report.py --split $sp --variant uq
+      python src/coverage_report.py --split $sp --tag _medcalc --variant nsai_uq
+      python src/coverage_report.py --split $sp --tag _mimic --variant nsai_uq
+    done'
 
-banner "J3 cross-experiment summary"
-python src/make_summary.py
+stage J3_summary \
+  python src/make_summary.py
 
-banner "J4 UMLS grounding reports"
-python src/umls_grounding.py coverage --graph data/umls/causal_graph.json \
-    > results/umls_coverage.txt
-python src/umls_grounding.py audit --graph data/umls/causal_graph.json \
-    > results/umls_audit.txt
+stage J4_umls_reports \
+  bash -c '
+    set -ex
+    python src/umls_grounding.py coverage --graph data/umls/causal_graph.json \
+        > results/umls_coverage.txt
+    python src/umls_grounding.py audit --graph data/umls/causal_graph.json \
+        > results/umls_audit.txt'
 
-banner "JOIN DONE"
+if [ "$FAILED" -eq 0 ]; then
+  touch "$STATE_DIR/ALL_DONE"
+fi
+banner "JOIN DONE ($FAILED stage(s) failed)"
+exit "$FAILED"

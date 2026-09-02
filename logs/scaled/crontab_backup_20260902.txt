@@ -1,0 +1,19 @@
+# --- 2026-08-16: GPU0 belongs to the advisor from this date. Every entry that could touch cuda:0
+# --- is commented out below, not deleted. Backup of the previous crontab:
+# --- ~/sdcp_wsdm/logs/crontab_backup_20260816.txt   Do NOT re-enable a cuda:0 job.
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /usr/bin/screen -dmS watchdog /bin/bash /home/asosoft/sdcp_wsdm/scripts/watchdog.sh
+# RETIRED 2026-08-24: */5 * * * * /bin/bash /home/asosoft/sdcp_wsdm/scripts/gpu_watch.sh
+# DONE 2026-08-17 (E4 20/20 complete): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e4_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e4_gpu1.log 2>&1
+# DONE 2026-08-17 (E3 15/15 complete): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_rest_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_rest_gpu1.log 2>&1
+# --- finished jobs, disabled 2026-08-16 (all used cuda:0, or are complete):
+# @reboot /usr/bin/screen -dmS rebuild_index /bin/bash /home/asosoft/sdcp_wsdm/scripts/rebuild_index.sh
+# @reboot /usr/bin/screen -dmS execplan_v2 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_execution_plan_v2.sh
+# @reboot /usr/bin/screen -dmS fullscale_v3 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_fullscale_v3.sh
+# @reboot /usr/bin/screen -dmS upr_stage0 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_stage0.sh
+# @reboot /usr/bin/screen -dmS axis /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_axis_overnight.sh
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_sensitivity.sh >> /home/asosoft/sdcp_wsdm/logs/cron_upr_sensitivity.log 2>&1
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_sensitivity_extra.sh >> /home/asosoft/sdcp_wsdm/logs/cron_upr_sens_extra.log 2>&1
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e3e4_queue.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e3e4.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e2_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e2.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e11_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e11.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e12_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e12.log 2>&1

@@ -124,6 +124,11 @@ PLAUSIBLE = {
     "qt_ms": (200.0, 700.0),
     "heart_rate": (25.0, 220.0),
     "QTc": (250.0, 750.0),
+    # added 2026-09-02 for build_mimic.py's potassium/INR rule families --
+    # these are lab-panic-value bounds (transcription-error guards), not
+    # clinical safety thresholds, same role as the ranges above.
+    "potassium_mEqL": (1.5, 9.0),
+    "inr": (0.5, 12.0),
 }
 
 

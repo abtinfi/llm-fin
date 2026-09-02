@@ -163,14 +163,15 @@ git -C . rev-parse --short HEAD 2>/dev/null || echo "(not a git repository)"
 
 # ---------------------------------------------------------------- B1: SAE
 # Reuses the existing dictionary; only the knock-out is recomputed. --top 25,
-# --causal_items 40, --causal_features 8 and --causal_split test all match the
+# --causal_items -1 (all items), --causal_features 0 (all features) and
+# --causal_split test are the FULL-COVERAGE settings, matching stage 2/9 above.
 # baseline invocation in run_full_pipeline.sh stage 8, so the only difference
 # between the two artifacts is the fix.
 stage "1_sae_knockout_topk" \
   python src/sae.py score \
     --sae results/sae/sae_topk_L20.npz \
     --model_id "$M" \
-    --top 25 --causal_items 40 --causal_features 8 --causal_split test \
+    --top 25 --causal_items -1 --causal_features 0 --causal_split test \
     --out "$OUT/sae_topk_L20_fis.json"
 
 # ----------------------------------------------------------- B2: steering
@@ -204,20 +205,20 @@ stage "3b_patching_necessity_heldout" \
     --out "$OUT/patching_medcalc_heldout.json"
 
 # ------------------------------------------ B3: sufficiency / injection
-# Matched to run_bridge_pass.sh stage 8 (limit 40, alphas 0.5,1,2,4, and the
+# Matched to run_bridge_pass.sh stage 8 (limit 0 = ALL pairs, alphas 0.5,1,2,4, and the
 # leak-free 30-pair heldout split). The default layer list skips the last
 # layer, so these are primarily a regression check that the Patcher.run change
 # altered nothing it should not have.
 stage "4a_patching_sufficiency_test" \
   python src/patching.py --mode sufficiency \
     --data data/medcalc/counterfactual_test.jsonl --model_id "$M" \
-    --limit 40 --alphas 0.5,1,2,4 \
+    --limit 0 --alphas 0.5,1,2,4 \
     --out "$OUT/sufficiency_medcalc_test.json"
 
 stage "4b_patching_sufficiency_heldout" \
   python src/patching.py --mode sufficiency \
     --data data/medcalc/counterfactual_heldout.jsonl --model_id "$M" \
-    --limit 40 --alphas 0.5,1,2,4 \
+    --limit 0 --alphas 0.5,1,2,4 \
     --out "$OUT/sufficiency_medcalc_heldout.json"
 
 # ------------------------------------------------------------ comparison

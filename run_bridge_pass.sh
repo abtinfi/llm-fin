@@ -109,11 +109,11 @@ done
 banner "8/8 causal sufficiency: feature injection with dose sweep + controls"
 python src/patching.py --mode sufficiency \
     --data data/medcalc/counterfactual_test.jsonl --model_id $M \
-    --limit 40 --alphas 0.5,1,2,4 \
+    --limit 0 --alphas 0.5,1,2,4 \
     --out results/sufficiency_medcalc_test.json
 python src/patching.py --mode sufficiency \
     --data data/medcalc/counterfactual_heldout.jsonl --model_id $M \
-    --limit 40 --alphas 0.5,1,2,4 \
+    --limit 0 --alphas 0.5,1,2,4 \
     --out results/sufficiency_medcalc_heldout.json
 
 banner "DONE"

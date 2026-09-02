@@ -84,19 +84,24 @@ SOURCES = {
              "notes' arm and needs no data-use agreement."),
     "data/mimic": dict(
         what=None,
-        _what_tmpl="MIMIC-IV Real-Value Cohort, {n} items across 3 splits",
+        _what_tmpl="MIMIC-IV Real-Value Cohort, {n} items across 4 splits",
         origin="Derived by src/build_mimic.py from MIMIC-IV Clinical Database "
                "Demo v2.2 (data/mimic_demo, hosp/labevents itemid 50912)",
         credentialed=False,
         note="Open access under ODbL -- NO PhysioNet credentialing, no DUA. "
              "The only arm in this repository where BOTH sides of every "
-             "counterfactual pair are real measured values: 23 of the 100 "
-             "demo patients have two real serum creatinines straddling the "
-             "eGFR-30 threshold. Nothing is invented. Caveat carried in "
-             "data/mimic/build_meta.json: the arms are different TIMEPOINTS "
-             "in the same patient, so the clinical state genuinely differed; "
-             "the rendered note is minimal so the prompts differ in one "
-             "number only."),
+             "counterfactual pair are real measured values. FOUR families "
+             "(expanded 2026-09-02): metformin_egfr30 and metformin_egfr45 "
+             "(attested_exact), spironolactone_k5_5 (construct_mismatch, "
+             "flagged not hidden), warfarin_inr4 (attested_exact, HELD OUT "
+             "-- 8 mechanistically-distinct patients excluded from every "
+             "other family's pool). 71 pairs / 142 items total, up from 23 "
+             "pairs single-family. Nothing is invented. Caveat carried in "
+             "data/mimic/build_meta.json: arms are different TIMEPOINTS in "
+             "the same patient, so the clinical state genuinely differed; "
+             "the rendered note is minimal so prompts differ in one number "
+             "only. metformin_egfr30/45 share the same underlying "
+             "creatinine measurements -- not independent evidence."),
     "data/mimic_demo": dict(
         what="MIMIC-IV Demo v2.2 source tables (6 of 22)",
         origin="physionet.org/content/mimic-iv-demo/2.2/ -- open download",
@@ -146,6 +151,8 @@ MIMIC = [
     ("data/mimic/counterfactual_test.jsonl", "run_eval.py --data data/mimic"),
     ("data/mimic/counterfactual_calib.jsonl", "mimic UQ calibration"),
     ("data/mimic/counterfactual_train.jsonl", "constraint_layer.py on mimic"),
+    ("data/mimic/counterfactual_heldout.jsonl",
+     "run_eval.py --data data/mimic --split heldout (warfarin_inr4)"),
     ("data/mimic/rag_corpus.jsonl", "mimic RAG variants"),
 ]
 

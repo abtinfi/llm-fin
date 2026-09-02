@@ -230,7 +230,7 @@ stage 7_coverage coverage
 # 150k-token collection to retry a score.
 stage 8a_sae_collect \
   python src/sae.py collect --data data/medcalc --split train --layer 20 \
-    --model_id $M --other_mult 1000 --max_tokens 150000 \
+    --model_id $M --other_mult 1000 --max_tokens 300000 \
     --out results/sae/acts_medcalc_train_L20.npz
 stage 8b_sae_train_topk \
   python src/sae.py train --acts results/sae/acts_medcalc_train_L20.npz \
@@ -242,7 +242,7 @@ stage 8c_sae_train_jumprelu \
     --out results/sae/sae_jumprelu_L20.npz
 stage 8d_sae_score_topk \
   python src/sae.py score --sae results/sae/sae_topk_L20.npz --model_id $M \
-    --top 25 --causal_items 40 --causal_features 8 --causal_split test
+    --top 25 --causal_items -1 --causal_features 0 --causal_split test
 stage 8e_sae_score_jumprelu \
   python src/sae.py score --sae results/sae/sae_jumprelu_L20.npz --model_id $M \
     --top 25 --causal_items 0

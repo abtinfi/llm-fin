@@ -216,7 +216,7 @@ def analyse(args):
     used, skipped = 0, defaultdict(int)
 
     for pid, safe_r, unsafe_r in pairs:
-        if used >= args.limit:
+        if args.limit and used >= args.limit:
             break
         ea = P.encode(safe_r["prompt"])
         eb = P.encode(unsafe_r["prompt"])
@@ -254,7 +254,8 @@ def analyse(args):
 
         used += 1
         if used % 10 == 0:
-            print(f"  {used}/{min(args.limit, len(pairs))} pairs", flush=True)
+            cap = len(pairs) if not args.limit else min(args.limit, len(pairs))
+            print(f"  {used}/{cap} pairs", flush=True)
 
     if not used:
         print("no usable pairs"); return
@@ -360,7 +361,7 @@ def sufficiency(args):
     used, skipped = 0, defaultdict(int)
 
     for pid, safe_r, unsafe_r in pairs:
-        if used >= args.limit:
+        if args.limit and used >= args.limit:
             break
         ea, eb = P.encode(safe_r["prompt"]), P.encode(unsafe_r["prompt"])
         a, b = ea["input_ids"][0], eb["input_ids"][0]
@@ -396,7 +397,8 @@ def sufficiency(args):
 
         used += 1
         if used % 10 == 0:
-            print(f"  {used}/{min(args.limit, len(pairs))} pairs", flush=True)
+            cap = len(pairs) if not args.limit else min(args.limit, len(pairs))
+            print(f"  {used}/{cap} pairs", flush=True)
 
     if not used:
         print("no usable pairs"); return
@@ -454,7 +456,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
     ap.add_argument("--model_id", default="BioMistral/BioMistral-7B")
-    ap.add_argument("--limit", type=int, default=100)
+    ap.add_argument("--limit", type=int, default=0,
+                    help="cap on pairs evaluated; 0 (default) means "
+                         "ALL complete pairs in --data, no cap")
     ap.add_argument("--max_diff", type=int, default=6)
     ap.add_argument("--min_gap", type=float, default=0.5)
     ap.add_argument("--mode", choices=["necessity", "sufficiency"],

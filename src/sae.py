@@ -596,7 +596,10 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
     # Knock-out is run on a DIFFERENT split from the one the dictionary was
     # fitted on where possible: a feature that only moves the decision on its
     # own training notes has not been shown to matter.
-    records = records[:args.causal_items]
+    # causal_items > 0 caps it; -1 means ALL items (0 never reaches here --
+    # cmd_score's `if args.causal_items:` gate skips the whole stage on 0).
+    if args.causal_items > 0:
+        records = records[:args.causal_items]
     print(f"  knock-out on {len(records)} items of split `{split}`")
     layer = int(z["layer"])
 
@@ -684,7 +687,8 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
     rng = np.random.default_rng(0)
     n_feat = W_dec.shape[0]
     results = {}
-    for f in feats[:args.causal_features]:
+    for f in (feats if not args.causal_features
+             else feats[:args.causal_features]):
         state["feature"] = int(f)
         eff = float(np.abs(margins() - clean).mean())
         ctrl_f = int(rng.integers(0, n_feat))
@@ -751,9 +755,13 @@ def main():
     s.add_argument("--top", type=int, default=20)
     s.add_argument("--model_id", default="BioMistral/BioMistral-7B")
     s.add_argument("--max_len", type=int, default=1400)
-    s.add_argument("--causal_items", type=int, default=40,
-                   help="0 disables the knock-out stage")
-    s.add_argument("--causal_features", type=int, default=8)
+    s.add_argument("--causal_items", type=int, default=-1,
+                   help="items to run knock-out on: 0 disables the stage, "
+                        "-1 (default) means ALL items of the split, N>0 caps "
+                        "it at N")
+    s.add_argument("--causal_features", type=int, default=0,
+                   help="how many of the --top features to run knock-out on; "
+                        "0 (default) means ALL of them")
     s.add_argument("--causal_split", default=None,
                    help="split to run the knock-out on; defaults to the split "
                         "the activations came from")

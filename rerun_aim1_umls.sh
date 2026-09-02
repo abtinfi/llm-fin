@@ -24,7 +24,7 @@ git rev-parse --short HEAD 2>/dev/null || echo "(no git rev)"
 
 banner "1/4 collect (layer 20, 150k tokens, UMLS vocabulary)"
 python src/sae.py collect --data data/medcalc --split train --layer 20 \
-    --model_id $M --other_mult 1000 --max_tokens 150000 \
+    --model_id $M --other_mult 1000 --max_tokens 300000 \
     --concepts umls --graph data/umls/causal_graph.json \
     --out results/sae/acts_medcalc_train_L20_umls.npz
 
