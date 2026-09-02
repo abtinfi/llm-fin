@@ -37,6 +37,27 @@ like an expert-validated number when no expert has seen it.
     python src/sae.py collect --data data/medcalc --split test --layer 20
     python src/sae.py train   --acts results/sae/acts_medcalc_test_L20.npz
     python src/sae.py score   --sae results/sae/sae_medcalc_test_L20.npz
+
+THE CONCEPT VOCABULARY (changed 2026-09-02)
+-------------------------------------------
+`S_semantic` is only as strong as the thing it matches against. Until
+2026-09-02 that was 11 hand-written regexes, so "maps a feature to a biomedical
+concept" meant "matches my regex". The default is now the CUI-anchored
+groundings from the causal knowledge graph (`--concepts umls`); the regexes are
+kept as `LEGACY_CONCEPT_PATTERNS` and reachable with `--concepts regex` so the
+earlier numbers stay reproducible.
+
+Two things must travel with any UMLS-grounded number:
+
+  - The matcher is a **union of UMLS atoms and a curated lexical layer**, not
+    UMLS alone. UMLS atoms by themselves collapse recall on the surface forms
+    notes actually use (eGFR 16->0 hits, pregnancy 20->2, potassium 4->0),
+    because UMLS is terminology-normalised and notes write "eGFR"/"pregnant".
+    `concept_provenance` in the FIS report gives the split per concept.
+  - `age` has **no CUI at all** and is a pure lexical fallback, and
+    `qt_interval` matches nothing on UMLS atoms alone. Any feature whose
+    concept is one of those is CUI-anchored at best and must not be described
+    as UMLS-matched. Run `python src/umls_grounding.py audit` for the numbers.
 """
 
 import argparse
@@ -57,7 +78,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # never from the dataset's structured facts.
 # ---------------------------------------------------------------------------
 NUM = r"\d+(?:\.\d+)?"
-CONCEPT_PATTERNS = {
+LEGACY_CONCEPT_PATTERNS = {
     "creatinine": re.compile(
         r"creatin(?:ine|e)\b[^.\n;]{0,30}?" + NUM +
         r"\s*(?:mg\s*/\s*d[lL]|[µu]mol\s*/\s*L)", re.I),
@@ -81,7 +102,80 @@ CONCEPT_PATTERNS = {
         r"\b(pregnan\w*|hCG|menstrual)\b", re.I),
     "asthma": re.compile(r"\b(asthma|bronchospasm|salbutamol|inhaler)\b", re.I),
 }
+# The vocabulary actually used is bound at run time by
+# `set_concept_vocabulary()`. It defaults to the UMLS groundings; the legacy
+# regexes above stay reachable via `--concepts regex` so the pre-2026-09-02
+# numbers can still be reproduced exactly.
+CONCEPT_PATTERNS = dict(LEGACY_CONCEPT_PATTERNS)
 CONCEPTS = list(CONCEPT_PATTERNS)
+CONCEPT_SOURCE = "regex"
+CONCEPT_PROVENANCE = {}
+
+DEFAULT_GRAPH = "data/umls/causal_graph.json"
+
+
+def set_concept_vocabulary(source="umls", graph_path=DEFAULT_GRAPH):
+    """
+    Bind the concept vocabulary the whole file scores against.
+
+    `source="umls"` loads the CUI-anchored groundings from the causal knowledge
+    graph; `source="regex"` keeps the hand-written patterns. The graph is read
+    from disk and its UMLS cache is warm, so this makes no network calls.
+
+    WHY THIS IS NOT A COSMETIC SWAP: `cmd_collect` keeps every token a concept
+    fires on, so the vocabulary decides which activations enter the dictionary.
+    Changing it changes X, the trained SAE and every S_semantic downstream. It
+    is a full collect -> train -> score re-run, never a re-score.
+
+    WHAT A MATCH MEANS AFTERWARDS: the matcher is a provenance-tracked union of
+    UMLS atoms and a curated lexical layer, because UMLS atoms alone collapse
+    recall on the surface forms clinical notes actually use (eGFR 16->0 hits,
+    pregnancy 20->2, potassium 4->0). `CONCEPT_PROVENANCE` records the split per
+    concept so no concept is called "UMLS-matched" without the number that
+    qualifies it.
+    """
+    global CONCEPT_PATTERNS, CONCEPTS, CONCEPT_SOURCE, CONCEPT_PROVENANCE
+    if source == "regex":
+        CONCEPT_PATTERNS = dict(LEGACY_CONCEPT_PATTERNS)
+        CONCEPTS = list(CONCEPT_PATTERNS)
+        CONCEPT_SOURCE = "regex"
+        CONCEPT_PROVENANCE = {}
+        return CONCEPT_PATTERNS
+
+    from umls_grounding import CausalKnowledgeGraph
+    gp = Path(graph_path)
+    if not gp.exists():
+        raise SystemExit(
+            f"{gp} not found. Build it first:\n"
+            f"  python src/umls_grounding.py build --out data/umls\n"
+            f"or score the legacy vocabulary explicitly with --concepts regex.")
+    graph = CausalKnowledgeGraph.load(gp)
+    pats = graph.concept_patterns()
+    if not pats:
+        raise SystemExit(f"{gp} carries no concept groundings.")
+
+    # Keep the legacy ordering so a concept's column index is stable across the
+    # two vocabularies and the two runs stay column-comparable.
+    order = [c for c in LEGACY_CONCEPT_PATTERNS if c in pats]
+    order += [c for c in pats if c not in order]
+    CONCEPT_PATTERNS = {c: pats[c] for c in order}
+    CONCEPTS = list(CONCEPT_PATTERNS)
+    CONCEPT_SOURCE = "umls"
+    CONCEPT_PROVENANCE = {}
+    for slug in CONCEPTS:
+        g = graph.groundings.get(slug)
+        if g is None:
+            continue
+        CONCEPT_PROVENANCE[slug] = {
+            "cui": g.cui, "preferred_name": g.preferred_name,
+            "n_umls_terms": g.n_umls_terms,
+            "n_curated_terms": g.n_curated_terms,
+            "numeric_tail": bool(g.numeric), "source": g.source}
+    missing = [c for c in LEGACY_CONCEPT_PATTERNS if c not in CONCEPT_PATTERNS]
+    if missing:
+        print(f"  WARNING: no grounding for {missing}; "
+              f"these concepts are dropped from the vocabulary")
+    return CONCEPT_PATTERNS
 
 
 def read_jsonl(p):
@@ -113,6 +207,16 @@ def concept_labels(text, offsets):
 def cmd_collect(args):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    set_concept_vocabulary(args.concepts, args.graph)
+    print(f"  concept vocabulary: {CONCEPT_SOURCE} "
+          f"({len(CONCEPTS)} concepts)")
+    if CONCEPT_PROVENANCE:
+        for slug, pr in CONCEPT_PROVENANCE.items():
+            print(f"    {slug:14s} {pr['cui']:10s} "
+                  f"umls_atoms={pr['n_umls_terms']:3d} "
+                  f"curated={pr['n_curated_terms']:3d}"
+                  + ("  +numeric_tail" if pr["numeric_tail"] else ""))
 
     records = read_jsonl(Path(args.data) / f"counterfactual_{args.split}.jsonl")
     if args.limit:
@@ -175,7 +279,9 @@ def cmd_collect(args):
     out.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out, X=X, labels=L, concepts=np.array(CONCEPTS),
                         ids=np.array(ids), layer=args.layer,
-                        data=str(args.data), split=args.split)
+                        data=str(args.data), split=args.split,
+                        concept_source=CONCEPT_SOURCE,
+                        concept_provenance=json.dumps(CONCEPT_PROVENANCE))
     print(f"wrote {out}: X{X.shape} labels{L.shape}")
     print("  concept token counts: " +
           ", ".join(f"{c}={int(L[:, i].sum())}"
@@ -375,6 +481,10 @@ def cmd_score(args):
     X = torch.tensor(acts["X"], dtype=torch.float32)      # stays on CPU
     labels = acts["labels"]
     concepts = [str(c) for c in acts["concepts"]]
+    concept_source = (str(acts["concept_source"])
+                      if "concept_source" in acts.files else "regex")
+    concept_provenance = (json.loads(str(acts["concept_provenance"]))
+                          if "concept_provenance" in acts.files else {})
     d_hidden = int(sae_z["d_hidden"])
 
     sae = SAE(X.shape[1], d_hidden, str(sae_z["kind"]),
@@ -415,6 +525,21 @@ def cmd_score(args):
               "fvu": float(sae_z["fvu"]), "l0": float(sae_z["l0"]),
               "dead": int(sae_z["dead"]), "d_hidden": int(sae_z["d_hidden"]),
               "concepts": concepts,
+              "concept_source": concept_source,
+              "concept_provenance": concept_provenance,
+              "concept_note": (
+                  "S_semantic is measured against a UMLS-grounded vocabulary: "
+                  "each concept is anchored to a CUI and matched on a "
+                  "provenance-tracked union of UMLS atoms and a curated "
+                  "lexical layer, plus a regex numeric tail where the concept "
+                  "is a measurement (UMLS cannot express '2.1 mg/dL'). "
+                  "`concept_provenance` gives the atom-vs-curated split per "
+                  "concept; a concept whose n_umls_terms is small rests mostly "
+                  "on curation and must not be reported as UMLS-matched."
+                  if concept_source == "umls" else
+                  "S_semantic is measured against 11 hand-written regexes. "
+                  "'Biomedical concept' here means 'matches my regex', not "
+                  "'selects a UMLS concept'."),
               "features": [{"feature": int(f), "s_semantic": float(s_sem[f]),
                             "concept": (concepts[which[f]] if which[f] >= 0
                                         else None),
@@ -601,6 +726,11 @@ def main():
                         "value keeps the whole note, which is what a "
                         "dictionary should be fitted on; the default subsample "
                         "exists for quick runs.")
+    c.add_argument("--concepts", choices=["umls", "regex"], default="umls",
+                   help="concept vocabulary: UMLS groundings from the causal "
+                        "knowledge graph (default), or the legacy hand-written "
+                        "regexes that produced the pre-2026-09-02 numbers")
+    c.add_argument("--graph", default=DEFAULT_GRAPH)
     c.add_argument("--out", default=None)
     c.set_defaults(fn=cmd_collect)
 

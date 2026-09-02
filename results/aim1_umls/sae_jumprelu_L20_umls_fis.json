@@ -1,0 +1,296 @@
+{
+  "sae": "results/sae/sae_jumprelu_L20_umls.npz",
+  "kind": "jumprelu",
+  "fvu": 0.09493430703878403,
+  "l0": 27.8963623046875,
+  "dead": 10656,
+  "d_hidden": 16384,
+  "concepts": [
+    "creatinine",
+    "qt_interval",
+    "egfr",
+    "heart_rate",
+    "potassium",
+    "inr",
+    "age",
+    "drug",
+    "renal_disease",
+    "pregnancy",
+    "asthma"
+  ],
+  "concept_source": "umls",
+  "concept_provenance": {
+    "creatinine": {
+      "cui": "C0201976",
+      "preferred_name": "Creatinine measurement, serum (procedure)",
+      "n_umls_terms": 16,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "qt_interval": {
+      "cui": "C0429028",
+      "preferred_name": "QT interval feature (observable entity)",
+      "n_umls_terms": 13,
+      "n_curated_terms": 4,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "egfr": {
+      "cui": "C3811844",
+      "preferred_name": "Estimated Glomerular Filtration Rate",
+      "n_umls_terms": 2,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "heart_rate": {
+      "cui": "C0018810",
+      "preferred_name": "heart rate",
+      "n_umls_terms": 18,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "potassium": {
+      "cui": "C0302353",
+      "preferred_name": "Serum potassium measurement",
+      "n_umls_terms": 19,
+      "n_curated_terms": 2,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "inr": {
+      "cui": "C0525032",
+      "preferred_name": "International Normalized Ratio",
+      "n_umls_terms": 26,
+      "n_curated_terms": 1,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "age": {
+      "cui": "",
+      "preferred_name": "age",
+      "n_umls_terms": 0,
+      "n_curated_terms": 0,
+      "numeric_tail": false,
+      "source": "lexical-fallback"
+    },
+    "drug": {
+      "cui": "C0025598",
+      "preferred_name": "metformin",
+      "n_umls_terms": 192,
+      "n_curated_terms": 0,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "renal_disease": {
+      "cui": "C0035078",
+      "preferred_name": "Kidney Failure",
+      "n_umls_terms": 97,
+      "n_curated_terms": 7,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "pregnancy": {
+      "cui": "C0032961",
+      "preferred_name": "Pregnancy",
+      "n_umls_terms": 17,
+      "n_curated_terms": 4,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "asthma": {
+      "cui": "C0004096",
+      "preferred_name": "Asthma",
+      "n_umls_terms": 27,
+      "n_curated_terms": 7,
+      "numeric_tail": false,
+      "source": "umls"
+    }
+  },
+  "concept_note": "S_semantic is measured against a UMLS-grounded vocabulary: each concept is anchored to a CUI and matched on a provenance-tracked union of UMLS atoms and a curated lexical layer, plus a regex numeric tail where the concept is a measurement (UMLS cannot express '2.1 mg/dL'). `concept_provenance` gives the atom-vs-curated split per concept; a concept whose n_umls_terms is small rests mostly on curation and must not be reported as UMLS-matched.",
+  "features": [
+    {
+      "feature": 14487,
+      "s_semantic": 0.4444444444444444,
+      "concept": "asthma",
+      "n_active": 38,
+      "fis": 0.2222222222222222
+    },
+    {
+      "feature": 7589,
+      "s_semantic": 0.3505063848524879,
+      "concept": "age",
+      "n_active": 3408,
+      "fis": 0.17525319242624396
+    },
+    {
+      "feature": 5554,
+      "s_semantic": 0.34521253756977244,
+      "concept": "age",
+      "n_active": 1195,
+      "fis": 0.17260626878488622
+    },
+    {
+      "feature": 871,
+      "s_semantic": 0.33584583106690497,
+      "concept": "creatinine",
+      "n_active": 10347,
+      "fis": 0.16792291553345248
+    },
+    {
+      "feature": 16367,
+      "s_semantic": 0.28482142857142856,
+      "concept": "age",
+      "n_active": 3346,
+      "fis": 0.14241071428571428
+    },
+    {
+      "feature": 9854,
+      "s_semantic": 0.27586206896551724,
+      "concept": "pregnancy",
+      "n_active": 11,
+      "fis": 0.13793103448275862
+    },
+    {
+      "feature": 8003,
+      "s_semantic": 0.24473257698541329,
+      "concept": "creatinine",
+      "n_active": 2414,
+      "fis": 0.12236628849270664
+    },
+    {
+      "feature": 6997,
+      "s_semantic": 0.23529411764705882,
+      "concept": "pregnancy",
+      "n_active": 16,
+      "fis": 0.11764705882352941
+    },
+    {
+      "feature": 9285,
+      "s_semantic": 0.23233733593968164,
+      "concept": "drug",
+      "n_active": 2777,
+      "fis": 0.11616866796984082
+    },
+    {
+      "feature": 9165,
+      "s_semantic": 0.2306467027715833,
+      "concept": "age",
+      "n_active": 2005,
+      "fis": 0.11532335138579165
+    },
+    {
+      "feature": 10583,
+      "s_semantic": 0.22050632911392404,
+      "concept": "creatinine",
+      "n_active": 5378,
+      "fis": 0.11025316455696202
+    },
+    {
+      "feature": 3610,
+      "s_semantic": 0.21621621621621623,
+      "concept": "pregnancy",
+      "n_active": 19,
+      "fis": 0.10810810810810811
+    },
+    {
+      "feature": 9802,
+      "s_semantic": 0.21621621621621623,
+      "concept": "pregnancy",
+      "n_active": 19,
+      "fis": 0.10810810810810811
+    },
+    {
+      "feature": 11809,
+      "s_semantic": 0.21052631578947367,
+      "concept": "pregnancy",
+      "n_active": 20,
+      "fis": 0.10526315789473684
+    },
+    {
+      "feature": 11112,
+      "s_semantic": 0.1960835509138381,
+      "concept": "creatinine",
+      "n_active": 5138,
+      "fis": 0.09804177545691906
+    },
+    {
+      "feature": 10040,
+      "s_semantic": 0.19409557984015657,
+      "concept": "creatinine",
+      "n_active": 3609,
+      "fis": 0.09704778992007829
+    },
+    {
+      "feature": 441,
+      "s_semantic": 0.19047619047619047,
+      "concept": "pregnancy",
+      "n_active": 24,
+      "fis": 0.09523809523809523
+    },
+    {
+      "feature": 2873,
+      "s_semantic": 0.18679245283018867,
+      "concept": "age",
+      "n_active": 3106,
+      "fis": 0.09339622641509433
+    },
+    {
+      "feature": 13592,
+      "s_semantic": 0.1857225769007545,
+      "concept": "age",
+      "n_active": 2312,
+      "fis": 0.09286128845037725
+    },
+    {
+      "feature": 5903,
+      "s_semantic": 0.18185205887833053,
+      "concept": "age",
+      "n_active": 4233,
+      "fis": 0.09092602943916527
+    },
+    {
+      "feature": 10275,
+      "s_semantic": 0.17777777777777778,
+      "concept": "pregnancy",
+      "n_active": 27,
+      "fis": 0.08888888888888889
+    },
+    {
+      "feature": 7020,
+      "s_semantic": 0.17647058823529413,
+      "concept": "pregnancy",
+      "n_active": 50,
+      "fis": 0.08823529411764706
+    },
+    {
+      "feature": 12447,
+      "s_semantic": 0.17391304347826086,
+      "concept": "pregnancy",
+      "n_active": 28,
+      "fis": 0.08695652173913043
+    },
+    {
+      "feature": 13770,
+      "s_semantic": 0.16967892834361045,
+      "concept": "drug",
+      "n_active": 3899,
+      "fis": 0.08483946417180523
+    },
+    {
+      "feature": 7537,
+      "s_semantic": 0.16637272192827748,
+      "concept": "creatinine",
+      "n_active": 11086,
+      "fis": 0.08318636096413874
+    }
+  ],
+  "fis_weights": {
+    "alpha_semantic": 0.5,
+    "beta_causal": 0.5,
+    "gamma_human": 0.0,
+    "gamma_note": "S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them."
+  }
+}
