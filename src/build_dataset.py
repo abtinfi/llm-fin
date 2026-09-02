@@ -1,7 +1,7 @@
 """
 Builds the synthetic counterfactual clinical dataset.
 
-Output: data/counterfactual_{split}.jsonl
+Output: data/synthetic_control/counterfactual_{split}.jsonl
 
 Each record is one arm of a counterfactual pair:
     pair_id      -- identical for the two arms
@@ -159,7 +159,7 @@ def validate(records, split_name):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="data")
+    ap.add_argument("--out", default="data/synthetic_control")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--no_hardening", action="store_true",
                     help="reproduce the original easy, fully explicit vignettes")

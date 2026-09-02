@@ -35,23 +35,27 @@ python src/constraint_layer.py --data data/medcalc --train_on heldout_first \
     --epochs 8 --graph $G --shuffled_control \
     --out results/constraint_qt_shuffled.json
 banner "A4 synthetic benchmark, trained on the calibration split"
-python src/constraint_layer.py --data data --train_on calib \
+python src/constraint_layer.py --data data/synthetic_control --train_on calib \
     --epochs 8 --graph $G --save_adapter results/adapter_synth.npz \
     --out results/constraint_synth.json
 
-# --- 2. synthetic ablation, new default UQ signal ---------------------------
-banner "A5 synthetic ablation, 6 variants, uq_signal=decision_entropy"
+# --- 2. synthetic CONTROL ablation, new default UQ signal ---------------------------
+banner "A5 synthetic CONTROL ablation, 6 variants, uq_signal=decision_entropy"
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
+    --data data/synthetic_control \
     --variants $V6 --batch_size 8
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split heldout \
+    --data data/synthetic_control \
     --variants $V6 --batch_size 8
 
-# --- 3. synthetic constraint-layer rows ------------------------------------
-banner "A6 synthetic constraint-layer rows"
+# --- 3. synthetic CONTROL constraint-layer rows ------------------------------------
+banner "A6 synthetic CONTROL constraint-layer rows"
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
+    --data data/synthetic_control \
     --variants cl nsai_uq_cl --adapter results/adapter_synth.npz \
     --adapter_layer 30 --batch_size 8
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split heldout \
+    --data data/synthetic_control \
     --variants cl nsai_uq_cl --adapter results/adapter_synth.npz \
     --adapter_layer 30 --batch_size 8
 

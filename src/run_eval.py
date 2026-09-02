@@ -257,7 +257,10 @@ def main():
     ap.add_argument("--alpha", type=float, default=0.10)
     ap.add_argument("--topk", type=int, default=3)
     ap.add_argument("--batch_size", type=int, default=8)
-    ap.add_argument("--data", default="data")
+    ap.add_argument("--data", default="data/synthetic_control",
+                    help="benchmark root. Default is the SYNTHETIC CONTROL "
+                         "benchmark (templated vignettes, hand-written "
+                         "thresholds); pass data/medcalc for the real-notes arm.")
     ap.add_argument("--out", default="results")
     ap.add_argument("--split", default="test",
                     help="name of the counterfactual_<split>.jsonl file to "
@@ -303,6 +306,18 @@ def main():
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
 
+    # A mock run must never be able to overwrite a real one. The mock backend is
+    # the DEFAULT, so a bare `python src/run_eval.py --split test` -- the exact
+    # command a smoke test uses -- silently replaced the real `base` row in
+    # results/summary_test.json AND results/preds_test_base_seed0.jsonl on
+    # 2026-09-02. Mock output is forced onto its own `_mock` tag before ANY file
+    # is written, and a mock row can never be merged into a file holding real
+    # ones.
+    if args.backend == "mock" and not args.tag.endswith("_mock"):
+        args.tag = f"{args.tag}_mock"
+        print("  NOTE: mock backend -- writing to the _mock tag so real "
+              "artifacts cannot be clobbered.")
+
     summary = []
     for seed in args.seeds:
         lm = load_model({"backend": args.backend, "model_id": args.model_id,
@@ -343,6 +358,12 @@ def main():
     spath = outdir / f"summary_{args.split}{args.tag}.json"
     if spath.exists():
         prev = json.load(spath.open())
+        real = {r.get("model") for r in prev} - {"mock", None}
+        if args.backend == "mock" and real:
+            raise SystemExit(
+                f"refusing to write mock rows into {spath}, which holds real "
+                f"results from {sorted(real)}. Delete the file or use a "
+                f"different --tag.")
         keep = [r for r in prev
                 if (r["variant"], r["seed"]) not in
                 {(x["variant"], x["seed"]) for x in summary}]

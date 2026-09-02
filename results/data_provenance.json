@@ -1,11 +1,11 @@
 {
   "credentialed_sources_required_to_run": [],
   "sources": {
-    "data": {
-      "what": "Synthetic counterfactual benchmark, 10 hand-written rule families",
+    "data/synthetic_control": {
+      "what": "SYNTHETIC CONTROL benchmark, 10 hand-written rule families",
       "origin": "Generated in-repo by src/build_dataset.py + src/hardening.py",
       "credentialed": false,
-      "note": "No external dependency at all; rebuildable offline.",
+      "note": "Templated vignettes with hand-written thresholds. This is a CONTROL ARM, not evidence about clinical text: it exists to show what the pipeline does when the causal factor is stated cleanly and the label is guaranteed. Every claim about real notes must cite data/medcalc instead. Renamed from data/ on 2026-09-02 so the distinction cannot be lost in a path.",
       "present": true
     },
     "data/medcalc": {
@@ -33,24 +33,24 @@
   },
   "required": [
     {
-      "path": "data/counterfactual_calib.jsonl",
+      "path": "data/synthetic_control/counterfactual_calib.jsonl",
       "present": true,
-      "used_by": "run_eval.py UQ calibration"
+      "used_by": "run_eval.py UQ calibration (synthetic control)"
     },
     {
-      "path": "data/counterfactual_test.jsonl",
+      "path": "data/synthetic_control/counterfactual_test.jsonl",
       "present": true,
-      "used_by": "run_eval.py --split test"
+      "used_by": "run_eval.py --split test (synthetic control)"
     },
     {
-      "path": "data/counterfactual_heldout.jsonl",
+      "path": "data/synthetic_control/counterfactual_heldout.jsonl",
       "present": true,
-      "used_by": "run_eval.py --split heldout"
+      "used_by": "run_eval.py --split heldout (synthetic control)"
     },
     {
-      "path": "data/rag_corpus.jsonl",
+      "path": "data/synthetic_control/rag_corpus.jsonl",
       "present": true,
-      "used_by": "components.TfidfRetriever (RAG variants)"
+      "used_by": "components.TfidfRetriever (synthetic control RAG)"
     },
     {
       "path": "data/medcalc/counterfactual_calib.jsonl",
@@ -111,7 +111,7 @@
     }
   ],
   "splits": {
-    "data/counterfactual_calib.jsonl": {
+    "data/synthetic_control/counterfactual_calib.jsonl": {
       "n_items": 32,
       "n_pairs": 16,
       "complete_pairs": 16,
@@ -128,7 +128,7 @@
       ],
       "issues": []
     },
-    "data/counterfactual_test.jsonl": {
+    "data/synthetic_control/counterfactual_test.jsonl": {
       "n_items": 128,
       "n_pairs": 64,
       "complete_pairs": 64,
@@ -145,7 +145,7 @@
       ],
       "issues": []
     },
-    "data/counterfactual_heldout.jsonl": {
+    "data/synthetic_control/counterfactual_heldout.jsonl": {
       "n_items": 32,
       "n_pairs": 16,
       "complete_pairs": 16,

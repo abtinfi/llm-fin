@@ -20,9 +20,15 @@ truth ambiguous:
      in the same units as the causal factor, so a naive number-grabbing
      extractor picks the wrong one.
 
-Thresholds are UNCHANGED from src/rules.py and remain INTERIM. They are still
-pending replacement by the openFDA curation worksheet. Do not present them as
-sourced.
+Thresholds are UNCHANGED from src/rules.py. As of 2026-09-02 they carry
+provenance: `src/curate_thresholds.py` checked all ten against the FDA labels
+in `data/openfda_raw.jsonl` and `results/threshold_provenance.md` reports the
+result. **5 of 10 are attested; 5 are not**, and two of those five have a
+number in the label that encodes a DIFFERENT construct (aspirin's '<12 years'
+is OTC dosing, not the Reye's rule; spironolactone's '5.0 mEq/L' is an
+initiation criterion, not a contraindication ceiling). Every family still
+carries `threshold_source` in rules.py. Do not present an UNSOURCED threshold
+as sourced.
 """
 
 import random

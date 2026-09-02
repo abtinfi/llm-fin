@@ -64,11 +64,16 @@ from pathlib import Path
 # the first is true.
 # ---------------------------------------------------------------------------
 SOURCES = {
-    "data": dict(
-        what="Synthetic counterfactual benchmark, 10 hand-written rule families",
+    "data/synthetic_control": dict(
+        what="SYNTHETIC CONTROL benchmark, 10 hand-written rule families",
         origin="Generated in-repo by src/build_dataset.py + src/hardening.py",
         credentialed=False,
-        note="No external dependency at all; rebuildable offline."),
+        note="Templated vignettes with hand-written thresholds. This is a "
+             "CONTROL ARM, not evidence about clinical text: it exists to show "
+             "what the pipeline does when the causal factor is stated cleanly "
+             "and the label is guaranteed. Every claim about real notes must "
+             "cite data/medcalc instead. Renamed from data/ on 2026-09-02 so "
+             "the distinction cannot be lost in a path."),
     "data/medcalc": dict(
         what=None,   # counted live -- see below; a hardcoded figure drifts
         _what_tmpl="Real clinical notes benchmark, {n} items across 5 splits",
@@ -95,10 +100,14 @@ SOURCES = {
 
 # Every file the evaluation pipeline reads, and which stage would break.
 REQUIRED = [
-    ("data/counterfactual_calib.jsonl", "run_eval.py UQ calibration"),
-    ("data/counterfactual_test.jsonl", "run_eval.py --split test"),
-    ("data/counterfactual_heldout.jsonl", "run_eval.py --split heldout"),
-    ("data/rag_corpus.jsonl", "components.TfidfRetriever (RAG variants)"),
+    ("data/synthetic_control/counterfactual_calib.jsonl",
+     "run_eval.py UQ calibration (synthetic control)"),
+    ("data/synthetic_control/counterfactual_test.jsonl",
+     "run_eval.py --split test (synthetic control)"),
+    ("data/synthetic_control/counterfactual_heldout.jsonl",
+     "run_eval.py --split heldout (synthetic control)"),
+    ("data/synthetic_control/rag_corpus.jsonl",
+     "components.TfidfRetriever (synthetic control RAG)"),
     ("data/medcalc/counterfactual_calib.jsonl", "medcalc UQ calibration"),
     ("data/medcalc/counterfactual_test.jsonl", "medcalc --split test"),
     ("data/medcalc/counterfactual_heldout.jsonl", "medcalc --split heldout"),

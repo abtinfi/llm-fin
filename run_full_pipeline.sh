@@ -129,13 +129,17 @@ else
   exec 1>&- 2>&-; wait; exit 65
 fi
 
-# ---------------------------------------------------------------- 1. synthetic
-stage 1a_synth_test \
+# ------------------------------------------- 1. synthetic CONTROL benchmark
+# Templated vignettes, hand-written thresholds. This is a CONTROL ARM: it shows
+# what the pipeline does when the causal factor is stated cleanly and the label
+# is guaranteed. No claim about clinical text may be sourced from these rows --
+# stage 2 (data/medcalc, real PMC notes) is the real-text arm.
+stage 1a_synthctl_test \
   python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
-    --variants $V6 --batch_size 8
-stage 1b_synth_heldout \
+    --data data/synthetic_control --variants $V6 --batch_size 8
+stage 1b_synthctl_heldout \
   python src/run_eval.py --backend hf --model_id $M --seeds 0 --split heldout \
-    --variants $V6 --batch_size 8
+    --data data/synthetic_control --variants $V6 --batch_size 8
 
 # ------------------------------------------------------------------ 2. medcalc
 stage 2a_medcalc_test \
@@ -160,7 +164,7 @@ stage 3c_cl_renal \
     --epochs 8 --save_adapter results/adapter_renal.npz \
     --out results/constraint_renal.json
 stage 3d_cl_synth \
-  python src/constraint_layer.py --data data --train_on calib \
+  python src/constraint_layer.py --data data/synthetic_control --train_on calib \
     --epochs 8 --save_adapter results/adapter_synth.npz \
     --out results/constraint_synth.json
 

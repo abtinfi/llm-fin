@@ -999,7 +999,8 @@ def main():
 
     a = sub.add_parser("audit", help="old regexes vs UMLS grounding, measured")
     a.add_argument("--graph", default="data/umls/causal_graph.json")
-    a.add_argument("--data", default="data/counterfactual_test.jsonl")
+    a.add_argument("--data",
+                   default="data/synthetic_control/counterfactual_test.jsonl")
     a.add_argument("--data2", default="data/medcalc/counterfactual_test.jsonl")
     a.add_argument("--limit", type=int, default=60)
     a.set_defaults(fn=cmd_audit)

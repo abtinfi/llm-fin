@@ -40,6 +40,15 @@ class RuleFamily:
     # the case is absurd rather than because ACE inhibitors are teratogenic
     # would have scored exactly the same.
     ages: List[int] = None
+    # Where this family's threshold comes from. Written by hand, CHECKED by
+    # src/curate_thresholds.py against data/openfda_raw.jsonl, and reported in
+    # results/threshold_provenance.md. "UNSOURCED" is not a placeholder to be
+    # tidied away: 5 of 10 families have no FDA-label attestation for their
+    # number, and two of those have a number in the label that means something
+    # else entirely. Any table quoting these thresholds must carry the split.
+    threshold_source: str = "UNSOURCED"
+    threshold_status: str = "absent"
+    threshold_evidence: str = ""
     # sexes this family may draw from. None -> both. The pregnancy family only
     # renders coherently as female; it was previously kept female only by the
     # accident that the implicit/explicit alternation and the sex alternation
@@ -54,6 +63,9 @@ SEXES = ["male", "female"]
 RULE_FAMILIES: List[RuleFamily] = [
     RuleFamily(
         name="metformin_renal",
+        threshold_source="openfda",
+        threshold_status="attested_exact",
+        threshold_evidence="FDA label, CONTRAINDICATIONS: 'Severe renal impairment: (eGFR below 30 mL/min/1.73 m2)'",
         drug="metformin",
         factor="eGFR",
         factor_unit="mL/min/1.73m2",
@@ -74,6 +86,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="nsaid_renal",
+        threshold_source="UNSOURCED",
+        threshold_status="absent",
+        threshold_evidence="ibuprofen label states no eGFR threshold; value carried over from rules.py",
         drug="ibuprofen",
         factor="eGFR",
         factor_unit="mL/min/1.73m2",
@@ -93,6 +108,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="acei_pregnancy",
+        threshold_source="openfda",
+        threshold_status="attested_qualitative",
+        threshold_evidence="FDA boxed warning: 'When pregnancy is detected, discontinue'",
         drug="lisinopril",
         factor="pregnancy status",
         factor_unit="",
@@ -128,6 +146,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="betablocker_asthma",
+        threshold_source="openfda",
+        threshold_status="attested_qualitative",
+        threshold_evidence="FDA label, CONTRAINDICATIONS: 'bronchial asthma'",
         drug="propranolol",
         factor="asthma status",
         factor_unit="",
@@ -157,6 +178,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="aspirin_reye",
+        threshold_source="UNSOURCED",
+        threshold_status="construct_mismatch",
+        threshold_evidence="label's '<12 years' is OTC dosing, NOT the Reye's contraindication; 16 is from external guidance not in this label set",
         drug="aspirin",
         factor="age",
         factor_unit="years",
@@ -177,6 +201,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="spironolactone_hyperkalaemia",
+        threshold_source="UNSOURCED",
+        threshold_status="construct_mismatch",
+        threshold_evidence="label's 5.0 mEq/L is an initiation criterion, not a contraindication ceiling",
         drug="spironolactone",
         factor="serum potassium",
         factor_unit="mmol/L",
@@ -197,6 +224,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="warfarin_inr",
+        threshold_source="openfda",
+        threshold_status="attested_exact",
+        threshold_evidence="FDA label, WARNINGS AND CAUTIONS: 'high intensity of anticoagulation (INR > 4)'",
         drug="warfarin",
         factor="INR",
         factor_unit="",
@@ -216,6 +246,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="statin_macrolide",
+        threshold_source="openfda",
+        threshold_status="attested_qualitative",
+        threshold_evidence="FDA label, CONTRAINDICATIONS: strong CYP3A4 inhibitors incl. macrolides",
         drug="simvastatin",
         factor="concurrent clarithromycin",
         factor_unit="",
@@ -245,6 +278,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     # ---------------- HELD OUT ----------------
     RuleFamily(
         name="nitrofurantoin_renal",
+        threshold_source="UNSOURCED",
+        threshold_status="absent",
+        threshold_evidence="nitrofurantoin label states no CrCl threshold in this label set",
         drug="nitrofurantoin",
         factor="eGFR",
         factor_unit="mL/min/1.73m2",
@@ -266,6 +302,9 @@ RULE_FAMILIES: List[RuleFamily] = [
     ),
     RuleFamily(
         name="ondansetron_qt",
+        threshold_source="UNSOURCED",
+        threshold_status="absent",
+        threshold_evidence="ondansetron label states no numeric QTc threshold; 500 ms is external guidance",
         drug="ondansetron",
         factor="QTc",
         factor_unit="ms",

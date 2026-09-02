@@ -39,15 +39,17 @@ python src/constraint_layer.py --data data/medcalc --train_on train \
     --epochs 8 --graph $G --save_adapter results/adapter_renal.npz \
     --out results/constraint_renal.json
 banner "1d synthetic benchmark, trained on the calibration split"
-python src/constraint_layer.py --data data --train_on calib \
+python src/constraint_layer.py --data data/synthetic_control --train_on calib \
     --epochs 8 --graph $G --save_adapter results/adapter_synth.npz \
     --out results/constraint_synth.json
 
 # --------------------------------------- 2. ablations, new default UQ signal
-banner "2/8 synthetic ablation, 6 variants, uq_signal=decision_entropy"
+banner "2/8 synthetic CONTROL ablation, 6 variants, uq_signal=decision_entropy"
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
+    --data data/synthetic_control \
     --variants $V6 --batch_size 8
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split heldout \
+    --data data/synthetic_control \
     --variants $V6 --batch_size 8
 
 banner "3/8 MedCalc ablation on real notes, 6 variants"
@@ -69,9 +71,11 @@ python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
     --variants cl nsai_uq_cl --adapter results/adapter_renal.npz \
     --adapter_layer 30 --batch_size 4
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \
+    --data data/synthetic_control \
     --variants cl nsai_uq_cl --adapter results/adapter_synth.npz \
     --adapter_layer 30 --batch_size 8
 python src/run_eval.py --backend hf --model_id $M --seeds 0 --split heldout \
+    --data data/synthetic_control \
     --variants cl nsai_uq_cl --adapter results/adapter_synth.npz \
     --adapter_layer 30 --batch_size 8
 
