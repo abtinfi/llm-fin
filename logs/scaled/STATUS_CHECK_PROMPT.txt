@@ -1,0 +1,14 @@
+وضعیت خط لولهٔ scaled pipeline پروژهٔ /home/asosoft/abtin/paper/csai را بررسی کن. این درخواست ممکن است بعد از یک ری‌استارت سرور باشد، پس اول مطمئن شو خودِ pipeline در حال اجراست یا نه، و اگر نیست خودت آن را دوباره راه‌انداز.
+
+مراحل دقیق:
+
+1. بررسی کن آیا session تی‌ماکس زنده است: `tmux has-session -t csai_scaled`
+2. بررسی کن آیا `/home/asosoft/abtin/paper/csai/.pipeline_state/SCALED_PIPELINE_COMPLETE` وجود دارد (یعنی کل pipeline قبلاً با موفقیت تمام شده).
+3. اگر (۱) منفی بود و (۲) هم وجود نداشت: یعنی pipeline باید در حال اجرا می‌بود ولی نیست — کران‌جاب @reboot را چک کن (`crontab -l | grep scaled_launch`) و اگر مشکلی نبود، خودت دستی اجرا کن: `bash scaled_launch.sh` (این idempotent است، به‌خاطر checkpoint marker ها از همان‌جا که مانده resume می‌شود، نه از صفر).
+4. لیست کن چه marker هایی (`*.done`) زیر `.pipeline_state/scaled_a/`, `.pipeline_state/scaled_b/`, `.pipeline_state/scaled_join/` وجود دارند تا معلوم شود کدام مراحل تمام شده‌اند.
+5. آخرین ۲۰ خط هر کدام از `logs/scaled/lane_a.log`, `logs/scaled/lane_b.log`, `logs/scaled/join.log` را ببین (با فیلتر خطوط `+` و `Loading weights` که شلوغ‌اند).
+6. دنبال خطای واقعی بگرد: `grep -niE "traceback|CUDA out of memory|FATAL|\[FAILED\]" logs/scaled/*.log`
+7. وضعیت GPU را با `nvidia-smi --query-gpu=index,memory.used,utilization.gpu --format=csv` ببین تا معلوم شود آیا واقعاً کاری در حال اجراست.
+8. اگر خطای واقعی (Traceback یا CUDA OOM) پیدا کردی که مرحله را متوقف کرده، آن را برای من روشن توضیح بده — چه مرحله‌ای، چرا، و آیا marker آن نوشته نشده (یعنی در اجرای بعدی خودش دوباره تلاش می‌کند).
+
+در پایان یک خلاصهٔ کوتاه و شفاف فارسی بده: چند درصد مراحل هر لاین تمام شده، الان دقیقاً چه چیزی در حال اجراست، تخمین زمان باقی‌مانده (اگر قابل تخمین است)، و آیا نیاز به دخالت من هست یا نه.
