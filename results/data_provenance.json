@@ -1,0 +1,220 @@
+{
+  "credentialed_sources_required_to_run": [],
+  "sources": {
+    "data": {
+      "what": "Synthetic counterfactual benchmark, 10 hand-written rule families",
+      "origin": "Generated in-repo by src/build_dataset.py + src/hardening.py",
+      "credentialed": false,
+      "note": "No external dependency at all; rebuildable offline.",
+      "present": true
+    },
+    "data/medcalc": {
+      "what": "Real clinical notes benchmark, 600 items",
+      "origin": "Derived by src/build_medcalc.py from MedCalc-Bench PMC case-report notes (data/external/*.csv)",
+      "credentialed": false,
+      "note": "Real published clinical prose. This is the pipeline's 'real notes' arm and needs no data-use agreement.",
+      "present": true
+    },
+    "data/external": {
+      "what": "MedCalc-Bench source CSVs (train + test)",
+      "origin": "Third-party, redistributed by the MedCalc-Bench authors",
+      "credentialed": false,
+      "note": "Open download, no credentialing. Git-ignored (54 MB) as it is not ours to vendor; re-fetch from the MedCalc-Bench release.",
+      "present": true
+    },
+    "data/umls": {
+      "what": "Causal knowledge graph + cached UMLS responses",
+      "origin": "UMLS UTS REST API (release 2026AA), cached to disk",
+      "credentialed": "rebuild-only",
+      "note": "RUNNING needs nothing: causal_graph.json and the response cache are committed and umls_grounding.py makes zero HTTP calls with a warm cache. REBUILDING (`umls_grounding.py build --refresh`) needs a free UTS licence key in ../.env.",
+      "present": true
+    }
+  },
+  "required": [
+    {
+      "path": "data/counterfactual_calib.jsonl",
+      "present": true,
+      "used_by": "run_eval.py UQ calibration"
+    },
+    {
+      "path": "data/counterfactual_test.jsonl",
+      "present": true,
+      "used_by": "run_eval.py --split test"
+    },
+    {
+      "path": "data/counterfactual_heldout.jsonl",
+      "present": true,
+      "used_by": "run_eval.py --split heldout"
+    },
+    {
+      "path": "data/rag_corpus.jsonl",
+      "present": true,
+      "used_by": "components.TfidfRetriever (RAG variants)"
+    },
+    {
+      "path": "data/medcalc/counterfactual_calib.jsonl",
+      "present": true,
+      "used_by": "medcalc UQ calibration"
+    },
+    {
+      "path": "data/medcalc/counterfactual_test.jsonl",
+      "present": true,
+      "used_by": "medcalc --split test"
+    },
+    {
+      "path": "data/medcalc/counterfactual_heldout.jsonl",
+      "present": true,
+      "used_by": "medcalc --split heldout"
+    },
+    {
+      "path": "data/medcalc/counterfactual_heldout_train.jsonl",
+      "present": true,
+      "used_by": "constraint_layer.py --train_on heldout_first"
+    },
+    {
+      "path": "data/medcalc/counterfactual_train.jsonl",
+      "present": true,
+      "used_by": "constraint_layer.py --train_on train"
+    },
+    {
+      "path": "data/medcalc/rag_corpus.jsonl",
+      "present": true,
+      "used_by": "medcalc RAG variants"
+    },
+    {
+      "path": "data/umls/causal_graph.json",
+      "present": true,
+      "used_by": "constraint_layer.py L_ontology"
+    }
+  ],
+  "optional": [
+    {
+      "path": "data/medcalc/counterfactual_heldout_all.jsonl",
+      "present": true,
+      "used_by": "patching.py / steering.py 85-pair QT continuity split"
+    },
+    {
+      "path": "data/external/medcalc_train_data_11_18_final.csv",
+      "present": true,
+      "used_by": "build_medcalc.py rebuild only"
+    },
+    {
+      "path": "data/external/medcalc_test_data_11_18_final.csv",
+      "present": true,
+      "used_by": "build_medcalc.py rebuild only"
+    },
+    {
+      "path": "results/acts/medcalc_heldout.npz",
+      "present": true,
+      "used_by": "steering.py activation cache"
+    }
+  ],
+  "splits": {
+    "data/counterfactual_calib.jsonl": {
+      "n_items": 32,
+      "n_pairs": 16,
+      "complete_pairs": 16,
+      "incomplete_pairs": 0,
+      "families": [
+        "acei_pregnancy",
+        "aspirin_reye",
+        "betablocker_asthma",
+        "metformin_renal",
+        "nsaid_renal",
+        "spironolactone_hyperkalaemia",
+        "statin_macrolide",
+        "warfarin_inr"
+      ],
+      "issues": []
+    },
+    "data/counterfactual_test.jsonl": {
+      "n_items": 128,
+      "n_pairs": 64,
+      "complete_pairs": 64,
+      "incomplete_pairs": 0,
+      "families": [
+        "acei_pregnancy",
+        "aspirin_reye",
+        "betablocker_asthma",
+        "metformin_renal",
+        "nsaid_renal",
+        "spironolactone_hyperkalaemia",
+        "statin_macrolide",
+        "warfarin_inr"
+      ],
+      "issues": []
+    },
+    "data/counterfactual_heldout.jsonl": {
+      "n_items": 32,
+      "n_pairs": 16,
+      "complete_pairs": 16,
+      "incomplete_pairs": 0,
+      "families": [
+        "nitrofurantoin_renal",
+        "ondansetron_qt"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_calib.jsonl": {
+      "n_items": 50,
+      "n_pairs": 25,
+      "complete_pairs": 25,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_renal"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_test.jsonl": {
+      "n_items": 180,
+      "n_pairs": 90,
+      "complete_pairs": 90,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_renal"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_heldout.jsonl": {
+      "n_items": 60,
+      "n_pairs": 30,
+      "complete_pairs": 30,
+      "incomplete_pairs": 0,
+      "families": [
+        "ondansetron_qt"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_heldout_train.jsonl": {
+      "n_items": 110,
+      "n_pairs": 55,
+      "complete_pairs": 55,
+      "incomplete_pairs": 0,
+      "families": [
+        "ondansetron_qt"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_train.jsonl": {
+      "n_items": 280,
+      "n_pairs": 140,
+      "complete_pairs": 140,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_renal"
+      ],
+      "issues": []
+    },
+    "data/medcalc/counterfactual_heldout_all.jsonl": {
+      "n_items": 170,
+      "n_pairs": 85,
+      "complete_pairs": 85,
+      "incomplete_pairs": 0,
+      "families": [
+        "ondansetron_qt"
+      ],
+      "issues": []
+    }
+  },
+  "leakage": []
+}

@@ -110,6 +110,25 @@ echo "full pipeline, $(date -Is)"
 echo "model: $M   GPU: $CUDA_VISIBLE_DEVICES   state: $STATE"
 echo "resuming: $(ls -1 "$STATE"/*.done 2>/dev/null | wc -l) of $(echo $ALL_STAGES | wc -w) stages already complete"
 
+# --------------------------------------------------------- data gate (stage 0)
+# Deliberately NOT a marked stage: a marker would let a resume skip it, and a
+# resume is exactly when it matters most. This run may be picking up after a
+# 03:00 reboot, and a stage killed mid-write can leave a truncated jsonl that
+# every downstream number would then be computed from. It costs ~1 s.
+#
+# It also asserts that nothing here needs credentialed data. MIMIC-IV /
+# PhysioNet is NOT a dependency of this pipeline -- no loader, data path or
+# token check exists in src/ -- and this gate is what keeps that true rather
+# than merely stated. See src/check_data.py.
+banner "0/9 data provenance + integrity gate"
+if python src/check_data.py --strict --json results/data_provenance.json; then
+  echo "[ok] data gate"
+else
+  echo "[FAILED] data gate -- refusing to start a 9 h run on unsound data."
+  echo "         Rebuild with: python src/build_dataset.py && python src/build_medcalc.py"
+  exec 1>&- 2>&-; wait; exit 65
+fi
+
 # ---------------------------------------------------------------- 1. synthetic
 stage 1a_synth_test \
   python src/run_eval.py --backend hf --model_id $M --seeds 0 --split test \

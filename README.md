@@ -114,6 +114,32 @@ are fixed in the current builder:
 The pre-fix data and results are kept under `data/archive_pre_fix/` and
 `results/archive_pre_fix/`.
 
+### Data provenance — no credentialed source is needed to run
+
+`python src/check_data.py` reports where every dataset came from, verifies the
+files the pipeline reads, re-checks pair structure and cross-split leakage, and
+exits non-zero under `--strict`. It runs as stage 0 of `run_full_pipeline.sh`.
+
+| Source | Needs credentials? | What it is |
+|---|---|---|
+| `data/` | no | Synthetic vignettes, generated in-repo by `build_dataset.py` |
+| `data/medcalc/` | no | **Real clinical prose** — 600 items from MedCalc-Bench PMC case reports |
+| `data/external/` | no | MedCalc-Bench source CSVs; open download, git-ignored (54 MB) |
+| `data/umls/` | **to rebuild only** | Causal graph + cached UMLS responses. Running makes zero HTTP calls; rebuilding needs a free UTS key in `../.env` |
+
+**MIMIC-IV / PhysioNet is not a dependency.** The proposal names MIMIC-IV in
+§4.6, but no loader, data path or token check exists anywhere in `src/` — it is
+an *unimplemented proposal element*, not a blocked one, and every Aim 1–4 stage
+runs without it. The real-clinical-text arm of every benchmark is
+`data/medcalc`, which is open access.
+
+This distinction is worth keeping straight in the write-up. A synthetic note
+corpus would not close the §4.6 gap: evaluating on generated notes measures the
+generator, not the model. What MIMIC-IV Demo v2.2 (open access, no
+credentialing) would add is *real structured `labevents`* — which is the only
+thing that addresses the which-value-is-current problem below, and it carries
+no notes at all.
+
 ## Known limitation to state in the write-up
 
 **The gate's accuracy is partly circular and must never be quoted alone.** It

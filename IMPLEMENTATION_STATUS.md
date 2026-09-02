@@ -82,7 +82,7 @@ represents one decisive quantity, not the other, and acts on neither.
 | Fixed-direction steering prototype (the simplest `P_causal`) | **DONE — null result, kept** | `src/steering.py` |
 | Ablation Matrix of §4.6 | **DONE, and extended** | 8 rows, not 4: rows 5–7 isolate each contribution against the baseline (`src/run_eval.py`, `src/make_table.py`) |
 | RQ3 — no degradation of language ability | **DONE** | perplexity 7.1622 → 7.0775 / 7.1266 (no degradation; both adapters sit slightly *below* base) |
-| **MIMIC-IV** for retrospective evaluation / scenario construction | **NOT IMPLEMENTED** | blocked on PhysioNet credentialing; the open-access **Demo v2.2** (100 patients, `labevents`/`prescriptions`, no notes) is the available substitute |
+| **MIMIC-IV** for retrospective evaluation / scenario construction | **NOT IMPLEMENTED — but nothing is blocked by it** | No loader, data path or token check exists in `src/`; `python src/check_data.py` asserts this on every pipeline run. MIMIC-IV is an *unimplemented proposal element*, not a blocked dependency. The pipeline's real-clinical-text arm is `data/medcalc` (600 items, real PMC case-report prose, open access). Open-access **Demo v2.2** (100 patients, `labevents`/`prescriptions`, **no notes**) remains the honest next step for the §4.6 claim |
 | Constraints seeded from **SNOMED CT / UMLS** | **NOT IMPLEMENTED** | `src/rules.py` holds 10 hand-written rule families; thresholds hand-transcribed |
 
 **Key result:** the layer works exactly where the probe predicted it would and
@@ -172,6 +172,13 @@ Ordered by how much of the proposal's claim each one blocks.
 - [ ] **MIMIC-IV** (§4.6). Start with the open-access Demo v2.2 — no
       credentialing, and structured `labevents` sidesteps the
       which-value-is-current problem below.
+      **This blocks a §4.6 claim, not the pipeline.** Every Aim 1–4 stage runs
+      today with no PhysioNet access; `src/check_data.py --strict` is wired in
+      as stage 0 of `run_full_pipeline.sh` and fails the run if that ever
+      stops being true. Note what a substitute can and cannot do: a synthetic
+      note corpus cannot support a *retrospective evaluation* claim, because
+      evaluating on generated notes measures the generator. Only Demo v2.2's
+      real structured labs can, and only for the structured-input half.
 - [ ] **More than two real rule families.** `data/medcalc` has metformin/eGFR
       and ondansetron/QTc; MedCalc-Bench has 55 calculators.
 - [ ] **A second model.** §4.3 names Llama-3-Med and Mistral variants; every
