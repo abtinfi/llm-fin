@@ -1,0 +1,457 @@
+# HANDOFF — Causal Neuro-Symbolic AI for Clinical Foundation Models
+
+Read this file completely before touching any code. It contains the project
+goal, what already works, what is known to be broken, four bugs that were found
+and fixed (do not reintroduce them), and the prioritised task list.
+
+---
+
+## 1. What this project is
+
+Implementation of a research proposal titled *"Causal Discovery and Control of
+Internal Representations in Clinical Foundation Models"* (36-month project). The
+proposal has four Aims:
+
+| Aim | Name | Content | Status |
+|---|---|---|---|
+| 1 | Discovery | Sparse Autoencoders on intermediate activations, Feature Interpretability Score | **not started** |
+| 2 | Mechanism | Causal necessity (knock-out) / sufficiency (injection), Average Causal Effect | **not started** |
+| 3 | Control | Constraint-Aware Layer modifying hidden states: `h'_l = h_l + α·P_causal(h_l)` | **proxy only** — current symbolic gate is post-hoc, not a residual-stream adapter |
+| 4 | Validation | Counterfactual benchmarks, uncertainty-aware deferral | **partially done, one component failed** |
+
+The proposal's central metric is **Causal Consistency** = correct counterfactual
+responses / total counterfactuals.
+
+### Supervisor's explicit requirements (from voice messages)
+
+1. Compare against a baseline — a simple model without the contributions.
+2. Add contributions **one at a time** and show each one's effect.
+3. Start with the smallest dataset and simplest tasks, move step by step.
+4. Deliver a **table**: baseline model vs. our model.
+
+This maps directly onto the ablation matrix in §4.6 of the proposal:
+Base LLM → +RAG → +Symbolic Gate (NS-AI) → +UQ Engine (NS-AI+UQ).
+
+---
+
+## 2. Environment
+
+```
+Server        : asosoft@rnd (SSH 172.22.226.18), accessed via VS Code Remote
+GPU           : 2× RTX 4090 23GB — ONLY GPU 0 is available to us
+                always: export CUDA_VISIBLE_DEVICES=0
+Conda         : /home/asosoft/abtin/miniconda3, environment is `base`
+                (the VS Code kernel is displayed as "abtin_env" but no such
+                conda env exists — do not try to activate it)
+Python        : 3.14.6
+torch         : 2.11.0+cu128, CUDA available
+Project root  : ~/abtin/paper/csai
+Long runs     : tmux session `abtin2`  (Ctrl+b then d to detach)
+Disk          : ~397 GB free
+```
+
+Model is `BioMistral/BioMistral-7B`, loaded in **bfloat16**, weights ≈14.5 GB,
+leaves ≈8 GB headroom. `batch_size 4` is safe; 8 probably fits.
+
+Intermittent `ReadTimeout` warnings appear during model load. They are
+non-fatal — the run proceeds. To eliminate them once weights are cached:
+`export HF_HUB_OFFLINE=1`.
+
+### CREDENTIALS — ACTION REQUIRED
+
+Both of these were pasted into a public chat and must be rotated before
+anything else:
+
+- openFDA API key (from api.data.gov)
+- HuggingFace token
+
+Never hardcode either. Use `OPENFDA_API_KEY` and `HF_TOKEN` environment
+variables.
+
+---
+
+## 3. File map
+
+```
+csai/
+  src/
+    rules.py            10 clinical contraindication rule families.
+                        8 training + 2 held out (nitrofurantoin_renal,
+                        ondansetron_qt). THRESHOLDS ARE HAND-WRITTEN AND
+                        INTERIM — see Open Problem 4.
+    hardening.py        Makes vignettes harder: near-threshold values, indirect
+                        presentation of the causal factor in half the templates,
+                        3 distractor labs per case.
+    build_dataset.py    Emits counterfactual pairs to data/*.jsonl.
+                        --no_hardening reproduces the original easy version.
+    model.py            HFModel (bf16, greedy) + MockLM. Token-level predictive
+                        entropy per Eq. (2) of the proposal. parse_answer().
+    components.py       TfidfRetriever (RAG) + SymbolicGate (regex fact
+                        extraction + constraint check).
+    metrics.py          score(), calibrate_threshold(), bootstrap_ci(),
+                        mcnemar(), holm_bonferroni().
+    run_eval.py         Runs all 4 variants. Entry point.
+    make_table.py       Produces results/table.md.
+    uq_diagnostic.py    AUROC + bootstrap CI + risk-coverage curve for four
+                        uncertainty signals (--signal / --all / --paired).
+    retrieval_diagnostic.py
+                        RAG hit@k, per-family breakdown, accuracy split by
+                        whether the gold guideline was retrieved. See P3.
+    fetch_openfda.py    Pulls real FDA label text → curation worksheet.
+                        NEVER TESTED against the live API.
+    perplexity.py       WikiText-2 perplexity, RQ3 control. Not yet run.
+  data/                 Generated datasets + RAG corpus
+  results/              preds_*.jsonl, summary_*.json, table.md
+  drugs.txt             10 generic drug names for fetch_openfda.py
+```
+
+### Dataset shape
+
+- `counterfactual_calib.jsonl` — 32 records / 16 pairs — UQ threshold calibration only
+- `counterfactual_test.jsonl` — 128 records / 64 pairs / 8 families — the reported number
+- `counterfactual_heldout.jsonl` — 32 records / 16 pairs / 2 unseen families
+- `rag_corpus.jsonl` — 22 passages (10 guidelines + 12 distractors)
+
+Each counterfactual pair flips exactly one causal variable across a threshold,
+so the correct label is guaranteed to flip. Ground truth is generated
+programmatically. **No LLM-as-judge, no human annotation.**
+
+---
+
+## 4. Current results (BioMistral-7B, test split, seed 0)
+
+| Variant | Accuracy (strict) | Sel. Acc. | Causal Consistency | Violation Rate | Coverage |
+|---|---|---|---|---|---|
+| (1) Base LLM | 0.594 | 0.594 | 0.234 | 0.109 | 1.000 |
+| (2) + RAG | 0.633 | 0.633 | 0.281 | 0.109 | 1.000 |
+| (3) + Symbolic Gate | 0.820 | 0.820 | 0.641 | 0.094 | 1.000 |
+| (4) + UQ Engine | 0.562 | 1.000 | 0.562 | 0.000 | 0.562 |
+
+Paired McNemar (item-level correctness, Holm-corrected):
+
+| Comparison | B01 | B10 | p (Holm) |
+|---|---|---|---|
+| base→rag | 12 | 7 | 0.359 — **not significant** |
+| rag→nsai | 24 | 0 | 2.4e-07 — **strongly significant** |
+| nsai→nsai_uq | 0 | 33 | 7.0e-10 — significant but **in the wrong direction** |
+
+Held-out split (16 pairs only, wide CIs) reproduces the same pattern:
+`rag→nsai` p=0.008 with 8 improvements and 0 regressions.
+
+### Other measured facts
+
+- Base model arm-wise accuracy: **UNSAFE arm 0.891, SAFE arm 0.297**. The model
+  calls almost everything unsafe. This is why pair-level Causal Consistency is
+  the right metric and plain accuracy is misleading.
+- Symbolic gate fires on 72/128 (56%) of test cases, declines on the rest,
+  and makes **0 incorrect** decisions when it fires.
+- Entropy AUROC as a wrongness detector on gate-declined cases: **0.374**.
+  Below 0.5 — the signal is *inverted*.
+
+---
+
+## 5. Bugs already found and fixed — DO NOT REINTRODUCE
+
+1. **`endswith("safe")` matches `"unsafe"` too.** Used twice in throwaway
+   analysis snippets and produced n=128 where n=64 was correct, hiding the true
+   SAFE-arm accuracy. Always split arms on the `arm` field, not the id suffix.
+
+2. **Age contradiction in implicit vignettes.** For the `aspirin_reye` family
+   the causal factor *is* age, but the implicit template wrote a generic patient
+   age (71) in the opening sentence while the true causal value was 14. Four
+   records had ground truth contradicting their own text. Fixed in
+   `hardening.py::render` via `stated_age`. Any new family whose causal variable
+   also appears in the vignette boilerplate needs the same treatment.
+
+3. **UQ threshold calibrated on the wrong population.** `tau` was fitted over
+   all calibration items including those the symbolic gate decides
+   deterministically. Their entropies carry no information about neural
+   uncertainty, which corrupted `tau` and collapsed the abstention set onto
+   exactly the non-gated cases (abstained=56, of which gate_fired=0;
+   answered=72, of which gate_fired=72 — perfect degeneracy). Fixed: `tau` is
+   now calibrated only on gate-declined calibration items.
+
+4. **Selective vs. strict accuracy conflated.** Row 4 originally showed
+   accuracy 1.000 at coverage 0.562 because accuracy was computed over answered
+   items only. Both are now reported; `accuracy` (strict, abstention counts as
+   wrong) is the row-comparable one.
+
+Also note: the benchmark was **hardened after seeing the first result** because
+the gate saturated at 1.000. This is legitimate (it made the task harder, not
+easier) but must be disclosed in any write-up. `--no_hardening` reproduces the
+original.
+
+---
+
+## 6. Open problems, in priority order
+
+### P1 — UQ signal is inverted — **INVESTIGATED, see `results/p1_uq_signals.md`**
+
+Status: acceptance criterion met, negative result confirmed for the `nsai_uq`
+row, plus one positive finding. Remaining: self-consistency (k=5) not attempted.
+
+- Entropy has no signal on any population (AUROC 0.374–0.469). Replicated.
+- `logit_margin` (logit(SAFE) − logit(UNSAFE) at the decision token) is
+  **reliably better than entropy** — paired bootstrap on identical items gives
+  +0.199 (p=0.004) on base, +0.119 (p=0.004) on rag, +0.170 (p=0.016) on the
+  gate-declined pool. Same sign on held-out but underpowered.
+- But on the population the UQ engine actually governs (gate-declined, n=56) the
+  best signal is `answer_logprob` at 0.560 with 95% CI [0.406, 0.714]. The CI
+  covers chance, so it does **not** clear the bar. No thresholds were tuned.
+- Structural point worth writing up: the gate decides 72/128 with 0 errors,
+  removing exactly the determinable cases. A signal at AUROC 0.668 on the full
+  population falls to 0.544 on the residual. The gate and the UQ engine compete
+  for the same easy cases.
+
+Tooling added: `uq_diagnostic.py --signal {entropy,max_entropy,logit_margin,
+answer_logprob}`, `--all` for a comparison table with bootstrap CIs, and
+`--paired A B` for a paired bootstrap of the AUROC difference.
+
+**Tokenizer trap — do not reintroduce.** On this SPM tokenizer `" SAFE"` and
+`" UNSAFE"` both start with the bare-space token 28705, so `encode(x)[0]` puts
+one id in both answer classes and makes the margin meaningless. `model.py::
+_answer_token_ids` skips leading whitespace-only pieces and drops any still
+ambiguous id. One eval run was discarded to this bug.
+
+### P1 (original description)
+
+Token-level predictive entropy does not detect wrong answers on this task.
+AUROC 0.374; mean entropy is *higher* on correct answers (1.07) than wrong ones
+(0.91); the risk-coverage curve rises rather than falls as coverage drops
+(error 0.411 at coverage 1.00 → 0.545 at coverage 0.20).
+
+This falsifies the assumption in §4.7 of the proposal. That is a legitimate
+finding and should be reported as such. But before settling for it, try
+alternative uncertainty signals that are tied to the *decision* rather than the
+whole vocabulary distribution:
+
+- **Logit margin** between the `SAFE` and `UNSAFE` answer tokens at the first
+  generated position. Most promising — it measures uncertainty about the actual
+  binary decision.
+- Sequence log-probability of the answer token only, not averaged over the
+  justification.
+- Self-consistency: sample k=5 completions at temperature>0 and use answer
+  disagreement rate. Note this breaks the deterministic-decoding guarantee, so
+  it needs its own variant row rather than replacing the existing one.
+
+**Acceptance criterion:** report AUROC of the new signal via
+`src/uq_diagnostic.py` (extend it to accept a `--signal` argument). If AUROC
+stays below 0.55, stop and report the negative result — do not tune thresholds
+until a number looks good.
+
+### P2 — Seeds do not produce any variance
+
+`do_sample=False` makes decoding deterministic, so all 5 seeds return identical
+numbers and the table shows `± 0.000`. Reporting "5 seeds" with zero std implies
+variability was measured when it was not.
+
+Fix: make the seed affect **dataset construction** (patient ages, which value
+from the near-threshold list is chosen, which distractor labs are injected)
+rather than decoding. Then std means "sensitivity to benchmark instantiation",
+which is a real and defensible quantity.
+
+Implementation sketch: `build_dataset.py --seed N` already exists but the seed
+is not actually used in value selection (`idx % len(values)` is deterministic).
+Route the `rng` through value selection and age/sex assignment, emit
+`data/seed{N}/`, and let `run_eval.py` take `--data data/seed{N}`.
+
+**Acceptance criterion:** non-zero std in the table; the qualitative ordering of
+rows 1–3 must survive.
+
+### P3 — RAG does not work — **RESOLVED, see `results/p3_retrieval.md`**
+
+Acceptance criterion met. Stated hit rate: **hit@3 = 0.648 on test, 1.000 on
+held-out** (`src/retrieval_diagnostic.py`, new).
+
+Retrieval is not the bottleneck. On held-out the correct guideline was retrieved
+for every case at ceiling precision, and Causal Consistency was still 0.000. On
+test, accuracy is 0.614 when the gold doc is retrieved vs 0.667 when it is not —
+no relationship in either direction. The model ignores retrieved context.
+**"RAG is insufficient on this benchmark" is now defensible.** A dense retriever
+would raise the test hit rate but held-out shows it would not change the
+conclusion.
+
+### P3 (original description)
+
+`base→rag` is not significant on the test split (p=0.36) and Causal Consistency
+*drops* to 0.000 on held-out. Two independent observations of the same pattern.
+
+Before reporting "RAG does not help", verify it is not a plumbing failure:
+
+- What is the retrieval hit rate? For each case, does the correct guideline for
+  that rule family appear in the top-k? `results/preds_*_rag_*.jsonl` stores the
+  retrieved doc ids in the `retrieved` field — measure precision@3 against
+  `guideline::{family}`.
+- If retrieval hit rate is high but accuracy does not move, the model is
+  ignoring the context, which is a genuine and reportable finding.
+- If retrieval hit rate is low, TF-IDF is the problem — try a dense retriever
+  before drawing conclusions.
+
+**Acceptance criterion:** a stated retrieval hit rate. The claim "RAG is
+insufficient" is only defensible once retrieval is shown to have worked.
+
+### P4 — Clinical rules are hand-written
+
+`src/rules.py` thresholds were written from memory, not sourced. The proposal
+requires the SCM to be "initialized from biomedical ontologies (e.g., UMLS) and
+refined using expert-curated causal relations" (§4.2).
+
+`src/fetch_openfda.py` exists and is designed to pull real FDA label text
+(`https://api.fda.gov/drug/label.json`, fields `contraindications`,
+`boxed_warning`, `warnings_and_precautions`, `drug_interactions`, plus
+`openfda.rxcui` / `openfda.spl_set_id`) and emit a curation worksheet where a
+human transcribes the numeric threshold from the quoted source sentence.
+
+**Status update — it HAS now been run against the live API.** Outputs:
+`data/openfda_raw.jsonl` (10 labels) and `data/curation_worksheet.csv`
+(145 rows, 8 drugs: lisinopril, metformin, nitrofurantoin, ondansetron,
+propranolol, simvastatin, spironolactone, warfarin). 82 of the 145 rows contain
+a number. Two of the ten drugs in `drugs.txt` returned nothing and are missing
+from the worksheet.
+
+The open question is now answered in part: FDA labels **do** sometimes state
+explicit numeric thresholds — e.g. metformin, "Severe renal impairment: (eGFR
+below 30 mL/min/1.73 m2)". Whether that holds for all ten families is unknown
+until a human reads the 82 numeric rows.
+
+**Blocking gap: `constraint_value` is empty on all 145 rows.** Nobody has
+curated the worksheet yet, so `src/rules.py` is still running on the
+hand-written thresholds. Until a human transcribes the numbers, P4 is not
+closed. Do not invent numbers to fill the gap, and do not regex numbers out of
+prose that may refer to something else.
+
+Deeper sources also pending: UMLS/UTS account (free, registration takes days),
+MIMIC-IV via PhysioNet (requires CITI training, takes weeks — start the
+application now if it has not been started). Note the **MIMIC-IV Clinical
+Database Demo v2.2 is open access with no credentialing** (ODbL, 100 patients,
+all 26 tables including `labevents` and `prescriptions`, but no free-text
+notes) — usable immediately while the full application is pending.
+
+### P5 — The symbolic gate is not Aim 3
+
+The current gate is a **post-hoc** check on the model's output. Aim 3 specifies
+a Constraint-Aware Layer that modifies intermediate hidden states before
+decoding: `h'_l = h_l + α·P_causal(h_l)`, with joint objective
+`L = L_LM + λ1·L_ontology + λ2·L_causal + λ3·L_uncertainty`.
+
+The current implementation is a reasonable stand-in for a week-one ablation but
+must not be presented as the proposal's intervention layer. When the real layer
+is built, `src/perplexity.py` gives the pre-intervention baseline needed to show
+general language capability is not degraded (RQ3).
+
+### P6 — Aims 1 and 2 not started
+
+SAE training on middle-layer activations, Feature Interpretability Score
+(`FIS = α·S_semantic + β·S_causal + γ·S_human`), sparse concept probing
+classifiers, then knock-out/injection experiments with Average Causal Effect and
+negative controls. Fallback to JumpReLU or TopK SAE if standard SAEs yield <30%
+expert-validated features. This is the bulk of the 36-month project and needs
+more GPU than a single 4090 for the SAE stage.
+
+---
+
+## 7. Non-negotiables
+
+These were deliberate decisions. Do not "optimise" them away.
+
+- **No quantisation.** bf16 only. 4-bit perturbs the logit distribution and
+  invalidates any entropy- or logit-based uncertainty measure.
+- **No LLM-as-judge and no human annotation** for ground truth. Labels are
+  generated programmatically from the rule definitions.
+- **Causal Consistency is pair-level** — both arms of a counterfactual pair must
+  be correct. A model that always answers UNSAFE would score 50% per-arm but 0%
+  at pair level, which is the entire point.
+- **Paired statistics.** Identical prompts, decoding, item order and seeds
+  across variants so McNemar is valid. Holm correction across the three
+  consecutive comparisons.
+- **The gate never guesses.** If it cannot extract the relevant fact it defers
+  to the neural answer. Do not add fallback heuristics that make it fire more
+  often — its 0-error record depends on this.
+- **Never report MockLM numbers.** `MockLM` exists only to test plumbing without
+  a GPU. `make_table.py` prints a warning banner when the backend is mock.
+- **Do not tune thresholds until a number looks good.** If a signal has no
+  discriminative power, report that.
+
+---
+
+## 8. Commands
+
+```bash
+cd ~/abtin/paper/csai
+export CUDA_VISIBLE_DEVICES=0
+
+# build datasets
+python src/build_dataset.py --out data
+
+# plumbing check, no GPU
+python src/run_eval.py --backend mock --seeds 0 1
+
+# real run
+python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B \
+    --seeds 0 --batch_size 4 2>&1 | tee run.log
+python src/make_table.py --split test
+
+# held-out generalisation
+python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B \
+    --seeds 0 --batch_size 4 --split heldout
+python src/make_table.py --split heldout
+
+# UQ signal diagnostic (P1)
+python src/uq_diagnostic.py --preds results/preds_test_nsai_seed0.jsonl
+python src/uq_diagnostic.py --preds results/preds_test_base_seed0.jsonl --all
+python src/uq_diagnostic.py --preds results/preds_test_base_seed0.jsonl \
+    --paired logit_margin entropy
+
+# retrieval diagnostic (P3)
+python src/retrieval_diagnostic.py --preds results/preds_test_rag_seed0.jsonl \
+    --compare results/preds_test_base_seed0.jsonl
+
+# real FDA labels (never yet run successfully)
+export OPENFDA_API_KEY='...'
+python src/fetch_openfda.py --drugs drugs.txt --out data/curation_worksheet.csv
+
+# RQ3 control, not yet run
+python src/perplexity.py --model_id BioMistral/BioMistral-7B
+```
+
+`make_table.py` overwrites `results/table.md` each time. Copy finished tables to
+`results/table_{split}_final.md`.
+
+**Both table files are currently corrupt.** `results/table.md` and
+`results/table_heldout_final.md` contain run-log output (weight-loading progress
+bars and per-seed lines), not markdown tables — a `tee` redirect went to the
+wrong path. The numbers themselves are safe in `results/summary_test.json` and
+`results/summary_heldout.json`; re-run `make_table.py` to regenerate.
+
+See `BACKLOG.md` for the done/remaining breakdown against the proposal's four
+Aims and the supervisor's four requirements.
+
+---
+
+## 9. Honest framing for the write-up
+
+What the results actually support:
+
+- The symbolic constraint layer produces a large, statistically strong
+  improvement in Causal Consistency (0.281 → 0.641, p≈2e-7, 24 improvements and
+  0 regressions), reproduced on held-out rule families.
+- The base model has high accuracy on unsafe cases (0.891) and poor accuracy on
+  safe ones (0.297) — it is over-cautious rather than clinically discriminating.
+  Plain accuracy hides this; pair-level Causal Consistency exposes it. This is
+  the strongest argument for the proposal's metric choice.
+- RAG showed no significant benefit on this benchmark (pending the retrieval
+  diagnostic in P3).
+- Entropy-based uncertainty quantification failed, with an inverted signal. This
+  falsifies an assumption in §4.7.
+
+What must be disclosed:
+
+- Thresholds are hand-written and not yet sourced from FDA/UMLS.
+- The symbolic gate is post-hoc, not the proposal's residual-stream layer.
+- The benchmark was hardened after an initial saturated result.
+- Held-out has only 16 pairs; its confidence intervals are very wide.
+- Aims 1 and 2 have not been started.
+
+Reporting the negative results is not a weakness. A proposal that lists
+falsifiable predictions and then reports one as falsified is doing what it said
+it would do.

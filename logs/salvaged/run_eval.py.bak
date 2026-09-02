@@ -1,0 +1,163 @@
+"""
+Runs the ablation matrix from section 4.6 of the proposal:
+
+  (1) Base LLM
+  (2) + RAG
+  (3) + Symbolic Gate            (NS-AI)
+  (4) + UQ Engine                (NS-AI + UQ)
+
+Each variant adds exactly one component. Prompts, decoding, seeds and item
+order are identical across variants so that paired tests (McNemar) are valid.
+
+Usage
+  python src/run_eval.py --backend mock --seeds 0 1 2 3 4
+  python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 1 2
+"""
+
+import argparse
+import json
+from pathlib import Path
+
+from components import SymbolicGate, TfidfRetriever, build_rag_prompt
+from metrics import calibrate_threshold, score
+from model import load_model, parse_answer
+from rules import RULE_FAMILIES
+
+VARIANTS = ["base", "rag", "nsai", "nsai_uq"]
+
+
+def read_jsonl(p):
+    return [json.loads(l) for l in Path(p).open()]
+
+
+def generate_for_split(lm, records, use_rag, retriever, batch_size):
+    prompts, meta = [], []
+    for r in records:
+        if use_rag:
+            p, docs = build_rag_prompt(r["vignette"], retriever)
+            meta.append([d["id"] for d in docs])
+        else:
+            p, = (r["prompt"],)
+            meta.append([])
+        prompts.append(p)
+    gens = lm.generate(prompts, batch_size=batch_size)
+    return gens, meta
+
+
+def apply_gate(gate, records, preds):
+    """
+    Symbolic gate overrides the neural decision when a hard constraint fires.
+    Gate abstains (returns the neural answer unchanged) when it cannot extract
+    the relevant fact -- it never guesses.
+    """
+    out, fired = [], []
+    for r, p in zip(records, preds):
+        g = gate(r["vignette"])
+        if g.fired:
+            out.append("UNSAFE" if g.violated else "SAFE")
+            fired.append(True)
+        else:
+            out.append(p)
+            fired.append(False)
+    return out, fired
+
+
+def run_variant(variant, lm, calib, test, retriever, gate, alpha, batch_size):
+    use_rag = variant in ("rag", "nsai", "nsai_uq")
+    use_gate = variant in ("nsai", "nsai_uq")
+    use_uq = variant == "nsai_uq"
+
+    tau = None
+    if use_uq:
+        cg, _ = generate_for_split(lm, calib, use_rag, retriever, batch_size)
+        cpred = [parse_answer(g.text) for g in cg]
+        cfired = [False] * len(cpred)
+        if use_gate:
+            cpred, cfired = apply_gate(gate, calib, cpred)
+        # Only calibrate on the population the UQ engine actually governs.
+        # Gate-decided items are deterministic, so their entropies carry no
+        # information about neural uncertainty; including them corrupts tau and
+        # collapses the abstention set onto exactly the non-gated cases.
+        pool = [(g.entropy, p == r["label"])
+                for g, p, r, f in zip(cg, cpred, calib, cfired) if not f]
+        if not pool:
+            pool = [(g.entropy, p == r["label"])
+                    for g, p, r in zip(cg, cpred, calib)]
+        tau = calibrate_threshold([e for e, _ in pool],
+                                  [c for _, c in pool], alpha=alpha)
+
+    gens, rag_meta = generate_for_split(lm, test, use_rag, retriever, batch_size)
+    preds = [parse_answer(g.text) for g in gens]
+    gate_fired = [False] * len(preds)
+    if use_gate:
+        preds, gate_fired = apply_gate(gate, test, preds)
+
+    records = []
+    for r, g, p, gf, rm in zip(test, gens, preds, gate_fired, rag_meta):
+        # gate-decided items are deterministic -> never abstained on entropy
+        abstained = bool(use_uq and not gf and (p is None or g.entropy > tau))
+        if p is None and not use_uq:
+            abstained = False
+        records.append({
+            "id": r["id"], "pair_id": r["pair_id"], "family": r["family"],
+            "label": r["label"], "pred": p, "abstained": abstained,
+            "entropy": g.entropy, "max_entropy": g.max_entropy,
+            "logit_margin": g.logit_margin, "answer_logprob": g.answer_logprob,
+            "gate_fired": gf, "retrieved": rm, "raw": g.text,
+        })
+    return records, tau
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--backend", choices=["mock", "hf"], default="mock")
+    ap.add_argument("--model_id", default="BioMistral/BioMistral-7B")
+    ap.add_argument("--device", default="cuda")
+    ap.add_argument("--dtype", default="bfloat16")
+    ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
+    ap.add_argument("--alpha", type=float, default=0.10)
+    ap.add_argument("--topk", type=int, default=3)
+    ap.add_argument("--batch_size", type=int, default=8)
+    ap.add_argument("--data", default="data")
+    ap.add_argument("--out", default="results")
+    ap.add_argument("--split", default="test",
+                    choices=["test", "heldout"])
+    args = ap.parse_args()
+
+    data = Path(args.data)
+    calib = read_jsonl(data / "counterfactual_calib.jsonl")
+    test = read_jsonl(data / f"counterfactual_{args.split}.jsonl")
+    retriever = TfidfRetriever(str(data / "rag_corpus.jsonl"), k=args.topk)
+    gate = SymbolicGate(RULE_FAMILIES)
+
+    outdir = Path(args.out)
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    summary = []
+    for seed in args.seeds:
+        lm = load_model({"backend": args.backend, "model_id": args.model_id,
+                         "device": args.device, "dtype": args.dtype, "seed": seed})
+        for variant in VARIANTS:
+            recs, tau = run_variant(variant, lm, calib, test, retriever, gate,
+                                    args.alpha, args.batch_size)
+            s = score(recs)
+            s.update({"variant": variant, "seed": seed, "tau": tau,
+                      "split": args.split, "backend": args.backend,
+                      "model": args.model_id if args.backend == "hf" else "mock"})
+            summary.append(s)
+
+            with (outdir / f"preds_{args.split}_{variant}_seed{seed}.jsonl").open("w") as f:
+                for r in recs:
+                    f.write(json.dumps(r) + "\n")
+            print(f"[seed {seed}] {variant:9s} "
+                  f"acc={s['accuracy']:.3f} cc={s['causal_consistency']:.3f} "
+                  f"viol={s['violation_rate']:.3f} cov={s['coverage']:.3f}")
+        del lm
+
+    with (outdir / f"summary_{args.split}.json").open("w") as f:
+        json.dump(summary, f, indent=2)
+    print(f"\nwrote {outdir}/summary_{args.split}.json")
+
+
+if __name__ == "__main__":
+    main()

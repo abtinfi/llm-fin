@@ -1,0 +1,10 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.68it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 226.54it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 253.43it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 255.56it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 263.78it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 265.31it/s]Loading weights:  65%|██████▍   | 188/291 [00:00<00:00, 272.86it/s]Loading weights:  74%|███████▍  | 216/291 [00:00<00:00, 272.93it/s]Loading weights:  84%|████████▍ | 244/291 [00:00<00:00, 273.14it/s]Loading weights:  93%|█████████▎| 272/291 [00:01<00:00, 273.75it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 264.49it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.500 cc=0.125 viol=0.125 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] nsai      acc=0.750 cc=0.500 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.562 cc=0.500 viol=0.000 cov=0.562
+
+wrote results/summary_heldout_margin.json

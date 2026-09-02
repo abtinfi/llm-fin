@@ -1,0 +1,165 @@
+### renal patching finished, GPU free ###
+14410 MiB
+2 MiB
+=== PATCHING medcalc_heldout ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+85 complete pairs in data/medcalc/counterfactual_heldout.jsonl
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 257, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 253, in main
+    analyse(ap.parse_args())
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 150, in analyse
+    P = Patcher(args.model_id)
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 58, in __init__
+    self.model = AutoModelForCausalLM.from_pretrained(
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4428, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 5090, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 13.49 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.58 GiB is free. Process 216254 has 14.07 GiB memory in use. Including non-PyTorch memory, this process has 384.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+=== PATCHING synthetic_test ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+64 complete pairs in data/counterfactual_test.jsonl
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 257, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 253, in main
+    analyse(ap.parse_args())
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 150, in analyse
+    P = Patcher(args.model_id)
+  File "/home/asosoft/abtin/paper/csai/src/patching.py", line 58, in __init__
+    self.model = AutoModelForCausalLM.from_pretrained(
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4428, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 5090, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 13.49 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.58 GiB is free. Process 216254 has 14.07 GiB memory in use. Including non-PyTorch memory, this process has 384.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+=== PROBE medcalc_test ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+430 items, 215 pairs, labels={np.str_('SAFE'): np.int64(215), np.str_('UNSAFE'): np.int64(215)}
+collecting activations ...
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 246, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 198, in main
+    fin, mea = collect_activations(recs, args.model_id, args.batch_size)
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 79, in collect_activations
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4428, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 5090, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 13.49 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.58 GiB is free. Process 216254 has 14.07 GiB memory in use. Including non-PyTorch memory, this process has 384.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+=== PROBE medcalc_heldout ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+170 items, 85 pairs, labels={np.str_('SAFE'): np.int64(85), np.str_('UNSAFE'): np.int64(85)}
+collecting activations ...
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 246, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 198, in main
+    fin, mea = collect_activations(recs, args.model_id, args.batch_size)
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 79, in collect_activations
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4428, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 5090, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 13.49 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.58 GiB is free. Process 216254 has 14.07 GiB memory in use. Including non-PyTorch memory, this process has 384.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+=== PROBE synthetic_test ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+128 items, 64 pairs, labels={np.str_('SAFE'): np.int64(64), np.str_('UNSAFE'): np.int64(64)}
+collecting activations ...
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 246, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 198, in main
+    fin, mea = collect_activations(recs, args.model_id, args.batch_size)
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/probe.py", line 79, in collect_activations
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 4428, in _load_pretrained_model
+    caching_allocator_warmup(model, expanded_device_map, load_config.hf_quantizer)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/transformers/modeling_utils.py", line 5090, in caching_allocator_warmup
+    _ = torch.empty(int(byte_count // 2), dtype=torch.float16, device=device, requires_grad=False)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 13.49 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.58 GiB is free. Process 216254 has 14.07 GiB memory in use. Including non-PyTorch memory, this process has 384.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+### EVERYTHING DONE ###

@@ -1,0 +1,22 @@
+{"id": "guideline::metformin_renal", "text": "Metformin is contraindicated when the estimated glomerular filtration rate falls below 30 mL/min/1.73m2 because of the risk of lactic acidosis. Initiation is not recommended between 30 and 45 mL/min/1.73m2. Metformin may be used without dose restriction above 60 mL/min/1.73m2."}
+{"id": "guideline::nsaid_renal", "text": "Non-steroidal anti-inflammatory drugs should be avoided in patients with an estimated glomerular filtration rate below 30 mL/min/1.73m2, as they reduce afferent arteriolar perfusion and may precipitate acute kidney injury."}
+{"id": "guideline::acei_pregnancy", "text": "Angiotensin converting enzyme inhibitors are contraindicated in pregnancy. Exposure during the second and third trimesters causes fetal renal failure, oligohydramnios and skull hypoplasia. Labetalol, nifedipine or methyldopa are preferred antihypertensives in pregnant patients."}
+{"id": "guideline::betablocker_asthma", "text": "Non-selective beta blockers such as propranolol are contraindicated in severe asthma because beta-2 receptor blockade causes bronchoconstriction and may precipitate life threatening bronchospasm. Cardioselective agents are preferred when a beta blocker is unavoidable."}
+{"id": "guideline::aspirin_reye", "text": "Aspirin should not be given to patients under 16 years of age with a febrile viral illness because of the association with Reye syndrome, an acute encephalopathy with hepatic steatosis. Paracetamol is the antipyretic of choice in this age group."}
+{"id": "guideline::spironolactone_hyperkalaemia", "text": "Potassium sparing diuretics such as spironolactone are contraindicated when serum potassium exceeds 5.5 mmol/L. Initiation in the presence of hyperkalaemia risks fatal arrhythmia. Potassium should be corrected and rechecked before the drug is started."}
+{"id": "guideline::warfarin_inr", "text": "A supratherapeutic INR above 4.0 in a patient on warfarin requires the dose to be withheld rather than continued, because of a steeply increased risk of major haemorrhage. The target range for atrial fibrillation is 2.0 to 3.0."}
+{"id": "guideline::statin_macrolide", "text": "Simvastatin is contraindicated with concurrent clarithromycin. Clarithromycin is a potent CYP3A4 inhibitor and markedly increases simvastatin exposure, raising the risk of rhabdomyolysis. Azithromycin or a non-interacting antibiotic should be used instead."}
+{"id": "guideline::nitrofurantoin_renal", "text": "Nitrofurantoin is ineffective and potentially toxic when the estimated glomerular filtration rate is below 30 mL/min/1.73m2, since inadequate urinary concentrations are achieved while systemic accumulation causes peripheral neuropathy and pulmonary toxicity."}
+{"id": "guideline::ondansetron_qt", "text": "Ondansetron prolongs the QT interval and is contraindicated when the corrected QT interval exceeds 500 ms, because of the risk of torsades de pointes. An alternative antiemetic without QT effect should be selected."}
+{"id": "distractor::0", "text": "Vitamin D supplementation is recommended for adults with limited sun exposure."}
+{"id": "distractor::1", "text": "Blood pressure should be measured in both arms at the first assessment."}
+{"id": "distractor::2", "text": "Annual influenza vaccination is recommended for adults over 65 years."}
+{"id": "distractor::3", "text": "Smoking cessation support should be offered at every clinical contact."}
+{"id": "distractor::4", "text": "Statins are first line for secondary prevention of cardiovascular disease."}
+{"id": "distractor::5", "text": "Metformin is the preferred first line oral agent in type 2 diabetes."}
+{"id": "distractor::6", "text": "Paracetamol is first line for mild to moderate musculoskeletal pain."}
+{"id": "distractor::7", "text": "Atrial fibrillation stroke risk should be assessed with the CHA2DS2-VASc score."}
+{"id": "distractor::8", "text": "Serum creatinine should be rechecked one to two weeks after starting an ACE inhibitor."}
+{"id": "distractor::9", "text": "Inhaler technique should be reviewed before escalating asthma therapy."}
+{"id": "distractor::10", "text": "Bone protection should be considered for patients on long term oral corticosteroids."}
+{"id": "distractor::11", "text": "Proton pump inhibitors should be reviewed for deprescribing after eight weeks."}

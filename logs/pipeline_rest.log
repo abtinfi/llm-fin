@@ -1,0 +1,153 @@
++ echo '### 2/5 SHUFFLED-LABEL CONTROL on QT ###'
+### 2/5 SHUFFLED-LABEL CONTROL on QT ###
++ python src/constraint_layer.py --train_on heldout_first --layer 30 --rank 32 --epochs 8 --shuffled_control --out results/constraint_qt_shuffled.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.14it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.75it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.35it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 253.20it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.72it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 258.40it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 266.97it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 266.79it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 266.77it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 266.42it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.87it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== training on 110 items (SHUFFLED-LABEL CONTROL) ===
+  epoch 1/8  L_causal=0.7591  L_KL=0.0912  train-decision-acc=0.500
+  epoch 2/8  L_causal=0.7066  L_KL=0.0236  train-decision-acc=0.464
+  epoch 3/8  L_causal=0.7108  L_KL=0.0299  train-decision-acc=0.536
+  epoch 4/8  L_causal=0.7078  L_KL=0.0217  train-decision-acc=0.482
+  epoch 5/8  L_causal=0.7114  L_KL=0.0342  train-decision-acc=0.545
+  epoch 6/8  L_causal=0.6941  L_KL=0.0199  train-decision-acc=0.500
+  epoch 7/8  L_causal=0.7038  L_KL=0.0457  train-decision-acc=0.518
+  epoch 8/8  L_causal=0.7015  L_KL=0.0172  train-decision-acc=0.500
+
+=== with constraint layer ===
+  test    acc=0.500  CC=0.000   (base 0.033, delta -0.033)
+  heldout acc=0.483  CC=0.067   (base 0.000, delta +0.067)
+
+wrote results/constraint_qt_shuffled.json
++ echo '### 3/5 training on RENAL (probe predicts NO benefit) ###'
+### 3/5 training on RENAL (probe predicts NO benefit) ###
++ python src/constraint_layer.py --train_on train --layer 30 --rank 32 --epochs 8 --out results/constraint_renal.json --save_adapter results/adapter_renal.npz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 280 items / 140 pairs
+test  180 items / 90 pairs (same family as train)
+held  170 items / 85 pairs (['ondansetron_qt'])
+train families: ['metformin_renal']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 178.74it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.46it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 249.64it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 252.26it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 253.58it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 257.09it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 259.68it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 261.82it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 263.02it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 263.93it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.23it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== training on 280 items (real labels) ===
+  epoch 1/8  L_causal=0.8405  L_KL=0.0074  train-decision-acc=0.518
+  epoch 2/8  L_causal=1.1156  L_KL=0.0019  train-decision-acc=0.489
+  epoch 3/8  L_causal=1.1139  L_KL=0.0038  train-decision-acc=0.489
+  epoch 4/8  L_causal=0.8760  L_KL=0.0016  train-decision-acc=0.511
+  epoch 5/8  L_causal=0.8888  L_KL=0.0018  train-decision-acc=0.514
+  epoch 6/8  L_causal=0.7706  L_KL=0.0016  train-decision-acc=0.511
+  epoch 7/8  L_causal=0.7677  L_KL=0.0021  train-decision-acc=0.493
+  epoch 8/8  L_causal=0.7717  L_KL=0.0021  train-decision-acc=0.500
+
+=== with constraint layer ===
+  test    acc=0.506  CC=0.011   (base 0.033, delta -0.022)
+  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
+
+wrote results/constraint_renal.json
+wrote results/adapter_renal.npz
++ echo '### 4/5 RQ3 perplexity, BASE ###'
+### 4/5 RQ3 perplexity, BASE ###
++ python src/perplexity.py --n 200
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/perplexity.py", line 98, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/perplexity.py", line 45, in main
+    ds = load_dataset(args.dataset, args.config, split="test")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1696, in load_dataset
+    builder_instance = load_dataset_builder(
+        path=path,
+    ...<10 lines>...
+        **config_kwargs,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1323, in load_dataset_builder
+    dataset_module = dataset_module_factory(
+        path,
+    ...<5 lines>...
+        cache_dir=cache_dir,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1215, in dataset_module_factory
+    raise e1 from None
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1190, in dataset_module_factory
+    ).get_module()
+      ~~~~~~~~~~^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 608, in get_module
+    standalone_yaml_path = cached_path(
+        hf_dataset_url(self.name, config.REPOYAML_FILENAME, revision=self.commit_hash),
+        download_config=download_config,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/utils/file_utils.py", line 180, in cached_path
+    ).resolve_path(url_or_filename)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/hf_file_system.py", line 305, in resolve_path
+    parsed = parse_hf_uri(f"{constants.HF_PROTOCOL}{path}")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/utils/_hf_uris.py", line 319, in parse_hf_uri
+    return _parse_repo_body(location, type_, raw=raw)
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/utils/_hf_uris.py", line 617, in _parse_repo_body
+    raise HfUriError(uri=raw, msg=f"Repository id must be 'namespace/name', got '{repo_id}'.")
+huggingface_hub.errors.HfUriError: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.
++ echo '### 5/5 RQ3 perplexity, WITH the QT constraint layer ###'
+### 5/5 RQ3 perplexity, WITH the QT constraint layer ###
++ python src/perplexity.py --n 200 --adapter results/adapter_qt.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/perplexity.py", line 98, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/perplexity.py", line 45, in main
+    ds = load_dataset(args.dataset, args.config, split="test")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1696, in load_dataset
+    builder_instance = load_dataset_builder(
+        path=path,
+    ...<10 lines>...
+        **config_kwargs,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1323, in load_dataset_builder
+    dataset_module = dataset_module_factory(
+        path,
+    ...<5 lines>...
+        cache_dir=cache_dir,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1215, in dataset_module_factory
+    raise e1 from None
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 1190, in dataset_module_factory
+    ).get_module()
+      ~~~~~~~~~~^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/load.py", line 608, in get_module
+    standalone_yaml_path = cached_path(
+        hf_dataset_url(self.name, config.REPOYAML_FILENAME, revision=self.commit_hash),
+        download_config=download_config,
+    )
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/datasets/utils/file_utils.py", line 180, in cached_path
+    ).resolve_path(url_or_filename)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/hf_file_system.py", line 305, in resolve_path
+    parsed = parse_hf_uri(f"{constants.HF_PROTOCOL}{path}")
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/utils/_hf_uris.py", line 319, in parse_hf_uri
+    return _parse_repo_body(location, type_, raw=raw)
+  File "/home/asosoft/abtin/miniconda3/lib/python3.14/site-packages/huggingface_hub/utils/_hf_uris.py", line 617, in _parse_repo_body
+    raise HfUriError(uri=raw, msg=f"Repository id must be 'namespace/name', got '{repo_id}'.")
+huggingface_hub.errors.HfUriError: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.
++ echo '### PIPELINE COMPLETE ###'
+### PIPELINE COMPLETE ###

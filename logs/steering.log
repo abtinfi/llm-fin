@@ -1,0 +1,19 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+170 items, 85 pairs, layer 5, pooling final
+mean residual norm at this layer: 1.4 (alpha is in the same units)
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:02, 125.74it/s]Loading weights:  14%|█▍        | 41/291 [00:00<00:01, 213.97it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 221.37it/s]Loading weights:  32%|███▏      | 92/291 [00:00<00:00, 231.70it/s]Loading weights:  42%|████▏     | 121/291 [00:00<00:00, 228.55it/s]Loading weights:  49%|████▉     | 144/291 [00:00<00:00, 228.36it/s]Loading weights:  58%|█████▊    | 168/291 [00:00<00:00, 227.93it/s]Loading weights:  66%|██████▋   | 193/291 [00:00<00:00, 228.15it/s]Loading weights:  77%|███████▋  | 225/291 [00:00<00:00, 253.90it/s]Loading weights:  86%|████████▋ | 251/291 [00:01<00:00, 250.65it/s]Loading weights:  96%|█████████▌| 278/291 [00:01<00:00, 255.97it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 240.91it/s]
+  alpha=   0.0  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha=   2.0  probe: acc=0.500 CC=0.000   random: acc=0.494 CC=0.000   margin=+0.000
+  alpha=   5.0  probe: acc=0.494 CC=0.000   random: acc=0.482 CC=0.012   margin=-0.012
+  alpha=  10.0  probe: acc=0.541 CC=0.082   random: acc=0.494 CC=0.000   margin=+0.082
+  alpha=  20.0  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha=  40.0  probe: acc=0.500 CC=0.000   random: acc=0.494 CC=0.000   margin=+0.000
+  alpha=  80.0  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 160.0  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+
+best alpha 10.0: CC 0.082 vs random 0.000  (+0.082)
+unsteered model on this split: CC 0.000
+  -> steering along the probe direction is no better than a random vector.
+     The representation is not consumable by the downstream computation as-is.
+wrote results/steering_qt.json

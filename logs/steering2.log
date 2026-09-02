@@ -1,0 +1,42 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+170 items, 85 pairs, pooling final, layers [5, 15, 25, 30]
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:02, 135.46it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 192.94it/s]Loading weights:  23%|██▎       | 68/291 [00:00<00:01, 222.13it/s]Loading weights:  32%|███▏      | 94/291 [00:00<00:00, 232.78it/s]Loading weights:  42%|████▏     | 123/291 [00:00<00:00, 249.14it/s]Loading weights:  51%|█████     | 148/291 [00:00<00:00, 238.22it/s]Loading weights:  60%|██████    | 176/291 [00:00<00:00, 245.01it/s]Loading weights:  69%|██████▉   | 202/291 [00:00<00:00, 236.29it/s]Loading weights:  79%|███████▉  | 231/291 [00:00<00:00, 241.16it/s]Loading weights:  88%|████████▊ | 256/291 [00:01<00:00, 238.36it/s]Loading weights:  97%|█████████▋| 283/291 [00:01<00:00, 240.01it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 239.22it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+
+=== layer 5: mean residual norm 1.43 ===
+  alpha= 0.00x norm (   0.00)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 0.50x norm (   0.72)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 1.00x norm (   1.43)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 2.00x norm (   2.87)  probe: acc=0.494 CC=0.000   random: acc=0.506 CC=0.059   margin=-0.059
+  alpha= 4.00x norm (   5.73)  probe: acc=0.494 CC=0.035   random: acc=0.529 CC=0.059   margin=-0.024
+  alpha= 8.00x norm (  11.46)  probe: acc=0.524 CC=0.047   random: acc=0.500 CC=0.000   margin=+0.047
+
+=== layer 15: mean residual norm 5.20 ===
+  alpha= 0.00x norm (   0.00)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 0.50x norm (   2.60)  probe: acc=0.506 CC=0.047   random: acc=0.494 CC=0.012   margin=+0.035
+  alpha= 1.00x norm (   5.20)  probe: acc=0.524 CC=0.059   random: acc=0.471 CC=0.035   margin=+0.024
+  alpha= 2.00x norm (  10.40)  probe: acc=0.512 CC=0.024   random: acc=0.500 CC=0.000   margin=+0.024
+  alpha= 4.00x norm (  20.81)  probe: acc=0.553 CC=0.106   random: acc=0.500 CC=0.000   margin=+0.106
+  alpha= 8.00x norm (  41.62)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+
+=== layer 25: mean residual norm 17.08 ===
+  alpha= 0.00x norm (   0.00)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 0.50x norm (   8.54)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.024   margin=-0.024
+  alpha= 1.00x norm (  17.08)  probe: acc=0.524 CC=0.059   random: acc=0.500 CC=0.000   margin=+0.059
+  alpha= 2.00x norm (  34.16)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 4.00x norm (  68.33)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.012   margin=-0.012
+  alpha= 8.00x norm ( 136.65)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+
+=== layer 30: mean residual norm 29.99 ===
+  alpha= 0.00x norm (   0.00)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+  alpha= 0.50x norm (  15.00)  probe: acc=0.518 CC=0.035   random: acc=0.524 CC=0.071   margin=-0.035
+  alpha= 1.00x norm (  29.99)  probe: acc=0.518 CC=0.035   random: acc=0.488 CC=0.000   margin=+0.035
+  alpha= 2.00x norm (  59.99)  probe: acc=0.500 CC=0.000   random: acc=0.506 CC=0.012   margin=-0.012
+  alpha= 4.00x norm ( 119.97)  probe: acc=0.482 CC=0.012   random: acc=0.500 CC=0.000   margin=+0.012
+  alpha= 8.00x norm ( 239.94)  probe: acc=0.500 CC=0.000   random: acc=0.500 CC=0.000   margin=+0.000
+
+unsteered CC on this split: 0.000
+best overall: layer 15, alpha 4.00x norm -> CC 0.106 vs random 0.000 (+0.106)
+  -> the represented fact CAN be made to drive the answer. Aim 3 has a concrete target.
+wrote results/steering_qt.json

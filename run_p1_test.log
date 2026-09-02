@@ -1,0 +1,8 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   7%|▋         | 21/291 [00:00<00:01, 185.29it/s]Loading weights:  14%|█▍        | 41/291 [00:00<00:01, 190.26it/s]Loading weights:  21%|██        | 61/291 [00:00<00:01, 184.62it/s]Loading weights:  27%|██▋       | 80/291 [00:00<00:01, 180.86it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:01, 184.12it/s]Loading weights:  45%|████▌     | 131/291 [00:00<00:00, 209.06it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 222.25it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 222.33it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 241.14it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 249.47it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 251.78it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 227.40it/s]
+[seed 0] base      acc=0.594 cc=0.234 viol=0.109 cov=1.000
+[seed 0] rag       acc=0.633 cc=0.281 viol=0.109 cov=1.000
+[seed 0] nsai      acc=0.820 cc=0.641 viol=0.094 cov=1.000
+[seed 0] nsai_uq   acc=0.562 cc=0.562 viol=0.000 cov=0.578
+
+wrote results/summary_test.json

@@ -1,0 +1,1153 @@
++ export CUDA_VISIBLE_DEVICES=0
++ CUDA_VISIBLE_DEVICES=0
++ export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ cd /home/asosoft/abtin/paper/csai
++ M=BioMistral/BioMistral-7B
++ V6='base rag sym uq nsai nsai_uq'
++ banner '1/9 synthetic ablation, rebuilt data, 6 variants'
++ echo
+
++ echo '########## 1/9 synthetic ablation, rebuilt data, 6 variants ##########'
+########## 1/9 synthetic ablation, rebuilt data, 6 variants ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split test --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.29it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 222.81it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 240.36it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 256.41it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 258.82it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 260.53it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 261.72it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 262.50it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 262.81it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 262.74it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 259.24it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.602 cc=0.219 viol=0.125 cov=1.000
+[seed 0] rag       acc=0.648 cc=0.312 viol=0.141 cov=1.000
+[seed 0] sym       acc=0.805 cc=0.609 viol=0.062 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=0.836 cc=0.672 viol=0.125 cov=1.000
+[seed 0] nsai_uq   acc=0.562 cc=0.562 viol=0.000 cov=0.570
+
+wrote results/summary_test.json
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split heldout --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 178.73it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.47it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.88it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 251.98it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 251.89it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 256.38it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 259.19it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 266.92it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.61it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 258.14it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 257.23it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.594 cc=0.250 viol=0.062 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=0.750 cc=0.562 viol=0.062 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=0.750 cc=0.500 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.500 cc=0.500 viol=0.000 cov=0.500
+
+wrote results/summary_heldout.json
++ banner '2/9 MedCalc ablation on real notes, 6 variants'
++ echo
+
++ echo '########## 2/9 MedCalc ablation on real notes, 6 variants ##########'
+########## 2/9 MedCalc ablation on real notes, 6 variants ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 175.29it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 233.77it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 238.38it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 248.36it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.63it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 264.60it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 264.66it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 264.55it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 264.36it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 264.56it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.14it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.506 cc=0.011 viol=0.322 cov=1.000
+[seed 0] rag       acc=0.494 cc=0.000 viol=0.022 cov=1.000
+[seed 0] sym       acc=0.994 cc=0.989 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.028 cc=0.000 viol=0.000 cov=0.050
+[seed 0] nsai      acc=0.994 cc=0.989 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.994 cc=0.989 viol=0.000 cov=1.000
+
+wrote results/summary_test_medcalc.json
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 207.65it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 217.90it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 246.64it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 245.70it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 253.31it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 255.61it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 255.32it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 261.04it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 261.58it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 262.30it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 258.20it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/summary_heldout_medcalc.json
++ banner '3/9 constraint layer: QT, full objective'
++ echo
+
++ echo '########## 3/9 constraint layer: QT, full objective ##########'
+########## 3/9 constraint layer: QT, full objective ##########
++ echo
+
++ python src/constraint_layer.py --data data/medcalc --train_on heldout_first --epochs 8 --save_adapter results/adapter_qt.npz --out results/constraint_qt.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.52it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 222.82it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 240.56it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 249.15it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.02it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 263.77it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 264.03it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 264.40it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 264.23it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 264.24it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 259.53it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:366: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+
+=== training on 110 items (real labels) ===
+  epoch 1/8  L_causal=0.6925  L_KL=0.0263  L_ont=0.9852  L_unc=0.0064  train-decision-acc=0.509
+  epoch 2/8  L_causal=0.5209  L_KL=0.3566  L_ont=0.3091  L_unc=0.1603  train-decision-acc=0.809
+  epoch 3/8  L_causal=0.4050  L_KL=0.4315  L_ont=0.1342  L_unc=0.0266  train-decision-acc=0.855
+  epoch 4/8  L_causal=0.4023  L_KL=0.4826  L_ont=0.0455  L_unc=0.0432  train-decision-acc=0.818
+  epoch 5/8  L_causal=0.3098  L_KL=0.7107  L_ont=0.1091  L_unc=0.1098  train-decision-acc=0.882
+  epoch 6/8  L_causal=0.2653  L_KL=0.6265  L_ont=0.0534  L_unc=0.0161  train-decision-acc=0.909
+  epoch 7/8  L_causal=0.2660  L_KL=0.8222  L_ont=0.0137  L_unc=0.0996  train-decision-acc=0.900
+  epoch 8/8  L_causal=0.2445  L_KL=0.7903  L_ont=0.0148  L_unc=0.0644  train-decision-acc=0.909
+
+=== with constraint layer ===
+  test    acc=0.489  CC=0.044   (base 0.033, delta +0.011)
+  heldout acc=0.883  CC=0.767   (base 0.000, delta +0.767)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.4569 nats
+  heldout 0.6700 -> 0.5533 nats
+
+wrote results/constraint_qt.json
+wrote results/adapter_qt.npz
++ banner '3b shuffled-label control'
++ echo
+
++ echo '########## 3b shuffled-label control ##########'
+########## 3b shuffled-label control ##########
++ echo
+
++ python src/constraint_layer.py --data data/medcalc --train_on heldout_first --epochs 8 --shuffled_control --out results/constraint_qt_shuffled.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.17it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.00it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 241.05it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 249.56it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.50it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 257.70it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 259.98it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 261.56it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 262.36it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 263.10it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 259.98it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:366: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+  [control] lam_ont forced to 0: the ontology term is defined on the true arm ordering and would leak the real labels back into a run whose whole purpose is to have none.
+
+=== training on 110 items (SHUFFLED-LABEL CONTROL) ===
+  epoch 1/8  L_causal=0.6937  L_KL=0.0259  L_unc=0.0053  train-decision-acc=0.464
+  epoch 2/8  L_causal=0.6908  L_KL=0.0256  L_unc=0.0038  train-decision-acc=0.518
+  epoch 3/8  L_causal=0.6885  L_KL=0.0268  L_unc=0.0035  train-decision-acc=0.527
+  epoch 4/8  L_causal=0.6889  L_KL=0.0283  L_unc=0.0029  train-decision-acc=0.545
+  epoch 5/8  L_causal=0.6890  L_KL=0.0300  L_unc=0.0032  train-decision-acc=0.536
+  epoch 6/8  L_causal=0.6884  L_KL=0.0284  L_unc=0.0028  train-decision-acc=0.527
+  epoch 7/8  L_causal=0.6862  L_KL=0.0306  L_unc=0.0034  train-decision-acc=0.536
+  epoch 8/8  L_causal=0.6887  L_KL=0.0315  L_unc=0.0042  train-decision-acc=0.564
+
+=== with constraint layer ===
+  test    acc=0.500  CC=0.000   (base 0.033, delta -0.033)
+  heldout acc=0.583  CC=0.200   (base 0.000, delta +0.200)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.6236 nats
+  heldout 0.6700 -> 0.6897 nats
+
+wrote results/constraint_qt_shuffled.json
++ banner '3c renal (the probe predicts this should NOT work)'
++ echo
+
++ echo '########## 3c renal (the probe predicts this should NOT work) ##########'
+########## 3c renal (the probe predicts this should NOT work) ##########
++ echo
+
++ python src/constraint_layer.py --data data/medcalc --train_on train --epochs 8 --save_adapter results/adapter_renal.npz --out results/constraint_renal.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 280 items / 140 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['metformin_renal']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.11it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 223.86it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 241.62it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 250.32it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 255.05it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 257.56it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 266.34it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 265.83it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.56it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 265.35it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.13it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:366: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+
+=== training on 280 items (real labels) ===
+  epoch 1/8  L_causal=0.7993  L_KL=0.0044  L_ont=1.0754  L_unc=0.0622  train-decision-acc=0.500
+  epoch 2/8  L_causal=0.7740  L_KL=0.0095  L_ont=1.0071  L_unc=0.0597  train-decision-acc=0.521
+  epoch 3/8  L_causal=0.7730  L_KL=0.0136  L_ont=0.9234  L_unc=0.0574  train-decision-acc=0.543
+  epoch 4/8  L_causal=0.8148  L_KL=0.0145  L_ont=0.9297  L_unc=0.0403  train-decision-acc=0.529
+  epoch 5/8  L_causal=0.7320  L_KL=0.0168  L_ont=0.9277  L_unc=0.0283  train-decision-acc=0.532
+  epoch 6/8  L_causal=0.6918  L_KL=0.0384  L_ont=0.9222  L_unc=0.0361  train-decision-acc=0.539
+  epoch 7/8  L_causal=0.6843  L_KL=0.0361  L_ont=0.9234  L_unc=0.0337  train-decision-acc=0.550
+  epoch 8/8  L_causal=0.6900  L_KL=0.0346  L_ont=0.9224  L_unc=0.0333  train-decision-acc=0.532
+
+=== with constraint layer ===
+  test    acc=0.517  CC=0.033   (base 0.033, delta +0.000)
+  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.6426 nats
+  heldout 0.6700 -> 0.6906 nats
+
+wrote results/constraint_renal.json
+wrote results/adapter_renal.npz
++ banner '3d synthetic benchmark, trained on the calibration split'
++ echo
+
++ echo '########## 3d synthetic benchmark, trained on the calibration split ##########'
+########## 3d synthetic benchmark, trained on the calibration split ##########
++ echo
+
++ python src/constraint_layer.py --data data --train_on calib --epochs 8 --save_adapter results/adapter_synth.npz --out results/constraint_synth.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 32 items / 16 pairs
+test  128 items / 64 pairs (same family as train)
+held  32 items / 16 pairs (['nitrofurantoin_renal', 'ondansetron_qt'])
+train families: ['acei_pregnancy', 'aspirin_reye', 'betablocker_asthma', 'metformin_renal', 'nsaid_renal', 'spironolactone_hyperkalaemia', 'statin_macrolide', 'warfarin_inr']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.19it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.55it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 241.79it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 250.28it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 262.17it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 262.82it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 263.52it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 263.86it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 263.98it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 264.16it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.37it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:366: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.602  CC=0.234
+  heldout acc=0.656  CC=0.312
+
+=== decision entropy on REDACTED notes, base model ===
+  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6457 nats over 8 items
+
+=== training on 32 items (real labels) ===
+  epoch 1/8  L_causal=0.6549  L_KL=0.0067  L_ont=0.7813  L_unc=0.0000  train-decision-acc=0.656
+  epoch 2/8  L_causal=0.6109  L_KL=0.0184  L_ont=0.5547  L_unc=0.0000  train-decision-acc=0.688
+  epoch 3/8  L_causal=0.6658  L_KL=0.1133  L_ont=0.4414  L_unc=0.0000  train-decision-acc=0.562
+  epoch 4/8  L_causal=0.6152  L_KL=0.0475  L_ont=0.4805  L_unc=0.0000  train-decision-acc=0.688
+  epoch 5/8  L_causal=0.5679  L_KL=0.0615  L_ont=0.3633  L_unc=0.0000  train-decision-acc=0.750
+  epoch 6/8  L_causal=0.5835  L_KL=0.1096  L_ont=0.3516  L_unc=0.0000  train-decision-acc=0.750
+  epoch 7/8  L_causal=0.5481  L_KL=0.0884  L_ont=0.3399  L_unc=0.0000  train-decision-acc=0.688
+  epoch 8/8  L_causal=0.5596  L_KL=0.1112  L_ont=0.3242  L_unc=0.0000  train-decision-acc=0.750
+
+=== with constraint layer ===
+  test    acc=0.703  CC=0.422   (base 0.234, delta +0.188)
+  heldout acc=0.719  CC=0.438   (base 0.312, delta +0.125)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    nan -> nan nats
+  heldout 0.6457 -> 0.6602 nats
+
+wrote results/constraint_synth.json
+wrote results/adapter_synth.npz
++ banner '4/9 constraint-layer rows, identical readout to every other row'
++ echo
+
++ echo '########## 4/9 constraint-layer rows, identical readout to every other row ##########'
+########## 4/9 constraint-layer rows, identical readout to every other row ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/adapter_qt.npz --adapter_layer 30 --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.73it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.07it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 241.62it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 249.02it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 253.98it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 256.56it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 255.97it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 257.74it/s]Loading weights:  83%|████████▎ | 242/291 [00:00<00:00, 273.61it/s]Loading weights:  93%|█████████▎| 270/291 [00:01<00:00, 271.25it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 258.82it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.883 cc=0.767 viol=0.133 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/summary_heldout_medcalc.json
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/adapter_renal.npz --adapter_layer 30 --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.87it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 220.38it/s]Loading weights:  27%|██▋       | 80/291 [00:00<00:00, 253.63it/s]Loading weights:  37%|███▋      | 107/291 [00:00<00:00, 256.62it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 259.67it/s]Loading weights:  56%|█████▌    | 163/291 [00:00<00:00, 267.44it/s]Loading weights:  65%|██████▌   | 190/291 [00:00<00:00, 266.97it/s]Loading weights:  75%|███████▍  | 217/291 [00:00<00:00, 266.57it/s]Loading weights:  84%|████████▍ | 244/291 [00:00<00:00, 266.42it/s]Loading weights:  93%|█████████▎| 271/291 [00:01<00:00, 265.97it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.63it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.506 cc=0.022 viol=0.044 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.994 cc=0.989 viol=0.000 cov=1.000
+
+wrote results/summary_test_medcalc.json
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split test --variants cl nsai_uq_cl --adapter results/adapter_synth.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 207.39it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 218.12it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 238.14it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 247.63it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 252.95it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 256.44it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 258.86it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 266.59it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.77it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 264.63it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 259.33it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.703 cc=0.422 viol=0.344 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.562 cc=0.562 viol=0.000 cov=0.586
+
+wrote results/summary_test.json
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --seeds 0 --split heldout --variants cl nsai_uq_cl --adapter results/adapter_synth.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.85it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.40it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 242.24it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 251.33it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 256.31it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 265.79it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 265.28it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 265.31it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.51it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 264.69it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.77it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.719 cc=0.438 viol=0.250 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.500 cc=0.500 viol=0.000 cov=0.500
+
+wrote results/summary_heldout.json
++ banner '5/9 RQ3: language ability, base and with each adapter'
++ echo
+
++ echo '########## 5/9 RQ3: language ability, base and with each adapter ##########'
+########## 5/9 RQ3: language ability, base and with each adapter ##########
++ echo
+
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 178.05it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.14it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 242.54it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 258.18it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 260.52it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 262.02it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 263.03it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 263.25it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 264.12it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 265.08it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.11it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+model=BioMistral/BioMistral-7B  base (no intervention)  wikitext-2 perplexity = 7.1622
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/adapter_qt.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.45it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.08it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 242.19it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 251.16it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 255.75it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 259.22it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 260.74it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 268.52it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 266.98it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 262.86it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 258.86it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+constraint layer attached at layer 30, alpha=1.0, rank=32
+model=BioMistral/BioMistral-7B  +constraint layer L30  wikitext-2 perplexity = 7.0775
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/adapter_synth.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 180.18it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 226.69it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.73it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 257.14it/s]Loading weights:  45%|████▌     | 131/291 [00:00<00:00, 256.71it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 263.02it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 263.97it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 264.54it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.04it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 265.80it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 262.05it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+constraint layer attached at layer 30, alpha=1.0, rank=32
+model=BioMistral/BioMistral-7B  +constraint layer L30  wikitext-2 perplexity = 7.1266
++ banner '6/9 tables'
++ echo
+
++ echo '########## 6/9 tables ##########'
+########## 6/9 tables ##########
++ echo
+
++ python src/make_table.py --split test --out results/table_test_final.md
+## Ablation matrix -- split=`test`, model=`BioMistral/BioMistral-7B`, seeds=[0]
+
+UQ engine defers on **`entropy`**  (the proposal's Eq. (2))
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.602 | +0.000 | 0.219 | +0.000 | 0.125 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.648 | +0.047 | 0.312 | +0.094 | 0.141 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.836 | +0.234 | 0.672 | +0.453 | 0.125 | 1.000 | 0.562 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.562 | -0.039 | 0.562 | +0.344 | 0.000 | 0.570 | 0.562 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.805 | +0.203 | 0.609 | +0.391 | 0.062 | 1.000 | 0.562 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.602 | 0.000 | -0.219 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.703 | +0.102 | 0.422 | +0.203 | 0.344 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.562 | -0.039 | 0.562 | +0.344 | 0.000 | 0.586 | 0.562 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.602 | [0.516, 0.688] | 0.219 | [0.125, 0.328] |
+| (2) + RAG | 0.648 | [0.562, 0.727] | 0.312 | [0.203, 0.422] |
+| (3) + Symbolic Gate (NS-AI) | 0.836 | [0.766, 0.898] | 0.672 | [0.562, 0.781] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.562 | [0.477, 0.648] | 0.562 | [0.438, 0.688] |
+| (5) Base + Symbolic Gate only | 0.805 | [0.734, 0.867] | 0.609 | [0.484, 0.734] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.703 | [0.625, 0.781] | 0.422 | [0.297, 0.547] |
+| (8) All four contributions | 0.562 | [0.477, 0.648] | 0.562 | [0.438, 0.688] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 18 | 12 | 0.3616 | 1 |
+| base→nsai | 35 | 5 | 1.383e-06 | 6.913e-06 |
+| base→nsai_uq | 26 | 31 | 0.5966 | 1 |
+| base→sym | 26 | 0 | 2.98e-08 | 1.788e-07 |
+| base→uq | 0 | 77 | 1.323e-23 | 9.264e-23 |
+| base→cl | 29 | 16 | 0.07245 | 0.2898 |
+| base→nsai_uq_cl | 26 | 31 | 0.5966 | 1 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 18 | 12 | 0.3616 | 0.3616 |
+| rag→nsai | 24 | 0 | 1.192e-07 | 2.384e-07 |
+| nsai→nsai_uq | 0 | 35 | 5.821e-11 | 1.746e-10 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 72 | 1.000 | 0.639 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 56 | 0.625 | 0.554 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 72 | 1.000 | 0.639 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 56 | 0.000 | 0.554 |
+| (5) Base + Symbolic Gate only | gate fired | 72 | 1.000 | 0.639 |
+| (5) Base + Symbolic Gate only | gate declined | 56 | 0.554 | 0.554 |
+| (8) All four contributions | gate fired | 72 | 1.000 | 0.639 |
+| (8) All four contributions | gate declined | 56 | 0.000 | 0.554 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 32 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 3.1% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/table_test_final.md
++ python src/make_table.py --split heldout --out results/table_heldout_final.md
+## Ablation matrix -- split=`heldout`, model=`BioMistral/BioMistral-7B`, seeds=[0]
+
+UQ engine defers on **`entropy`**  (the proposal's Eq. (2))
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.594 | +0.000 | 0.250 | +0.000 | 0.062 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.500 | -0.094 | 0.000 | -0.250 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.750 | +0.156 | 0.500 | +0.250 | 0.000 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.500 | -0.094 | 0.500 | +0.250 | 0.000 | 0.500 | 0.500 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.156 | 0.562 | +0.312 | 0.062 | 1.000 | 0.500 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.594 | 0.000 | -0.250 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.719 | +0.125 | 0.438 | +0.188 | 0.250 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.500 | -0.094 | 0.500 | +0.250 | 0.000 | 0.500 | 0.500 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.594 | [0.438, 0.750] | 0.250 | [0.062, 0.500] |
+| (2) + RAG | 0.500 | [0.344, 0.688] | 0.000 | [0.000, 0.000] |
+| (3) + Symbolic Gate (NS-AI) | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
+| (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.562 | [0.312, 0.812] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.719 | [0.562, 0.875] | 0.438 | [0.188, 0.688] |
+| (8) All four contributions | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 1 | 4 | 0.375 | 1 |
+| base→nsai | 6 | 1 | 0.125 | 0.625 |
+| base→nsai_uq | 5 | 8 | 0.5811 | 1 |
+| base→sym | 5 | 0 | 0.0625 | 0.375 |
+| base→uq | 0 | 19 | 3.815e-06 | 2.67e-05 |
+| base→cl | 7 | 3 | 0.3438 | 1 |
+| base→nsai_uq_cl | 5 | 8 | 0.5811 | 1 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 1 | 4 | 0.375 | 0.375 |
+| rag→nsai | 8 | 0 | 0.007812 | 0.02344 |
+| nsai→nsai_uq | 0 | 8 | 0.007812 | 0.02344 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 16 | 1.000 | 0.688 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 16 | 0.500 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 16 | 1.000 | 0.688 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 16 | 0.000 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.688 |
+| (5) Base + Symbolic Gate only | gate declined | 16 | 0.500 | 0.500 |
+| (8) All four contributions | gate fired | 16 | 1.000 | 0.688 |
+| (8) All four contributions | gate declined | 16 | 0.000 | 0.500 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 32 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 3.1% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/table_heldout_final.md
++ cp results/table_test_final.md results/table.md
++ python src/make_table.py --split test --tag _medcalc --out results/table_medcalc_test.md
+## Ablation matrix -- split=`test`, model=`BioMistral/BioMistral-7B`, seeds=[0]
+
+UQ engine defers on **`entropy`**  (the proposal's Eq. (2))
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.506 | +0.000 | 0.011 | +0.000 | 0.322 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.494 | -0.011 | 0.000 | -0.011 | 0.022 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.028 | -0.478 | 0.000 | -0.011 | 0.000 | 0.050 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.506 | +0.000 | 0.022 | +0.011 | 0.044 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.506 | [0.433, 0.578] | 0.011 | [0.000, 0.033] |
+| (2) + RAG | 0.494 | [0.422, 0.572] | 0.000 | [0.000, 0.000] |
+| (3) + Symbolic Gate (NS-AI) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (5) Base + Symbolic Gate only | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (6) Base + UQ only | 0.028 | [0.006, 0.056] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.506 | [0.433, 0.578] | 0.022 | [0.000, 0.056] |
+| (8) All four contributions | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 28 | 30 | 0.8957 | 1 |
+| base→nsai | 88 | 0 | 6.462e-27 | 4.524e-26 |
+| base→nsai_uq | 88 | 0 | 6.462e-27 | 4.524e-26 |
+| base→sym | 88 | 0 | 6.462e-27 | 4.524e-26 |
+| base→uq | 0 | 86 | 2.585e-26 | 7.755e-26 |
+| base→cl | 25 | 25 | 1 | 1 |
+| base→nsai_uq_cl | 88 | 0 | 6.462e-27 | 4.524e-26 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 28 | 30 | 0.8957 | 1 |
+| rag→nsai | 90 | 0 | 1.616e-27 | 4.847e-27 |
+| nsai→nsai_uq | 0 | 0 | 1 | 1 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 178 | 1.000 | 0.506 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 2 | 0.500 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 178 | 1.000 | 0.506 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 2 | 0.500 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 178 | 1.000 | 0.506 |
+| (5) Base + Symbolic Gate only | gate declined | 2 | 0.500 | 0.500 |
+| (8) All four contributions | gate fired | 178 | 1.000 | 0.506 |
+| (8) All four contributions | gate declined | 2 | 0.500 | 0.500 |
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/table_medcalc_test.md
++ python src/make_table.py --split heldout --tag _medcalc --out results/table_medcalc_heldout.md
+## Ablation matrix -- split=`heldout`, model=`BioMistral/BioMistral-7B`, seeds=[0]
+
+UQ engine defers on **`entropy`**  (the proposal's Eq. (2))
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.500 | +0.000 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.500 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.883 | +0.383 | 0.767 | +0.767 | 0.133 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.500 | [0.367, 0.617] | 0.000 | [0.000, 0.000] |
+| (2) + RAG | 0.500 | [0.383, 0.633] | 0.000 | [0.000, 0.000] |
+| (3) + Symbolic Gate (NS-AI) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.883 | [0.800, 0.950] | 0.767 | [0.600, 0.900] |
+| (8) All four contributions | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 30 | 30 | 1 | 1 |
+| base→nsai | 30 | 0 | 1.863e-09 | 1.304e-08 |
+| base→nsai_uq | 30 | 0 | 1.863e-09 | 1.304e-08 |
+| base→sym | 30 | 0 | 1.863e-09 | 1.304e-08 |
+| base→uq | 0 | 30 | 1.863e-09 | 1.304e-08 |
+| base→cl | 26 | 3 | 1.524e-05 | 3.047e-05 |
+| base→nsai_uq_cl | 30 | 0 | 1.863e-09 | 1.304e-08 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 30 | 30 | 1 | 1 |
+| rag→nsai | 30 | 0 | 1.863e-09 | 5.588e-09 |
+| nsai→nsai_uq | 0 | 0 | 1 | 1 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 60 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 60 | 1.000 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 60 | 1.000 | 0.500 |
+| (8) All four contributions | gate fired | 60 | 1.000 | 0.500 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 50 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 2.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/table_medcalc_heldout.md
++ banner '7/9 adaptive conformal + conditional coverage'
++ echo
+
++ echo '########## 7/9 adaptive conformal + conditional coverage ##########'
+########## 7/9 adaptive conformal + conditional coverage ##########
++ echo
+
++ for sp in test heldout
++ python src/coverage_report.py --split test --variant nsai_uq
+# UQ coverage report -- `test`, variant `nsai_uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 128.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.570 | 0.014 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.570 | 0.014 |
+| **ACI** | **0.875** | **0.161** |
+
+alpha_t ends at 0.0151 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 128 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| acei_pregnancy | 16 | 0.500 | 1.000 | 0.000 |
+| aspirin_reye | 16 | 1.000 | 1.000 | 0.000 |
+| betablocker_asthma | 16 | 0.500 | 1.000 | 0.000 |
+| metformin_renal | 16 | 0.500 | 1.000 | 0.000 |
+| nsaid_renal | 16 | 0.500 | 1.000 | 0.000 |
+| spironolactone_hyperkalaemia | 16 | 0.500 | 1.000 | 0.000 |
+| statin_macrolide | 16 | 0.562 | 0.889 | 0.000 |
+| warfarin_inr | 16 | 0.500 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 64 | 0.578 | 0.973 | 0.000 |
+| UNSAFE | 64 | 0.562 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 56 | 0.018 | 0.000 | 0.000 |
+| True | 72 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.982** (min 0.018, max 1.000). Marginal coverage is 0.570.
+
+
+wrote results/uq_coverage_test_nsai_uq.md
++ python src/coverage_report.py --split test --variant uq
+# UQ coverage report -- `test`, variant `uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 128.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.000 | nan | 0.10 |
+
+Target **violated** on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.000 | nan |
+| **ACI** | **0.992** | **0.394** |
+
+alpha_t ends at 0.0151 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 128 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| acei_pregnancy | 16 | 0.000 | — | 0.000 |
+| aspirin_reye | 16 | 0.000 | — | 0.000 |
+| betablocker_asthma | 16 | 0.000 | — | 0.000 |
+| metformin_renal | 16 | 0.000 | — | 0.000 |
+| nsaid_renal | 16 | 0.000 | — | 0.000 |
+| spironolactone_hyperkalaemia | 16 | 0.000 | — | 0.000 |
+| statin_macrolide | 16 | 0.000 | — | 0.000 |
+| warfarin_inr | 16 | 0.000 | — | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 64 | 0.000 | — | 0.000 |
+| UNSAFE | 64 | 0.000 | — | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 128 | 0.000 | — | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 0.000, max 0.000). Marginal coverage is 0.000.
+
+
+wrote results/uq_coverage_test_uq.md
++ python src/coverage_report.py --split test --tag _medcalc --variant nsai_uq
+# UQ coverage report -- `test_medcalc`, variant `nsai_uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 180.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 1.000 | 0.006 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 1.000 | 0.006 |
+| **ACI** | **0.489** | **0.000** |
+
+alpha_t ends at 0.9950 (started at 0.1). 
+ACI holds the target on this split.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| metformin_renal | 180 | 1.000 | 0.994 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 90 | 1.000 | 0.989 | 0.000 |
+| UNSAFE | 90 | 1.000 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 2  ⚠️ n<5 | 1.000 | 0.500 | 0.000 |
+| True | 178 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 1.000, max 1.000). Marginal coverage is 1.000.
+
+
+wrote results/uq_coverage_test_medcalc_nsai_uq.md
++ for sp in test heldout
++ python src/coverage_report.py --split heldout --variant nsai_uq
+# UQ coverage report -- `heldout`, variant `nsai_uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 32.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.500 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.500 | 0.000 |
+| **ACI** | **0.844** | **0.222** |
+
+alpha_t ends at 0.0251 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 32 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| nitrofurantoin_renal | 16 | 0.500 | 1.000 | 0.000 |
+| ondansetron_qt | 16 | 0.500 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 16 | 0.500 | 1.000 | 0.000 |
+| UNSAFE | 16 | 0.500 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 16 | 0.000 | — | 0.000 |
+| True | 16 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **1.000** (min 0.000, max 1.000). Marginal coverage is 0.500.
+
+
+wrote results/uq_coverage_heldout_nsai_uq.md
++ python src/coverage_report.py --split heldout --variant uq
+# UQ coverage report -- `heldout`, variant `uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 32.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.000 | nan | 0.10 |
+
+Target **violated** on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.000 | nan |
+| **ACI** | **0.875** | **0.357** |
+
+alpha_t ends at 0.0051 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 32 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| nitrofurantoin_renal | 16 | 0.000 | — | 0.000 |
+| ondansetron_qt | 16 | 0.000 | — | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 16 | 0.000 | — | 0.000 |
+| UNSAFE | 16 | 0.000 | — | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 32 | 0.000 | — | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 0.000, max 0.000). Marginal coverage is 0.000.
+
+
+wrote results/uq_coverage_heldout_uq.md
++ python src/coverage_report.py --split heldout --tag _medcalc --variant nsai_uq
+# UQ coverage report -- `heldout_medcalc`, variant `nsai_uq`
+
+Signal: **`entropy`**. Target error rate on retained items: alpha = 0.1. n = 60.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 1.000 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 1.000 | 0.000 |
+| **ACI** | **0.733** | **0.000** |
+
+alpha_t ends at 0.3950 (started at 0.1). 
+ACI holds the target on this split.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| ondansetron_qt | 60 | 1.000 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 30 | 1.000 | 1.000 | 0.000 |
+| UNSAFE | 30 | 1.000 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| True | 60 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 1.000, max 1.000). Marginal coverage is 1.000.
+
+
+wrote results/uq_coverage_heldout_medcalc_nsai_uq.md
++ banner '8/9 SAE: collect, train (topk + jumprelu), score'
++ echo
+
++ echo '########## 8/9 SAE: collect, train (topk + jumprelu), score ##########'
+########## 8/9 SAE: collect, train (topk + jumprelu), score ##########
++ echo
+
++ python src/sae.py collect --data data/medcalc --split train --layer 20 --model_id BioMistral/BioMistral-7B --other_mult 1000 --max_tokens 150000 --out results/sae/acts_medcalc_train_L20.npz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.36it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 235.68it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 240.02it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 257.60it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 260.13it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 261.68it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 262.96it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 263.56it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 261.57it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 259.99it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 258.82it/s]
+  50/280 items, 39604 tokens
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  100/280 items, 82590 tokens
+  150/280 items, 123778 tokens
+  token budget reached at item 190/280
+wrote results/sae/acts_medcalc_train_L20.npz: X(150000, 4096) labels(150000, 11)
+  concept token counts: creatinine=2386, qt_interval=38, egfr=0, heart_rate=418, potassium=122, inr=26, age=1134, drug=804, renal_disease=376, pregnancy=18, asthma=58
++ python src/sae.py train --acts results/sae/acts_medcalc_train_L20.npz --kind topk --expansion 4 --k 32 --epochs 30 --batch 2048 --out results/sae/sae_topk_L20.npz
+input scale 5.6093 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+150000 tokens x 4096 dims -> 16384 features (topk, k=32)
+train 141808 / val 8192 tokens
+  epoch 1/30  train_mse=1.16149  val_FVU=0.1433  val_L0=32.0  dead=5954
+  epoch 2/30  train_mse=0.25330  val_FVU=0.0950  val_L0=32.0  dead=6032
+  epoch 3/30  train_mse=0.20321  val_FVU=0.0836  val_L0=31.9  dead=5925
+  epoch 4/30  train_mse=0.17614  val_FVU=0.0783  val_L0=31.8  dead=5869
+  epoch 5/30  train_mse=0.16396  val_FVU=0.0752  val_L0=31.8  dead=5874
+  epoch 6/30  train_mse=0.15730  val_FVU=0.0736  val_L0=31.8  dead=5868
+  epoch 7/30  train_mse=0.15414  val_FVU=0.0726  val_L0=31.8  dead=5903
+  epoch 8/30  train_mse=0.15133  val_FVU=0.0711  val_L0=31.8  dead=5933
+  epoch 9/30  train_mse=0.14779  val_FVU=0.0703  val_L0=31.8  dead=5951
+  epoch 10/30  train_mse=0.14632  val_FVU=0.0699  val_L0=31.9  dead=5972
+  epoch 11/30  train_mse=0.15339  val_FVU=0.0721  val_L0=31.9  dead=6009
+  epoch 12/30  train_mse=0.14917  val_FVU=0.0707  val_L0=31.9  dead=6055
+  epoch 13/30  train_mse=0.14549  val_FVU=0.0693  val_L0=31.9  dead=6082
+  epoch 14/30  train_mse=0.14270  val_FVU=0.0684  val_L0=31.9  dead=6114
+  epoch 15/30  train_mse=0.14092  val_FVU=0.0683  val_L0=31.9  dead=6139
+  epoch 16/30  train_mse=0.14018  val_FVU=0.0679  val_L0=31.9  dead=6170
+  epoch 17/30  train_mse=0.14379  val_FVU=0.0688  val_L0=31.9  dead=6190
+  epoch 18/30  train_mse=0.14191  val_FVU=0.0679  val_L0=31.9  dead=6200
+  epoch 19/30  train_mse=0.14240  val_FVU=0.0689  val_L0=31.9  dead=6210
+  epoch 20/30  train_mse=0.13997  val_FVU=0.0675  val_L0=31.9  dead=6235
+  epoch 21/30  train_mse=0.13812  val_FVU=0.0671  val_L0=31.9  dead=6263
+  epoch 22/30  train_mse=0.13754  val_FVU=0.0671  val_L0=31.9  dead=6271
+  epoch 23/30  train_mse=0.13758  val_FVU=0.0674  val_L0=31.9  dead=6298
+  epoch 24/30  train_mse=0.13896  val_FVU=0.0672  val_L0=31.9  dead=6326
+  epoch 25/30  train_mse=0.13774  val_FVU=0.0677  val_L0=31.9  dead=6356
+  epoch 26/30  train_mse=0.13965  val_FVU=0.0675  val_L0=31.9  dead=6404
+  epoch 27/30  train_mse=0.13860  val_FVU=0.0677  val_L0=31.9  dead=6374
+  epoch 28/30  train_mse=0.14015  val_FVU=0.0714  val_L0=31.9  dead=6433
+  epoch 29/30  train_mse=0.16781  val_FVU=0.0706  val_L0=31.9  dead=6459
+  epoch 30/30  train_mse=0.13975  val_FVU=0.0665  val_L0=31.9  dead=6442
+wrote results/sae/sae_topk_L20.npz
+  final val FVU=0.0665  L0=31.9  dead features=6442/16384 (39.3%)
++ python src/sae.py train --acts results/sae/acts_medcalc_train_L20.npz --kind jumprelu --expansion 4 --epochs 30 --batch 2048 --out results/sae/sae_jumprelu_L20.npz
+input scale 5.6093 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+150000 tokens x 4096 dims -> 16384 features (jumprelu, k=32)
+train 141808 / val 8192 tokens
+  epoch 1/30  train_mse=2.99781  val_FVU=0.3688  val_L0=20.9  dead=8626
+  epoch 2/30  train_mse=0.93659  val_FVU=0.3288  val_L0=14.8  dead=8654
+  epoch 3/30  train_mse=0.84736  val_FVU=0.3035  val_L0=12.5  dead=8803
+  epoch 4/30  train_mse=0.80667  val_FVU=0.2906  val_L0=12.4  dead=8906
+  epoch 5/30  train_mse=0.77133  val_FVU=0.2752  val_L0=13.3  dead=8959
+  epoch 6/30  train_mse=0.73814  val_FVU=0.2654  val_L0=13.3  dead=8991
+  epoch 7/30  train_mse=0.71562  val_FVU=0.2572  val_L0=14.6  dead=9013
+  epoch 8/30  train_mse=0.69403  val_FVU=0.2462  val_L0=16.3  dead=9027
+  epoch 9/30  train_mse=0.66525  val_FVU=0.2324  val_L0=18.1  dead=9020
+  epoch 10/30  train_mse=0.63555  val_FVU=0.2201  val_L0=19.6  dead=9064
+  epoch 11/30  train_mse=0.61239  val_FVU=0.2111  val_L0=20.4  dead=9100
+  epoch 12/30  train_mse=0.59030  val_FVU=0.2033  val_L0=20.6  dead=9152
+  epoch 13/30  train_mse=0.57028  val_FVU=0.1958  val_L0=21.2  dead=9210
+  epoch 14/30  train_mse=0.55144  val_FVU=0.1888  val_L0=21.9  dead=9301
+  epoch 15/30  train_mse=0.53402  val_FVU=0.1826  val_L0=22.6  dead=9365
+  epoch 16/30  train_mse=0.51825  val_FVU=0.1766  val_L0=23.4  dead=9470
+  epoch 17/30  train_mse=0.50357  val_FVU=0.1710  val_L0=23.7  dead=9585
+  epoch 18/30  train_mse=0.49052  val_FVU=0.1661  val_L0=24.2  dead=9686
+  epoch 19/30  train_mse=0.47836  val_FVU=0.1608  val_L0=24.8  dead=9770
+  epoch 20/30  train_mse=0.46728  val_FVU=0.1566  val_L0=25.2  dead=9793
+  epoch 21/30  train_mse=0.45816  val_FVU=0.1528  val_L0=25.6  dead=9915
+  epoch 22/30  train_mse=0.45022  val_FVU=0.1495  val_L0=25.9  dead=9972
+  epoch 23/30  train_mse=0.44294  val_FVU=0.1464  val_L0=26.1  dead=10023
+  epoch 24/30  train_mse=0.43654  val_FVU=0.1437  val_L0=26.4  dead=10112
+  epoch 25/30  train_mse=0.43058  val_FVU=0.1412  val_L0=26.8  dead=10168
+  epoch 26/30  train_mse=0.42515  val_FVU=0.1389  val_L0=27.1  dead=10231
+  epoch 27/30  train_mse=0.41998  val_FVU=0.1367  val_L0=27.3  dead=10300
+  epoch 28/30  train_mse=0.41510  val_FVU=0.1345  val_L0=27.5  dead=10380
+  epoch 29/30  train_mse=0.41046  val_FVU=0.1325  val_L0=27.6  dead=10420
+  epoch 30/30  train_mse=0.40607  val_FVU=0.1306  val_L0=27.8  dead=10481
+wrote results/sae/sae_jumprelu_L20.npz
+  final val FVU=0.1306  L0=27.8  dead features=10481/16384 (64.0%)
++ python src/sae.py score --sae results/sae/sae_topk_L20.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 40 --causal_features 8 --causal_split test
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 599, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 595, in main
+    args.fn(args)
+    ~~~~~~~^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 382, in cmd_score
+    Z = torch.cat([sae.encode(X[i:i + 8192])
+        ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   for i in range(0, X.shape[0], 8192)]).cpu().numpy()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 9.16 GiB. GPU 0 has a total capacity of 22.04 GiB of which 9.00 GiB is free. Including non-PyTorch memory, this process has 13.03 GiB memory in use. Of the allocated memory 11.95 GiB is allocated by PyTorch, and 642.73 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
++ python src/sae.py score --sae results/sae/sae_jumprelu_L20.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 0
+Traceback (most recent call last):
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 599, in <module>
+    main()
+    ~~~~^^
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 595, in main
+    args.fn(args)
+    ~~~~~~~^^^^^^
+  File "/home/asosoft/abtin/paper/csai/src/sae.py", line 382, in cmd_score
+    Z = torch.cat([sae.encode(X[i:i + 8192])
+        ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   for i in range(0, X.shape[0], 8192)]).cpu().numpy()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 9.16 GiB. GPU 0 has a total capacity of 22.04 GiB of which 7.50 GiB is free. Including non-PyTorch memory, this process has 14.53 GiB memory in use. Of the allocated memory 11.95 GiB is allocated by PyTorch, and 2.13 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
++ banner '9/9 DONE'
++ echo
+
++ echo '########## 9/9 DONE ##########'
+########## 9/9 DONE ##########
++ echo
+

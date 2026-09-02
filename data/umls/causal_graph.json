@@ -1,0 +1,5463 @@
+{
+  "meta": {
+    "umls_release": "2026AA",
+    "built": "2026-09-01",
+    "clinical_sabs": "MED-RT"
+  },
+  "nodes": [
+    {
+      "cui": "C0201976",
+      "name": "Creatinine measurement, serum (procedure)",
+      "kind": "lab",
+      "tuis": [
+        "T059"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0429028",
+      "name": "QT interval feature (observable entity)",
+      "kind": "lab",
+      "tuis": [
+        "T201"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C3811844",
+      "name": "Estimated Glomerular Filtration Rate",
+      "kind": "lab",
+      "tuis": [
+        "T059"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0018810",
+      "name": "heart rate",
+      "kind": "lab",
+      "tuis": [
+        "T201"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0302353",
+      "name": "Serum potassium measurement",
+      "kind": "lab",
+      "tuis": [
+        "T059"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0525032",
+      "name": "International Normalized Ratio",
+      "kind": "finding",
+      "tuis": [
+        "T033"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0025598",
+      "name": "metformin",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0035078",
+      "name": "Kidney Failure",
+      "kind": "disease",
+      "tuis": [
+        "T047"
+      ],
+      "atom_keys": [
+        "esrd",
+        "failure kidney",
+        "failure, kidney",
+        "failure, renal",
+        "failure; renal",
+        "failure;renal;nos",
+        "failures, kidney",
+        "failures, renal",
+        "kidney failure",
+        "kidney failures",
+        "kidney; failure",
+        "renal failure",
+        "renal failure (diagnosis)",
+        "renal failure nos",
+        "renal failure not otherwise specified",
+        "renal failure syndrome",
+        "renal failure syndrome, nos",
+        "renal failure unspecified",
+        "renal failure, unspecified",
+        "renal failures",
+        "renal insufficiency",
+        "renal insufficiency syndrome",
+        "renal insufficiency syndrome, nos",
+        "renal; failure",
+        "rf - renal failure",
+        "syndrome renal failure",
+        "unspecified kidney failure",
+        "unspecified renal failure"
+      ]
+    },
+    {
+      "cui": "C0032961",
+      "name": "Pregnancy",
+      "kind": "process",
+      "tuis": [
+        "T040"
+      ],
+      "atom_keys": [
+        "female pregnancy",
+        "gestation",
+        "gestation, nos",
+        "mammalian gestation",
+        "pregnancies",
+        "pregnancy",
+        "pregnancy (diagnosis)",
+        "pregnancy (symptom)",
+        "pregnancy nos",
+        "pregnancy, function",
+        "pregnancy, nos"
+      ]
+    },
+    {
+      "cui": "C0004096",
+      "name": "Asthma",
+      "kind": "disease",
+      "tuis": [
+        "T047"
+      ],
+      "atom_keys": [
+        "airway hyperreactivity",
+        "asthma",
+        "asthma (diagnosis)",
+        "asthma bronchial",
+        "asthma disorders",
+        "asthma nos",
+        "asthma, bronchial",
+        "asthma, nos",
+        "asthma, unspecified",
+        "asthmas",
+        "asthmatic",
+        "asthmatics",
+        "br asthma",
+        "bronchial asthma",
+        "bronchial asthma, nos",
+        "bronchitic asthma",
+        "unspecified asthma"
+      ]
+    },
+    {
+      "cui": "C0020740",
+      "name": "ibuprofen",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0065374",
+      "name": "lisinopril",
+      "kind": "drug",
+      "tuis": [
+        "T116",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0033497",
+      "name": "propranolol",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0004057",
+      "name": "aspirin",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0035400",
+      "name": "Reye Syndrome",
+      "kind": "disease",
+      "tuis": [
+        "T047"
+      ],
+      "atom_keys": [
+        "fatty liver with encephalopathy",
+        "reye 's syndrome",
+        "reye johnson syndrome",
+        "reye syndrome",
+        "reye's encephalopathy",
+        "reye's syndrome",
+        "reye's syndrome (diagnosis)",
+        "reye-johnson syndrome",
+        "reyes syndrome",
+        "reyes syndromes",
+        "reyes' syndrome",
+        "reyes's syndrome",
+        "syndrome reye",
+        "syndrome reyes"
+      ]
+    },
+    {
+      "cui": "C0037982",
+      "name": "spironolactone",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C5979967",
+      "name": "Hyperkalemia (disorder)",
+      "kind": "disease",
+      "tuis": [
+        "T047"
+      ],
+      "atom_keys": [
+        "excess; potassium",
+        "hyperkalaemia",
+        "hyperkalaemic syndrome",
+        "hyperkalemia",
+        "hyperkalemia (diagnosis)",
+        "hyperkalemic disorder",
+        "hyperkalemic syndrome",
+        "hyperkalemic; syndrome",
+        "hyperpotassaemia",
+        "hyperpotassemia",
+        "k excess",
+        "k overload",
+        "overload; potassium",
+        "potassium excess",
+        "potassium overload",
+        "potassium; excess",
+        "potassium; overload",
+        "syndrome; hyperkalemic"
+      ]
+    },
+    {
+      "cui": "C0043031",
+      "name": "warfarin",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121",
+        "T131"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0019080",
+      "name": "Hemorrhage",
+      "kind": "disease",
+      "tuis": [
+        "T046"
+      ],
+      "atom_keys": [
+        "bleed",
+        "bleed_nos problem",
+        "bleeding",
+        "bleeding problem",
+        "bleeding problems",
+        "bleeding site unspecified",
+        "bleeding, nos",
+        "bleeding/hemorrhage nos",
+        "bleeds",
+        "blood loss",
+        "blood loss of (nos)",
+        "blood; extravasation",
+        "extravasation blood",
+        "extravasation of blood",
+        "extravasation; blood",
+        "haemorrhage",
+        "haemorrhage nos",
+        "haemorrhage, nos",
+        "haemorrhage, unspecified",
+        "haemorrhages",
+        "hem",
+        "hemorrhage",
+        "hemorrhage (nos)",
+        "hemorrhage nos",
+        "hemorrhage, nos",
+        "hemorrhage, unspecified",
+        "hemorrhages"
+      ]
+    },
+    {
+      "cui": "C0074554",
+      "name": "simvastatin",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0035410",
+      "name": "Rhabdomyolysis",
+      "kind": "disease",
+      "tuis": [
+        "T046"
+      ],
+      "atom_keys": [
+        "breakdown of skeletal muscle",
+        "necrosis of skeletal muscle",
+        "rhabdomyolyses",
+        "rhabdomyolysis",
+        "rhabdomyolysis (diagnosis)",
+        "rhabdomyolysis (morphologic abnormality)",
+        "skeletal muscle necrosis"
+      ]
+    },
+    {
+      "cui": "C0028156",
+      "name": "nitrofurantoin",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0061851",
+      "name": "ondansetron",
+      "kind": "drug",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0023976",
+      "name": "Long QT Syndrome",
+      "kind": "disease",
+      "tuis": [
+        "T047"
+      ],
+      "atom_keys": [
+        "long q t syndrome",
+        "long q-t syndrome",
+        "long qt syndrome",
+        "long qt syndrome (diagnosis)",
+        "long qt syndrome, nos",
+        "lqt",
+        "prolonged q-t interval syndrome",
+        "prolonged q-t interval syndrome, nos"
+      ]
+    },
+    {
+      "cui": "C0018926",
+      "name": "Hematemesis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "blood; vomiting",
+        "emesis bloody",
+        "gastrointestinal disorder hematemesis",
+        "haematemesis",
+        "haematemesis/vomiting blood",
+        "hematemeses",
+        "hematemesis",
+        "hematemesis (diagnosis)",
+        "hematemesis (physical finding)",
+        "hematemesis (symptom)",
+        "hematemesis/vomiting blood",
+        "vomiting blood",
+        "vomiting blood (hematemesis)",
+        "vomiting of blood",
+        "vomiting out blood",
+        "vomiting; blood",
+        "vomiting;blood"
+      ]
+    },
+    {
+      "cui": "C0019087",
+      "name": "Hemorrhagic Disorders",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "conditions hemorrhagic",
+        "diatheses, hemorrhagic",
+        "diathesis, hemorrhagic",
+        "diathesis; hemorrhagic",
+        "disease; hemorrhage",
+        "disorder, hemorrhagic",
+        "disorders, hemorrhagic",
+        "haemorrhagic condition, unspecified",
+        "haemorrhagic diathesis",
+        "haemorrhagic disorder",
+        "haemorrhagic disorders",
+        "hemorrhage; disease",
+        "hemorrhagic condition",
+        "hemorrhagic condition (diagnosis)",
+        "hemorrhagic condition, unspecified",
+        "hemorrhagic diatheses",
+        "hemorrhagic diathesis",
+        "hemorrhagic disease",
+        "hemorrhagic diseases",
+        "hemorrhagic disorder",
+        "hemorrhagic disorders",
+        "hemorrhagic; diathesis",
+        "hemorrhagic; disease",
+        "unspecified hemorrhagic conditions"
+      ]
+    },
+    {
+      "cui": "C1371839",
+      "name": "Decreased Platelet Activating Factor Production",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371843",
+      "name": "Decreased Prostaglandin Production",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372012",
+      "name": "Decreased Thromboxane Production",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373178",
+      "name": "Hepatic Metabolism [PK]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0018099",
+      "name": "Gout",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0015967",
+      "name": "Fever",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0855739",
+      "name": "Decreased Platelet Aggregation [PE]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0013182",
+      "name": "Drug Allergy",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "allergic drug reaction",
+        "allergic drug reaction (diagnosis)",
+        "allergic drug reactions",
+        "allergic drugs reaction",
+        "allergic drugs reactions",
+        "allergic reaction caused by drug",
+        "allergic reaction drug",
+        "allergic reaction to drug",
+        "allergic reaction to medication",
+        "allergic reaction;drug(s)",
+        "allergies drug",
+        "allergies drugs",
+        "allergies medication",
+        "allergies medications",
+        "allergies, drug",
+        "allergy drug",
+        "allergy drugs",
+        "allergy medication",
+        "allergy medications",
+        "allergy to drug",
+        "allergy to drugs",
+        "allergy, drug",
+        "drug allergic reaction",
+        "drug allergies",
+        "drug allergy",
+        "drug allergy (diagnosis)",
+        "drug allergy nos",
+        "drug allergy, nos",
+        "drug hypersensitivities",
+        "drug hypersensitivity",
+        "drug hypersensitivity nos",
+        "drug reaction, allergic",
+        "drug; allergy",
+        "drug; hypersensitivity",
+        "drugs allergic reaction",
+        "drugs hypersensitivity",
+        "hypersensitivities, drug",
+        "hypersensitivity, drug",
+        "hypersensitivity; drug",
+        "medication allergy",
+        "medicine allergy"
+      ]
+    },
+    {
+      "cui": "C0007785",
+      "name": "Cerebral Infarction",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0007787",
+      "name": "Transient Ischemic Attack",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0008049",
+      "name": "Chickenpox",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "chicken pox",
+        "chicken pox infection",
+        "chickenpox",
+        "chickenpox nos",
+        "chickenpox, nos",
+        "varicella",
+        "varicella (chickenpox)",
+        "varicella (diagnosis)",
+        "varicella infection",
+        "varicella nos",
+        "varicella, nos"
+      ]
+    },
+    {
+      "cui": "C0008100",
+      "name": "Child, Preschool",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "1-5 years old",
+        "child, preschool",
+        "children, preschool",
+        "pre-school",
+        "preschool child",
+        "preschool child (1-5)",
+        "preschool child (person)",
+        "preschool children",
+        "preschool student",
+        "preschool students",
+        "preschooler",
+        "preschoolers"
+      ]
+    },
+    {
+      "cui": "C0005779",
+      "name": "Blood Coagulation Disorders",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "abnormality of the coagulation cascade",
+        "bleeding diathesis",
+        "bleeding disorder",
+        "bleeding disorders",
+        "bleeding tendency",
+        "blood clotting disorder",
+        "blood clotting disorder, nos",
+        "blood clotting disorders",
+        "blood clotting; disorder",
+        "blood coagulation defect",
+        "blood coagulation disorder",
+        "blood coagulation disorder, disease or syndrome",
+        "blood coagulation disorder, nos",
+        "blood coagulation disorders",
+        "blood coagulation disorders, diseases and syndromes",
+        "clotting",
+        "clotting disorder",
+        "clotting disorders",
+        "coagulation defect",
+        "coagulation defect, unspecified",
+        "coagulation defects",
+        "coagulation disorder",
+        "coagulation disorder (nos)",
+        "coagulation disorder nos",
+        "coagulation disorder, blood",
+        "coagulation disorder, nos",
+        "coagulation disorders",
+        "coagulation disorders, blood",
+        "coagulation, disorders of",
+        "coagulopathies",
+        "coagulopathy",
+        "coagulopathy, nos",
+        "defect coagulation (nos)",
+        "disorder coagulation",
+        "disorder of haemostasis",
+        "disorder of haemostasis, nos",
+        "disorder of hemostasis",
+        "disorder of hemostasis, nos",
+        "disorder, blood coagulation",
+        "disorder, coagulation",
+        "disorder, hemostasis",
+        "disorder; blood clotting",
+        "disorder; hemostasis",
+        "disorders of blood coagulation",
+        "disorders of blood coagulation: general conditions",
+        "disorders of coagulation",
+        "disorders, blood coagulation",
+        "hemostatic disorder",
+        "hemostatic function, abnormal"
+      ]
+    },
+    {
+      "cui": "C0005818",
+      "name": "Blood Platelet Disorders",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "abnormal platelets present",
+        "blood disorder platelet",
+        "blood platelet disorder",
+        "blood platelet disorders",
+        "disorder platelet",
+        "disorder, blood platelet",
+        "disorders platelets",
+        "disorders, blood platelet",
+        "platelet abnormality",
+        "platelet blood disorder",
+        "platelet disorder",
+        "platelet disorder, blood",
+        "platelet disorder, disease or syndrome",
+        "platelet disorder, nos",
+        "platelet disorders",
+        "platelet disorders (diagnosis)",
+        "platelet disorders, blood",
+        "platelet disorders, diseases and syndromes",
+        "thrombocyte disorders",
+        "thrombocytopathia",
+        "thrombocytopathies",
+        "thrombocytopathy",
+        "thrombocytopathy (diagnosis)",
+        "thrombocytopathy, nos"
+      ]
+    },
+    {
+      "cui": "C0003873",
+      "name": "Rheumatoid Arthritis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0029408",
+      "name": "Degenerative polyarthritis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0030193",
+      "name": "Pain",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0032914",
+      "name": "Pre-Eclampsia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "edema proteinuria hypertension gestosis",
+        "edema-proteinuria-hypertension gestosis",
+        "eph - edema, proteinuria and hypertension of pregnancy",
+        "eph - oedema, proteinuria and hypertension of pregnancy",
+        "eph complex",
+        "eph gestosis",
+        "eph toxemia",
+        "eph toxemias",
+        "gestosis, edema-proteinuria-hypertension",
+        "gestosis, eph",
+        "gestosis, hypertension-edema-proteinuria",
+        "gestosis, proteinuria-edema-hypertension",
+        "hypertension edema proteinuria gestosis",
+        "hypertension-edema-proteinuria gestosis",
+        "of pregnancies, toxemia",
+        "of pregnancy, toxemia",
+        "pe - pre-eclampsia",
+        "pet - pre-eclamptic toxaemia",
+        "pet - pre-eclamptic toxemia",
+        "pre eclampsia",
+        "pre-eclampsia",
+        "pre-eclampsia (diagnosis)",
+        "pre-eclampsia nos",
+        "pre-eclampsia toxaemia",
+        "pre-eclampsia toxemia",
+        "pre-eclampsia, nos",
+        "pre-eclampsia, unspecified",
+        "pre-eclamptic nos",
+        "pre-eclamptic toxaemia",
+        "pre-eclamptic toxaemia, nos",
+        "pre-eclamptic toxemia",
+        "pre-eclamptic toxemia, nos",
+        "pre-eclamptic; toxemia",
+        "preeclampsia",
+        "pregnancies, toxemia of",
+        "pregnancy toxemia",
+        "pregnancy toxemias",
+        "pregnancy, toxemia of",
+        "pregnancy; pre-eclampsia",
+        "proteinuria edema hypertension gestosis",
+        "proteinuria-edema-hypertension gestosis",
+        "proteinuric hypertension of pregnancy",
+        "toxaemia of pregnancy",
+        "toxemia (pre)eclampsia",
+        "toxemia of pregnancies",
+        "toxemia of pregnancy",
+        "toxemia, eph",
+        "toxemia, preeclamptic",
+        "toxemia, pregnancy",
+        "toxemia; pre-eclamptic",
+        "toxemias, eph",
+        "toxemias, pregnancy",
+        "unspecified pre-eclampsia",
+        "unspecified pre-eclampsia, unspecified trimester"
+      ]
+    },
+    {
+      "cui": "C0035436",
+      "name": "Rheumatic Fever",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0032981",
+      "name": "Pregnancy Trimester, Third",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "3rd trimester",
+        "last pregnancy trimester",
+        "last trimester",
+        "last trimester of pregnancy",
+        "last trimester pregnancy",
+        "last trimesters",
+        "pregnancies, third trimester",
+        "pregnancy last trimester",
+        "pregnancy third trimester",
+        "pregnancy trimester, third",
+        "pregnancy trimesters, third",
+        "pregnancy, third trimester",
+        "pregnancy--trimester, third",
+        "third pregnancy trimester",
+        "third pregnancy trimesters",
+        "third trimester",
+        "third trimester of pregnancy",
+        "third trimester of pregnancy (history)",
+        "third trimester pregnancies",
+        "third trimester pregnancy",
+        "third trimesters",
+        "trimester third",
+        "trimester, last",
+        "trimester, third",
+        "trimesters, last",
+        "trimesters, third"
+      ]
+    },
+    {
+      "cui": "C0027051",
+      "name": "Myocardial Infarction",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C5779543",
+      "name": "Renal Excretion [PK]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0027430",
+      "name": "Nasal Polyp",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cavity nasal polyps",
+        "nasal cavity polyp",
+        "nasal cavity polyps",
+        "nasal cavity polyps (diagnosis)",
+        "nasal cavity; polyp",
+        "nasal polyp",
+        "nasal polyp - anterior",
+        "nasal polyp nos",
+        "nasal polyp, nos",
+        "nasal polyp, unspecified",
+        "nasal polyposis",
+        "nasal polyps",
+        "nasal polyps (diagnosis)",
+        "nasals polyps",
+        "nose polyp",
+        "nose polyps",
+        "nose, polyp",
+        "nose; polyp",
+        "polyp in anterior nares",
+        "polyp nasal",
+        "polyp of nasal cavity",
+        "polyp of nasal cavity, nos",
+        "polyp of the nasal cavity",
+        "polyp(s);nasal",
+        "polyp, nasal",
+        "polyp; nasal cavity",
+        "polyp; nose",
+        "polyposis nasal",
+        "polyposis nasi",
+        "polyps nasal",
+        "polyps of nose",
+        "polyps, nasal",
+        "unspecified nasal polyp"
+      ]
+    },
+    {
+      "cui": "C0025222",
+      "name": "Melena",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "altered blood in stool",
+        "altered blood passed per rectum",
+        "black stool",
+        "black stools",
+        "black, tarry stool",
+        "dark stools",
+        "melaena",
+        "melena",
+        "melena (physical finding)",
+        "melena/black tarry stools",
+        "melenas",
+        "stool black",
+        "stool color black",
+        "stool tarry",
+        "stool(s);black",
+        "stool(s);tarry",
+        "tarry stool",
+        "tarry stools"
+      ]
+    },
+    {
+      "cui": "C2756982",
+      "name": "Cyclooxygenase Inhibitors [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0021270",
+      "name": "Infant",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "babies",
+        "baby",
+        "infant",
+        "infant (person)",
+        "infants"
+      ]
+    },
+    {
+      "cui": "C0021368",
+      "name": "Inflammation",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0013390",
+      "name": "Dysmenorrhea",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0006444",
+      "name": "Bursitis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0085129",
+      "name": "Bronchial Hyperreactivity",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "bhr - bronchial hyperreactivity",
+        "bronchial hyperactivity",
+        "bronchial hyperreactivities",
+        "bronchial hyperreactivity",
+        "bronchial hyperresponsiveness",
+        "bronchial hypersensitivity",
+        "hyperreactivities, bronchial",
+        "hyperreactivity, bronchial"
+      ]
+    },
+    {
+      "cui": "C0030201",
+      "name": "Postoperative Pain",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0035455",
+      "name": "Rhinitis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "catarrh, nasal",
+        "catarrhs, nasal",
+        "inflammation of nasal passage",
+        "nasal catarrh",
+        "nasal catarrhs",
+        "rhinitides",
+        "rhinitis",
+        "rhinitis (diagnosis)",
+        "rhinitis nos",
+        "rhinitis, nos"
+      ]
+    },
+    {
+      "cui": "C0038013",
+      "name": "Ankylosing spondylitis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0032984",
+      "name": "Pregnancy, Abdominal",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "abdominal pregnancies",
+        "abdominal pregnancy",
+        "abdominal pregnancy (diagnosis)",
+        "abdominal pregnancy nos",
+        "abdominal; pregnancy",
+        "pregnancies, abdominal",
+        "pregnancy, abdominal",
+        "pregnancy; abdominal"
+      ]
+    },
+    {
+      "cui": "C0033046",
+      "name": "Premenstrual syndrome",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0025323",
+      "name": "Menorrhagia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C3495559",
+      "name": "Juvenile arthritis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0018801",
+      "name": "Heart failure",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cardiac failure",
+        "cardiac failure (nos)",
+        "cardiac failure nos",
+        "cardiac failure, nos",
+        "cardiac failures",
+        "cardiac insufficiency",
+        "cardiac; failure",
+        "cardiac; insufficiency",
+        "failure cardiac",
+        "failure heart",
+        "failure; cardiac",
+        "failure; heart",
+        "failure;cardiac",
+        "failure;heart",
+        "failures heart",
+        "heart failure",
+        "heart failure (nos)",
+        "heart failure and other functional disorders",
+        "heart failure nos",
+        "heart failure, nos",
+        "heart failure, unspecified",
+        "heart failures",
+        "hearts weak",
+        "hf - heart failure",
+        "insufficiency cardiac",
+        "insufficiency; cardiac",
+        "insufficiency;cardiac",
+        "myocardial failure",
+        "myocardial failure, nos",
+        "weak heart",
+        "weak heart, nos",
+        "weak; heart"
+      ]
+    },
+    {
+      "cui": "C1371406",
+      "name": "Decreased Bradykinin Degradation",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371678",
+      "name": "Decreased Intravascular Volume",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371739",
+      "name": "Decreased Mineralocorticoid Secretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371866",
+      "name": "Decreased Renal K+ Excretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372551",
+      "name": "Increased Renal Na+ Excretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372857",
+      "name": "Renal Arterial Vasodilation",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0011881",
+      "name": "Diabetic Nephropathy",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0242698",
+      "name": "Ventricular Dysfunction, Left",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0149721",
+      "name": "Left Ventricular Hypertrophy",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0002994",
+      "name": "Angioedema",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "angioedema",
+        "angioedema, nos",
+        "angioedemas",
+        "angioneurotic edema",
+        "angioneurotic edema, nos",
+        "angioneurotic edemas",
+        "angioneurotic oedema",
+        "angioneurotic oedema, nos",
+        "angioneurotic; edema",
+        "angiooedema",
+        "edema angioneurotic",
+        "edema quincke's",
+        "edema, angioneurotic",
+        "edema, quincke's",
+        "edema; angioneurotic",
+        "edema; quincke",
+        "edemas, angioneurotic",
+        "giant urticaria",
+        "giant urticarias",
+        "oedema angioneurotic",
+        "oedema quincke's",
+        "oedema;angioneurotic",
+        "quincke edema",
+        "quincke oedema",
+        "quincke's edema",
+        "quincke's oedema",
+        "quincke; edema",
+        "quinckes edema",
+        "urticaria, giant",
+        "urticarias, giant"
+      ]
+    },
+    {
+      "cui": "C2917141",
+      "name": "Decreased Blood Pressure [PE]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0020428",
+      "name": "Hyperaldosteronism",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "aldosteronism",
+        "aldosteronism nos",
+        "aldosteronism, nos",
+        "elevated plasma aldosterone",
+        "hyperaldosteronaemia",
+        "hyperaldosteronism",
+        "hyperaldosteronism (diagnosis)",
+        "hyperaldosteronism nos",
+        "hyperaldosteronism, nos",
+        "hyperaldosteronism, unspecified",
+        "increased aldosterone",
+        "increased aldosterone production",
+        "increased circulating aldosterone concentration",
+        "mineralocorticoid excess"
+      ]
+    },
+    {
+      "cui": "C0020538",
+      "name": "Hypertensive disease",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2757044",
+      "name": "Angiotensin-Converting Enzyme Inhibitors [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0020649",
+      "name": "Hypotension",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "arterial blood pressure decreased",
+        "arterial hypotension",
+        "arterial hypotension nos",
+        "arterial hypotension, nos",
+        "arterial pressure nos decreased",
+        "blood decreasing pressure",
+        "blood lowered pressure",
+        "blood lowers pressure",
+        "blood lowing pressure",
+        "blood pressure decreased",
+        "blood pressure drop arterial",
+        "blood pressure low",
+        "blood pressure lower",
+        "blood pressure, low",
+        "blood pressure; low",
+        "hypotension",
+        "hypotension arterial",
+        "hypotension nos",
+        "hypotension, nos",
+        "low blood pressure",
+        "low blood pressures",
+        "low; blood pressure",
+        "low;blood pressure",
+        "lower blood pressure",
+        "lowered blood pressure",
+        "pressure arterial decreased"
+      ]
+    },
+    {
+      "cui": "C1371656",
+      "name": "Decreased Gluconeogenesis",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371660",
+      "name": "Decreased Glycogenesis",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372343",
+      "name": "Increased Glucose Transport into Cells",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373092",
+      "name": "Insulin Receptor Agonists",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0011860",
+      "name": "Diabetes Mellitus, Non-Insulin-Dependent",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0011880",
+      "name": "Diabetic Ketoacidosis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "acidoses, diabetic",
+        "acidosis diabetic",
+        "acidosis, diabetic",
+        "diabetes mellitus with ketoacidosis",
+        "diabetes mellitus with ketoacidosis (diagnosis)",
+        "diabetes with ketoacidosis",
+        "diabetic acidoses",
+        "diabetic acidosis",
+        "diabetic acidosis without coma",
+        "diabetic acidosis, nos",
+        "diabetic keto-acidosis",
+        "diabetic ketoacidoses",
+        "diabetic ketoacidosis",
+        "diabetic ketoacidosis, dka",
+        "diabetic ketoses",
+        "diabetic ketosis",
+        "diabetic ketosis without coma",
+        "dka",
+        "dka - diabetic ketoacidosis",
+        "dka diabetic ketoacidoses",
+        "dka diabetic ketoacidosis",
+        "ketoacidoses, diabetic",
+        "ketoacidosis (diabetic)",
+        "ketoacidosis diabetic",
+        "ketoacidosis due to diabetes mellitus",
+        "ketoacidosis in diabetes mellitus",
+        "ketoacidosis, diabetic",
+        "ketoacidosis, dka diabetic",
+        "ketoses, diabetic",
+        "ketosis, diabetic"
+      ]
+    },
+    {
+      "cui": "C0220981",
+      "name": "Metabolic acidosis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "acidoses, metabolic",
+        "acidosis metabolic",
+        "acidosis, metabolic",
+        "acidosis; metabolic",
+        "metabolic acidoses",
+        "metabolic acidosis",
+        "metabolic acidosis (diagnosis)",
+        "metabolic acidosis disorder",
+        "metabolic acidosis nos",
+        "metabolic acidosis, nos",
+        "metabolic; acidosis"
+      ]
+    },
+    {
+      "cui": "C0023895",
+      "name": "Liver diseases",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "disease hepatocellular",
+        "disease of liver",
+        "disease of liver, nos",
+        "disease, liver",
+        "disease;liver",
+        "diseases of liver",
+        "diseases of liver (k70-k77)",
+        "diseases of the liver",
+        "diseases, liver",
+        "disorder hepatic",
+        "disorder liver",
+        "disorder of liver",
+        "disorder; liver",
+        "fector hepaticus",
+        "hepatic disease",
+        "hepatic disease (nos)",
+        "hepatic disease nos",
+        "hepatic diseases",
+        "hepatic disorder",
+        "hepatic disorder (nos)",
+        "hepatic disorder nos",
+        "hepatic disorders",
+        "hepatic disorders (diagnosis)",
+        "hepatic: hepatocellular",
+        "hepatocellular disease",
+        "hepatopathy",
+        "ld - liver disease",
+        "liver and intrahepatic bile duct disorder",
+        "liver disease",
+        "liver disease nos",
+        "liver disease, nos",
+        "liver disease, unspecified",
+        "liver diseases",
+        "liver diseases of",
+        "liver disorder",
+        "liver disorders",
+        "liver--diseases",
+        "liver; disease",
+        "unspecified disorder of liver"
+      ]
+    },
+    {
+      "cui": "C1371350",
+      "name": "Decreased Cell Wall Synthesis & Repair",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371554",
+      "name": "Decreased DNA Replication",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371715",
+      "name": "Decreased Metabolic Rate [PE]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371848",
+      "name": "Decreased Protein Synthesis",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373148",
+      "name": "Cellular Structure Molecule Interactions",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0014836",
+      "name": "Escherichia coli Infections",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0003460",
+      "name": "Anuria",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "absence of urine volume",
+        "absent urine output",
+        "anuria",
+        "anurias",
+        "arrest of urinary output",
+        "failure of urine formation",
+        "passes no urine",
+        "secretion; urinary, suppression",
+        "suppression of urinary secretion",
+        "suppression; urinary secretion",
+        "urinary output arrest of",
+        "urinary; secretion, suppression",
+        "urine formation failure of",
+        "urine volume, absence"
+      ]
+    },
+    {
+      "cui": "C0042029",
+      "name": "Urinary tract infection",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0004623",
+      "name": "Bacterial Infections",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0038160",
+      "name": "Staphylococcal Infections",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0028961",
+      "name": "Oliguria",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "decrease urination",
+        "decreased output urine",
+        "decreased urine output",
+        "decreased urine volume",
+        "low urine output",
+        "oligouria",
+        "oliguria",
+        "oliguria (diagnosis)",
+        "oligurias",
+        "passes too little urine",
+        "urination decrease",
+        "urine output decreased",
+        "urine output low",
+        "urine production scanty",
+        "urine volume deficient",
+        "urine volume, decreased",
+        "volume urine decreased"
+      ]
+    },
+    {
+      "cui": "C0022354",
+      "name": "Jaundice, Obstructive",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cholestatic icterus",
+        "cholestatic jaundice",
+        "cholestatic jaundice syndrome",
+        "cholestatic jaundice syndrome, nos",
+        "cholestatic jaundice, nos",
+        "jaundice cholestatic",
+        "jaundice obstructive",
+        "jaundice, cholestatic",
+        "jaundice, mechanical",
+        "jaundice, obstructive",
+        "jaundice, regurgitation",
+        "jaundice; obstructive",
+        "jaundice; regurgitation",
+        "jaundice;obstructive",
+        "mechanical jaundice",
+        "obstructive hyperbilirubinaemia",
+        "obstructive hyperbilirubinemia",
+        "obstructive jaundice",
+        "obstructive; jaundice",
+        "regurgitation; jaundice"
+      ]
+    },
+    {
+      "cui": "C0022658",
+      "name": "Kidney Diseases",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "disease of kidney",
+        "disease, kidney",
+        "diseases kidneys",
+        "diseases, kidney",
+        "disorder kidney",
+        "disorder of kidney",
+        "disorder renal",
+        "disorder;kidney",
+        "kidney disease",
+        "kidney disease, nos",
+        "kidney diseases",
+        "kidney disorder",
+        "kidney disorders",
+        "kidneys--diseases",
+        "nephrologic disease",
+        "nephropathies",
+        "nephropathy",
+        "nephropathy (diagnosis)",
+        "nephropathy nos",
+        "nephropathy, nos",
+        "renal disease",
+        "renal disease nos",
+        "renal disease, nos",
+        "renal diseases",
+        "renal disorder",
+        "renal disorder (diagnosis)",
+        "renal disorder nos",
+        "renal disorder, nos",
+        "renal disorders",
+        "renal disorders: nonspecific",
+        "renal; disease"
+      ]
+    },
+    {
+      "cui": "C0022729",
+      "name": "Klebsiella Infections",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2756995",
+      "name": "Enzyme Inhibitors [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371427",
+      "name": "Decreased Central Nervous System Serotonin Activity",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371830",
+      "name": "Decreased Peripheral Nervous System Serotonin Activity",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372039",
+      "name": "Emesis Suppression",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0520909",
+      "name": "Postoperative Nausea and Vomiting",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2917245",
+      "name": "Serotonin 3 Receptor Antagonists",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2757002",
+      "name": "Serotonin 5HT-3 Antagonists [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0001973",
+      "name": "Alcoholic Intoxication, Chronic",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "abuse;alcohol;chronic",
+        "alcohol abuse chronic",
+        "alcohol abuse, continuous drinking behavior",
+        "alcohol abuse, continuous drinking behaviour",
+        "alcohol dependence",
+        "alcohol dependence syndrome",
+        "alcohol dependences",
+        "alcohol; dependence",
+        "alcoholic intoxication, chronic",
+        "alcoholism",
+        "alcoholism chronic",
+        "alcoholism with alcohol dependence",
+        "alcoholism, chronic",
+        "alcoholism, nos",
+        "alcoholism;chronic",
+        "alcoholisms",
+        "chronic alcohol abuse",
+        "chronic alcoholic intoxication",
+        "chronic alcoholism",
+        "dependence, alcohol",
+        "dependence; alcohol",
+        "dependence;alcohol",
+        "dipsomania",
+        "intoxication, chronic alcoholic",
+        "mental and behavioral disorders due to use of alcohol, dependence syndrome",
+        "mental and behavioural disorders due to use of alcohol, dependence syndrome"
+      ]
+    },
+    {
+      "cui": "C1371278",
+      "name": "Arterial Vasodilation",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371292",
+      "name": "Cardiac Rhythm Alteration",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372752",
+      "name": "Negative Chronotropy",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372753",
+      "name": "Negative Inotropy",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373133",
+      "name": "Adrenergic beta2-Antagonists [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373134",
+      "name": "Adrenergic beta1-Antagonists [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0014849",
+      "name": "Esophageal and Gastric Varices",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0428977",
+      "name": "Bradycardia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "brachycardia",
+        "bradyarrhythmia",
+        "bradyarrhythmias",
+        "bradycardia",
+        "bradycardia nos",
+        "bradycardia, nos",
+        "bradycardia, unspecified",
+        "bradycardias",
+        "cardiac arrhythmia, bradycardia",
+        "decrease in heart rate",
+        "decreased heart rate",
+        "decreasing heart rate",
+        "heart beat; slow",
+        "heart rate decreased",
+        "heart rate low",
+        "heart rate slow",
+        "heart rate slowing",
+        "heart; frequency low",
+        "heart; slow",
+        "heartbeat (pulse);slow",
+        "low heart rate",
+        "low pulse rate",
+        "low pulse rates",
+        "pulse rate decrease",
+        "pulse rate decrease marked",
+        "pulse rate low",
+        "pulse slow",
+        "pulse slowed",
+        "pulse slowing",
+        "slow heart beat",
+        "slow heart rate",
+        "slow heart rate (symptom)",
+        "slow heartbeat",
+        "slow heartbeats",
+        "slow pulse",
+        "slow; heart",
+        "slow; heart beat"
+      ]
+    },
+    {
+      "cui": "C0270736",
+      "name": "Essential Tremor",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0149931",
+      "name": "Migraine Disorders",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0002962",
+      "name": "Angina Pectoris",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0039240",
+      "name": "Supraventricular tachycardia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0031511",
+      "name": "Pheochromocytoma",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0034063",
+      "name": "Pulmonary Edema",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "edema lung",
+        "edema pulmonary",
+        "edema, pulmonary",
+        "edema; lung",
+        "edemas, pulmonary",
+        "excess fluid in lungs",
+        "lung edema",
+        "lung oedema",
+        "lung, edema",
+        "lung, wet",
+        "lung; edema",
+        "lungs, wet",
+        "oedema lung",
+        "oedema pulmonary",
+        "oedema;pulmonary",
+        "pulmonary edema",
+        "pulmonary edema (diagnosis)",
+        "pulmonary edema nos",
+        "pulmonary edema, nos",
+        "pulmonary edemas",
+        "pulmonary oedema",
+        "pulmonary oedema nos",
+        "pulmonary oedema, nos",
+        "pulmonary oedemas",
+        "wet lung",
+        "wet lungs"
+      ]
+    },
+    {
+      "cui": "C0036980",
+      "name": "Shock, Cardiogenic",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cardiac shock syndrome",
+        "cardiocirculatory collapse",
+        "cardiogenic shock",
+        "cardiogenic shock (diagnosis)",
+        "cardiogenic; shock",
+        "cardiovascular shock",
+        "heart shock",
+        "heart shocking",
+        "power failure syndrome",
+        "shock cardiogenic",
+        "shock heart",
+        "shock, cardiogenic",
+        "shock; cardiogenic"
+      ]
+    },
+    {
+      "cui": "C0037052",
+      "name": "Sick Sinus Syndrome",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "sick sinus node syndrome",
+        "sick sinus syndrome",
+        "sick sinus syndrome (diagnosis)",
+        "sick sinus; syndrome",
+        "sick syndrome sinus",
+        "sinoatrial node disease",
+        "sinus sick syndrome",
+        "sss",
+        "syndrome sick sinus",
+        "syndrome, sick sinus",
+        "syndrome; sick sinus"
+      ]
+    },
+    {
+      "cui": "C0004245",
+      "name": "Atrioventricular Block",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "a-v block",
+        "atrioventricular block",
+        "atrioventricular block (diagnosis)",
+        "atrioventricular block (nos)",
+        "atrioventricular block by ecg finding",
+        "atrioventricular block by ekg finding",
+        "atrioventricular block nos",
+        "atrioventricular block, nos",
+        "atrioventricular block, unspecified",
+        "atrioventricular blocks",
+        "atrioventricular conduction block",
+        "atrioventricular conduction blocks",
+        "atrioventricular heart block",
+        "atrioventricular; block",
+        "av block",
+        "av block (nos)",
+        "av block, nos",
+        "av blocks",
+        "av heart block",
+        "avb - atrioventricular block",
+        "block, av",
+        "block; atrioventricular",
+        "block;atrioventricular",
+        "blocks, av",
+        "conduction block, atrioventricular",
+        "conduction blocks, atrioventricular",
+        "heart block atrioventricular",
+        "heart block av",
+        "interruption of electrical communication between upper and lower chambers of heart",
+        "unspecified atrioventricular block"
+      ]
+    },
+    {
+      "cui": "C0034734",
+      "name": "Raynaud Disease",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cold fingers, hereditary",
+        "disease raynaud",
+        "disease raynaud's",
+        "disease raynauds",
+        "disease;raynauds",
+        "raynaud",
+        "raynaud disease",
+        "raynaud s disease",
+        "raynaud syndrome",
+        "raynaud's",
+        "raynaud's disease",
+        "raynaud's phenomenon",
+        "raynaud's syndrome",
+        "raynaud's syndrome (diagnosis)",
+        "raynauds",
+        "raynauds disease",
+        "raynauds syndrome",
+        "raynauds's syndrome",
+        "syndrome raynaud"
+      ]
+    },
+    {
+      "cui": "C0042510",
+      "name": "Ventricular Fibrillation",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0042514",
+      "name": "Tachycardia, Ventricular",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0030319",
+      "name": "Panic Disorder",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C3536811",
+      "name": "Bronchoconstriction [PE]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2757061",
+      "name": "Adrenergic beta-Antagonists [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1956346",
+      "name": "Coronary Artery Disease",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0085605",
+      "name": "Liver Failure",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "failure hepatic",
+        "failure liver",
+        "failure;hepatic",
+        "hepatic failure",
+        "hepatic failure (diagnosis)",
+        "hepatic failure, nos",
+        "hepatic failure, unspecified",
+        "hepatic insufficiency",
+        "hepatic insufficiency, nos",
+        "liver decompensation",
+        "liver decompensation, nos",
+        "liver failure",
+        "liver function failure",
+        "liver function failure, nos",
+        "liver--failure"
+      ]
+    },
+    {
+      "cui": "C0022925",
+      "name": "Lactation",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "lactation",
+        "lactation, function",
+        "lactation, nos",
+        "milk secretion",
+        "milk secretions"
+      ]
+    },
+    {
+      "cui": "C0020443",
+      "name": "Hypercholesterolemia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0020476",
+      "name": "Hyperlipoproteinemias",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0020557",
+      "name": "Hypertriglyceridemia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2756999",
+      "name": "Hydroxymethylglutaryl-CoA Reductase Inhibitors [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0019572",
+      "name": "Hirsutism",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1565662",
+      "name": "Acute Kidney Insufficiency",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "acute kidney insufficiencies",
+        "acute kidney insufficiency",
+        "acute renal impairment",
+        "acute renal insufficiencies",
+        "acute renal insufficiency",
+        "acute renal insufficiency (diagnosis)",
+        "insufficiency; renal, acute",
+        "kidney insufficiencies, acute",
+        "kidney insufficiency, acute",
+        "renal insufficiencies, acute",
+        "renal insufficiency (acute)",
+        "renal insufficiency acute",
+        "renal insufficiency, acute"
+      ]
+    },
+    {
+      "cui": "C1371558",
+      "name": "Decreased Distal Tubule H+ Excretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371560",
+      "name": "Decreased Distal Tubule K+ Excretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1372283",
+      "name": "Increased Distal Tubule Na+ Excretion",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0013604",
+      "name": "Edema",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0003962",
+      "name": "Ascites",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0020461",
+      "name": "Increased circulating potassium concentration",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "excess k",
+        "excess potassium",
+        "excessive potassium in the blood",
+        "high blood potassium level",
+        "hyperkalaemia",
+        "hyperkalemia",
+        "hyperkalemias",
+        "hyperpotassaemia",
+        "hyperpotassemia",
+        "hyperpotassemias",
+        "increased circulating potassium concentration",
+        "potassium excess",
+        "potassium overload"
+      ]
+    },
+    {
+      "cui": "C0020517",
+      "name": "Hypersensitivity",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "allergic disorder",
+        "allergic disorders",
+        "allergic reaction",
+        "allergic reaction (nos)",
+        "allergic reaction nos",
+        "allergic reaction, nos",
+        "allergic reactions",
+        "allergic state",
+        "allergic state, nos",
+        "allergic; reaction",
+        "allergies",
+        "allergy",
+        "allergy nos",
+        "allergy, nos",
+        "allergy, unspecified",
+        "allergy/allergic reaction nos",
+        "hypersensitivities",
+        "hypersensitivity",
+        "hypersensitivity nos",
+        "hypersensitivity reaction",
+        "hypersensitivity reaction (nos)",
+        "hypersensitivity reaction, nos",
+        "hypersensitivity reactions",
+        "hypersensitivity; reaction",
+        "reaction allergic (nos)",
+        "reaction hypersensitivity (nos)",
+        "reaction; allergic",
+        "reaction; hypersensitivity",
+        "sensitivity"
+      ]
+    },
+    {
+      "cui": "C0020621",
+      "name": "Hypokalemia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2757004",
+      "name": "Aldosterone Antagonists [MoA]",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0001403",
+      "name": "Addison Disease",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "addison disease",
+        "addison's disease",
+        "addison's disease nos",
+        "addison's disease, nos",
+        "addison; disease or syndrome",
+        "addisons disease",
+        "adrenal insufficiency (addison disease)",
+        "adrenal insufficiency (addison's disease)",
+        "adrenal insufficiency, primary",
+        "adrenocortical insufficiencies, primary",
+        "adrenocortical insufficiency, primary",
+        "adrenocortical insufficiency, primary failure",
+        "autoimmune addison disease",
+        "autoimmune adrenalitis",
+        "chronic primary adrenal insufficiency",
+        "classic addison disease",
+        "disease (or disorder); bronzed skin (addison) (bronze disease)",
+        "disease addison's",
+        "disease, addison",
+        "disease;addisons",
+        "hypoadrenalism, primary",
+        "hypoadrenalisms, primary",
+        "hypocortisolism",
+        "insufficiencies, primary adrenocortical",
+        "insufficiency, primary adrenocortical",
+        "primary addison disease",
+        "primary adrenal deficiency",
+        "primary adrenal insufficiency",
+        "primary adrenocortical insufficiencies",
+        "primary adrenocortical insufficiency",
+        "primary hypoadrenalism",
+        "syndrome; addison"
+      ]
+    },
+    {
+      "cui": "C0019069",
+      "name": "Hemophilia A",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "a; hemophilia",
+        "ahg deficiency",
+        "ahg deficiency disease",
+        "anti-hemophilic globulin; deficiency",
+        "antihemophilic factor a deficiency",
+        "antihemophilic globulin deficiency",
+        "classic hemophilia",
+        "classic hemophilias",
+        "classical haemophilia",
+        "classical hemophilia",
+        "classical; hemophilia",
+        "congenital f8 deficiency",
+        "congenital factor viii deficiency",
+        "congenital factor viii deficiency disease",
+        "congenital factor viii disorder",
+        "congenital fviii deficiency",
+        "congenital hemophilia a",
+        "congenital hemophilia as",
+        "deficiency; anti-hemophilic globulin",
+        "factor viii deficiency",
+        "factor viii deficiency (hemophilia)",
+        "factor viii disorder congenital",
+        "factor viii hemophilia",
+        "functional factor viii deficiency",
+        "haemophilia",
+        "haemophilia a",
+        "haemophilia a (factor viii)",
+        "haemophilia a, nos",
+        "hema",
+        "hemophilia",
+        "hemophilia a",
+        "hemophilia a (diagnosis)",
+        "hemophilia a (factor viii)",
+        "hemophilia a, congenital",
+        "hemophilia a, nos",
+        "hemophilia as",
+        "hemophilia as, congenital",
+        "hemophilia, classic",
+        "hemophilia, classical",
+        "hemophilia; a",
+        "hemophilia; classical",
+        "hemophilias, classic",
+        "hereditary factor viii deficiency",
+        "hereditary factor viii deficiency disease",
+        "sex-linked factor viii deficiency",
+        "sex-linked factor viii deficiency disease",
+        "subhemophilia"
+      ]
+    },
+    {
+      "cui": "C1371533",
+      "name": "Decreased Coagulation Factor Activity",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1371534",
+      "name": "Decreased Coagulation Factor Concentration",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C1373065",
+      "name": "Vitamin K Epoxide Reductase Inhibitors",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0017181",
+      "name": "Gastrointestinal Hemorrhage",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "bleeding gastrointestinal",
+        "gastrointestinal bleeding",
+        "gastrointestinal haemorrhage",
+        "gastrointestinal haemorrhage nos",
+        "gastrointestinal haemorrhage, nos",
+        "gastrointestinal haemorrhage, unspecified",
+        "gastrointestinal haemorrhages",
+        "gastrointestinal hemorrhage",
+        "gastrointestinal hemorrhage, nos",
+        "gastrointestinal hemorrhage, unspecified",
+        "gastrointestinal hemorrhages",
+        "gastrointestinal tract bleed (nos)",
+        "gastrointestinal tract bleed nos",
+        "gastrointestinal tract hemorrhage",
+        "gastrointestinal tract; hemorrhage",
+        "gastrointestinal; hemorrhage",
+        "gi - gastrointestinal bleed",
+        "gi - gastrointestinal haemorrhage",
+        "gi - gastrointestinal hemorrhage",
+        "gi bleed",
+        "gi bleeding",
+        "gi bleeding, nos",
+        "gi haemorrhage",
+        "gi haemorrhage, nos",
+        "gi hemorrhage",
+        "gi hemorrhage, nos",
+        "git - gastrointestinal tract haemorrhage",
+        "git - gastrointestinal tract hemorrhage",
+        "haemorrhage gastrointestinal",
+        "hemorrhage gastrointestinal",
+        "hemorrhage of gastrointestinal tract",
+        "hemorrhage, gastrointestinal",
+        "hemorrhage; gastrointestinal",
+        "hemorrhage; gastrointestinal tract"
+      ]
+    },
+    {
+      "cui": "C0014121",
+      "name": "Bacterial Endocarditis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "bacterial endocarditides",
+        "bacterial endocarditis",
+        "bacterial endocarditis (diagnosis)",
+        "bacterial endocarditis, nos",
+        "bacterial infection of the heart valve",
+        "bacterial; endocarditis",
+        "be",
+        "be - bacterial endocarditis",
+        "endocarditides, bacterial",
+        "endocarditis bacterial",
+        "endocarditis bacterial nos",
+        "endocarditis infective",
+        "endocarditis, bacterial",
+        "endocarditis, infective nos",
+        "endocarditis; bacterial",
+        "endocarditis;bacterial",
+        "infective endocarditis"
+      ]
+    },
+    {
+      "cui": "C0857305",
+      "name": "Thrombocytopenic purpura",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "purpura thrombocytopaenic",
+        "purpura thrombocytopenic",
+        "purpura, thrombocytopenic",
+        "purpura, thrombopenic",
+        "purpura; thrombocytopenic",
+        "purpura; thrombopenic",
+        "purpuras, thrombocytopenic",
+        "purpuras, thrombopenic",
+        "thrombocytopaenic purpura",
+        "thrombocytopenia purpura",
+        "thrombocytopenic purpura",
+        "thrombocytopenic purpuras",
+        "thrombocytopenic; purpura",
+        "thrombopenic purpura",
+        "thrombopenic purpuras",
+        "thrombopenic; purpura"
+      ]
+    },
+    {
+      "cui": "C0012813",
+      "name": "Diverticulitis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "diverticulitides",
+        "diverticulitis",
+        "diverticulitis (diagnosis)",
+        "diverticulitis (morphologic abnormality)",
+        "diverticulitis nos",
+        "diverticulitis, nos"
+      ]
+    },
+    {
+      "cui": "C0013537",
+      "name": "Eclampsia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "eclampsia",
+        "eclampsia (diagnosis)",
+        "eclampsia nos",
+        "eclampsia, unspecified as to time period",
+        "eclampsias",
+        "eclamptic toxaemia",
+        "eclamptic toxemia",
+        "eclamptic; toxemia",
+        "toxaemia with convulsions",
+        "toxemia with convulsions",
+        "toxemia; eclamptic"
+      ]
+    },
+    {
+      "cui": "C0013911",
+      "name": "Emaciation",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "emaciate",
+        "emaciated",
+        "emaciated (physical finding)",
+        "emaciated build",
+        "emaciation",
+        "emaciation, nos",
+        "emaciations"
+      ]
+    },
+    {
+      "cui": "C0010072",
+      "name": "Coronary Thrombosis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0007097",
+      "name": "Carcinoma",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "carcinoma",
+        "carcinoma (diagnosis)",
+        "carcinoma (morphologic abnormality)",
+        "carcinoma nos",
+        "carcinoma, nos",
+        "carcinoma; unspecified site, unspecified site",
+        "carcinomas",
+        "epithelial carcinoma",
+        "epithelial neoplasm, malignant",
+        "epithelial neoplasms, malignant",
+        "epithelial tumor, malignant",
+        "epithelial tumors, malignant",
+        "epithelial tumour, malignant",
+        "epithelioma",
+        "epitheliomas",
+        "malignant epithelial neoplasm",
+        "malignant epithelial neoplasm (morphologic abnormality)",
+        "malignant epithelial neoplasms",
+        "malignant epithelial tumor",
+        "malignant epithelial tumors",
+        "malignant epithelial tumour",
+        "malignant epithelioma",
+        "neoplasm, malignant epithelial",
+        "neoplasms, malignant epithelial",
+        "tumor, malignant epithelial",
+        "unspecified site; carcinoma, unspecified site"
+      ]
+    },
+    {
+      "cui": "C0008533",
+      "name": "Hemophilia B",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "antihemophilic factor b deficiency",
+        "autoprothrombin ii deficiency",
+        "b haemophilia",
+        "b hemophilia",
+        "b; hemophilia",
+        "bs, hemophilia",
+        "christmas disease",
+        "christmas; disease",
+        "congenital factor ix deficiency",
+        "congenital factor ix disorder",
+        "deficiencies, factor ix",
+        "deficiency, factor ix",
+        "deficiency, plasma thromboplastin component",
+        "deficiency, ptc",
+        "deficiency; ptc",
+        "disease, christmas",
+        "disease; christmas",
+        "factor ix deficiencies",
+        "factor ix deficiency",
+        "factor ix deficiency (hemophilia b)",
+        "haemophilia b",
+        "haemophilia b (factor ix)",
+        "haemophilia b, nos",
+        "haemophilia bs",
+        "hemophilia b",
+        "hemophilia b (diagnosis)",
+        "hemophilia b (factor ix)",
+        "hemophilia b leyden",
+        "hemophilia b, nos",
+        "hemophilia bs",
+        "hemophilia; b",
+        "hereditary factor ix deficiency",
+        "hereditary factor ix deficiency disease",
+        "plasma thromboplastin component deficiency",
+        "plasma thromboplastin; component, deficiency",
+        "ptc deficiency",
+        "ptc deficiency disease",
+        "ptc; deficiency",
+        "sex-linked factor ix deficiency disease"
+      ]
+    },
+    {
+      "cui": "C0042880",
+      "name": "Vitamin K Deficiency",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "deficiencies k vitamin",
+        "deficiencies, vitamin k",
+        "deficiency k vitamin",
+        "deficiency of vitamin k",
+        "deficiency vitamin k",
+        "deficiency, vitamin k",
+        "deficiency; vitamin k",
+        "disease vitamin k deficiency",
+        "hypovitaminosis k",
+        "k vitamin deficiency",
+        "of vitamin k deficiency",
+        "vitamin k deficiencies",
+        "vitamin k deficiency",
+        "vitamin k deficiency (diagnosis)",
+        "vitamin k deficiency disease"
+      ]
+    },
+    {
+      "cui": "C0038454",
+      "name": "Cerebrovascular accident",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0002940",
+      "name": "Aneurysm",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "aneurysm",
+        "aneurysm (morphologic abnormality)",
+        "aneurysm - lesion",
+        "aneurysm of unspecified site",
+        "aneurysm of unspecified site (diagnosis)",
+        "aneurysm, nos",
+        "aneurysmal dilatation",
+        "aneurysmal dilatation, nos",
+        "aneurysms",
+        "artery; dilatation",
+        "vascular dilatation",
+        "wider than typical opening or gap"
+      ]
+    },
+    {
+      "cui": "C0034065",
+      "name": "Pulmonary Embolism",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0003969",
+      "name": "Ascorbic Acid Deficiency",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "ascorbic acid deficiencies",
+        "ascorbic acid deficiency",
+        "ascorbic acid deficiency disease",
+        "ascorbic acid; deficiency",
+        "deficiencies, ascorbic acid",
+        "deficiencies, vitamin c",
+        "deficiency of ascorbic acid",
+        "deficiency of vitamin c",
+        "deficiency, ascorbic acid",
+        "deficiency, vitamin c",
+        "deficiency; ascorbic acid",
+        "deficiency; vitamin, c",
+        "of vitamin c deficiency",
+        "scorbutic",
+        "vitamin c deficiencies",
+        "vitamin c deficiency",
+        "vitamin c deficiency (diagnosis)",
+        "vitamin c deficiency disease",
+        "vitamin; deficiency, c"
+      ]
+    },
+    {
+      "cui": "C0040038",
+      "name": "Thromboembolism",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0040046",
+      "name": "Thrombophlebitis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0004238",
+      "name": "Atrial Fibrillation",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0042487",
+      "name": "Venous Thrombosis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0032787",
+      "name": "Postoperative Complications",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C0032788",
+      "name": "Postoperative Hemorrhage",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "bleeding postoperative",
+        "blood loss, postoperative",
+        "haemorrhage postprocedure",
+        "haemorrhage;post-op",
+        "hemorrhage post operative",
+        "hemorrhage postoperative",
+        "hemorrhage postprocedure",
+        "hemorrhage, postoperative",
+        "hemorrhage; postoperative",
+        "hemorrhages, postoperative",
+        "loss, postoperative blood",
+        "post-op haemorrhage",
+        "post-op hemorrhage",
+        "post-operative haemorrhage",
+        "post-operative hemorrhage",
+        "postoperative bleeding",
+        "postoperative blood loss",
+        "postoperative haemorrhage",
+        "postoperative hemorrhage",
+        "postoperative hemorrhage (diagnosis)",
+        "postoperative hemorrhages",
+        "postoperative; hemorrhage"
+      ]
+    },
+    {
+      "cui": "C0033575",
+      "name": "Prostatic Diseases",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "disease (or disorder); prostate",
+        "disease of prostate, nos",
+        "disease prostate",
+        "disease prostates",
+        "disease, prostatic",
+        "disease;prostate",
+        "diseases of the prostate",
+        "diseases prostate",
+        "diseases, prostatic",
+        "disorder of prostate",
+        "disorder of prostate, nos",
+        "disorder of prostate, unspecified",
+        "disorders prostate",
+        "of prostate disease",
+        "prostate disease",
+        "prostate diseases",
+        "prostate disorder",
+        "prostate disorders",
+        "prostate disorders (diagnosis)",
+        "prostate--diseases",
+        "prostatic disease",
+        "prostatic disease or syndrome",
+        "prostatic diseases",
+        "prostatic diseases and syndromes",
+        "prostatic disorder",
+        "prostatic disorder nos",
+        "prostatic disorder, nos",
+        "unspecified disorder of prostate"
+      ]
+    },
+    {
+      "cui": "C0033677",
+      "name": "Protein-Energy Malnutrition",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "calorie malnutrition protein",
+        "deficiency of macronutrients",
+        "energy malnutrition protein",
+        "malnutrition protein-calorie",
+        "malnutrition, protein-calorie",
+        "malnutrition, protein-energy",
+        "malnutrition; protein, caloric",
+        "malnutritions, protein-energy",
+        "pcm",
+        "pcm - protein-calorie malnutrition",
+        "pcms",
+        "pem - protein-energy malnutrition",
+        "protein calorie malnutrition",
+        "protein energy malnutrition",
+        "protein-calorie malnutrition",
+        "protein-calorie malnutrition, nos",
+        "protein-calorie undernutrition",
+        "protein-energy malnutrition",
+        "protein-energy malnutrition, nos",
+        "protein; malnutrition, caloric",
+        "unspecified protein-calorie malnutrition",
+        "unspecified protein-energy malnutrition"
+      ]
+    },
+    {
+      "cui": "C0031039",
+      "name": "Pericardial effusion",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "effusion pericardial",
+        "effusion, pericardial",
+        "effusion; pericardial",
+        "effusion; pericardium",
+        "effusions, pericardial",
+        "fluid around heart",
+        "fluid in pericardium",
+        "pericardial effusion",
+        "pericardial effusion (diagnosis)",
+        "pericardial effusion, nos",
+        "pericardial effusions",
+        "pericardial fluid",
+        "pericardium; effusion"
+      ]
+    },
+    {
+      "cui": "C0031046",
+      "name": "Pericarditis",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "an inflammation of the membrane surrounding the heart",
+        "inflammation; pericardium",
+        "pericarditis",
+        "pericarditis (diagnosis)",
+        "pericarditis nos",
+        "pericarditis, nos",
+        "pericardium; inflammation",
+        "swelling or irritation of membrane around heart"
+      ]
+    },
+    {
+      "cui": "C0023418",
+      "name": "leukemia",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "all types of leukemia",
+        "blood (leukemia)",
+        "leucocythaemia",
+        "leucocythaemias",
+        "leucocythemia",
+        "leucocythemias",
+        "leukaemia",
+        "leukaemia morphology",
+        "leukaemia nos",
+        "leukaemia of unspecified cell type",
+        "leukaemia unspecified",
+        "leukaemia, disease",
+        "leukaemia, nos",
+        "leukaemia, nos, without mention of remission",
+        "leukaemia, unspecified",
+        "leukaemia, unspecified, without mention of remission",
+        "leukaemias",
+        "leukemia",
+        "leukemia (diagnosis)",
+        "leukemia (morphologic abnormality)",
+        "leukemia morphology",
+        "leukemia nos",
+        "leukemia of unspecified cell type",
+        "leukemia type",
+        "leukemia types",
+        "leukemia unspecified",
+        "leukemia, disease",
+        "leukemia, nos",
+        "leukemia, nos, without mention of remission",
+        "leukemia, unspecified",
+        "leukemia, unspecified, without mention of remission",
+        "leukemias",
+        "leukemias, general",
+        "leukemias, nos",
+        "unspecified leukaemia",
+        "unspecified leukaemia without mention of remission",
+        "unspecified leukemia",
+        "unspecified leukemia without mention of remission",
+        "unspecified leukemias"
+      ]
+    },
+    {
+      "cui": "C2917237",
+      "name": "Vitamin K Inhibitors",
+      "kind": "process",
+      "tuis": [],
+      "atom_keys": []
+    },
+    {
+      "cui": "C2937358",
+      "name": "Cerebral Hemorrhage",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "cerebral haemorrhage",
+        "cerebral haemorrhages",
+        "cerebral hemorrhage",
+        "cerebral hemorrhages",
+        "cerebral parenchymal haemorrhage",
+        "cerebral parenchymal hemorrhage",
+        "cerebral parenchymal hemorrhages",
+        "cerebrum hemorrhage",
+        "cerebrum hemorrhages",
+        "cva - cerebrovascular accident due to intracerebral haemorrhage",
+        "cva - cerebrovascular accident due to intracerebral hemorrhage",
+        "haemorrhage cerebral",
+        "haemorrhage intracerebral",
+        "haemorrhage;cerebral",
+        "hemorrhage cerebral",
+        "hemorrhage intracerebral",
+        "hemorrhage of cerebrum",
+        "hemorrhage, cerebral",
+        "hemorrhage, cerebral parenchymal",
+        "hemorrhage, cerebrum",
+        "hemorrhage, intracerebral",
+        "hemorrhage; intracerebral",
+        "hemorrhages, cerebral",
+        "hemorrhages, cerebral parenchymal",
+        "hemorrhages, cerebrum",
+        "hemorrhages, intracerebral",
+        "ich - intracerebral hemorrhage",
+        "intracerebral haemorrhage",
+        "intracerebral haemorrhage, nos",
+        "intracerebral haemorrhage, unspecified",
+        "intracerebral hematoma",
+        "intracerebral hemorrhage",
+        "intracerebral hemorrhage, nos",
+        "intracerebral hemorrhage, unspecified",
+        "intracerebral hemorrhages",
+        "intracerebral; hemorrhage",
+        "parenchymal hemorrhage, cerebral",
+        "parenchymal hemorrhages, cerebral",
+        "rupture of blood vessel in brain",
+        "rupture of blood vessels in the brain",
+        "rupture;blood vessel;brain",
+        "stroke due to intracerebral haemorrhage",
+        "stroke due to intracerebral hemorrhage"
+      ]
+    },
+    {
+      "cui": "C0020540",
+      "name": "Malignant Hypertension",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "accelerated hypertension",
+        "hypertension accelerated",
+        "hypertension malignant",
+        "hypertension, accelerated",
+        "hypertension, malignant",
+        "hypertension;malignant",
+        "malignant hypertension",
+        "malignant hypertension (diagnosis)",
+        "malignant hypertension nos"
+      ]
+    },
+    {
+      "cui": "C0000821",
+      "name": "Threatened abortion",
+      "kind": "disease",
+      "tuis": [],
+      "atom_keys": [
+        "abortion threatened",
+        "abortion, threatened",
+        "abortion; threatened",
+        "abortion;threatened",
+        "miscarriage threatening",
+        "miscarriage, threatened",
+        "miscarriage; threatened",
+        "miscarriage;threatened",
+        "pregnancy with threatened abortion",
+        "pregnancy with threatened abortion (diagnosis)",
+        "pregnancy; abortion, threatened",
+        "pregnancy; threatened abortion",
+        "threaten abortion",
+        "threatened abortion",
+        "threatened abortion (antepartum)",
+        "threatened abortion, antepartum",
+        "threatened abortion, antepartum condition or complication",
+        "threatened abortion, nos",
+        "threatened abortions",
+        "threatened miscarriage",
+        "threatened miscarriages",
+        "threatened; abortion",
+        "threatened; miscarriage"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "src": "C0025598",
+      "dst": "C0035078",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "metformin_renal",
+      "threshold": {
+        "var": "egfr",
+        "op": "<",
+        "threshold": 30,
+        "drug": "metformin"
+      }
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0035078",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "nsaid_renal",
+      "threshold": {
+        "var": "egfr",
+        "op": "<",
+        "threshold": 30,
+        "drug": "ibuprofen"
+      }
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "acei_pregnancy",
+      "threshold": {
+        "var": "pregnant",
+        "op": "==",
+        "threshold": true,
+        "drug": "lisinopril"
+      }
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0004096",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "betablocker_asthma",
+      "threshold": {
+        "var": "severe_asthma",
+        "op": "==",
+        "threshold": true,
+        "drug": "propranolol"
+      }
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0035400",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "aspirin_reye",
+      "threshold": {
+        "var": "age",
+        "op": "<",
+        "threshold": 16,
+        "drug": "aspirin"
+      }
+    },
+    {
+      "src": "C0037982",
+      "dst": "C5979967",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "spironolactone_hyperkalaemia",
+      "threshold": {
+        "var": "potassium",
+        "op": ">",
+        "threshold": 5.5,
+        "drug": "spironolactone"
+      }
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0019080",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "warfarin_inr",
+      "threshold": {
+        "var": "inr",
+        "op": ">",
+        "threshold": 4.0,
+        "drug": "warfarin"
+      }
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0035410",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "statin_macrolide",
+      "threshold": {
+        "var": "clarithromycin",
+        "op": "==",
+        "threshold": true,
+        "drug": "simvastatin"
+      }
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0035078",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "nitrofurantoin_renal",
+      "threshold": {
+        "var": "egfr",
+        "op": "<",
+        "threshold": 30,
+        "drug": "nitrofurantoin"
+      }
+    },
+    {
+      "src": "C0061851",
+      "dst": "C0023976",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "curated",
+      "source_vocab": "ondansetron_qt",
+      "threshold": {
+        "var": "qtc",
+        "op": ">",
+        "threshold": 500,
+        "drug": "ondansetron"
+      }
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0018926",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0019087",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C1371839",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C1371843",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C1372012",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C1373178",
+      "rel": "HAS_PHARMACOKINETICS",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0018099",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0015967",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0855739",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0007785",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0007787",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0008049",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0008100",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0005779",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0005818",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0003873",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0029408",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0030193",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0030193",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0032914",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0035436",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0032981",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0027051",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C5779543",
+      "rel": "HAS_PHARMACOKINETICS",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0027430",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0025222",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C2756982",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0021270",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0004057",
+      "dst": "C0021368",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C1371839",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C1371843",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C1372012",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C1373178",
+      "rel": "HAS_PHARMACOKINETICS",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0018099",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0015967",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0013390",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0006444",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0085129",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0003873",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0004096",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0029408",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0030193",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0030201",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0035455",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0038013",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0032981",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0032984",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0033046",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C5779543",
+      "rel": "HAS_PHARMACOKINETICS",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0025323",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C3495559",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C2756982",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0020740",
+      "dst": "C0021368",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0018801",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1371406",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1371678",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1371739",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1371866",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1372551",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C1372857",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0011881",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0011881",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0242698",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0242698",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0149721",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0002994",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0027051",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C2917141",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0020428",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0020538",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C2757044",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0065374",
+      "dst": "C0020649",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C1371656",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C1371660",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C1372343",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C1373092",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0011860",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0011880",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0220981",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0035078",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C5779543",
+      "rel": "HAS_PHARMACOKINETICS",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0025598",
+      "dst": "C0023895",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C1371350",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C1371554",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C1371715",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C1371848",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C1373148",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0014836",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0003460",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0042029",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0042029",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0004623",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0004623",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0032981",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0038160",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0028961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0022354",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0022658",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0022729",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0023895",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C2756995",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0028156",
+      "dst": "C0021270",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C1371427",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C1371830",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C1372039",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C0520909",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C2917245",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C2757002",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0061851",
+      "dst": "C0001973",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0018801",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0018801",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1371278",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1371292",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1372752",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1372753",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1373133",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C1373134",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0014849",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0428977",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0270736",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0149931",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0085129",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0002962",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0039240",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0031511",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0034063",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0036980",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0037052",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0004096",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0004245",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0034734",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0042510",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0042514",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0030319",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0027051",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C2917141",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C3536811",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0020538",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C2757061",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0033497",
+      "dst": "C0020649",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C1956346",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C1956346",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0085605",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0022925",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0020443",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0020476",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C0020557",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0074554",
+      "dst": "C2756999",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0018801",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0019572",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C1565662",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C1371278",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C1371558",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C1371560",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C1372283",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0013604",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0003460",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0003962",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C2917141",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0020428",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0020461",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0020517",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0020538",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0020621",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C2757004",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0037982",
+      "dst": "C0001403",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0019069",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0019080",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C1371533",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C1371534",
+      "rel": "HAS_PHYSIOLOGIC_EFFECT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C1373065",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0017181",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0014121",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0857305",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0012813",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0013182",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0013537",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0013911",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0010072",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0007097",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0007787",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0008533",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0042880",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0038454",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0038454",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0002940",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0034065",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0034065",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0003969",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0040038",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0040038",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0040046",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0004238",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0004238",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0042487",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0032787",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0032787",
+      "rel": "MAY_TREAT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0032788",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0032914",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0032961",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0033575",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0033677",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0031039",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0031046",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0027051",
+      "rel": "MAY_PREVENT",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0023418",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C2917237",
+      "rel": "HAS_MECHANISM",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0023895",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C2937358",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0020540",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0000821",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    },
+    {
+      "src": "C0043031",
+      "dst": "C0001973",
+      "rel": "CONTRAINDICATED_WITH",
+      "provenance": "umls",
+      "source_vocab": "MED-RT",
+      "threshold": null
+    }
+  ],
+  "groundings": {
+    "creatinine": {
+      "slug": "creatinine",
+      "cui": "C0201976",
+      "preferred_name": "Creatinine measurement, serum (procedure)",
+      "tuis": [
+        "T059"
+      ],
+      "tui_names": [
+        "Laboratory Procedure"
+      ],
+      "synonyms": [
+        "Creatinine in serum",
+        "Creatinine measurement, serum",
+        "Creatinine measurement, serum (procedure)",
+        "Creatinine.serum",
+        "Serum Creatinine Measurement",
+        "Serum Creatinine Test",
+        "Serum creatinine",
+        "creatinine procedure serum",
+        "creatinine serum",
+        "creatinine serum test",
+        "serum creatinine",
+        "serum creatinine level",
+        "serum creatinine measurement",
+        "serum creatinine measurement (lab test)",
+        "serum creatinine test",
+        "serum creatinine tests"
+      ],
+      "lexical_variants": [
+        "creatinine",
+        "creatine",
+        "SCr"
+      ],
+      "kind": "lab",
+      "numeric": true,
+      "source": "umls"
+    },
+    "qt_interval": {
+      "slug": "qt_interval",
+      "cui": "C0429028",
+      "preferred_name": "QT interval feature (observable entity)",
+      "tuis": [
+        "T201"
+      ],
+      "tui_names": [
+        "Clinical Attribute"
+      ],
+      "synonyms": [
+        "Electrocardiogram QT interval",
+        "Q-T interval",
+        "QT Interval",
+        "QT interval",
+        "QT interval feature",
+        "QT interval feature (observable entity)",
+        "QT interval, NOS",
+        "interval q-t",
+        "interval qt",
+        "intervals qt",
+        "q t interval",
+        "q-t interval",
+        "qt interval"
+      ],
+      "lexical_variants": [
+        "QTc",
+        "QT",
+        "QT duration",
+        "corrected QT"
+      ],
+      "kind": "lab",
+      "numeric": true,
+      "source": "umls"
+    },
+    "egfr": {
+      "slug": "egfr",
+      "cui": "C3811844",
+      "preferred_name": "Estimated Glomerular Filtration Rate",
+      "tuis": [
+        "T059"
+      ],
+      "tui_names": [
+        "Laboratory Procedure"
+      ],
+      "synonyms": [
+        "Estimated Glomerular Filtration Rate",
+        "Estimated glomerular filtration rate"
+      ],
+      "lexical_variants": [
+        "eGFR",
+        "GFR",
+        "estimated GFR"
+      ],
+      "kind": "lab",
+      "numeric": true,
+      "source": "umls"
+    },
+    "heart_rate": {
+      "slug": "heart_rate",
+      "cui": "C0018810",
+      "preferred_name": "heart rate",
+      "tuis": [
+        "T201"
+      ],
+      "tui_names": [
+        "Clinical Attribute"
+      ],
+      "synonyms": [
+        "Cardiac Rate",
+        "Cardiac Rates",
+        "Cardiac rate",
+        "Cardiac rate, NOS",
+        "HR",
+        "HR - Heart rate",
+        "Heart Rate",
+        "Heart Rates",
+        "Heart rate",
+        "Heart rate (observable entity)",
+        "Heart rate, NOS",
+        "Hrtrate",
+        "Rate, Cardiac",
+        "Rate, Heart",
+        "cardiac rate",
+        "cardiac rates",
+        "heart rate",
+        "heart rates"
+      ],
+      "lexical_variants": [
+        "pulse",
+        "heart rate",
+        "HR"
+      ],
+      "kind": "lab",
+      "numeric": true,
+      "source": "umls"
+    },
+    "potassium": {
+      "slug": "potassium",
+      "cui": "C0302353",
+      "preferred_name": "Serum potassium measurement",
+      "tuis": [
+        "T059"
+      ],
+      "tui_names": [
+        "Laboratory Procedure"
+      ],
+      "synonyms": [
+        "Measurement of potassium in serum",
+        "POTASSIUM SERUM PLASMA/WHOLE BLOOD",
+        "Potassium; serum, plasma or whole blood",
+        "Serum Potassium",
+        "Serum Potassium Measurement",
+        "Serum potassium",
+        "Serum potassium level",
+        "Serum potassium measurement",
+        "Serum potassium measurement (procedure)",
+        "k serum",
+        "levels potassium serum",
+        "potassium level",
+        "potassium serum",
+        "serum K+",
+        "serum k",
+        "serum potassium",
+        "serum potassium level",
+        "serum potassium measurement",
+        "serum potassium measurement (lab test)"
+      ],
+      "lexical_variants": [
+        "potassium",
+        "K+"
+      ],
+      "kind": "lab",
+      "numeric": true,
+      "source": "umls"
+    },
+    "inr": {
+      "slug": "inr",
+      "cui": "C0525032",
+      "preferred_name": "International Normalized Ratio",
+      "tuis": [
+        "T033"
+      ],
+      "tui_names": [
+        "Finding"
+      ],
+      "synonyms": [
+        "INR",
+        "INR (International normalised ratio)",
+        "INR (International normalized ratio)",
+        "INR - Internationalised ratio",
+        "INR - Internationalized ratio",
+        "International Normalized Ratio",
+        "International Normalized Ratios",
+        "International normalised ratio",
+        "International normalized ratio",
+        "International normalized ratio (observable entity)",
+        "International normalized ratio (qualifier value)",
+        "Internationalised ratio",
+        "Internationalized ratio",
+        "Normalized Ratio, International",
+        "Normalized Ratios, International",
+        "Ratio, International Normalized",
+        "Ratios, International Normalized",
+        "bcr",
+        "international normalised ratio",
+        "international normalising ratio",
+        "international normalize ratio",
+        "international normalized ratio",
+        "international normalized ratio (INR)",
+        "international normalized ratios",
+        "international normalizing ratio",
+        "internationalised ratio"
+      ],
+      "lexical_variants": [
+        "INR"
+      ],
+      "kind": "finding",
+      "numeric": true,
+      "source": "umls"
+    },
+    "age": {
+      "slug": "age",
+      "cui": "",
+      "preferred_name": "age",
+      "tuis": [],
+      "tui_names": [],
+      "synonyms": [],
+      "lexical_variants": [],
+      "kind": "lexical",
+      "numeric": false,
+      "source": "lexical-fallback"
+    },
+    "drug": {
+      "slug": "drug",
+      "cui": "C0025598",
+      "preferred_name": "metformin",
+      "tuis": [
+        "T109",
+        "T121"
+      ],
+      "tui_names": [
+        "Organic Chemical",
+        "Pharmacologic Substance"
+      ],
+      "synonyms": [
+        "(4-isobutylphenyl)-\u03b1-methylacetic acid",
+        "(RS)-ibuprofen",
+        "(S)-1-(N(2)-(1-Carboxy-3-phenylpropyl)-L-lysyl)-L-proline",
+        "(\u00b1)-2-(p-isobutylphenyl)propionic acid",
+        "(\u00b1)-ibuprofen",
+        "(\u00b1)-p-isobutylhydratropic acid",
+        "(\u00b1)-\u03b1-methyl-4-(2-methylpropyl)benzeneacetic acid",
+        "1,1-Dimethylbiguanide",
+        "1-((1-Methylethyl)amino)-3-(1-naphthalenyloxy)-2-propanol",
+        "1-((5-nitro-2-furanyl)methylene)amino-2,4-imidazolidenedione",
+        "1-((5-nitrofurfurylidene)amino)hydantoin",
+        "1-(4'-Hydroxy-3'-coumarinyl)-1-phenyl-3-butanone",
+        "1-(isopropylamino)-3-(1-naphthyloxy)propan-2-ol",
+        "1-[(1-Methylethyl)amino]-3-(1-naphthalenyloxy)-2-propanol",
+        "17-Hydroxy-7alpha-mercapto-3-oxo-17alpha-pregn-4-ene-21-carboxylic Acid, gamma Lactone, Acetate",
+        "17-hydroxy-7alpha-mercapto-3-oxo-17alpha-pregn-4-ene-21-carboxylic Acid, gamma Lactone, Acetate",
+        "2,2-dimethylbutyric acid, 8-ester with (4R,6R)-6-(2-((1S,2S,6R,8S,8aR)-1,2,6,7,8,8a-hexahydro-8-hydroxy-2,6-dimethyl-1-naphthyl)ethyl)tetrahydro-4-hydroxy-2H-pyran-2-one",
+        "2,4-Imidazolidinedione, 1-(((5-nitro-2-furanyl)methylene)amino)-",
+        "2-(4-isobutylphenyl)propanoic acid",
+        "2-(Acetyloxy)benzoic Acid",
+        "2-(acetyloxy)benzoic Acid",
+        "2-Acetoxybenzenecarboxylic acid",
+        "2-Acetoxybenzoic acid",
+        "2-Propanol, 1-((1-methylethyl)amino)-3-(1-naphthalenyloxy)-",
+        "2H-1-Benzopyran-2-one, 4-hydroxy-3-(3-oxo-1-phenylbutyl)-",
+        "3-(Alpha-acetonylbenzyl)-4-hydroxycoumarin",
+        "3-Alpha-phenyl-beta-acetylethyl-4-hydroxycoumarin",
+        "4-Hydroxy-3-(3-oxo-1-phenylbutyl)-2H-1-benzopyran-2-one",
+        "4-Hydroxy-3-(3-oxo-1-phenylbutyl)coumarin",
+        "4-isobutylhydratropic acid",
+        "4H-Carbazol-4-one, 1,2,3,9-tetrahydro-9-methyl-3-((2-methyl-1H-imidazol-1-yl)methyl)-",
+        "5-Nitrofurantoin",
+        "ACETYLSALICYLIC ACID",
+        "ASA",
+        "ASPIRIN",
+        "Acetylsalicylic Acid",
+        "Acetylsalicylic acid",
+        "Acetylsalicyls\u00e4ure",
+        "Acid, Acetylsalicylic",
+        "Acide ac\u00e9tylsalicylique",
+        "Acidum acetylsalicylicum",
+        "Antiplatelet aspirin",
+        "Aspirin",
+        "Aspirin (substance)",
+        "Aspirin [antiplatelet]",
+        "Aspirin-containing product",
+        "Aspirina",
+        "Azetylsalizyls\u00e4ure",
+        "Benzeneacetic Acid, Alpha-methyl-4-(2-methylpropyl)-",
+        "Benzeneacetic Acid, alpha-methyl-4-(2-methylpropyl)- trimethylsilyl ester",
+        "Benzoic acid, 2-(acetyloxy)-",
+        "Dimethylbiguanid",
+        "Dimethylbiguanidine",
+        "Dimethylguanylguanidine",
+        "Espironolactona",
+        "HMG-CoA reductase inhibitors simvastatin",
+        "IBUPROFEN",
+        "Ibuprofen",
+        "Ibuprofen (substance)",
+        "Ibuprofen PMR",
+        "Ibuprofen product",
+        "Ibuprofen-containing product",
+        "Ibuprofene",
+        "Ibuprofeno",
+        "Ibuprofenum",
+        "Ibuprophen",
+        "Imidodicarbonimidic diamide, N,N-dimethyl-",
+        "L-Proline, 1-(N2-(1-carboxy-3-phenylpropyl)-L-lysyl)-, dihydrate, (S)-",
+        "LISINOPRIL",
+        "Lisinopril",
+        "Lisinopril (substance)",
+        "Lisinopril-containing product",
+        "Lisinoprilum",
+        "Lysinopril",
+        "METFORMIN",
+        "Metformin",
+        "Metformin (substance)",
+        "Metformin Hcl-Saxagliptin ER",
+        "Metformin-containing product",
+        "Metformina",
+        "Metformine",
+        "Metforminum",
+        "N,N-Dimethylimidodicarbonimidic Diamide",
+        "N,N-dimethylbiguanide",
+        "N-(5-Nitrofurfurylidene)-1-aminohydantoin",
+        "NITROFURANTOIN",
+        "Nitrofurantoin",
+        "Nitrofurantoin (substance)",
+        "Nitrofurantoin-containing product",
+        "O-acetylsalicylic acid",
+        "ONDANSETRON",
+        "Ondansetron",
+        "Ondansetron (substance)",
+        "Ondansetron, (+,-)-Isomer",
+        "Ondansetron-containing product",
+        "PROPRANOLOL",
+        "Pregn-4-ene-21-carboxylic acid, 7-(acetylthio)-17-hydroxy-3-oxo-, gamma-lactone, (7alpha,17alpha)-",
+        "Product containing aspirin (medicinal product)",
+        "Product containing ibuprofen (medicinal product)",
+        "Product containing lisinopril (medicinal product)",
+        "Product containing metformin (medicinal product)",
+        "Product containing nitrofurantoin (medicinal product)",
+        "Product containing ondansetron (medicinal product)",
+        "Product containing propranolol (medicinal product)",
+        "Product containing simvastatin (medicinal product)",
+        "Product containing spironolactone (medicinal product)",
+        "Product containing warfarin (medicinal product)",
+        "Propanalol",
+        "Propanolol",
+        "Propionic acid-ibuprofen",
+        "Propranolol",
+        "Propranolol (substance)",
+        "Propranolol-containing product",
+        "Propranololo",
+        "Propranololum",
+        "SIMVASTATIN",
+        "SPIRONOLACTONE",
+        "SPL",
+        "Salicylic acid acetate",
+        "Simvastatin",
+        "Simvastatin (substance)",
+        "Simvastatin-containing product",
+        "Simvastatina",
+        "Simvastatine",
+        "Simvastatinum",
+        "Spirolactone",
+        "Spironolactone",
+        "Spironolactone (substance)",
+        "Spironolactone-containing product",
+        "Spironolactonum",
+        "Spironolattone",
+        "Veroshpiron",
+        "Verospirone",
+        "WARFARIN",
+        "Warfarin",
+        "Warfarin (substance)",
+        "Warfarin-containing product",
+        "Warfarina",
+        "Zoocoumarin",
+        "[1S-[1alpha,3alpha,7beta,8beta(2S*,4S*),8abeta]]-1,2,3,7,8,8a-Hexahydro-3,7-dimethyl-8-[2-(tetrahydro-4-hydroxy-6-oxo-2H-pyran-2-yl)ethyl]-1-naphthalenyl 2,2-dimethylbutanoate",
+        "[N2-[(S)-1-carboxy-3-phenylpropyl]-L-lysyl-L-proline",
+        "acetyl salicylic acid",
+        "acetyl-salicylic acid",
+        "acetylsalicylic acid",
+        "acide 2-(ac\u00e9tyloxy)benzo\u00efque",
+        "alpha-Methyl-4-(2-methylpropyl)benzeneacetic Acid",
+        "antiplatelet aspirin",
+        "aspirin",
+        "aspirin (medication)",
+        "aspirin antiplatelet",
+        "aspirin chemicals",
+        "aspirin products",
+        "aspirins",
+        "benzeneacetic acid, alpha-methyl-4-(2-methylpropyl)-",
+        "beta-Propranolol",
+        "ibuprofen",
+        "ibuprofen (medication)",
+        "ibuprofen products",
+        "lisinopril",
+        "lisinopril (medication)",
+        "lysinopril",
+        "metFORMIN",
+        "metformin",
+        "nitrofurantoin",
+        "nitrofurantoin (medication)",
+        "nitrofurantoina",
+        "nitrofurantoine",
+        "nitrofurantoinum",
+        "o-acetoxybenzoic acid",
+        "o-carboxyphenyl acetate",
+        "ondansetron",
+        "ondansetron (medication)",
+        "p-Isobutylhydratropic Acid",
+        "p-Isobutylhydratropic acid",
+        "p-isobutylhydratropic acid",
+        "propanolol",
+        "propranolol",
+        "propranolol (medication)",
+        "simvastatin",
+        "simvastatin (medication)",
+        "simvastatin product",
+        "spirolactone",
+        "spirolactones",
+        "spironolactone",
+        "spironolactone (medication)",
+        "urological antibacterial nitrofurantoin",
+        "warfarin",
+        "warfarin (medication)",
+        "\u00e1cido acetilsalic\u00edlico",
+        "\u03b1-(4-isobutylphenyl)propionic acid",
+        "\u03b1-(p-isobutylphenyl)propionic acid",
+        "\u03b2-Propranolol"
+      ],
+      "lexical_variants": [],
+      "kind": "drug",
+      "numeric": false,
+      "source": "umls"
+    },
+    "renal_disease": {
+      "slug": "renal_disease",
+      "cui": "C0035078",
+      "preferred_name": "Kidney Failure",
+      "tuis": [
+        "T047"
+      ],
+      "tui_names": [
+        "Disease or Syndrome"
+      ],
+      "synonyms": [
+        "CKD",
+        "CKD - Chronic Kidney Disease",
+        "CKD - chronic kidney disease",
+        "Chronic Kidney Disease",
+        "Chronic Kidney Diseases",
+        "Chronic Renal Disease",
+        "Chronic Renal Diseases",
+        "Chronic kidney disease",
+        "Chronic kidney disease (CKD)",
+        "Chronic kidney disease (disorder)",
+        "Chronic kidney disease, unspecified",
+        "Chronic renal disease",
+        "Chronic renal failure",
+        "Chronic renal insufficiency",
+        "Disease, Chronic Kidney",
+        "Disease, Chronic Renal",
+        "Diseases, Chronic Kidney",
+        "Diseases, Chronic Renal",
+        "ESRD",
+        "FAILURE KIDNEY",
+        "Failure kidney",
+        "Failure, Kidney",
+        "Failure, Renal",
+        "Failure;renal;NOS",
+        "Failures, Kidney",
+        "Failures, Renal",
+        "INSUFFICIENCY RENAL",
+        "Impaired renal function",
+        "Insufficiency renal",
+        "Insufficiency, Kidney",
+        "Insufficiency;renal",
+        "KIDNEY FAILURE",
+        "Kidney Disease, Chronic",
+        "Kidney Diseases, Chronic",
+        "Kidney Failure",
+        "Kidney Failures",
+        "Kidney Insufficiencies",
+        "Kidney Insufficiency",
+        "Kidney failure",
+        "Loss of renal function",
+        "RENAL DISEASE CHRONIC",
+        "RENAL FAILURE",
+        "RENAL FAILURE NOS",
+        "RENAL INSUFFICIENCY",
+        "RF - Renal failure",
+        "Renal Disease, Chronic",
+        "Renal Diseases, Chronic",
+        "Renal Failure",
+        "Renal Failures",
+        "Renal Impairment",
+        "Renal Insufficiencies",
+        "Renal Insufficiency",
+        "Renal dysfunction",
+        "Renal failure",
+        "Renal failure NOS",
+        "Renal failure syndrome",
+        "Renal failure syndrome (disorder)",
+        "Renal failure syndrome, NOS",
+        "Renal failure unspecified",
+        "Renal failure, unspecified",
+        "Renal impairment",
+        "Renal impairment (diagnosis)",
+        "Renal impairment (disorder)",
+        "Renal impairment NOS",
+        "Renal insufficiency",
+        "Renal insufficiency (disorder)",
+        "Renal insufficiency syndrome",
+        "Renal insufficiency syndrome, NOS",
+        "Unspecified kidney failure",
+        "Unspecified renal failure",
+        "chronic disease renal",
+        "chronic diseases renal",
+        "chronic renal disease",
+        "disease (or disorder); kidney, chronic",
+        "failure; renal",
+        "function impaired renal",
+        "impaired renal function",
+        "impairment renal",
+        "impairments renal",
+        "insufficiency; renal",
+        "kidney failure",
+        "kidney insufficiency",
+        "kidney; disease, chronic",
+        "kidney; failure",
+        "kidney; insufficiency",
+        "renal disease chronic",
+        "renal disorders renal impairment",
+        "renal failure",
+        "renal failure (diagnosis)",
+        "renal failure not otherwise specified",
+        "renal failure syndrome",
+        "renal impairment",
+        "renal insufficiencies",
+        "renal insufficiency",
+        "renal insufficiency (diagnosis)",
+        "renal; failure",
+        "syndrome renal failure"
+      ],
+      "lexical_variants": [
+        "renal failure",
+        "renal impairment",
+        "renal insufficiency",
+        "kidney disease",
+        "kidney injury",
+        "dialysis",
+        "CKD"
+      ],
+      "kind": "disease",
+      "numeric": false,
+      "source": "umls"
+    },
+    "pregnancy": {
+      "slug": "pregnancy",
+      "cui": "C0032961",
+      "preferred_name": "Pregnancy",
+      "tuis": [
+        "T040"
+      ],
+      "tui_names": [
+        "Organism Function"
+      ],
+      "synonyms": [
+        "GESTATION",
+        "Gestation",
+        "Gestation, NOS",
+        "PREGNANCY",
+        "Pregnancies",
+        "Pregnancy",
+        "Pregnancy NOS",
+        "Pregnancy, NOS",
+        "Pregnancy, function",
+        "Pregnancy, function (observable entity)",
+        "female pregnancy",
+        "gestation",
+        "mammalian gestation",
+        "pregnancies",
+        "pregnancy",
+        "pregnancy (diagnosis)",
+        "pregnancy (symptom)"
+      ],
+      "lexical_variants": [
+        "pregnant",
+        "hCG",
+        "menstrual",
+        "gravid"
+      ],
+      "kind": "process",
+      "numeric": false,
+      "source": "umls"
+    },
+    "asthma": {
+      "slug": "asthma",
+      "cui": "C0004096",
+      "preferred_name": "Asthma",
+      "tuis": [
+        "T047"
+      ],
+      "tui_names": [
+        "Disease or Syndrome"
+      ],
+      "synonyms": [
+        "ASTHMA",
+        "ASTHMA BRONCHIAL",
+        "ASTHMA, BRONCHIAL",
+        "Airway hyperreactivity",
+        "Asthma",
+        "Asthma (disorder)",
+        "Asthma NOS",
+        "Asthma bronchial",
+        "Asthma, Bronchial",
+        "Asthma, NOS",
+        "Asthma, unspecified",
+        "Asthmas",
+        "Asthmatic",
+        "BRONCHIAL ASTHMA",
+        "Bronchial Asthma",
+        "Bronchial asthma",
+        "Bronchial asthma, NOS",
+        "Bronchitic asthma",
+        "Unspecified asthma",
+        "asthma",
+        "asthma (diagnosis)",
+        "asthma disorders",
+        "asthmatic",
+        "asthmatics",
+        "br asthma",
+        "bronchial asthma",
+        "bronchitic asthma"
+      ],
+      "lexical_variants": [
+        "asthma",
+        "asthmatic",
+        "bronchospasm",
+        "salbutamol",
+        "inhaler",
+        "wheeze",
+        "wheezing"
+      ],
+      "kind": "disease",
+      "numeric": false,
+      "source": "umls"
+    }
+  }
+}

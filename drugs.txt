@@ -1,0 +1,11 @@
+# generic drug names, one per line
+metformin
+ibuprofen
+lisinopril
+propranolol
+aspirin
+spironolactone
+warfarin
+simvastatin
+nitrofurantoin
+ondansetron

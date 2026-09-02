@@ -1,0 +1,125 @@
+=== probes done, starting patching ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+215 complete pairs in data/medcalc/counterfactual_test.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   6%|▌         | 17/291 [00:00<00:01, 164.75it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 168.05it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 203.10it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:00, 223.99it/s]Loading weights:  41%|████      | 118/291 [00:00<00:00, 225.20it/s]Loading weights:  51%|█████     | 147/291 [00:00<00:00, 246.04it/s]Loading weights:  59%|█████▉    | 172/291 [00:00<00:00, 241.89it/s]Loading weights:  68%|██████▊   | 197/291 [00:00<00:00, 241.10it/s]Loading weights:  76%|███████▋  | 222/291 [00:00<00:00, 237.21it/s]Loading weights:  85%|████████▍ | 246/291 [00:01<00:00, 228.45it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 227.96it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 231.52it/s]
+  10/80 pairs
+  20/80 pairs
+  30/80 pairs
+  40/80 pairs
+  50/80 pairs
+  60/80 pairs
+  70/80 pairs
+  80/80 pairs
+
+usable pairs: 80
+  skipped 8: different token length
+  skipped 2: more than 6 differing positions
+identity control, max |error|: 0.00e+00 (hook is correctly placed)
+
+clean margin gap between arms (unsafe - safe): +0.0017 logits
+  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
+
+ layer   ACE (logits)    control     excess
+     0        -0.0013     0.0029    -0.0042
+     1        -0.0002     0.0022    -0.0024
+     2        -0.0002    -0.0015     0.0013
+     3        -0.0055     0.0018    -0.0073
+     4        -0.0011     0.0060    -0.0071
+     5        -0.0013     0.0055    -0.0068
+     6        -0.0035     0.0012    -0.0047
+     7        -0.0005     0.0014    -0.0018
+     8         0.0024     0.0043    -0.0020
+     9        -0.0005     0.0081    -0.0086
+    10         0.0008     0.0001     0.0007
+    11         0.0080     0.0061     0.0019
+    12        -0.0024     0.0039    -0.0063
+    13         0.0025     0.0035    -0.0011
+    14        -0.0036     0.0031    -0.0066
+    15         0.0024     0.0043    -0.0019
+    16         0.0026     0.0004     0.0021
+    17         0.0038     0.0009     0.0029
+    18         0.0026     0.0002     0.0025
+    19         0.0031     0.0024     0.0007
+    20         0.0047     0.0027     0.0019
+    21         0.0014     0.0047    -0.0033
+    22         0.0063     0.0068    -0.0005
+    23         0.0059     0.0010     0.0049
+    24         0.0043     0.0062    -0.0019
+    25         0.0026     0.0011     0.0015
+    26         0.0021     0.0017     0.0003
+    27         0.0036     0.0043    -0.0007
+    28         0.0036     0.0047    -0.0011
+    29         0.0047     0.0042     0.0004
+    30        -0.0010    -0.0003    -0.0008
+    31         0.0000     0.0000     0.0000
+
+largest effect over control at layer 9: -0.0086 logits
+  -> the edited value has essentially no causal effect on the decision at ANY layer.
+     The quantity is not on a causal path to the answer.
+wrote results/patching_medcalc_test.json
+=== RENAL PATCHING DONE ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+85 complete pairs in data/medcalc/counterfactual_heldout.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   6%|▌         | 17/291 [00:00<00:01, 169.97it/s]Loading weights:  12%|█▏        | 35/291 [00:00<00:01, 173.45it/s]Loading weights:  20%|█▉        | 58/291 [00:00<00:01, 195.87it/s]Loading weights:  29%|██▊       | 83/291 [00:00<00:00, 208.71it/s]Loading weights:  39%|███▉      | 113/291 [00:00<00:00, 226.46it/s]Loading weights:  47%|████▋     | 137/291 [00:00<00:00, 230.40it/s]Loading weights:  55%|█████▍    | 160/291 [00:00<00:00, 213.36it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 217.54it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 237.13it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 234.13it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 245.51it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 230.55it/s]
+  10/80 pairs
+  20/80 pairs
+  30/80 pairs
+  40/80 pairs
+  50/80 pairs
+  60/80 pairs
+  70/80 pairs
+  80/80 pairs
+
+usable pairs: 80
+identity control, max |error|: 0.00e+00 (hook is correctly placed)
+
+clean margin gap between arms (unsafe - safe): +0.0008 logits
+  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
+
+ layer   ACE (logits)    control     excess
+     0         0.0000    -0.0070     0.0070
+     1        -0.0102    -0.0031    -0.0070
+     2        -0.0023    -0.0047     0.0023
+     3        -0.0063    -0.0016    -0.0047
+     4        -0.0055    -0.0008    -0.0047
+     5         0.0039    -0.0031     0.0070
+     6        -0.0078    -0.0047    -0.0031
+     7        -0.0055    -0.0047    -0.0008
+     8        -0.0008    -0.0070     0.0063
+     9         0.0016     0.0000     0.0016
+    10         0.0102    -0.0078     0.0180
+    11         0.0078    -0.0039     0.0117
+    12         0.0047    -0.0008     0.0055
+    13         0.0008    -0.0070     0.0078
+    14         0.0000    -0.0094     0.0094
+    15        -0.0070     0.0000    -0.0070
+    16        -0.0023    -0.0023     0.0000
+    17         0.0016    -0.0063     0.0078
+    18         0.0055    -0.0063     0.0117
+    19         0.0133    -0.0078     0.0211
+    20         0.0078    -0.0023     0.0102
+    21         0.0016    -0.0023     0.0039
+    22         0.0070    -0.0016     0.0086
+    23         0.0023    -0.0008     0.0031
+    24        -0.0047    -0.0047     0.0000
+    25         0.0016    -0.0008     0.0023
+    26         0.0008     0.0008     0.0000
+    27         0.0008    -0.0039     0.0047
+    28         0.0055    -0.0070     0.0125
+    29         0.0039    -0.0008     0.0047
+    30        -0.0016    -0.0016     0.0000
+    31         0.0000     0.0102    -0.0102
+
+largest effect over control at layer 19: +0.0211 logits
+  -> the edited value has essentially no causal effect on the decision at ANY layer.
+     The quantity is not on a causal path to the answer.
+wrote results/patching_medcalc_heldout.json
+=== QT PATCHING DONE ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+64 complete pairs in data/counterfactual_test.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   7%|▋         | 19/291 [00:00<00:01, 187.67it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 189.58it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 222.17it/s]Loading weights:  32%|███▏      | 94/291 [00:00<00:00, 238.12it/s]Loading weights:  42%|████▏     | 121/291 [00:00<00:00, 240.57it/s]Loading weights:  51%|█████     | 148/291 [00:00<00:00, 247.16it/s]Loading weights:  60%|██████    | 175/291 [00:00<00:00, 251.60it/s]Loading weights:  70%|███████   | 204/291 [00:00<00:00, 260.45it/s]Loading weights:  79%|███████▉  | 231/291 [00:00<00:00, 260.32it/s]Loading weights:  89%|████████▊ | 258/291 [00:01<00:00, 257.08it/s]Loading weights:  98%|█████████▊| 284/291 [00:01<00:00, 256.00it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 248.70it/s]
+no usable pairs
+=== SYNTHETIC PATCHING DONE ===

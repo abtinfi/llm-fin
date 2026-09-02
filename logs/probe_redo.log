@@ -1,0 +1,83 @@
+### chain done, recomputing medcalc_test probe with the corrected null ###
+430 items, 215 pairs, labels={np.str_('SAFE'): np.int64(215), np.str_('UNSAFE'): np.int64(215)}
+loaded cached activations (33, 430, 4096) from results/acts/medcalc_test.npz
+
+--- pooling: final (the readout position: is the fact AVAILABLE to the decision?) ---
+ layer   item acc    pair CC   shuffled CC
+     0      0.502      0.005         0.005
+     1      0.519      0.042         0.009
+     2      0.509      0.033         0.005
+     3      0.495      0.000         0.033
+     4      0.505      0.023         0.005
+     5      0.500      0.014         0.005
+     6      0.505      0.014         0.009
+     7      0.512      0.033         0.014
+     8      0.509      0.023         0.019
+     9      0.502      0.014         0.014
+    10      0.500      0.009         0.005
+    11      0.498      0.005         0.005
+    12      0.498      0.019         0.014
+    13      0.493      0.005         0.019
+    14      0.512      0.033         0.009
+    15      0.500      0.009         0.014
+    16      0.502      0.019         0.009
+    17      0.514      0.028         0.005
+    18      0.502      0.009         0.009
+    19      0.514      0.033         0.019
+    20      0.514      0.037         0.009
+    21      0.495      0.005         0.014
+    22      0.509      0.023         0.019
+    23      0.505      0.023         0.023
+    24      0.502      0.028         0.009
+    25      0.514      0.033         0.019
+    26      0.505      0.023         0.014
+    27      0.509      0.028         0.019
+    28      0.502      0.014         0.014
+    29      0.505      0.014         0.014
+    30      0.514      0.037         0.014
+    31      0.498      0.014         0.014
+    32      0.498      0.009         0.009
+best layer 1: pair-level consistency 0.042 (item accuracy 0.519)
+highest null (within-pair permuted) consistency: 0.033 (a per-arm-random predictor scores 0.250)
+  signal over null: +0.009   -> no evidence the fact is linearly decodable here.
+
+--- pooling: mean (all positions: is the fact ENCODED anywhere?) ---
+ layer   item acc    pair CC   shuffled CC
+     0      0.526      0.060         0.023
+     1      0.537      0.074         0.005
+     2      0.544      0.088         0.028
+     3      0.533      0.065         0.014
+     4      0.519      0.037         0.023
+     5      0.544      0.093         0.033
+     6      0.540      0.079         0.042
+     7      0.540      0.079         0.037
+     8      0.540      0.079         0.005
+     9      0.523      0.047         0.014
+    10      0.514      0.028         0.009
+    11      0.521      0.042         0.028
+    12      0.521      0.042         0.023
+    13      0.523      0.047         0.033
+    14      0.526      0.051         0.014
+    15      0.535      0.070         0.023
+    16      0.528      0.056         0.028
+    17      0.530      0.060         0.023
+    18      0.523      0.047         0.028
+    19      0.521      0.042         0.023
+    20      0.514      0.028         0.019
+    21      0.507      0.014         0.028
+    22      0.509      0.019         0.014
+    23      0.523      0.047         0.009
+    24      0.514      0.028         0.028
+    25      0.521      0.042         0.023
+    26      0.512      0.023         0.009
+    27      0.516      0.033         0.005
+    28      0.514      0.028         0.009
+    29      0.514      0.028         0.019
+    30      0.507      0.014         0.019
+    31      0.514      0.033         0.009
+    32      0.505      0.019         0.000
+best layer 5: pair-level consistency 0.093 (item accuracy 0.544)
+highest null (within-pair permuted) consistency: 0.042 (a per-arm-random predictor scores 0.250)
+  signal over null: +0.051   -> no evidence the fact is linearly decodable here.
+wrote results/probe_medcalc_test.json
+############ ALL PROBES FINAL ############

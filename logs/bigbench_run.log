@@ -1,0 +1,68 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:02, 126.69it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 171.31it/s]Loading weights:  22%|██▏       | 64/291 [00:00<00:01, 196.15it/s]Loading weights:  31%|███▏      | 91/291 [00:00<00:00, 220.92it/s]Loading weights:  39%|███▉      | 114/291 [00:00<00:00, 219.51it/s]Loading weights:  50%|█████     | 146/291 [00:00<00:00, 251.62it/s]Loading weights:  59%|█████▉    | 172/291 [00:00<00:00, 253.11it/s]Loading weights:  68%|██████▊   | 198/291 [00:00<00:00, 254.99it/s]Loading weights:  77%|███████▋  | 224/291 [00:00<00:00, 253.87it/s]Loading weights:  86%|████████▌ | 250/291 [00:01<00:00, 236.55it/s]Loading weights:  95%|█████████▍| 275/291 [00:01<00:00, 237.96it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 232.82it/s]
+
+=== medmcqa ===
+loaded 4183 items
+[model] dropping 2 token id(s) ambiguous across labels ['A', 'B', 'C', 'D']: ['▁**', '▁(']
+  160/4183  18.61 it/s  eta 3.6 min
+  320/4183  18.23 it/s  eta 3.5 min
+  480/4183  18.24 it/s  eta 3.4 min
+  640/4183  18.28 it/s  eta 3.2 min
+  800/4183  18.15 it/s  eta 3.1 min
+  960/4183  18.22 it/s  eta 2.9 min
+  1120/4183  18.33 it/s  eta 2.8 min
+  1280/4183  18.41 it/s  eta 2.6 min
+  1440/4183  18.42 it/s  eta 2.5 min
+  1600/4183  18.45 it/s  eta 2.3 min
+  1760/4183  18.48 it/s  eta 2.2 min
+  1920/4183  18.47 it/s  eta 2.0 min
+  2080/4183  18.49 it/s  eta 1.9 min
+  2240/4183  18.54 it/s  eta 1.7 min
+  2400/4183  18.53 it/s  eta 1.6 min
+  2560/4183  18.52 it/s  eta 1.5 min
+  2720/4183  18.53 it/s  eta 1.3 min
+  2880/4183  18.52 it/s  eta 1.2 min
+  3040/4183  18.54 it/s  eta 1.0 min
+  3200/4183  18.55 it/s  eta 0.9 min
+  3360/4183  18.55 it/s  eta 0.7 min
+  3520/4183  18.54 it/s  eta 0.6 min
+  3680/4183  18.54 it/s  eta 0.5 min
+  3840/4183  18.52 it/s  eta 0.3 min
+  4000/4183  18.53 it/s  eta 0.2 min
+  4160/4183  18.56 it/s  eta 0.0 min
+  4183/4183  18.53 it/s  eta 0.0 min
+wrote results/bigbench_medmcqa_seed0.jsonl
+  n=4183  accuracy=0.388  decision token resolved on 4183/4183 (100.0%)
+  token-vs-text agreement: 4181/4181 (100.0%)   unparsable: 0
+
+=== medqa ===
+Generating train split:   0%|          | 0/10178 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10178/10178 [00:00<00:00, 173907.62 examples/s]
+Generating test split:   0%|          | 0/1273 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1273/1273 [00:00<00:00, 198304.51 examples/s]
+loaded 1273 items
+  160/1273  9.58 it/s  eta 1.9 min
+  320/1273  9.82 it/s  eta 1.6 min
+  480/1273  9.75 it/s  eta 1.4 min
+  640/1273  9.59 it/s  eta 1.1 min
+  800/1273  9.60 it/s  eta 0.8 min
+  960/1273  9.54 it/s  eta 0.5 min
+  1120/1273  9.55 it/s  eta 0.3 min
+  1273/1273  9.41 it/s  eta 0.0 min
+wrote results/bigbench_medqa_seed0.jsonl
+  n=1273  accuracy=0.397  decision token resolved on 1273/1273 (100.0%)
+  token-vs-text agreement: 1273/1273 (100.0%)   unparsable: 0
+
+=== pubmedqa ===
+Generating train split:   0%|          | 0/1000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 1000/1000 [00:00<00:00, 116453.45 examples/s]
+loaded 1000 items
+[model] dropping 2 token id(s) ambiguous across labels ['yes', 'no', 'maybe']: ['▁**', '▁(']
+  160/1000  8.15 it/s  eta 1.7 min
+  320/1000  8.01 it/s  eta 1.4 min
+  480/1000  7.95 it/s  eta 1.1 min
+  640/1000  7.84 it/s  eta 0.8 min
+  800/1000  7.75 it/s  eta 0.4 min
+  960/1000  7.70 it/s  eta 0.1 min
+  1000/1000  7.72 it/s  eta 0.0 min
+wrote results/bigbench_pubmedqa_seed0.jsonl
+  n=1000  accuracy=0.721  decision token resolved on 1000/1000 (100.0%)
+  token-vs-text agreement: 1000/1000 (100.0%)   unparsable: 0

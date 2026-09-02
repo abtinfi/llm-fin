@@ -1,0 +1,314 @@
+{
+  "sae": "results/sae/sae_topk_L20.npz",
+  "kind": "topk",
+  "fvu": 0.06651917099952698,
+  "l0": 31.8946533203125,
+  "dead": 6442,
+  "d_hidden": 16384,
+  "concepts": [
+    "creatinine",
+    "qt_interval",
+    "egfr",
+    "heart_rate",
+    "potassium",
+    "inr",
+    "age",
+    "drug",
+    "renal_disease",
+    "pregnancy",
+    "asthma"
+  ],
+  "features": [
+    {
+      "feature": 14294,
+      "s_semantic": 0.7027027027027027,
+      "concept": "qt_interval",
+      "n_active": 36,
+      "s_causal": 0.0015625,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0015625,
+        "control_feature": 13936,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0015625
+      },
+      "fis": 0.3521326013513514
+    },
+    {
+      "feature": 7626,
+      "s_semantic": 0.6153846153846154,
+      "concept": "pregnancy",
+      "n_active": 8,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 10435,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": -0.0015625
+      },
+      "fis": 0.3076923076923077
+    },
+    {
+      "feature": 14058,
+      "s_semantic": 0.6033076074972437,
+      "concept": "creatinine",
+      "n_active": 2149,
+      "s_causal": 0.0158203125,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0158203125,
+        "control_feature": 8374,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0158203125
+      },
+      "fis": 0.30956395999862185
+    },
+    {
+      "feature": 11855,
+      "s_semantic": 0.5915057915057915,
+      "concept": "age",
+      "n_active": 1456,
+      "s_causal": 0.0146484375,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0146484375,
+        "control_feature": 4420,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0146484375
+      },
+      "fis": 0.30307711450289576
+    },
+    {
+      "feature": 5438,
+      "s_semantic": 0.585792349726776,
+      "concept": "heart_rate",
+      "n_active": 497,
+      "s_causal": 0.009765625,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02890625,
+        "control_feature": 5043,
+        "control_mean_abs_delta_logit": 0.019140625,
+        "excess": 0.009765625
+      },
+      "fis": 0.297778987363388
+    },
+    {
+      "feature": 2883,
+      "s_semantic": 0.5413060582218725,
+      "concept": "drug",
+      "n_active": 467,
+      "s_causal": 0.016210937499999998,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0208984375,
+        "control_feature": 671,
+        "control_mean_abs_delta_logit": 0.0046875,
+        "excess": 0.016210937499999998
+      },
+      "fis": 0.27875849786093626
+    },
+    {
+      "feature": 7679,
+      "s_semantic": 0.5384615384615384,
+      "concept": "asthma",
+      "n_active": 46,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 1232,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": -0.0015625
+      },
+      "fis": 0.2692307692307692
+    },
+    {
+      "feature": 16231,
+      "s_semantic": 0.5201401050788091,
+      "concept": "age",
+      "n_active": 1150,
+      "s_causal": 0.015625,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0171875,
+        "control_feature": 270,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": 0.015625
+      },
+      "fis": 0.2678825525394046
+    },
+    {
+      "feature": 7696,
+      "s_semantic": 0.5194639438417358,
+      "concept": "age",
+      "n_active": 2000,
+      "fis": 0.2597319719208679
+    },
+    {
+      "feature": 3446,
+      "s_semantic": 0.5112262521588946,
+      "concept": "drug",
+      "n_active": 354,
+      "fis": 0.2556131260794473
+    },
+    {
+      "feature": 4754,
+      "s_semantic": 0.501168770453483,
+      "concept": "age",
+      "n_active": 1005,
+      "fis": 0.2505843852267415
+    },
+    {
+      "feature": 13369,
+      "s_semantic": 0.4941610325752919,
+      "concept": "age",
+      "n_active": 493,
+      "fis": 0.24708051628764596
+    },
+    {
+      "feature": 6550,
+      "s_semantic": 0.4902597402597403,
+      "concept": "age",
+      "n_active": 1330,
+      "fis": 0.24512987012987014
+    },
+    {
+      "feature": 11615,
+      "s_semantic": 0.48,
+      "concept": "qt_interval",
+      "n_active": 62,
+      "fis": 0.24
+    },
+    {
+      "feature": 11193,
+      "s_semantic": 0.4766917293233083,
+      "concept": "drug",
+      "n_active": 526,
+      "fis": 0.23834586466165414
+    },
+    {
+      "feature": 6673,
+      "s_semantic": 0.47593582887700536,
+      "concept": "heart_rate",
+      "n_active": 330,
+      "fis": 0.23796791443850268
+    },
+    {
+      "feature": 15148,
+      "s_semantic": 0.44481887110362256,
+      "concept": "drug",
+      "n_active": 383,
+      "fis": 0.22240943555181128
+    },
+    {
+      "feature": 9285,
+      "s_semantic": 0.4442662389735365,
+      "concept": "drug",
+      "n_active": 443,
+      "fis": 0.22213311948676825
+    },
+    {
+      "feature": 7910,
+      "s_semantic": 0.4406779661016949,
+      "concept": "age",
+      "n_active": 518,
+      "fis": 0.22033898305084745
+    },
+    {
+      "feature": 64,
+      "s_semantic": 0.43828715365239296,
+      "concept": "age",
+      "n_active": 454,
+      "fis": 0.21914357682619648
+    },
+    {
+      "feature": 13629,
+      "s_semantic": 0.43505234587049246,
+      "concept": "creatinine",
+      "n_active": 7930,
+      "fis": 0.21752617293524623
+    },
+    {
+      "feature": 14695,
+      "s_semantic": 0.417910447761194,
+      "concept": "inr",
+      "n_active": 41,
+      "fis": 0.208955223880597
+    },
+    {
+      "feature": 11033,
+      "s_semantic": 0.41781505891751547,
+      "concept": "creatinine",
+      "n_active": 2621,
+      "fis": 0.20890752945875773
+    },
+    {
+      "feature": 1713,
+      "s_semantic": 0.41440443213296396,
+      "concept": "age",
+      "n_active": 671,
+      "fis": 0.20720221606648198
+    },
+    {
+      "feature": 1052,
+      "s_semantic": 0.41274238227146814,
+      "concept": "age",
+      "n_active": 310,
+      "fis": 0.20637119113573407
+    }
+  ],
+  "causal": {
+    "n_items": 40,
+    "clean_margin_mean": -0.1314453125,
+    "per_feature": {
+      "14294": {
+        "mean_abs_delta_logit": 0.0015625,
+        "control_feature": 13936,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0015625
+      },
+      "7626": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 10435,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": -0.0015625
+      },
+      "14058": {
+        "mean_abs_delta_logit": 0.0158203125,
+        "control_feature": 8374,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0158203125
+      },
+      "11855": {
+        "mean_abs_delta_logit": 0.0146484375,
+        "control_feature": 4420,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0146484375
+      },
+      "5438": {
+        "mean_abs_delta_logit": 0.02890625,
+        "control_feature": 5043,
+        "control_mean_abs_delta_logit": 0.019140625,
+        "excess": 0.009765625
+      },
+      "2883": {
+        "mean_abs_delta_logit": 0.0208984375,
+        "control_feature": 671,
+        "control_mean_abs_delta_logit": 0.0046875,
+        "excess": 0.016210937499999998
+      },
+      "7679": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 1232,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": -0.0015625
+      },
+      "16231": {
+        "mean_abs_delta_logit": 0.0171875,
+        "control_feature": 270,
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": 0.015625
+      }
+    }
+  },
+  "fis_weights": {
+    "alpha_semantic": 0.5,
+    "beta_causal": 0.5,
+    "gamma_human": 0.0,
+    "gamma_note": "S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them."
+  }
+}

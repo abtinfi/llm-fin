@@ -1,0 +1,78 @@
++ export CUDA_VISIBLE_DEVICES=0
++ CUDA_VISIBLE_DEVICES=0
++ export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ cd /home/asosoft/abtin/paper/csai
++ python src/sae.py score --sae results/sae/sae_topk_L20.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 40 --causal_features 8 --causal_split test
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  # 14294  S_sem=0.703  concept=qt_interval  fires on 36/150000 tokens
+  #  7626  S_sem=0.615  concept=pregnancy  fires on 8/150000 tokens
+  # 14058  S_sem=0.603  concept=creatinine  fires on 2149/150000 tokens
+  # 11855  S_sem=0.592  concept=age  fires on 1456/150000 tokens
+  #  5438  S_sem=0.586  concept=heart_rate  fires on 497/150000 tokens
+  #  2883  S_sem=0.541  concept=drug  fires on 467/150000 tokens
+  #  7679  S_sem=0.538  concept=asthma  fires on 46/150000 tokens
+  # 16231  S_sem=0.520  concept=age  fires on 1150/150000 tokens
+  #  7696  S_sem=0.519  concept=age  fires on 2000/150000 tokens
+  #  3446  S_sem=0.511  concept=drug  fires on 354/150000 tokens
+  #  4754  S_sem=0.501  concept=age  fires on 1005/150000 tokens
+  # 13369  S_sem=0.494  concept=age  fires on 493/150000 tokens
+  #  6550  S_sem=0.490  concept=age  fires on 1330/150000 tokens
+  # 11615  S_sem=0.480  concept=qt_interval  fires on 62/150000 tokens
+  # 11193  S_sem=0.477  concept=drug  fires on 526/150000 tokens
+  #  6673  S_sem=0.476  concept=heart_rate  fires on 330/150000 tokens
+  # 15148  S_sem=0.445  concept=drug  fires on 383/150000 tokens
+  #  9285  S_sem=0.444  concept=drug  fires on 443/150000 tokens
+  #  7910  S_sem=0.441  concept=age  fires on 518/150000 tokens
+  #    64  S_sem=0.438  concept=age  fires on 454/150000 tokens
+  # 13629  S_sem=0.435  concept=creatinine  fires on 7930/150000 tokens
+  # 14695  S_sem=0.418  concept=inr  fires on 41/150000 tokens
+  # 11033  S_sem=0.418  concept=creatinine  fires on 2621/150000 tokens
+  #  1713  S_sem=0.414  concept=age  fires on 671/150000 tokens
+  #  1052  S_sem=0.413  concept=age  fires on 310/150000 tokens
+  knock-out on 40 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.80it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 227.02it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 245.14it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 252.47it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 264.99it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 266.39it/s]Loading weights:  65%|██████▍   | 188/291 [00:00<00:00, 273.64it/s]Loading weights:  74%|███████▍  | 216/291 [00:00<00:00, 272.89it/s]Loading weights:  84%|████████▍ | 244/291 [00:00<00:00, 271.82it/s]Loading weights:  93%|█████████▎| 272/291 [00:01<00:00, 272.73it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.49it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  knock-out #14294: |Δ margin|=0.0016 (random control #13936: 0.0000, excess +0.0016)
+  knock-out #7626: |Δ margin|=0.0000 (random control #10435: 0.0016, excess -0.0016)
+  knock-out #14058: |Δ margin|=0.0158 (random control #8374: 0.0000, excess +0.0158)
+  knock-out #11855: |Δ margin|=0.0146 (random control #4420: 0.0000, excess +0.0146)
+  knock-out #5438: |Δ margin|=0.0289 (random control #5043: 0.0191, excess +0.0098)
+  knock-out #2883: |Δ margin|=0.0209 (random control #671: 0.0047, excess +0.0162)
+  knock-out #7679: |Δ margin|=0.0000 (random control #1232: 0.0016, excess -0.0016)
+  knock-out #16231: |Δ margin|=0.0172 (random control #270: 0.0016, excess +0.0156)
+
+wrote results/sae/sae_topk_L20_fis.json
++ python src/sae.py score --sae results/sae/sae_jumprelu_L20.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 0
+
+top 25 features by S_semantic:
+  # 13297  S_sem=0.363  concept=age  fires on 2246/150000 tokens
+  #  8720  S_sem=0.351  concept=creatinine  fires on 9247/150000 tokens
+  # 13500  S_sem=0.324  concept=age  fires on 2401/150000 tokens
+  #   955  S_sem=0.278  concept=drug  fires on 2468/150000 tokens
+  #  1715  S_sem=0.271  concept=age  fires on 2877/150000 tokens
+  #  9854  S_sem=0.267  concept=pregnancy  fires on 12/150000 tokens
+  # 14487  S_sem=0.250  concept=asthma  fires on 198/150000 tokens
+  #  6997  S_sem=0.235  concept=pregnancy  fires on 16/150000 tokens
+  # 11809  S_sem=0.235  concept=pregnancy  fires on 16/150000 tokens
+  #  6872  S_sem=0.231  concept=age  fires on 3281/150000 tokens
+  #  4825  S_sem=0.230  concept=age  fires on 2934/150000 tokens
+  #  3125  S_sem=0.222  concept=asthma  fires on 14/150000 tokens
+  #  9285  S_sem=0.215  concept=creatinine  fires on 3965/150000 tokens
+  # 10966  S_sem=0.214  concept=creatinine  fires on 7116/150000 tokens
+  #  6094  S_sem=0.212  concept=creatinine  fires on 1224/150000 tokens
+  # 10388  S_sem=0.205  concept=drug  fires on 1249/150000 tokens
+  # 10275  S_sem=0.195  concept=pregnancy  fires on 23/150000 tokens
+  #   441  S_sem=0.195  concept=pregnancy  fires on 23/150000 tokens
+  #  7559  S_sem=0.192  concept=creatinine  fires on 5069/150000 tokens
+  # 11440  S_sem=0.180  concept=creatinine  fires on 4508/150000 tokens
+  # 11815  S_sem=0.176  concept=creatinine  fires on 4413/150000 tokens
+  # 13187  S_sem=0.175  concept=drug  fires on 1970/150000 tokens
+  #  2166  S_sem=0.171  concept=drug  fires on 3278/150000 tokens
+  #  3610  S_sem=0.171  concept=pregnancy  fires on 17/150000 tokens
+  #  5844  S_sem=0.167  concept=pregnancy  fires on 30/150000 tokens
+
+wrote results/sae/sae_jumprelu_L20_fis.json

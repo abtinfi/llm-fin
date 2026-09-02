@@ -1,0 +1,204 @@
+{
+  "sae": "results/sae/sae_jumprelu_L20.npz",
+  "kind": "jumprelu",
+  "fvu": 0.13059818744659424,
+  "l0": 27.795654296875,
+  "dead": 10481,
+  "d_hidden": 16384,
+  "concepts": [
+    "creatinine",
+    "qt_interval",
+    "egfr",
+    "heart_rate",
+    "potassium",
+    "inr",
+    "age",
+    "drug",
+    "renal_disease",
+    "pregnancy",
+    "asthma"
+  ],
+  "features": [
+    {
+      "feature": 13297,
+      "s_semantic": 0.3633136094674556,
+      "concept": "age",
+      "n_active": 2246,
+      "fis": 0.1816568047337278
+    },
+    {
+      "feature": 8720,
+      "s_semantic": 0.350726381844752,
+      "concept": "creatinine",
+      "n_active": 9247,
+      "fis": 0.175363190922376
+    },
+    {
+      "feature": 13500,
+      "s_semantic": 0.3236209335219236,
+      "concept": "age",
+      "n_active": 2401,
+      "fis": 0.1618104667609618
+    },
+    {
+      "feature": 955,
+      "s_semantic": 0.2781173594132029,
+      "concept": "drug",
+      "n_active": 2468,
+      "fis": 0.13905867970660146
+    },
+    {
+      "feature": 1715,
+      "s_semantic": 0.2712540513587634,
+      "concept": "age",
+      "n_active": 2877,
+      "fis": 0.1356270256793817
+    },
+    {
+      "feature": 9854,
+      "s_semantic": 0.26666666666666666,
+      "concept": "pregnancy",
+      "n_active": 12,
+      "fis": 0.13333333333333333
+    },
+    {
+      "feature": 14487,
+      "s_semantic": 0.25,
+      "concept": "asthma",
+      "n_active": 198,
+      "fis": 0.125
+    },
+    {
+      "feature": 6997,
+      "s_semantic": 0.23529411764705882,
+      "concept": "pregnancy",
+      "n_active": 16,
+      "fis": 0.11764705882352941
+    },
+    {
+      "feature": 11809,
+      "s_semantic": 0.23529411764705882,
+      "concept": "pregnancy",
+      "n_active": 16,
+      "fis": 0.11764705882352941
+    },
+    {
+      "feature": 6872,
+      "s_semantic": 0.23103057757644394,
+      "concept": "age",
+      "n_active": 3281,
+      "fis": 0.11551528878822197
+    },
+    {
+      "feature": 4825,
+      "s_semantic": 0.23008849557522124,
+      "concept": "age",
+      "n_active": 2934,
+      "fis": 0.11504424778761062
+    },
+    {
+      "feature": 3125,
+      "s_semantic": 0.2222222222222222,
+      "concept": "asthma",
+      "n_active": 14,
+      "fis": 0.1111111111111111
+    },
+    {
+      "feature": 9285,
+      "s_semantic": 0.21476932766493464,
+      "concept": "creatinine",
+      "n_active": 3965,
+      "fis": 0.10738466383246732
+    },
+    {
+      "feature": 10966,
+      "s_semantic": 0.21406019785308356,
+      "concept": "creatinine",
+      "n_active": 7116,
+      "fis": 0.10703009892654178
+    },
+    {
+      "feature": 6094,
+      "s_semantic": 0.2116343490304709,
+      "concept": "creatinine",
+      "n_active": 1224,
+      "fis": 0.10581717451523545
+    },
+    {
+      "feature": 10388,
+      "s_semantic": 0.20457866536775451,
+      "concept": "drug",
+      "n_active": 1249,
+      "fis": 0.10228933268387726
+    },
+    {
+      "feature": 10275,
+      "s_semantic": 0.1951219512195122,
+      "concept": "pregnancy",
+      "n_active": 23,
+      "fis": 0.0975609756097561
+    },
+    {
+      "feature": 441,
+      "s_semantic": 0.1951219512195122,
+      "concept": "pregnancy",
+      "n_active": 23,
+      "fis": 0.0975609756097561
+    },
+    {
+      "feature": 7559,
+      "s_semantic": 0.19154929577464788,
+      "concept": "creatinine",
+      "n_active": 5069,
+      "fis": 0.09577464788732394
+    },
+    {
+      "feature": 11440,
+      "s_semantic": 0.17986655062373078,
+      "concept": "creatinine",
+      "n_active": 4508,
+      "fis": 0.08993327531186539
+    },
+    {
+      "feature": 11815,
+      "s_semantic": 0.17590822179732313,
+      "concept": "creatinine",
+      "n_active": 4413,
+      "fis": 0.08795411089866156
+    },
+    {
+      "feature": 13187,
+      "s_semantic": 0.17519826964671953,
+      "concept": "drug",
+      "n_active": 1970,
+      "fis": 0.08759913482335976
+    },
+    {
+      "feature": 2166,
+      "s_semantic": 0.17148456638902498,
+      "concept": "drug",
+      "n_active": 3278,
+      "fis": 0.08574228319451249
+    },
+    {
+      "feature": 3610,
+      "s_semantic": 0.17142857142857143,
+      "concept": "pregnancy",
+      "n_active": 17,
+      "fis": 0.08571428571428572
+    },
+    {
+      "feature": 5844,
+      "s_semantic": 0.16666666666666666,
+      "concept": "pregnancy",
+      "n_active": 30,
+      "fis": 0.08333333333333333
+    }
+  ],
+  "fis_weights": {
+    "alpha_semantic": 0.5,
+    "beta_causal": 0.5,
+    "gamma_human": 0.0,
+    "gamma_note": "S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them."
+  }
+}

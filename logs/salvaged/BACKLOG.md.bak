@@ -1,0 +1,162 @@
+# BACKLOG — done vs. remaining
+
+Companion to `HANDOFF.md`. That file explains *how* things work and what broke.
+This file tracks *what is finished and what is not*.
+
+No time estimates appear anywhere in this file. None exist in the proposal
+(which states only a 36-month total), in `HANDOFF.md`, or in the supervisor's
+requirements. Any per-task duration would be invention.
+
+---
+
+## 1. Supervisor's four requirements
+
+From the voice messages, recorded in `HANDOFF.md` §1.
+
+| # | Requirement | Status | Evidence |
+|---|---|---|---|
+| 1 | Compare against a baseline — a simple model without the contributions | **DONE** | Row (1) Base LLM, `results/summary_test.json` |
+| 2 | Add contributions one at a time, show each one's effect | **DONE** | Rows (1)→(2)→(3)→(4), paired McNemar with Holm correction |
+| 3 | Start with smallest dataset and simplest task, move step by step | **DONE** | 128 records / 64 pairs, binary SAFE/UNSAFE decision |
+| 4 | Deliver a table: baseline vs. our model | **DONE (regenerate)** | Numbers exist in `summary_*.json`; both `table*.md` files are corrupt — see `HANDOFF.md` §8 |
+
+These four map onto the ablation matrix in §4.6 of the proposal:
+Base LLM → +RAG → +Symbolic Gate → +UQ Engine.
+
+**All four are met.** The recent request — "implement the paper and get
+results" — is a different and larger ask; see §2.
+
+---
+
+## 2. The proposal's four Aims
+
+| Aim | Name | Status |
+|---|---|---|
+| 1 | Discovery — SAEs, Feature Interpretability Score, concept probes | **NOT STARTED** |
+| 2 | Mechanism — knock-out / injection, ACE, negative controls | **NOT STARTED** |
+| 3 | Control — Constraint-Aware Layer, `h'_l = h_l + α·P_causal(h_l)` | **PROXY ONLY** — current gate is post-hoc, not a residual-stream adapter |
+| 4 | Validation — counterfactual benchmark, uncertainty-aware deferral | **MOSTLY DONE** — one component (UQ) failed and is documented as a negative result |
+
+Research questions:
+
+| RQ | Question | Status |
+|---|---|---|
+| RQ1 | Sparse latent features → biomedical concepts with semantic coherence | **NOT ADDRESSED** — requires Aim 1 |
+| RQ2 | Targeted interventions → predictable causally consistent changes | **NOT ADDRESSED** — requires Aim 2 |
+| RQ3 | Symbolic constraints improve consistency without harming language ability | **HALF** — consistency improvement shown (0.281→0.641); the language-capability control has not been run (`src/perplexity.py` written but never executed) |
+
+Everything built so far is behavioural. No model activations have been touched.
+
+---
+
+## 3. DONE
+
+### Infrastructure
+- 12 modules under `src/`: dataset construction, model wrapper, RAG + symbolic
+  gate, metrics and statistics, eval driver, table generator, two diagnostics.
+- BioMistral-7B in bf16, greedy decoding, single GPU. No quantisation.
+- `MockLM` backend for GPU-free plumbing checks, with a warning banner in
+  `make_table.py` so mock numbers can never be reported by accident.
+
+### Benchmark
+- 10 contraindication rule families — 8 training, 2 held out
+  (`nitrofurantoin_renal`, `ondansetron_qt`).
+- `counterfactual_test.jsonl` 128 records / 64 pairs; `_heldout` 32 / 16;
+  `_calib` 32 / 16; `rag_corpus.jsonl` 22 passages.
+- Each pair flips exactly one causal variable across a threshold, so the label
+  flip is guaranteed. Ground truth generated programmatically — no LLM-as-judge,
+  no human annotation.
+- `hardening.py`: near-threshold values, indirect presentation of the causal
+  factor in half the templates, 3 distractor labs per case. Applied after an
+  initial saturated result — legitimate but **must be disclosed**.
+
+### Results
+- Full 4-variant ablation on test and held-out splits.
+- Paired McNemar with Holm correction across the three consecutive comparisons.
+- Arm-wise breakdown exposing the base model's over-caution
+  (UNSAFE arm 0.891 / SAFE arm 0.297).
+- Symbolic gate fires on 72/128 and makes 0 incorrect decisions when it fires.
+
+### Closed investigations
+- **P3 retrieval** (`results/p3_retrieval.md`) — hit@3 = 0.648 test, 1.000
+  held-out. Retrieval works; the model ignores the retrieved context. "RAG is
+  insufficient on this benchmark" is now defensible.
+- **P1 uncertainty signals** (`results/p1_uq_signals.md`) — entropy has no
+  signal on any population. `logit_margin` is reliably better than entropy
+  (+0.199 base, p=0.004), but no signal clears the bar on the population the UQ
+  engine actually governs. Negative result confirmed, one positive finding kept.
+
+### Bugs found and fixed
+Four, all documented in `HANDOFF.md` §5 with instructions not to reintroduce
+them, plus the SPM tokenizer trap that cost one discarded eval run.
+
+### Data acquisition
+- `fetch_openfda.py` run against the live API. `data/openfda_raw.jsonl`
+  (10 labels) and `data/curation_worksheet.csv` (145 rows, 82 containing a
+  number).
+
+---
+
+## 4. REMAINING
+
+Ordered by what blocks the most. IDs match `HANDOFF.md` §6 where they exist.
+
+### Immediate / cheap
+- [ ] Regenerate `results/table.md` and `results/table_heldout_final.md` — both
+      contain run-log output instead of tables.
+- [ ] **P2 — seeds produce zero variance.** `do_sample=False` makes decoding
+      deterministic, so all 5 seeds are byte-identical and the table reports
+      `± 0.000`. Reporting "5 seeds" with zero std implies variability was
+      measured when it was not. Fix: route the seed through *dataset
+      construction* (value selection, age/sex, distractor labs), emit
+      `data/seed{N}/`, let `run_eval.py` take `--data`.
+      Acceptance: non-zero std; qualitative ordering of rows 1–3 survives.
+- [ ] Run `src/perplexity.py` on WikiText-2 — the pre-intervention baseline
+      RQ3 needs. Written, never executed.
+
+### Blocking the science
+- [ ] **P6 / Aim 1 — nothing exists.** SAE on middle-layer activations, Feature
+      Interpretability Score `FIS = α·S_semantic + β·S_causal + γ·S_human`,
+      sparse concept probing classifiers, stability across layers/prompts/seeds.
+      Fallback to JumpReLU or TopK SAE if <30% of features pass expert
+      validation. Needs more GPU than one 4090 for the SAE stage.
+- [ ] **P6 / Aim 2 — nothing exists.** Causal necessity (knock-out), causal
+      sufficiency (injection), Average Causal Effect
+      `ACE(Δf) = E[Y|do(F+Δf)] − E[Y|do(F)]`, negative controls on random
+      features. Note the existing counterfactual pairs are minimal pairs and are
+      the right substrate for this.
+- [ ] **P5 / Aim 3 — the gate is not the proposal's layer.** Current gate is a
+      post-hoc check on output text. The proposal specifies a residual-stream
+      adapter modifying hidden states before decoding, under a joint objective
+      `L = L_LM + λ1·L_ontology + λ2·L_causal + λ3·L_uncertainty`.
+      Must not be presented as the proposal's intervention layer.
+
+### Data provenance
+- [ ] **P4 — thresholds still hand-written.** `constraint_value` is empty on all
+      145 worksheet rows. Requires a human to transcribe numbers from the
+      quoted source sentences. 2 of 10 drugs returned nothing from openFDA.
+- [ ] UMLS / UTS account — free, registration takes days (per `HANDOFF.md`).
+- [ ] MIMIC-IV via PhysioNet — CITI training takes weeks (per `HANDOFF.md`).
+      Note the **Demo v2.2 is open access with no credentialing**, ODbL, 100
+      patients, all 26 tables including `labevents` and `prescriptions`, but no
+      free-text notes.
+
+### Optional / deferred
+- [ ] P1 self-consistency (k=5 samples at temperature > 0, answer disagreement
+      rate). Breaks the deterministic-decoding guarantee that makes the paired
+      McNemar tests valid, so it needs its own variant row.
+- [ ] External-validity run on a public dataset. Candidates researched:
+      `ncbi/MedCalc-Bench-v1.2`, `ncbi/Open-Patients`, `aai530-group6/ddxplus`,
+      RxSafeBench, MedHallu.
+
+---
+
+## 5. Security — still open
+
+Both credentials were pasted into a public chat and must be rotated. There is no
+evidence in the repo that this has been done.
+
+- [ ] Rotate the openFDA API key (api.data.gov)
+- [ ] Rotate the HuggingFace token
+
+Use `OPENFDA_API_KEY` and `HF_TOKEN`. Never hardcode.

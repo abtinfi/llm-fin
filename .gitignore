@@ -1,0 +1,40 @@
+# What is deliberately NOT tracked, and why.
+#
+# The point of this repository is provenance for CODE and for the ARTIFACTS a
+# claim rests on -- the JSON and Markdown that src/make_summary.py reads. Large
+# regenerable binaries are excluded: they are 2.4 GB against 14 MB of actual
+# results, and /home is already 88% full.
+
+# --- large regenerable binaries -------------------------------------------
+# results/sae/*.npz          ~1.8 GB  activation collection + two dictionaries
+# results/acts/*.npz         ~510 MB  probe activation caches
+# All are rebuilt by `bash run_full_pipeline.sh` stage 8 and by probe.py.
+*.npz
+
+# ...except the trained constraint-layer adapters. They are 1.1 MB each, they
+# are the actual deliverable of Aim 3, and every constraint-layer row in every
+# table is scored with one. Losing them means retraining to reproduce a number.
+!results/adapter_*.npz
+
+# --- third-party source corpora -------------------------------------------
+# MedCalc-Bench CSVs, 54 MB, redistributed by their own authors under their own
+# licence. src/build_medcalc.py reads them; they are not ours to vendor.
+data/external/
+
+# --- secrets ---------------------------------------------------------------
+# The UMLS and openFDA keys live in ../.env, outside this tree. These patterns
+# are belt-and-braces: BACKLOG.md section 5 records that keys have been pasted
+# into a chat before, so the cost of one leaking again is not hypothetical.
+.env
+*.key
+*.pem
+secrets.*
+
+# --- generated state -------------------------------------------------------
+.pipeline_state/
+__pycache__/
+*.pyc
+*.pyo
+
+# --- archives --------------------------------------------------------------
+*.zip

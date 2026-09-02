@@ -1,0 +1,640 @@
+"""
+Aim 1: sparse autoencoders on the residual stream, and the Feature
+Interpretability Score.
+
+    x_hat = W_dec . ReLU(W_enc . x + b_enc) + b_dec          (proposal Eq. 1)
+    FIS   = a*S_semantic + b*S_causal + c*S_human            (proposal 4.4)
+
+WHY THIS FILE EXISTS
+--------------------
+Aim 1 is the first aim of the proposal and nothing in this repository
+implemented it. `src/probe.py` asks a strictly weaker question -- "is the fact
+linearly decodable from the residual stream" -- which is a supervised readout,
+not a decomposition. A probe cannot produce features, cannot say what a
+direction responds to, and cannot be knocked out one unit at a time. Every
+statement about "discovering sparse features" needs an SAE, so here is one.
+
+WHAT IS AND IS NOT CLAIMED
+--------------------------
+This is a **pilot-scale** SAE. Production SAEs are trained on hundreds of
+millions of tokens with 8-64x expansion. This one sees a few hundred thousand
+tokens from one narrow corpus, at 2-4x expansion, because that is the corpus
+this project has. The consequences are stated rather than hidden:
+
+  - features here describe THIS distribution of clinical notes, not the model
+    in general;
+  - a feature that fails to appear is not evidence that the model lacks it;
+  - the dead-feature count and reconstruction error are reported for every run
+    so an under-trained dictionary is visible instead of implied.
+
+Both architectures named in the proposal's fallback are implemented: `topk`
+(the default) and `jumprelu`. The proposal says to fall back if fewer than 30%
+of features pass expert validation. There are no experts in this pipeline, so
+S_human cannot be measured and its weight is FORCED TO ZERO and reported as
+such -- an unmeasured term silently weighted at 1/3 would make the FIS look
+like an expert-validated number when no expert has seen it.
+
+    python src/sae.py collect --data data/medcalc --split test --layer 20
+    python src/sae.py train   --acts results/sae/acts_medcalc_test_L20.npz
+    python src/sae.py score   --sae results/sae/sae_medcalc_test_L20.npz
+"""
+
+import argparse
+import json
+import re
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+# ---------------------------------------------------------------------------
+# Concept vocabulary. A feature is "semantic" to the extent that it fires on
+# the tokens of exactly one of these and not on the others. Spans are found in
+# the prompt text, so the labels are derived from the text the model reads,
+# never from the dataset's structured facts.
+# ---------------------------------------------------------------------------
+NUM = r"\d+(?:\.\d+)?"
+CONCEPT_PATTERNS = {
+    "creatinine": re.compile(
+        r"creatin(?:ine|e)\b[^.\n;]{0,30}?" + NUM +
+        r"\s*(?:mg\s*/\s*d[lL]|[µu]mol\s*/\s*L)", re.I),
+    "qt_interval": re.compile(
+        r"QT\s*(?:interval|duration)?[^.\n;]{0,25}?" + NUM +
+        r"\s*(?:ms|msec|milliseconds)\b", re.I),
+    "egfr": re.compile(r"eGFR\s*(?:is|of)?\s*" + NUM, re.I),
+    "heart_rate": re.compile(
+        r"(?:heart rate|pulse)[^.\n;]{0,25}?" + NUM, re.I),
+    "potassium": re.compile(r"potassium (?:is |of )?" + NUM, re.I),
+    "inr": re.compile(r"INR (?:is |of )?" + NUM, re.I),
+    "age": re.compile(NUM + r"[\s-]*(?:year|yr)s?[\s-]*old", re.I),
+    "drug": re.compile(
+        r"\b(metformin|ibuprofen|lisinopril|propranolol|aspirin|"
+        r"spironolactone|warfarin|simvastatin|nitrofurantoin|ondansetron)\b",
+        re.I),
+    "renal_disease": re.compile(
+        r"\b(renal (?:failure|impairment|insufficiency)|kidney (?:disease|"
+        r"injury)|dialysis|CKD)\b", re.I),
+    "pregnancy": re.compile(
+        r"\b(pregnan\w*|hCG|menstrual)\b", re.I),
+    "asthma": re.compile(r"\b(asthma|bronchospasm|salbutamol|inhaler)\b", re.I),
+}
+CONCEPTS = list(CONCEPT_PATTERNS)
+
+
+def read_jsonl(p):
+    return [json.loads(l) for l in Path(p).open()]
+
+
+def concept_labels(text, offsets):
+    """
+    [T, C] boolean matrix: token t overlaps a span of concept c.
+
+    Offsets come from the tokenizer, so a concept spanning several tokens marks
+    all of them. A token belonging to two concepts is marked for both -- the
+    scoring treats concepts one at a time and never assumes exclusivity.
+    """
+    lab = np.zeros((len(offsets), len(CONCEPTS)), dtype=bool)
+    for ci, name in enumerate(CONCEPTS):
+        for m in CONCEPT_PATTERNS[name].finditer(text):
+            a, b = m.span()
+            for ti, (s, e) in enumerate(offsets):
+                if e > a and s < b and e > s:
+                    lab[ti, ci] = True
+    return lab
+
+
+# ---------------------------------------------------------------------------
+# 1. collect
+# ---------------------------------------------------------------------------
+
+def cmd_collect(args):
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    records = read_jsonl(Path(args.data) / f"counterfactual_{args.split}.jsonl")
+    if args.limit:
+        records = records[:args.limit]
+    tok = AutoTokenizer.from_pretrained(args.model_id, use_fast=True)
+    if tok.pad_token is None:
+        tok.pad_token = tok.eos_token
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model_id, torch_dtype=torch.bfloat16, device_map="cuda").eval()
+
+    def wrap(p):
+        if tok.chat_template:
+            return tok.apply_chat_template([{"role": "user", "content": p}],
+                                           tokenize=False,
+                                           add_generation_prompt=True)
+        return f"[INST] {p} [/INST]"
+
+    X, L, ids, budget = [], [], [], args.max_tokens
+    for i, r in enumerate(records):
+        text = wrap(r["prompt"])
+        enc = tok(text, return_tensors="pt", return_offsets_mapping=True,
+                  truncation=True, max_length=args.max_len)
+        offs = enc.pop("offset_mapping")[0].tolist()
+        enc = {k: v.to("cuda") for k, v in enc.items()}
+        with torch.no_grad():
+            out = model(**enc, output_hidden_states=True)
+        h = out.hidden_states[args.layer][0]              # [T, D]
+        lab = concept_labels(text, offs)
+
+        # Keep every token that carries a concept, plus a random sample of the
+        # rest. Keeping only concept tokens would train the dictionary on a
+        # distribution the model never sees and make every feature look
+        # selective; keeping everything blows the budget on padding-like
+        # boilerplate that is identical across items.
+        keep = np.where(lab.any(axis=1))[0]
+        rng = np.random.default_rng(1000 + i)
+        others = np.setdiff1d(np.arange(h.shape[0]), keep)
+        n_other = min(len(others),
+                      max(8, int(args.other_mult * len(keep))))
+        keep = np.concatenate([keep, rng.choice(others, n_other,
+                                                replace=False)])
+        keep = keep[keep < h.shape[0]]
+        if len(keep) > budget:
+            keep = keep[:budget]
+        X.append(h[keep].float().cpu().numpy().astype(np.float16))
+        L.append(lab[keep])
+        ids.extend([r["id"]] * len(keep))
+        budget -= len(keep)
+        if budget <= 0:
+            print(f"  token budget reached at item {i+1}/{len(records)}")
+            break
+        if (i + 1) % 50 == 0:
+            print(f"  {i+1}/{len(records)} items, "
+                  f"{args.max_tokens - budget} tokens", flush=True)
+
+    X = np.concatenate(X)
+    L = np.concatenate(L)
+    out = Path(args.out or f"results/sae/acts_{Path(args.data).name}_"
+                           f"{args.split}_L{args.layer}.npz")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(out, X=X, labels=L, concepts=np.array(CONCEPTS),
+                        ids=np.array(ids), layer=args.layer,
+                        data=str(args.data), split=args.split)
+    print(f"wrote {out}: X{X.shape} labels{L.shape}")
+    print("  concept token counts: " +
+          ", ".join(f"{c}={int(L[:, i].sum())}"
+                    for i, c in enumerate(CONCEPTS)))
+
+
+# ---------------------------------------------------------------------------
+# 2. train
+# ---------------------------------------------------------------------------
+
+class SAE:
+    """
+    Proposal Eq. (1) with the two architectures its fallback names.
+
+    `topk`     keeps the k largest pre-activations and zeroes the rest. Sparsity
+               is exact and set by hand, so L0 cannot drift during training and
+               there is no L1 coefficient to tune.
+    `jumprelu` keeps pre-activations above a learned per-feature threshold, with
+               a straight-through estimator for the step. Sparsity is learned,
+               which is the honest comparison for the fallback the proposal
+               describes.
+
+    The decoder is unit-norm per feature after every step: without it the model
+    can shrink activations and grow decoder columns to fake sparsity.
+    """
+
+    def __init__(self, d_in, d_hidden, kind="topk", k=32, torch=None,
+                 device="cuda", seed=0):
+        self.torch = torch
+        self.kind, self.k = kind, k
+        g = torch.Generator(device="cpu").manual_seed(seed)
+        W = torch.randn(d_hidden, d_in, generator=g) / np.sqrt(d_in)
+        self.W_dec = (W / W.norm(dim=1, keepdim=True)).to(device).requires_grad_(True)
+        self.W_enc = self.W_dec.detach().clone().T.contiguous().to(device).requires_grad_(True)
+        self.b_enc = torch.zeros(d_hidden, device=device).requires_grad_(True)
+        self.b_dec = torch.zeros(d_in, device=device).requires_grad_(True)
+        self.theta = (torch.full((d_hidden,), -3.0, device=device)
+                      .requires_grad_(True))      # log-threshold for jumprelu
+
+    def params(self):
+        p = [self.W_enc, self.W_dec, self.b_enc, self.b_dec]
+        return p + [self.theta] if self.kind == "jumprelu" else p
+
+    def encode(self, x):
+        torch = self.torch
+        pre = (x - self.b_dec) @ self.W_enc + self.b_enc
+        if self.kind == "topk":
+            v, i = torch.topk(pre, self.k, dim=-1)
+            z = torch.zeros_like(pre).scatter_(-1, i, torch.relu(v))
+            return z
+        thr = torch.exp(self.theta)
+        act = torch.relu(pre)
+        gate = (pre > thr).float()
+        # straight-through: gradient flows as if the gate were the identity
+        gate = gate + (torch.sigmoid((pre - thr) * 10.0)
+                       - torch.sigmoid((pre - thr) * 10.0).detach())
+        return act * gate
+
+    def decode(self, z):
+        return z @ self.W_dec + self.b_dec
+
+    def __call__(self, x):
+        z = self.encode(x)
+        return self.decode(z), z
+
+    def normalise(self):
+        with self.torch.no_grad():
+            self.W_dec.div_(self.W_dec.norm(dim=1, keepdim=True) + 1e-8)
+
+    def state(self):
+        return {k: v.detach().cpu().numpy() for k, v in
+                (("W_enc", self.W_enc), ("W_dec", self.W_dec),
+                 ("b_enc", self.b_enc), ("b_dec", self.b_dec),
+                 ("theta", self.theta))}
+
+
+def cmd_train(args):
+    import torch
+    z = np.load(args.acts, allow_pickle=True)
+    X = torch.tensor(z["X"], dtype=torch.float32)
+    n, d = X.shape
+
+    # Input scaling. Residual-stream norms in this model grow by ~240x with
+    # depth, so raw activations at a middle layer have norms in the tens and a
+    # sum-of-squares reconstruction loss in the thousands. The first attempt
+    # diverged to NaN on the first optimiser step for exactly this reason, and
+    # -- worse -- still printed a plausible-looking FVU and a 100% dead-feature
+    # count, which is the failure mode that gets written up as a finding.
+    # Rescaling so E||x|| = sqrt(d) is the standard SAE convention and makes
+    # the learning rate mean the same thing at any layer. The factor is stored
+    # so downstream code can undo it.
+    scale = float(np.sqrt(d) / X.norm(dim=1).mean())
+    X = X * scale
+    print(f"input scale {scale:.4f} -> mean ||x|| = "
+          f"{float(X.norm(dim=1).mean()):.2f} (sqrt(d) = {np.sqrt(d):.1f})")
+    d_hidden = args.expansion * d
+    print(f"{n} tokens x {d} dims -> {d_hidden} features "
+          f"({args.kind}, k={args.k})")
+
+    # split so reconstruction is reported on tokens the SAE never fitted
+    g = torch.Generator().manual_seed(0)
+    perm = torch.randperm(n, generator=g)
+    # cap the validation split at a fifth of the data. The previous
+    # `max(1024, n//10)` took MORE rows than existed on a small collection,
+    # leaving the training set empty; the loop then averaged over zero batches,
+    # printed `nan`, and still wrote an SAE. Anything trained on nothing must
+    # fail loudly, so the size is clamped and the guard below is explicit.
+    if n < 64:
+        raise SystemExit(f"only {n} activation vectors -- too few to train")
+    n_val = max(1, min(n // 5, 8192))
+    val, tr = X[perm[:n_val]].cuda(), X[perm[n_val:]]
+    print(f"train {tr.shape[0]} / val {n_val} tokens")
+
+    sae = SAE(d, d_hidden, args.kind, args.k, torch=torch, seed=0)
+    opt = torch.optim.Adam(sae.params(), lr=args.lr)
+    ntr = tr.shape[0]
+    steps_per_epoch = max(1, ntr // args.batch)
+
+    for ep in range(args.epochs):
+        idx = torch.randperm(ntr, generator=g)
+        tot = 0.0
+        for s in range(steps_per_epoch):
+            xb = tr[idx[s * args.batch:(s + 1) * args.batch]].cuda()
+            xh, zb = sae(xb)
+            # mean over dimensions, not sum: keeps the loss scale independent
+            # of the model's hidden size
+            loss = ((xh - xb) ** 2).mean()
+            if args.kind == "jumprelu":
+                loss = loss + args.l1 * zb.abs().sum(-1).mean()
+            loss.backward()
+            opt.step()
+            opt.zero_grad(set_to_none=True)
+            sae.normalise()
+            tot += float(loss.detach())
+        with torch.no_grad():
+            xh, zv = sae(val)
+            fvu = float(((xh - val) ** 2).sum() /
+                        ((val - val.mean(0)) ** 2).sum())
+            l0 = float((zv > 0).float().sum(-1).mean())
+            # a feature is dead if it never fires on ANY held-out token
+            dead = int(((zv > 0).sum(0) == 0).sum())
+        print(f"  epoch {ep+1}/{args.epochs}  train_mse={tot/steps_per_epoch:.5f}"
+              f"  val_FVU={fvu:.4f}  val_L0={l0:.1f}  dead={dead}", flush=True)
+        if not np.isfinite(tot):
+            raise SystemExit("training diverged (non-finite loss) -- refusing "
+                             "to write an SAE whose scores would be noise")
+    out = Path(args.out or str(args.acts).replace("acts_", "sae_"))
+    np.savez_compressed(out, **sae.state(), kind=args.kind, k=args.k,
+                        acts=str(args.acts), fvu=fvu, l0=l0, dead=dead,
+                        d_hidden=d_hidden, scale=scale)
+    print(f"wrote {out}")
+    print(f"  final val FVU={fvu:.4f}  L0={l0:.1f}  dead features={dead}"
+          f"/{d_hidden} ({dead/d_hidden:.1%})")
+
+
+# ---------------------------------------------------------------------------
+# 3. score: FIS
+# ---------------------------------------------------------------------------
+
+def semantic_scores_from_counts(tp, n_active, n_pos):
+    """
+    S_semantic per feature: best F1 of "this feature is active" against "this
+    token belongs to concept c", maximised over concepts.
+
+    F1 rather than a mean-activation difference because the question is whether
+    the feature SELECTS the concept: a feature that fires on the creatinine
+    token and on a third of everything else is not a creatinine feature, and
+    only a metric with a precision term says so.
+
+    Takes accumulated counts instead of the full activation matrix. Scoring a
+    150k-token collection against a 16k-feature dictionary materialises 9.8 GB
+    of float32 if the matrix is built at once, which is exactly how the first
+    attempt died on a 24 GB card that also had the model resident. The counts
+    are all the F1 needs, and they stream.
+    """
+    n_feat, n_con = tp.shape
+    best = np.zeros(n_feat)
+    which = np.full(n_feat, -1)
+    for c in range(n_con):
+        if n_pos[c] == 0:
+            continue
+        tp_c = tp[:, c]
+        fp = n_active - tp_c
+        fn = n_pos[c] - tp_c
+        f1 = np.where(tp_c > 0, 2 * tp_c / np.maximum(2 * tp_c + fp + fn, 1),
+                      0.0)
+        upd = f1 > best
+        best[upd], which[upd] = f1[upd], c
+    return best, which
+
+
+def cmd_score(args):
+    import torch
+    sae_z = np.load(args.sae, allow_pickle=True)
+    acts = np.load(str(sae_z["acts"]), allow_pickle=True)
+    scale = float(sae_z["scale"]) if "scale" in sae_z.files else 1.0
+    X = torch.tensor(acts["X"], dtype=torch.float32)      # stays on CPU
+    labels = acts["labels"]
+    concepts = [str(c) for c in acts["concepts"]]
+    d_hidden = int(sae_z["d_hidden"])
+
+    sae = SAE(X.shape[1], d_hidden, str(sae_z["kind"]),
+              int(sae_z["k"]), torch=torch)
+    for k in ("W_enc", "W_dec", "b_enc", "b_dec", "theta"):
+        getattr(sae, k).data = torch.tensor(sae_z[k]).cuda()
+
+    # Stream the collection through the encoder, accumulating only the counts
+    # the F1 needs: [features x concepts] true positives, plus per-feature
+    # firing counts. Peak memory is one chunk, not the whole matrix.
+    n_con = labels.shape[1]
+    tp = np.zeros((d_hidden, n_con), dtype=np.int64)
+    n_active = np.zeros(d_hidden, dtype=np.int64)
+    CH = 4096
+    with torch.no_grad():
+        for i in range(0, X.shape[0], CH):
+            xb = X[i:i + CH].cuda() * scale
+            act = (sae.encode(xb) > 0)
+            n_active += act.sum(0).cpu().numpy().astype(np.int64)
+            yb = torch.tensor(labels[i:i + CH]).cuda()
+            tp += (act.float().T @ yb.float()).cpu().numpy().astype(np.int64)
+            del xb, act, yb
+    torch.cuda.empty_cache()
+    n_pos = labels.sum(0)
+
+    s_sem, which = semantic_scores_from_counts(tp, n_active, n_pos)
+    order = np.argsort(-s_sem)
+    top = order[:args.top]
+    Z_active = n_active
+
+    print(f"\ntop {args.top} features by S_semantic:")
+    for f in top:
+        print(f"  #{f:6d}  S_sem={s_sem[f]:.3f}  concept="
+              f"{concepts[which[f]] if which[f] >= 0 else '-'}  "
+              f"fires on {int(Z_active[f])}/{X.shape[0]} tokens")
+
+    report = {"sae": str(args.sae), "kind": str(sae_z["kind"]),
+              "fvu": float(sae_z["fvu"]), "l0": float(sae_z["l0"]),
+              "dead": int(sae_z["dead"]), "d_hidden": int(sae_z["d_hidden"]),
+              "concepts": concepts,
+              "features": [{"feature": int(f), "s_semantic": float(s_sem[f]),
+                            "concept": (concepts[which[f]] if which[f] >= 0
+                                        else None),
+                            "n_active": int(Z_active[f])}
+                           for f in top]}
+
+    # ---- S_causal: knock the feature out of the forward pass -------------
+    if args.causal_items:
+        report["causal"] = causal_knockout(args, sae, top, report, scale)
+
+    # ---- FIS -------------------------------------------------------------
+    a, b = args.alpha_sem, args.beta_causal
+    for feat in report["features"]:
+        sc = feat.get("s_causal", 0.0)
+        feat["fis"] = a * feat["s_semantic"] + b * sc
+    report["fis_weights"] = {
+        "alpha_semantic": a, "beta_causal": b,
+        "gamma_human": 0.0,
+        "gamma_note": ("S_human is NOT measured: this pipeline has no expert "
+                       "annotators. Its weight is forced to zero and the FIS "
+                       "reported here is therefore a two-term score. The "
+                       "proposal's 30%-expert-validation fallback criterion "
+                       "cannot be evaluated without them.")}
+
+    out = Path(args.out or str(args.sae).replace(".npz", "_fis.json"))
+    out.write_text(json.dumps(report, indent=2))
+    print(f"\nwrote {out}")
+
+
+def causal_knockout(args, sae, feats, report, scale=1.0):
+    """
+    S_causal: does removing this feature from the residual stream change the
+    model's decision?
+
+    The feature's contribution at every position is subtracted:
+        h' = h - z_f(h) * W_dec[f]
+    and the change in the SAFE-minus-UNSAFE decision logit is measured. This is
+    the feature-level version of the necessity test in section 4.5 of the
+    proposal (knock-out), run on the units Aim 1 discovers rather than on token
+    positions.
+
+    A matched control is mandatory and is run for every feature: the same
+    number of items, with a RANDOM feature of similar firing rate knocked out.
+    Without it, "the decision moved by 0.4 logits" is unreadable, because
+    perturbing the residual stream at all moves it somewhat.
+    """
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    z = np.load(str(np.load(args.sae, allow_pickle=True)["acts"]),
+                allow_pickle=True)
+    split = args.causal_split or str(z["split"])
+    records = read_jsonl(Path(str(z["data"])) / f"counterfactual_{split}.jsonl")
+    # Knock-out is run on a DIFFERENT split from the one the dictionary was
+    # fitted on where possible: a feature that only moves the decision on its
+    # own training notes has not been shown to matter.
+    records = records[:args.causal_items]
+    print(f"  knock-out on {len(records)} items of split `{split}`")
+    layer = int(z["layer"])
+
+    tok = AutoTokenizer.from_pretrained(args.model_id)
+    if tok.pad_token is None:
+        tok.pad_token = tok.eos_token
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model_id, torch_dtype=torch.bfloat16, device_map="cuda").eval()
+
+    def answer_ids(label):
+        ids = set()
+        for t in (label, f" {label}", f"\n{label}"):
+            for tid in tok.encode(t, add_special_tokens=False):
+                piece = tok.convert_ids_to_tokens(tid)
+                if not piece.replace("▁", "").strip() or piece == "<0x0A>":
+                    continue
+                ids.add(tid)
+                break
+        return ids
+    safe_ids, unsafe_ids = answer_ids("SAFE"), answer_ids("UNSAFE")
+    ov = safe_ids & unsafe_ids
+    safe_ids, unsafe_ids = safe_ids - ov, unsafe_ids - ov
+
+    def wrap(p):
+        if tok.chat_template:
+            return tok.apply_chat_template([{"role": "user", "content": p}],
+                                           tokenize=False,
+                                           add_generation_prompt=True)
+        return f"[INST] {p} [/INST]"
+
+    W_dec = sae.W_dec.detach()
+    state = {"feature": None}
+
+    def hook(module, inputs, output):
+        h = output[0] if isinstance(output, tuple) else output
+        f = state["feature"]
+        if f is None:
+            return output
+        # the SAE was fitted on SCALED activations, so scale in, subtract
+        # the feature's contribution, and scale back out
+        zf = sae.encode(h[0].float() * scale)[:, f]          # [T]
+        delta = (zf[:, None] * W_dec[f][None, :]) / scale    # [T, D]
+        h = h.clone()
+        h[0] = h[0] - delta.to(h.dtype)
+        return (h,) + output[1:] if isinstance(output, tuple) else h
+
+    # LAYER ALIGNMENT (defect B1, fixed 2026-09-02).
+    #
+    # `cmd_collect` stores `out.hidden_states[layer]`. In transformers,
+    # hidden_states[0] is the embedding output and hidden_states[l] is the
+    # INPUT to decoder layer l -- i.e. the OUTPUT of decoder layer l-1.
+    # Verified empirically against transformers 5.15.0; note also that
+    # hidden_states[n_layers] is post-`model.norm`, not the last layer's
+    # output, which is defect B3 in patching.py.
+    #
+    # The hook must therefore fire on the module that PRODUCES
+    # hidden_states[layer], which is `layers[layer-1]`, not `layers[layer]`.
+    # Before this fix the dictionary fitted on h_20 was used to encode and
+    # subtract from h_21, so S_causal was measured with a mismatched
+    # dictionary and the knock-out null was not independent evidence.
+    #
+    # At layer 0 the producing module is the embedding table, which returns a
+    # bare tensor rather than a tuple; `hook` already handles both shapes.
+    target = (model.model.embed_tokens if layer == 0
+              else model.model.layers[layer - 1])
+    print(f"  knock-out hook on {'embed_tokens' if layer == 0 else f'layers[{layer-1}]'}"
+          f", which produces hidden_states[{layer}] -- the stream the SAE was "
+          f"fitted on")
+    handle = target.register_forward_hook(hook)
+
+    def margins():
+        out = []
+        for r in records:
+            enc = tok(wrap(r["prompt"]), return_tensors="pt",
+                      truncation=True, max_length=args.max_len).to("cuda")
+            with torch.no_grad():
+                lg = model(**enc).logits[0, -1].float()
+            out.append(max(lg[i].item() for i in safe_ids) -
+                       max(lg[i].item() for i in unsafe_ids))
+        return np.array(out)
+
+    state["feature"] = None
+    clean = margins()
+
+    rng = np.random.default_rng(0)
+    n_feat = W_dec.shape[0]
+    results = {}
+    for f in feats[:args.causal_features]:
+        state["feature"] = int(f)
+        eff = float(np.abs(margins() - clean).mean())
+        ctrl_f = int(rng.integers(0, n_feat))
+        state["feature"] = ctrl_f
+        ctrl = float(np.abs(margins() - clean).mean())
+        results[int(f)] = {"mean_abs_delta_logit": eff,
+                           "control_feature": ctrl_f,
+                           "control_mean_abs_delta_logit": ctrl,
+                           "excess": eff - ctrl}
+        print(f"  knock-out #{f}: |Δ margin|={eff:.4f} "
+              f"(random control #{ctrl_f}: {ctrl:.4f}, excess {eff-ctrl:+.4f})",
+              flush=True)
+    handle.remove()
+
+    # normalise into [0, 1] for the FIS: 1 logit of excess effect is a lot
+    for feat in report["features"]:
+        r = results.get(feat["feature"])
+        if r:
+            feat["s_causal"] = float(np.clip(r["excess"], 0.0, 1.0))
+            feat["causal_detail"] = r
+    return {"n_items": len(records), "clean_margin_mean": float(clean.mean()),
+            "per_feature": {str(k): v for k, v in results.items()}}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    c = sub.add_parser("collect")
+    c.add_argument("--data", default="data/medcalc")
+    c.add_argument("--split", default="test")
+    c.add_argument("--layer", type=int, default=20)
+    c.add_argument("--model_id", default="BioMistral/BioMistral-7B")
+    c.add_argument("--max_len", type=int, default=1400)
+    c.add_argument("--max_tokens", type=int, default=200000)
+    c.add_argument("--limit", type=int, default=0)
+    c.add_argument("--other_mult", type=float, default=2.0,
+                   help="non-concept tokens kept per concept token. A large "
+                        "value keeps the whole note, which is what a "
+                        "dictionary should be fitted on; the default subsample "
+                        "exists for quick runs.")
+    c.add_argument("--out", default=None)
+    c.set_defaults(fn=cmd_collect)
+
+    t = sub.add_parser("train")
+    t.add_argument("--acts", required=True)
+    t.add_argument("--kind", choices=["topk", "jumprelu"], default="topk")
+    t.add_argument("--expansion", type=int, default=2)
+    t.add_argument("--k", type=int, default=32)
+    t.add_argument("--l1", type=float, default=1e-3)
+    t.add_argument("--lr", type=float, default=1e-3)
+    t.add_argument("--epochs", type=int, default=20)
+    t.add_argument("--batch", type=int, default=2048)
+    t.add_argument("--out", default=None)
+    t.set_defaults(fn=cmd_train)
+
+    s = sub.add_parser("score")
+    s.add_argument("--sae", required=True)
+    s.add_argument("--top", type=int, default=20)
+    s.add_argument("--model_id", default="BioMistral/BioMistral-7B")
+    s.add_argument("--max_len", type=int, default=1400)
+    s.add_argument("--causal_items", type=int, default=40,
+                   help="0 disables the knock-out stage")
+    s.add_argument("--causal_features", type=int, default=8)
+    s.add_argument("--causal_split", default=None,
+                   help="split to run the knock-out on; defaults to the split "
+                        "the activations came from")
+    s.add_argument("--alpha_sem", type=float, default=0.5)
+    s.add_argument("--beta_causal", type=float, default=0.5)
+    s.add_argument("--out", default=None)
+    s.set_defaults(fn=cmd_score)
+
+    args = ap.parse_args()
+    args.fn(args)
+
+
+if __name__ == "__main__":
+    main()

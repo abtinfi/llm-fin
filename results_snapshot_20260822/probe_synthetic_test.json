@@ -1,0 +1,423 @@
+{
+  "data": "data/counterfactual_test.jsonl",
+  "pooling": {
+    "final": {
+      "rows": [
+        {
+          "layer": 0,
+          "item_acc": 0.5,
+          "pair_cc": 0.0,
+          "shuffled_cc": 0.0
+        },
+        {
+          "layer": 1,
+          "item_acc": 0.6328125,
+          "pair_cc": 0.453125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 2,
+          "item_acc": 0.6640625,
+          "pair_cc": 0.484375,
+          "shuffled_cc": 0.234375
+        },
+        {
+          "layer": 3,
+          "item_acc": 0.5703125,
+          "pair_cc": 0.34375,
+          "shuffled_cc": 0.234375
+        },
+        {
+          "layer": 4,
+          "item_acc": 0.6015625,
+          "pair_cc": 0.390625,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 5,
+          "item_acc": 0.625,
+          "pair_cc": 0.40625,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 6,
+          "item_acc": 0.71875,
+          "pair_cc": 0.546875,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 7,
+          "item_acc": 0.6953125,
+          "pair_cc": 0.515625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 8,
+          "item_acc": 0.6484375,
+          "pair_cc": 0.4375,
+          "shuffled_cc": 0.21875
+        },
+        {
+          "layer": 9,
+          "item_acc": 0.703125,
+          "pair_cc": 0.515625,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 10,
+          "item_acc": 0.71875,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.234375
+        },
+        {
+          "layer": 11,
+          "item_acc": 0.7109375,
+          "pair_cc": 0.546875,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 12,
+          "item_acc": 0.7265625,
+          "pair_cc": 0.53125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 13,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.203125
+        },
+        {
+          "layer": 14,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.21875
+        },
+        {
+          "layer": 15,
+          "item_acc": 0.8203125,
+          "pair_cc": 0.640625,
+          "shuffled_cc": 0.328125
+        },
+        {
+          "layer": 16,
+          "item_acc": 0.796875,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 17,
+          "item_acc": 0.765625,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 18,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.234375
+        },
+        {
+          "layer": 19,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 20,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 21,
+          "item_acc": 0.78125,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 22,
+          "item_acc": 0.78125,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 23,
+          "item_acc": 0.78125,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 24,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.3125
+        },
+        {
+          "layer": 25,
+          "item_acc": 0.765625,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 26,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 27,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.609375,
+          "shuffled_cc": 0.34375
+        },
+        {
+          "layer": 28,
+          "item_acc": 0.78125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 29,
+          "item_acc": 0.78125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 30,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.609375,
+          "shuffled_cc": 0.328125
+        },
+        {
+          "layer": 31,
+          "item_acc": 0.78125,
+          "pair_cc": 0.609375,
+          "shuffled_cc": 0.359375
+        },
+        {
+          "layer": 32,
+          "item_acc": 0.796875,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.34375
+        }
+      ],
+      "best": {
+        "layer": 15,
+        "item_acc": 0.8203125,
+        "pair_cc": 0.640625,
+        "shuffled_cc": 0.328125
+      },
+      "shuffle_floor": 0.359375
+    },
+    "mean": {
+      "rows": [
+        {
+          "layer": 0,
+          "item_acc": 0.7265625,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.4375
+        },
+        {
+          "layer": 1,
+          "item_acc": 0.6875,
+          "pair_cc": 0.484375,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 2,
+          "item_acc": 0.7578125,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.328125
+        },
+        {
+          "layer": 3,
+          "item_acc": 0.7265625,
+          "pair_cc": 0.53125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 4,
+          "item_acc": 0.75,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.3125
+        },
+        {
+          "layer": 5,
+          "item_acc": 0.765625,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.359375
+        },
+        {
+          "layer": 6,
+          "item_acc": 0.7109375,
+          "pair_cc": 0.5,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 7,
+          "item_acc": 0.6796875,
+          "pair_cc": 0.46875,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 8,
+          "item_acc": 0.7265625,
+          "pair_cc": 0.546875,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 9,
+          "item_acc": 0.734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 10,
+          "item_acc": 0.734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 11,
+          "item_acc": 0.75,
+          "pair_cc": 0.59375,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 12,
+          "item_acc": 0.78125,
+          "pair_cc": 0.640625,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 13,
+          "item_acc": 0.765625,
+          "pair_cc": 0.640625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 14,
+          "item_acc": 0.78125,
+          "pair_cc": 0.65625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 15,
+          "item_acc": 0.78125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 16,
+          "item_acc": 0.7890625,
+          "pair_cc": 0.65625,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 17,
+          "item_acc": 0.796875,
+          "pair_cc": 0.65625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 18,
+          "item_acc": 0.78125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 19,
+          "item_acc": 0.75,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 20,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 21,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.53125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 22,
+          "item_acc": 0.7734375,
+          "pair_cc": 0.59375,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 23,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.5625,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 24,
+          "item_acc": 0.75,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 25,
+          "item_acc": 0.765625,
+          "pair_cc": 0.59375,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 26,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.265625
+        },
+        {
+          "layer": 27,
+          "item_acc": 0.7578125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 28,
+          "item_acc": 0.7578125,
+          "pair_cc": 0.625,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 29,
+          "item_acc": 0.7421875,
+          "pair_cc": 0.59375,
+          "shuffled_cc": 0.28125
+        },
+        {
+          "layer": 30,
+          "item_acc": 0.734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.296875
+        },
+        {
+          "layer": 31,
+          "item_acc": 0.734375,
+          "pair_cc": 0.578125,
+          "shuffled_cc": 0.25
+        },
+        {
+          "layer": 32,
+          "item_acc": 0.7109375,
+          "pair_cc": 0.546875,
+          "shuffled_cc": 0.25
+        }
+      ],
+      "best": {
+        "layer": 14,
+        "item_acc": 0.78125,
+        "pair_cc": 0.65625,
+        "shuffled_cc": 0.265625
+      },
+      "shuffle_floor": 0.4375
+    }
+  }
+}
