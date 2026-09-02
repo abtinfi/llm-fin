@@ -70,6 +70,64 @@ def ablation_block(title, files):
     return lines
 
 
+def _causal_spans(R):
+    """
+    The Aim 2 effect sizes, read from the artifacts rather than typed in.
+
+    These three numbers were hard-coded string literals until 2026-09-02, which
+    contradicted this file's own docstring ("from the artifacts, not from
+    memory") and meant the B1/B3 fixes could not reach section 5. The
+    `~0.002 logits` and `0.002-0.016 logits` figures they asserted were both
+    stale the moment the knock-out was re-run against the correct layer.
+
+    Prefers `results/rerun_fixes/` where a post-fix artifact exists, because
+    the pre-fix patching runs used a mismatched hook (B3) and a superseded data
+    partition. Falls back to the baseline path so this still works in a tree
+    where the re-run has not been done.
+    """
+    import json as _json
+
+    def _load(*cands):
+        for c in cands:
+            p = R / c
+            if p.is_file():
+                try:
+                    return _json.loads(p.read_text())
+                except _json.JSONDecodeError:
+                    pass
+        return None
+
+    def _span(vals, unit="logits"):
+        if not vals:
+            return "not measured"
+        lo, hi = min(vals), max(vals)
+        return (f"{hi:.4f} {unit}" if abs(hi - lo) < 5e-5
+                else f"{lo:.4f} to {hi:.4f} {unit}")
+
+    out = {}
+    pat = []
+    for split in ("test", "heldout"):
+        d = _load(f"rerun_fixes/patching_medcalc_{split}.json",
+                  f"patching_medcalc_{split}.json")
+        if d:
+            pat.append(max(abs(r["excess"]) for r in d["rows"]))
+    out["patching"] = _span([min(pat), max(pat)] if pat else [])
+
+    fis = _load("sae/sae_topk_L20_fis.json")
+    ko = ([f["causal_detail"]["excess"] for f in fis["features"]
+           if "causal_detail" in f] if fis else [])
+    out["knockout"] = _span(ko)
+
+    suf = []
+    for split in ("test", "heldout"):
+        d = _load(f"rerun_fixes/sufficiency_medcalc_{split}.json",
+                  f"sufficiency_medcalc_{split}.json")
+        if d:
+            suf.append(max(abs(r["excess"]) for r in d["rows"]))
+    out["sufficiency"] = _span([min(suf), max(suf)] if suf else [])
+    return out
+
+
 def main():
     L = ["# All experiments, side by side",
          "",
@@ -183,9 +241,10 @@ def main():
           "recovers the target by giving up coverage.\n"]
 
     # ---------------- earlier experiments, unchanged --------------------
-    L += ["## 5. Results carried over unchanged\n",
-          "These were not affected by the data fixes and were not re-run; "
-          "their reports hold the detail.\n",
+    L += ["## 5. Supporting results\n",
+          "Their reports hold the detail. The three causal rows are computed "
+          "from the post-fix artifacts (B1/B2/B3, 2026-09-02); the two UQ rows "
+          "are unaffected by those fixes and carry over unchanged.\n",
           "| Question | Answer | Where |",
           "|---|---|---|",
           "| Does the proposal's Eq. (2) uncertainty work? | **No** — pooled "
@@ -196,11 +255,15 @@ def main():
           "`results/mcqpairs.md` |",
           "| Is the decisive fact represented internally? | QT yes (pair-CC "
           "0.976), creatinine no (0.042) | `results/aim123_internals.md` |",
-          "| Does it causally drive the answer? | No — patching effects "
-          "~0.002 logits, 100-500x too small | `results/aim123_internals.md` |",
-          "| ...and by SAE feature knock-out? | No — 0.002-0.016 logits "
-          "against matched controls, replicating the patching null | "
-          "`results/aim1_sae.md` |",
+          f"| Does it causally drive the answer? | No — patching effects "
+          f"{_causal_spans(R)['patching']}, ~100x too small to flip a "
+          f"decision | `results/aim123_internals.md` |",
+          f"| ...and by SAE feature knock-out? | No — "
+          f"{_causal_spans(R)['knockout']} against matched controls, "
+          f"replicating the patching null | `results/aim1_sae.md` |",
+          f"| ...and by feature injection (sufficiency)? | No — "
+          f"{_causal_spans(R)['sufficiency']} | "
+          f"`results/rerun_fixes/COMPARISON.md` |",
           "",
           "See `results/FIXES.md` for the nine defects found in an audit of "
           "this repository, what each would have done to a reported number, "

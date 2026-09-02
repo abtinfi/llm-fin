@@ -24,14 +24,14 @@
       "s_semantic": 0.7027027027027027,
       "concept": "qt_interval",
       "n_active": 36,
-      "s_causal": 0.0015625,
+      "s_causal": 0.0,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.0015625,
+        "mean_abs_delta_logit": 0.0,
         "control_feature": 13936,
         "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0015625
+        "excess": 0.0
       },
-      "fis": 0.3521326013513514
+      "fis": 0.35135135135135137
     },
     {
       "feature": 7626,
@@ -42,8 +42,8 @@
       "causal_detail": {
         "mean_abs_delta_logit": 0.0,
         "control_feature": 10435,
-        "control_mean_abs_delta_logit": 0.0015625,
-        "excess": -0.0015625
+        "control_mean_abs_delta_logit": 0.003125,
+        "excess": -0.003125
       },
       "fis": 0.3076923076923077
     },
@@ -52,56 +52,56 @@
       "s_semantic": 0.6033076074972437,
       "concept": "creatinine",
       "n_active": 2149,
-      "s_causal": 0.0158203125,
+      "s_causal": 0.024999999999999998,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.0158203125,
+        "mean_abs_delta_logit": 0.0265625,
         "control_feature": 8374,
-        "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0158203125
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": 0.024999999999999998
       },
-      "fis": 0.30956395999862185
+      "fis": 0.31415380374862184
     },
     {
       "feature": 11855,
       "s_semantic": 0.5915057915057915,
       "concept": "age",
       "n_active": 1456,
-      "s_causal": 0.0146484375,
+      "s_causal": 0.019140625,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.0146484375,
+        "mean_abs_delta_logit": 0.019140625,
         "control_feature": 4420,
         "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0146484375
+        "excess": 0.019140625
       },
-      "fis": 0.30307711450289576
+      "fis": 0.3053232082528958
     },
     {
       "feature": 5438,
       "s_semantic": 0.585792349726776,
       "concept": "heart_rate",
       "n_active": 497,
-      "s_causal": 0.009765625,
+      "s_causal": 0.0,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.02890625,
+        "mean_abs_delta_logit": 0.005859375,
         "control_feature": 5043,
-        "control_mean_abs_delta_logit": 0.019140625,
-        "excess": 0.009765625
+        "control_mean_abs_delta_logit": 0.022265625,
+        "excess": -0.01640625
       },
-      "fis": 0.297778987363388
+      "fis": 0.292896174863388
     },
     {
       "feature": 2883,
       "s_semantic": 0.5413060582218725,
       "concept": "drug",
       "n_active": 467,
-      "s_causal": 0.016210937499999998,
+      "s_causal": 0.0205078125,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.0208984375,
+        "mean_abs_delta_logit": 0.0251953125,
         "control_feature": 671,
         "control_mean_abs_delta_logit": 0.0046875,
-        "excess": 0.016210937499999998
+        "excess": 0.0205078125
       },
-      "fis": 0.27875849786093626
+      "fis": 0.28090693536093625
     },
     {
       "feature": 7679,
@@ -122,14 +122,14 @@
       "s_semantic": 0.5201401050788091,
       "concept": "age",
       "n_active": 1150,
-      "s_causal": 0.015625,
+      "s_causal": 0.013867187500000001,
       "causal_detail": {
-        "mean_abs_delta_logit": 0.0171875,
+        "mean_abs_delta_logit": 0.0154296875,
         "control_feature": 270,
         "control_mean_abs_delta_logit": 0.0015625,
-        "excess": 0.015625
+        "excess": 0.013867187500000001
       },
-      "fis": 0.2678825525394046
+      "fis": 0.2670036462894046
     },
     {
       "feature": 7696,
@@ -256,40 +256,40 @@
     "clean_margin_mean": -0.1314453125,
     "per_feature": {
       "14294": {
-        "mean_abs_delta_logit": 0.0015625,
+        "mean_abs_delta_logit": 0.0,
         "control_feature": 13936,
         "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0015625
+        "excess": 0.0
       },
       "7626": {
         "mean_abs_delta_logit": 0.0,
         "control_feature": 10435,
-        "control_mean_abs_delta_logit": 0.0015625,
-        "excess": -0.0015625
+        "control_mean_abs_delta_logit": 0.003125,
+        "excess": -0.003125
       },
       "14058": {
-        "mean_abs_delta_logit": 0.0158203125,
+        "mean_abs_delta_logit": 0.0265625,
         "control_feature": 8374,
-        "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0158203125
+        "control_mean_abs_delta_logit": 0.0015625,
+        "excess": 0.024999999999999998
       },
       "11855": {
-        "mean_abs_delta_logit": 0.0146484375,
+        "mean_abs_delta_logit": 0.019140625,
         "control_feature": 4420,
         "control_mean_abs_delta_logit": 0.0,
-        "excess": 0.0146484375
+        "excess": 0.019140625
       },
       "5438": {
-        "mean_abs_delta_logit": 0.02890625,
+        "mean_abs_delta_logit": 0.005859375,
         "control_feature": 5043,
-        "control_mean_abs_delta_logit": 0.019140625,
-        "excess": 0.009765625
+        "control_mean_abs_delta_logit": 0.022265625,
+        "excess": -0.01640625
       },
       "2883": {
-        "mean_abs_delta_logit": 0.0208984375,
+        "mean_abs_delta_logit": 0.0251953125,
         "control_feature": 671,
         "control_mean_abs_delta_logit": 0.0046875,
-        "excess": 0.016210937499999998
+        "excess": 0.0205078125
       },
       "7679": {
         "mean_abs_delta_logit": 0.0,
@@ -298,10 +298,10 @@
         "excess": -0.0015625
       },
       "16231": {
-        "mean_abs_delta_logit": 0.0171875,
+        "mean_abs_delta_logit": 0.0154296875,
         "control_feature": 270,
         "control_mean_abs_delta_logit": 0.0015625,
-        "excess": 0.015625
+        "excess": 0.013867187500000001
       }
     }
   },

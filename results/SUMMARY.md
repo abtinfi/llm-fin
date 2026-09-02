@@ -79,14 +79,14 @@ Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 
 | feature | concept | S_semantic | S_causal | FIS |
 |---|---|---|---|---|
-| #14294 | qt_interval | 0.703 | 0.0016 | 0.352 |
+| #14294 | qt_interval | 0.703 | 0.0000 | 0.351 |
 | #7626 | pregnancy | 0.615 | 0.0000 | 0.308 |
-| #14058 | creatinine | 0.603 | 0.0158 | 0.310 |
-| #11855 | age | 0.592 | 0.0146 | 0.303 |
-| #5438 | heart_rate | 0.586 | 0.0098 | 0.298 |
-| #2883 | drug | 0.541 | 0.0162 | 0.279 |
+| #14058 | creatinine | 0.603 | 0.0250 | 0.314 |
+| #11855 | age | 0.592 | 0.0191 | 0.305 |
+| #5438 | heart_rate | 0.586 | 0.0000 | 0.293 |
+| #2883 | drug | 0.541 | 0.0205 | 0.281 |
 | #7679 | asthma | 0.538 | 0.0000 | 0.269 |
-| #16231 | age | 0.520 | 0.0156 | 0.268 |
+| #16231 | age | 0.520 | 0.0139 | 0.267 |
 | #7696 | age | 0.519 | not run | 0.260 |
 | #3446 | drug | 0.511 | not run | 0.256 |
 
@@ -96,17 +96,18 @@ Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 
 Frozen split-conformal vs Adaptive Conformal Inference, and coverage broken down by subgroup, are in `results/uq_coverage_*.md`. The headline: a frozen threshold has no guarantee on a split that is not exchangeable with the calibration split, which is exactly what the held-out rule family is, and ACI recovers the target by giving up coverage.
 
-## 5. Results carried over unchanged
+## 5. Supporting results
 
-These were not affected by the data fixes and were not re-run; their reports hold the detail.
+Their reports hold the detail. The three causal rows are computed from the post-fix artifacts (B1/B2/B3, 2026-09-02); the two UQ rows are unaffected by those fixes and carry over unchanged.
 
 | Question | Answer | Where |
 |---|---|---|
 | Does the proposal's Eq. (2) uncertainty work? | **No** — pooled AUROC 0.525 over 6,456 items; restricting the same entropy to the answer tokens gives 0.687 | `results/bigbench_uq.md` |
 | Is counterfactual consistency alone evidence of reasoning? | **No** — discrimination −0.013 [−0.037, +0.013] over 8,000 items | `results/mcqpairs.md` |
 | Is the decisive fact represented internally? | QT yes (pair-CC 0.976), creatinine no (0.042) | `results/aim123_internals.md` |
-| Does it causally drive the answer? | No — patching effects ~0.002 logits, 100-500x too small | `results/aim123_internals.md` |
-| ...and by SAE feature knock-out? | No — 0.002-0.016 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
+| Does it causally drive the answer? | No — patching effects 0.0064 to 0.0221 logits, ~100x too small to flip a decision | `results/aim123_internals.md` |
+| ...and by SAE feature knock-out? | No — -0.0164 to 0.0250 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
+| ...and by feature injection (sufficiency)? | No — 0.0134 to 0.0833 logits | `results/rerun_fixes/COMPARISON.md` |
 
 See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.
 
