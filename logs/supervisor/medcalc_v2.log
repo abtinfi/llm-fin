@@ -20,3 +20,17 @@ wrote results/summary_test_medcalc2.json
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
 Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.04it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 226.18it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.95it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 253.09it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.25it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 258.32it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 261.08it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 263.16it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 264.27it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 271.18it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 262.33it/s]
+[seed 0] base      acc=0.556 cc=0.000 viol=1.000 cov=1.000
+[seed 0] rag       acc=0.444 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/summary_heldout_medcalc2.json
+[v2][ok  ] ablation_heldout
+[v2][run ] cl_test  2026-09-07T17:35:00+03:00
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.83it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 226.10it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.27it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 252.75it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 251.58it/s]Loading weights:  56%|█████▌    | 162/291 [00:00<00:00, 272.86it/s]Loading weights:  65%|██████▌   | 190/291 [00:00<00:00, 271.47it/s]Loading weights:  75%|███████▍  | 218/291 [00:00<00:00, 271.97it/s]Loading weights:  85%|████████▍ | 246/291 [00:00<00:00, 272.44it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 250.44it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.56it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
