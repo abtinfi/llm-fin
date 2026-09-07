@@ -26,6 +26,14 @@ from make_table import LABELS, correct_flags, load_preds
 from metrics import bootstrap_ci, holm_bonferroni, mcnemar, score
 
 # (tag, split, human name). The tag is how run_eval.py namespaces the arm.
+# Which dataset each tag was evaluated on, needed to recover `is_control`.
+TAG_DATA = {
+    "":          "data/synthetic_control",
+    "_medcalc":  "data/medcalc",
+    "_medcalc2": "data/medcalc_v2",
+    "_mimic":    "data/mimic",
+}
+
 ARMS = [
     ("",          "test",    "synthetic control, test"),
     ("",          "heldout", "synthetic control, held-out"),
@@ -45,6 +53,39 @@ PROPOSED = "nsai_uq_cl"      # all four contributions
 FALLBACK = "nsai_uq"         # the proposal's row (4) where row (8) is absent
 
 
+# Prediction files written before 2026-09-07 do not carry `is_control`, and
+# re-running a 448-item ablation to recover one boolean per row would be
+# absurd. The flag is a property of the DATASET, so it is joined back on `id`.
+_CTRL_CACHE = {}
+
+
+def control_ids(data_dir, split):
+    key = (str(data_dir), split)
+    if key in _CTRL_CACHE:
+        return _CTRL_CACHE[key]
+    p = Path(data_dir) / f"counterfactual_{split}.jsonl"
+    ids = set()
+    if p.is_file():
+        for line in p.open():
+            r = json.loads(line)
+            if r.get("is_control"):
+                ids.add(r["id"])
+    _CTRL_CACHE[key] = ids
+    return ids
+
+
+def enrich(recs, data_dir, split):
+    """Restore `is_control` from the dataset when the preds predate it."""
+    if not recs or "is_control" in recs[0]:
+        return recs
+    ids = control_ids(data_dir, split)
+    if not ids:
+        return recs
+    for r in recs:
+        r["is_control"] = r["id"] in ids
+    return recs
+
+
 def fmt(x, nd=3):
     return "—" if x is None else f"{x:.{nd}f}"
 
@@ -55,16 +96,19 @@ def signed(x, nd=3):
 
 def arm_rows(R, tag, split, seed=0):
     """Everything one arm contributes, or None if it was not run."""
+    data_dir = TAG_DATA.get(tag, "data/medcalc")
     try:
-        base = load_preds(R, split, "base", seed, tag)
+        base = enrich(load_preds(R, split, "base", seed, tag), data_dir, split)
     except FileNotFoundError:
         return None
     prop_name = PROPOSED
     try:
-        prop = load_preds(R, split, prop_name, seed, tag)
+        prop = enrich(load_preds(R, split, prop_name, seed, tag),
+                      data_dir, split)
     except FileNotFoundError:
         try:
-            prop = load_preds(R, split, FALLBACK, seed, tag)
+            prop = enrich(load_preds(R, split, FALLBACK, seed, tag),
+                          data_dir, split)
             prop_name = FALLBACK
         except FileNotFoundError:
             return None
@@ -83,7 +127,8 @@ def arm_rows(R, tag, split, seed=0):
     }
     for v, label in ISOLATING:
         try:
-            recs = load_preds(R, split, v, seed, tag)
+            recs = enrich(load_preds(R, split, v, seed, tag),
+                          data_dir, split)
         except FileNotFoundError:
             continue
         s = score(recs)

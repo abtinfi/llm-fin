@@ -237,6 +237,13 @@ def run_variant(variant, lm, calib, test, retriever, gate, alpha,
         records.append({
             "id": r["id"], "pair_id": r["pair_id"], "family": r["family"],
             "label": r["label"], "pred": p, "abstained": abstained,
+            # Carried through so metrics.score() can separate control pairs
+            # (driving value moves, label does not) from causal ones. Without
+            # it every prediction file looks like a flip-only benchmark and
+            # `spurious_flip_rate` reports "not measured" on a split that has
+            # the pairs. Absent on records from datasets that predate control
+            # pairs, which is why score() treats a missing key as causal.
+            "is_control": bool(r.get("is_control", False)),
             "entropy": g.entropy, "max_entropy": g.max_entropy,
             "uq_signal": uq_signal, "uq_uncertainty": (
                 None if unc == float("inf") else unc),
