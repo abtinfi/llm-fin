@@ -251,7 +251,8 @@ def cmd_collect(args):
         # selective; keeping everything blows the budget on padding-like
         # boilerplate that is identical across items.
         keep = np.where(lab.any(axis=1))[0]
-        rng = np.random.default_rng(1000 + i)
+        rng = np.random.default_rng(getattr(args, "seed", 0) * 100003
+                                    + 1000 + i)
         others = np.setdiff1d(np.arange(h.shape[0]), keep)
         n_other = min(len(others),
                       max(8, int(args.other_mult * len(keep))))
@@ -381,7 +382,7 @@ def cmd_train(args):
           f"({args.kind}, k={args.k})")
 
     # split so reconstruction is reported on tokens the SAE never fitted
-    g = torch.Generator().manual_seed(0)
+    g = torch.Generator().manual_seed(getattr(args, "seed", 0))
     perm = torch.randperm(n, generator=g)
     # cap the validation split at a fifth of the data. The previous
     # `max(1024, n//10)` took MORE rows than existed on a small collection,
@@ -394,7 +395,8 @@ def cmd_train(args):
     val, tr = X[perm[:n_val]].cuda(), X[perm[n_val:]]
     print(f"train {tr.shape[0]} / val {n_val} tokens")
 
-    sae = SAE(d, d_hidden, args.kind, args.k, torch=torch, seed=0)
+    sae = SAE(d, d_hidden, args.kind, args.k, torch=torch,
+              seed=getattr(args, "seed", 0))
     opt = torch.optim.Adam(sae.params(), lr=args.lr)
     ntr = tr.shape[0]
     steps_per_epoch = max(1, ntr // args.batch)
@@ -667,7 +669,7 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
     state["feature"] = None
     clean = margins()
 
-    rng = np.random.default_rng(0)
+    rng = np.random.default_rng(getattr(args, "seed", 0))
     n_feat = W_dec.shape[0]
     results = {}
     for f in (feats if not args.causal_features
@@ -718,6 +720,8 @@ def main():
                         "knowledge graph (default), or the legacy hand-written "
                         "regexes that produced the pre-2026-09-02 numbers")
     c.add_argument("--graph", default=DEFAULT_GRAPH)
+    c.add_argument("--seed", type=int, default=0,
+                   help="Seeds the dictionary init, the train/val split, the batch order, the non-concept token subsample and the random control feature -- the four RNGs that were hard-coded. Decoding stays greedy, so this is the only real source of variance in the Aim 1 pipeline.")
     c.add_argument("--out", default=None)
     c.set_defaults(fn=cmd_collect)
 
@@ -730,6 +734,8 @@ def main():
     t.add_argument("--lr", type=float, default=1e-3)
     t.add_argument("--epochs", type=int, default=20)
     t.add_argument("--batch", type=int, default=2048)
+    t.add_argument("--seed", type=int, default=0,
+                   help="Seeds the dictionary init, the train/val split, the batch order, the non-concept token subsample and the random control feature -- the four RNGs that were hard-coded. Decoding stays greedy, so this is the only real source of variance in the Aim 1 pipeline.")
     t.add_argument("--out", default=None)
     t.set_defaults(fn=cmd_train)
 
@@ -750,6 +756,8 @@ def main():
                         "the activations came from")
     s.add_argument("--alpha_sem", type=float, default=0.5)
     s.add_argument("--beta_causal", type=float, default=0.5)
+    s.add_argument("--seed", type=int, default=0,
+                   help="Seeds the dictionary init, the train/val split, the batch order, the non-concept token subsample and the random control feature -- the four RNGs that were hard-coded. Decoding stays greedy, so this is the only real source of variance in the Aim 1 pipeline.")
     s.add_argument("--out", default=None)
     s.set_defaults(fn=cmd_score)
 

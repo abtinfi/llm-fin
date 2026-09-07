@@ -53,6 +53,7 @@ cat > "$QUEUE" <<'EOQ'
 .pipeline_state/MODEL_COMPLETE_biomistral-7b-L16_L16|layer16|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b-L16 RESULTS_DIR=results/layers/L16 LAYER=16|bash run_model.sh
 .pipeline_state/MODEL_COMPLETE_biomistral-7b-L24_L24|layer24|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b-L24 RESULTS_DIR=results/layers/L24 LAYER=24|bash run_model.sh
 .pipeline_state/sae_split_weights_L20/attr.done|sae_qt_weights||bash run_sae_split_weights.sh
+.pipeline_state/seed_sweep_L20/ALL_DONE|seed_sweep||bash run_seed_sweep.sh
 EOQ
 
 CLAIMS=".pipeline_state/claims"
@@ -121,6 +122,16 @@ log "[reports] regenerating"
   done
   # shellcheck disable=SC2086
   python src/make_comparison.py --results results --models $MODELS
+  # stability only if at least one extra seed exists
+  SAES=$(ls results/sae/sae_topk_L20.npz results/sae/sae_topk_L20_s*.npz 2>/dev/null)
+  if [ "$(echo "$SAES" | wc -w)" -ge 2 ]; then
+    LABELS=""
+    for f in $SAES; do
+      case "$f" in *_s*.npz) LABELS="$LABELS seed$(echo "$f" | sed 's/.*_s\([0-9]*\)\.npz/\1/')";;
+                          *) LABELS="$LABELS seed0";; esac
+    done
+    python src/stability.py --sae $SAES --labels $LABELS --top 25
+  fi
   python src/make_paper.py
 } >> logs/supervisor/reports.log 2>&1
 log "[reports] exit=$?"
