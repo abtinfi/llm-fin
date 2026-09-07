@@ -1,0 +1,37 @@
+# --- 2026-08-16: GPU0 belongs to the advisor from this date. Every entry that could touch cuda:0
+# --- is commented out below, not deleted. Backup of the previous crontab:
+# --- ~/sdcp_wsdm/logs/crontab_backup_20260816.txt   Do NOT re-enable a cuda:0 job.
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /usr/bin/screen -dmS watchdog /bin/bash /home/asosoft/sdcp_wsdm/scripts/watchdog.sh
+# RETIRED 2026-08-24: */5 * * * * /bin/bash /home/asosoft/sdcp_wsdm/scripts/gpu_watch.sh
+# DONE 2026-08-17 (E4 20/20 complete): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e4_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e4_gpu1.log 2>&1
+# DONE 2026-08-17 (E3 15/15 complete): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_rest_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_rest_gpu1.log 2>&1
+# --- finished jobs, disabled 2026-08-16 (all used cuda:0, or are complete):
+# @reboot /usr/bin/screen -dmS rebuild_index /bin/bash /home/asosoft/sdcp_wsdm/scripts/rebuild_index.sh
+# @reboot /usr/bin/screen -dmS execplan_v2 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_execution_plan_v2.sh
+# @reboot /usr/bin/screen -dmS fullscale_v3 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_fullscale_v3.sh
+# @reboot /usr/bin/screen -dmS upr_stage0 /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_stage0.sh
+# @reboot /usr/bin/screen -dmS axis /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_axis_overnight.sh
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_sensitivity.sh >> /home/asosoft/sdcp_wsdm/logs/cron_upr_sensitivity.log 2>&1
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_upr_sensitivity_extra.sh >> /home/asosoft/sdcp_wsdm/logs/cron_upr_sens_extra.log 2>&1
+# @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e3e4_queue.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e3e4.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e2_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e2.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e11_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e11.log 2>&1
+# RETIRED 2026-08-24 (all experiments complete, GPU access ended): @reboot /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_e12_gpu1.sh >> /home/asosoft/sdcp_wsdm/logs/cron_e12.log 2>&1
+
+# --- 2026-09-02: csai thesis pipeline reboot resilience (abtin/paper/csai)
+# --- Idempotent: does nothing if the tmux session is already running or the
+# --- pipeline already completed (.pipeline_state/SCALED_PIPELINE_COMPLETE).
+# --- Uses GPU0+GPU1; user confirmed both free for this project 2026-09-02.
+# --- Safe to remove: crontab -e and delete these lines, or:
+# --- crontab /home/asosoft/abtin/paper/csai/logs/scaled/crontab_backup_20260902.txt
+@reboot sleep 60 && /bin/bash /home/asosoft/abtin/paper/csai/scaled_launch.sh
+@reboot sleep 90 && /bin/bash /home/asosoft/sdcp_wsdm/scripts/run_trecdl_e14e15.sh >> /home/asosoft/sdcp_wsdm/logs/trecdl_e14e15_reboot.log 2>&1
+
+# --- csai (2026-09-07): reboot-resilient supervisor for the remaining
+# --- multi-model / multi-layer / expanded-benchmark runs. Every job it
+# --- launches is internally checkpointed, so a reboot resumes rather
+# --- than restarts. The watchdog also covers a crash that is not a
+# --- reboot. Both are no-ops once .pipeline_state/SUPERVISOR_ALL_DONE
+# --- exists. Backup of the previous crontab: logs/scaled/crontab_backup_20260907_1629.txt
+@reboot sleep 120 && /bin/bash /home/asosoft/abtin/paper/csai/supervisor_launch.sh
+*/15 * * * * /bin/bash /home/asosoft/abtin/paper/csai/supervisor_launch.sh

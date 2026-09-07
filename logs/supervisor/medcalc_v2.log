@@ -7,3 +7,16 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
 Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.88it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 223.88it/s]Loading weights:  27%|██▋       | 80/291 [00:00<00:00, 257.17it/s]Loading weights:  37%|███▋      | 107/291 [00:00<00:00, 260.55it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 262.86it/s]Loading weights:  56%|█████▌    | 163/291 [00:00<00:00, 270.78it/s]Loading weights:  66%|██████▌   | 191/291 [00:00<00:00, 272.35it/s]Loading weights:  75%|███████▌  | 219/291 [00:00<00:00, 273.22it/s]Loading weights:  85%|████████▍ | 247/291 [00:00<00:00, 249.90it/s]Loading weights:  95%|█████████▍| 276/291 [00:01<00:00, 259.92it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.64it/s]
+[seed 0] base      acc=0.520 cc=0.263 viol=0.268 cov=1.000
+[seed 0] rag       acc=0.467 cc=0.210 viol=0.010 cov=1.000
+[seed 0] sym       acc=0.942 cc=0.906 viol=0.029 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=0.942 cc=0.906 viol=0.010 cov=1.000
+[seed 0] nsai_uq   acc=0.891 cc=0.884 viol=0.005 cov=0.902
+
+wrote results/summary_test_medcalc2.json
+[v2][ok  ] ablation_test
+[v2][run ] ablation_heldout  2026-09-07T17:31:39+03:00
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.04it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 226.18it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.95it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 253.09it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 254.25it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 258.32it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 261.08it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 263.16it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 264.27it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 271.18it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 262.33it/s]
