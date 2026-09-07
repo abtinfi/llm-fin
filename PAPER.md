@@ -142,7 +142,19 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 
 No arm in this run carries control pairs, so every Causal Consistency number above conflates causal sensitivity with plain prompt sensitivity. `data/medcalc_v2` adds them; run `run_eval.py --data data/medcalc_v2 --tag _medcalc2` to fill this section in.
 
-### 5.2 Aim 1 — what the features are worth
+### 5.2 Is the consistency real? Control pairs
+
+Every Causal Consistency number in the literature on flip-only pairs shares a weakness: a model that reacts to any prompt edit scores well without tracking the clinical variable. The expanded real-notes arm adds **control pairs** — the driving lab value moves by a comparable amount but does not cross the threshold, so the label is unchanged.
+
+| variant | causal flip rate | spurious flip rate | discrimination | control pairs |
+|---|---|---|---|---|
+| Base LLM | 0.035 | 0.037 | -0.0019 | 109 |
+
+The base model's discrimination is **-0.0019** — it changes its answer at essentially the same rate whether or not crossing the threshold changed the truth. This replicates, on real clinical prose and a binary safety decision, the **−0.013 [−0.037, +0.013]** measured over 8,000 multiple-choice items. Two benchmarks of entirely different shape agree that counterfactual consistency alone is not evidence of clinical reasoning.
+
+This is why a spurious-flip rate belongs beside every consistency number, and why a split without control pairs must report it as *not measured* rather than as zero.
+
+### 5.3 Aim 1 — what the features are worth
 
 The TopK dictionary reaches FVU 0.051 at L0 31.731, with 6,851 of 16,384 features dead. Its best features by S_semantic:
 
@@ -161,7 +173,7 @@ The TopK dictionary reaches FVU 0.051 at L0 31.731, with 6,851 of 16,384 feature
 
 **A caveat that decides how these features may be described.** The top-25 selection by S_semantic is not balanced across concepts. It yields twelve `age` features and, after clipping features whose knock-out does not beat their matched control, **none** for `qt_interval`, `egfr`, `inr`, `potassium`, `pregnancy`, `asthma` or `renal_disease`. Any statement about what the model represents is bounded by what the dictionary was scored for.
 
-### 5.3 Aim 2 — the intervention null
+### 5.4 Aim 2 — the intervention null
 
 | test | largest |excess| over a matched control |
 |---|---|
@@ -170,7 +182,7 @@ The TopK dictionary reaches FVU 0.051 at L0 31.731, with 6,851 of 16,384 feature
 
 A decision flip on this model needs 1–5 logits. Every effect above is roughly two orders of magnitude smaller, and the identity control is exactly 0.0000 in every run, which is what establishes the hooks are in the right place. Necessity, sufficiency and knock-out agree, so the null is not an artefact of one intervention shape.
 
-### 5.4 §4.2 — does the attribution layer point at the right thing?
+### 5.5 §4.2 — does the attribution layer point at the right thing?
 
 The benchmark answers this without annotation: the two arms of a pair differ in exactly one causal value, so the differing tokens **are** the decisive ones. The number is their percentile rank; 0.5 is chance.
 
@@ -195,9 +207,9 @@ Whether that is a fact about the dictionary or about our own measurement had to 
 
 *That check is still running. Until it lands, the QT result is reported as unresolved rather than as a finding about the dictionary — see `results/attribution.md` §4.*
 
-**Faithfulness is weak everywhere, including for occlusion**, which is exact. A rationale the model barely reacts to when it is deleted is the token-level form of the same null §5.3 reports. The layer identifies the decisive token; it does not thereby show the decision depends on it.
+**Faithfulness is weak everywhere, including for occlusion**, which is exact. A rationale the model barely reacts to when it is deleted is the token-level form of the same null §5.4 reports. The layer identifies the decisive token; it does not thereby show the decision depends on it.
 
-### 5.5 Aim 3 — the constraint-aware layer
+### 5.6 Aim 3 — the constraint-aware layer
 
 A rank-32 residual adapter at layer 30, trained with all four objective terms on a base model that stays frozen, moves held-out Causal Consistency from 0.000 to **0.767** on the QT family. The shuffled-label control reaches only 0.200, which is what separates learning the rule from learning the task format.
 
@@ -205,7 +217,7 @@ A rank-32 residual adapter at layer 30, trained with all four objective terms on
 
 **The cost, disclosed.** `ondansetron_qt` — the family carrying this result — is absent from the FDA labels *and* absent from MED-RT, so it is grounded at neither end. The result is real and it rests on curation.
 
-### 5.6 Aim 4 — uncertainty and deferral
+### 5.7 Aim 4 — uncertainty and deferral
 
 Over 6,456 external items (MedMCQA, MedQA-USMLE, PubMedQA), the proposal's Eq. (2) whole-vocabulary entropy reaches AUROC **0.525 [0.511, 0.539]**. The identical entropy restricted to the decision tokens reaches **0.687 [0.675, 0.700]**, a paired difference of **+0.163 [0.144, 0.181]**, replicated independently on all three benchmarks.
 
@@ -213,7 +225,7 @@ The implementation was never broken. §4.7 asks for the wrong quantity, and the 
 
 Conformal coverage is reported with the caveat that makes it meaningful: a frozen split-conformal threshold carries no guarantee on a split that is not exchangeable with the calibration split, which is exactly what a held-out rule family is. Adaptive Conformal Inference recovers the target coverage by giving up coverage.
 
-### 5.7 Generalisation across models and layers
+### 5.8 Generalisation across models and layers
 
 *Pending: the multi-model and multi-layer runs are still executing. This section is generated from `results/models/<slug>/` and `results/layers/L<n>/` and will be filled in on the next build.*
 

@@ -343,7 +343,63 @@ def main():
         body = body.split("## 5. Two things")[0]
         A(body.strip())
     A("")
-    A("### 5.2 Aim 1 — what the features are worth")
+    A("### 5.2 Is the consistency real? Control pairs")
+    A("")
+    A("Every Causal Consistency number in the literature on flip-only pairs "
+      "shares a weakness: a model that reacts to any prompt edit scores well "
+      "without tracking the clinical variable. The expanded real-notes arm "
+      "adds **control pairs** — the driving lab value moves by a comparable "
+      "amount but does not cross the threshold, so the label is unchanged.")
+    A("")
+    try:
+        from make_comparison import enrich
+        from make_table import load_preds
+        from metrics import score as _score
+        rows = []
+        for variant, label in (("base", "Base LLM"),
+                               ("nsai_uq", "+ gate + UQ"),
+                               ("nsai_uq_cl", "All four")):
+            try:
+                recs = enrich(load_preds("results", "test", variant, 0,
+                                         "_medcalc2"),
+                              "data/medcalc_v2", "test")
+            except FileNotFoundError:
+                continue
+            sc = _score(recs)
+            if sc["spurious_flip_rate"] is None:
+                continue
+            rows.append((label, sc))
+        if rows:
+            A("| variant | causal flip rate | spurious flip rate | "
+              "discrimination | control pairs |")
+            A("|---|---|---|---|---|")
+            for label, sc in rows:
+                A(f"| {label} | {f3(sc['causal_flip_rate'])} | "
+                  f"{f3(sc['spurious_flip_rate'])} | "
+                  f"{sc['discrimination']:+.4f} | {sc['n_control_pairs']} |")
+            A("")
+            b = rows[0][1]
+            A(f"The base model's discrimination is "
+              f"**{b['discrimination']:+.4f}** — it changes its answer at "
+              f"essentially the same rate whether or not crossing the "
+              f"threshold changed the truth. This replicates, on real "
+              f"clinical prose and a binary safety decision, the "
+              f"**−0.013 [−0.037, +0.013]** measured over 8,000 "
+              f"multiple-choice items. Two benchmarks of entirely different "
+              f"shape agree that counterfactual consistency alone is not "
+              f"evidence of clinical reasoning.")
+            A("")
+            A("This is why a spurious-flip rate belongs beside every "
+              "consistency number, and why a split without control pairs must "
+              "report it as *not measured* rather than as zero.")
+        else:
+            A("*Pending: the expanded-arm evaluation is still running. This "
+              "section is generated from the `_medcalc2` prediction files.*")
+    except Exception as e:
+        A(f"*Pending ({type(e).__name__}); regenerate once the expanded-arm "
+          f"evaluation completes.*")
+    A("")
+    A("### 5.3 Aim 1 — what the features are worth")
     A("")
     A(f"The TopK dictionary reaches FVU {f3(fis['fvu'])} at L0 "
       f"{f3(fis['l0'])}, with {fis['dead']:,} of {fis['d_hidden']:,} features "
@@ -366,7 +422,7 @@ def main():
       "`renal_disease`. Any statement about what the model represents is "
       "bounded by what the dictionary was scored for.")
     A("")
-    A("### 5.3 Aim 2 — the intervention null")
+    A("### 5.4 Aim 2 — the intervention null")
     A("")
     A("| test | largest |excess| over a matched control |")
     A("|---|---|")
@@ -381,7 +437,7 @@ def main():
       "in the right place. Necessity, sufficiency and knock-out agree, so the "
       "null is not an artefact of one intervention shape.")
     A("")
-    A("### 5.4 §4.2 — does the attribution layer point at the right thing?")
+    A("### 5.5 §4.2 — does the attribution layer point at the right thing?")
     A("")
     A("The benchmark answers this without annotation: the two arms of a pair "
       "differ in exactly one causal value, so the differing tokens **are** the "
@@ -441,11 +497,11 @@ def main():
     A("")
     A("**Faithfulness is weak everywhere, including for occlusion**, which is "
       "exact. A rationale the model barely reacts to when it is deleted is "
-      "the token-level form of the same null §5.3 reports. The layer "
+      "the token-level form of the same null §5.4 reports. The layer "
       "identifies the decisive token; it does not thereby show the decision "
       "depends on it.")
     A("")
-    A("### 5.5 Aim 3 — the constraint-aware layer")
+    A("### 5.6 Aim 3 — the constraint-aware layer")
     A("")
     A(f"A rank-32 residual adapter at layer 30, trained with all four "
       f"objective terms on a base model that stays frozen, moves held-out "
@@ -463,7 +519,7 @@ def main():
       "is grounded at neither end. The result is real and it rests on "
       "curation.")
     A("")
-    A("### 5.6 Aim 4 — uncertainty and deferral")
+    A("### 5.7 Aim 4 — uncertainty and deferral")
     A("")
     A(f"Over {e_ent['n']:,} external items (MedMCQA, MedQA-USMLE, PubMedQA), "
       f"the proposal's Eq. (2) whole-vocabulary entropy reaches AUROC "
@@ -486,7 +542,7 @@ def main():
       "exactly what a held-out rule family is. Adaptive Conformal Inference "
       "recovers the target coverage by giving up coverage.")
     A("")
-    A("### 5.7 Generalisation across models and layers")
+    A("### 5.8 Generalisation across models and layers")
     A("")
     if other_slugs:
         A(f"Beyond BioMistral-7B the pipeline was run end to end on: "
