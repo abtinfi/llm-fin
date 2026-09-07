@@ -80,7 +80,19 @@ def main():
 
     fis = art("sae/sae_topk_L20_fis.json")
     fis_j = art("sae/sae_jumprelu_L20_fis.json")
-    best = fis["features"][0]
+
+    # The headline feature must be one that is actually CUI-anchored. The
+    # top feature by S_semantic is `age`, whose provenance is
+    # `lexical-fallback` with no CUI at all -- quoting it as evidence that
+    # "sparse features select BIOMEDICAL concepts" would be the exact
+    # overclaim the grounding audit exists to prevent.
+    cprov = fis.get("concept_provenance", {})
+    def grounded(f):
+        pr = cprov.get(f.get("concept"), {})
+        return bool(pr.get("cui")) and pr.get("source") == "umls"
+    grounded_feats = [f for f in fis["features"] if grounded(f)]
+    best = grounded_feats[0] if grounded_feats else fis["features"][0]
+    best_ungrounded = fis["features"][0]
 
     suf_t = art("sufficiency_medcalc_test.json")
     suf_h = art("sufficiency_medcalc_heldout.json")
@@ -138,8 +150,9 @@ def main():
     A("")
     A(f"Three findings are positive and three are negative, and the negative "
       f"ones are the load-bearing ones. **Sparse features do select clinical "
-      f"concepts** — the best feature reaches F1 "
-      f"{f3(best['s_semantic'])} on `{best['concept']}`. **The attribution "
+      f"concepts** — the best CUI-anchored feature reaches F1 "
+      f"{f3(best['s_semantic'])} on `{best['concept']}` "
+      f"(CUI {cprov.get(best['concept'], {}).get('cui', '—')}). **The attribution "
       f"layer points at the right token**: on the renal family it ranks the "
       f"causally edited token at the "
       f"{f3(ft['edited_token_percentile']['sae_concept'])} percentile against "
@@ -148,7 +161,7 @@ def main():
       f"{f3(ft['concept_pointing']['accuracy_mean'])} of the time against a "
       f"{f3(ft['concept_pointing']['random_baseline'])} chance baseline. "
       f"**Symbolic constraints raise consistency without harming language "
-      f"ability** — Causal Consistency 0.000 → {f3(cl_qt.get('cc_after'))} on "
+      f"ability** — Causal Consistency 0.000 → {f3(cl_qt['adapted']['heldout_cc'])} on "
       f"a held-out rule family, with WikiText-2 perplexity unchanged.")
     A("")
     A(f"Against that: **intervening on those features does not move the "
@@ -182,9 +195,11 @@ def main():
     A("| RQ | Question | Answer |")
     A("|---|---|---|")
     A(f"| RQ1 | Do sparse latent features map to biomedical concepts with "
-      f"semantic coherence? | **Yes, partially.** Best F1 "
-      f"{f3(best['s_semantic'])}; concept coverage is uneven and is reported "
-      f"per concept |")
+      f"semantic coherence? | **Yes, partially.** Best CUI-anchored feature "
+      f"F1 {f3(best['s_semantic'])} (`{best['concept']}`); the highest-scoring "
+      f"feature overall is `{best_ungrounded['concept']}` at "
+      f"{f3(best_ungrounded['s_semantic'])}, which has no CUI and must not be "
+      f"quoted as a biomedical concept |")
     A("| RQ2 | Do targeted interventions on those features produce "
       "predictable, causally consistent changes? | **No, on this model.** "
       "Necessity, sufficiency and knock-out all land ~100× below the "
@@ -198,10 +213,15 @@ def main():
       "responds to the clinical variable from one that responds to any prompt "
       "edit. On 8,000 MCQ items this model's discrimination was **−0.013 "
       "[−0.037, +0.013]** — it changed its answer at the same rate whether or "
-      "not the truth changed. Every benchmark here therefore now carries "
-      "**control pairs** whose driving value moves without crossing the "
-      "threshold, and a spurious-flip rate is reported beside every "
-      "consistency number.")
+      "not the truth changed.")
+    A("")
+    A("The expanded real-notes arm therefore carries **control pairs** whose "
+      "driving value moves by a comparable amount *without* crossing the "
+      "threshold, and reports a spurious-flip rate beside Causal Consistency. "
+      "The other arms do not yet carry them, and their consistency numbers "
+      "are reported without a spurious-flip rate rather than with one implied "
+      "— a split with no control pairs reports the rate as *not measured*, "
+      "never as zero.")
     A("")
     A("## 2. Related work")
     A("")
@@ -429,9 +449,9 @@ def main():
     A("")
     A(f"A rank-32 residual adapter at layer 30, trained with all four "
       f"objective terms on a base model that stays frozen, moves held-out "
-      f"Causal Consistency from {f3(cl_qt.get('cc_before'))} to "
-      f"**{f3(cl_qt.get('cc_after'))}** on the QT family. The shuffled-label "
-      f"control reaches only {f3(cl_qt_sh.get('cc_after'))}, which is what "
+      f"Causal Consistency from {f3(cl_qt['base']['heldout_cc'])} to "
+      f"**{f3(cl_qt['adapted']['heldout_cc'])}** on the QT family. The shuffled-label "
+      f"control reaches only {f3(cl_qt_sh['adapted']['heldout_cc'])}, which is what "
       f"separates learning the rule from learning the task format.")
     A("")
     A("`L_ontology` reads the causal graph rather than applying a constant "

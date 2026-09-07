@@ -6,7 +6,7 @@
 
 We ask whether a clinical language model's safety decisions rest on identifiable internal representations that can be found, causally tested, and controlled. On BioMistral-7B we train sparse autoencoders on the residual stream, probe every layer, run activation patching and feature knock-out with matched controls, train a constraint-aware residual adapter, and evaluate uncertainty-aware deferral under conformal calibration. We introduce a Token-to-Concept Attribution Layer that completes the bridge from a generated token back to a biomedical concept, and evaluate it for faithfulness.
 
-Three findings are positive and three are negative, and the negative ones are the load-bearing ones. **Sparse features do select clinical concepts** — the best feature reaches F1 0.693 on `age`. **The attribution layer points at the right token**: on the renal family it ranks the causally edited token at the 0.980 percentile against 0.508 for a random attributor, and names the right concept 0.900 of the time against a 0.251 chance baseline. **Symbolic constraints raise consistency without harming language ability** — Causal Consistency 0.000 → — on a held-out rule family, with WikiText-2 perplexity unchanged.
+Three findings are positive and three are negative, and the negative ones are the load-bearing ones. **Sparse features do select clinical concepts** — the best CUI-anchored feature reaches F1 0.634 on `creatinine` (CUI C0201976). **The attribution layer points at the right token**: on the renal family it ranks the causally edited token at the 0.980 percentile against 0.508 for a random attributor, and names the right concept 0.900 of the time against a 0.251 chance baseline. **Symbolic constraints raise consistency without harming language ability** — Causal Consistency 0.000 → 0.767 on a held-out rule family, with WikiText-2 perplexity unchanged.
 
 Against that: **intervening on those features does not move the decision.** Activation patching yields at most 0.0221 logits over matched controls, feature knock-out and feature injection replicate the null (0.0646 logits), and a decision flip needs 1–5. **The proposal's uncertainty term measures the wrong quantity** — whole-vocabulary entropy reaches AUROC 0.525 [0.511, 0.539] over 6,456 items, while the identical entropy restricted to the decision tokens reaches 0.687 [0.675, 0.700]. And **the symbolic gate's accuracy is bounded not by its precision but by how often it can fire at all**, which falls as the rule needs more variables and collapses when a variable is a clinical judgement rather than a number.
 
@@ -20,11 +20,13 @@ Three research questions follow, and each is answered here with a measurement ra
 
 | RQ | Question | Answer |
 |---|---|---|
-| RQ1 | Do sparse latent features map to biomedical concepts with semantic coherence? | **Yes, partially.** Best F1 0.693; concept coverage is uneven and is reported per concept |
+| RQ1 | Do sparse latent features map to biomedical concepts with semantic coherence? | **Yes, partially.** Best CUI-anchored feature F1 0.634 (`creatinine`); the highest-scoring feature overall is `age` at 0.693, which has no CUI and must not be quoted as a biomedical concept |
 | RQ2 | Do targeted interventions on those features produce predictable, causally consistent changes? | **No, on this model.** Necessity, sufficiency and knock-out all land ~100× below the threshold for a decision flip |
 | RQ3 | Do symbolic constraints improve consistency without harming language ability? | **Yes.** Consistency rises on a held-out family; perplexity does not degrade |
 
-A methodological point runs through all three. Counterfactual consistency on flip-only pairs cannot distinguish a model that responds to the clinical variable from one that responds to any prompt edit. On 8,000 MCQ items this model's discrimination was **−0.013 [−0.037, +0.013]** — it changed its answer at the same rate whether or not the truth changed. Every benchmark here therefore now carries **control pairs** whose driving value moves without crossing the threshold, and a spurious-flip rate is reported beside every consistency number.
+A methodological point runs through all three. Counterfactual consistency on flip-only pairs cannot distinguish a model that responds to the clinical variable from one that responds to any prompt edit. On 8,000 MCQ items this model's discrimination was **−0.013 [−0.037, +0.013]** — it changed its answer at the same rate whether or not the truth changed.
+
+The expanded real-notes arm therefore carries **control pairs** whose driving value moves by a comparable amount *without* crossing the threshold, and reports a spurious-flip rate beside Causal Consistency. The other arms do not yet carry them, and their consistency numbers are reported without a spurious-flip rate rather than with one implied — a split with no control pairs reports the rate as *not measured*, never as zero.
 
 ## 2. Related work
 
@@ -197,7 +199,7 @@ Whether that is a fact about the dictionary or about our own measurement had to 
 
 ### 5.5 Aim 3 — the constraint-aware layer
 
-A rank-32 residual adapter at layer 30, trained with all four objective terms on a base model that stays frozen, moves held-out Causal Consistency from — to **—** on the QT family. The shuffled-label control reaches only —, which is what separates learning the rule from learning the task format.
+A rank-32 residual adapter at layer 30, trained with all four objective terms on a base model that stays frozen, moves held-out Causal Consistency from 0.000 to **0.767** on the QT family. The shuffled-label control reaches only 0.200, which is what separates learning the rule from learning the task format.
 
 `L_ontology` reads the causal graph rather than applying a constant margin: a family the graph licenses no contraindication for gets a margin of zero and the term is silent for it.
 
