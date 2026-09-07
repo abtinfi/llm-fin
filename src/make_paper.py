@@ -390,12 +390,34 @@ def main():
       "the right concept far above chance, while gradient×input and a random "
       "attributor sit at chance.")
     A("")
-    A("**Where the dictionary lacks the concept, the layer scores at chance — "
-      "and that is a vocabulary gap, not an attribution failure.** The QT "
-      "family's decisive concept has no feature with a positive knock-out "
-      "excess in the scored set, so the layer cannot name it. Reporting the "
-      "two splits without the expressible-concept list would make a property "
-      "of the dictionary look like a property of the method.")
+    qtw = opt("faithfulness_medcalc_heldout_biomistral-7b_qtweights.json")
+    A("**Where the dictionary lacks the concept, the layer scores at chance.** "
+      "The QT family's decisive concept has no feature with a positive "
+      "knock-out excess in the scored set, so the layer cannot name it.")
+    A("")
+    A("Whether that is a fact about the dictionary or about our own "
+      "measurement had to be checked, because the weights are knock-out "
+      "excesses and they were measured on a split containing only renal "
+      "items — where a QT feature is causally inert by construction and "
+      "scores zero whether or not it exists. Widening the vocabulary from 25 "
+      "to 100 features does not settle it (QT still has two features, both "
+      "with negative excess); re-scoring the same dictionary on the split "
+      "where QT *is* the decisive variable does.")
+    if qtw:
+        c = qtw["concept_pointing"]
+        A("")
+        A(f"With split-matched weights the QT split gives concept-pointing "
+          f"{f3(c['accuracy_mean'])} against a "
+          f"{f3(c['random_baseline'])} baseline, and an edited-token "
+          f"percentile of "
+          f"{f4(qtw['edited_token_percentile'].get('sae_concept'))}. "
+          f"The vocabulary gap is therefore a property of the dictionary, "
+          f"not of how the weights were obtained.")
+    else:
+        A("")
+        A("*That check is still running. Until it lands, the QT result is "
+          "reported as unresolved rather than as a finding about the "
+          "dictionary — see `results/attribution.md` §4.*")
     A("")
     A("**Faithfulness is weak everywhere, including for occlusion**, which is "
       "exact. A rationale the model barely reacts to when it is deleted is "

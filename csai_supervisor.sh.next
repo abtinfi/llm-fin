@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# The one thing that must survive the 03:01 reboot.
+#
+# Every job below is INTERNALLY checkpointed (.pipeline_state/<job>/*.done) and
+# takes its own flock, so this script only decides ORDER and CONCURRENCY and
+# only ever re-runs unfinished stages. It is safe to run repeatedly, and it is
+# meant to be: @reboot fires it, and a */15 watchdog fires it again if the
+# session dies for any other reason.
+#
+# History this exists because of:
+#   * 2026-09-02: the scaled run was launched from an interactive session, the
+#     machine rebooted at 03:01, and the work stopped. `last -x reboot` shows
+#     the reboot is daily and has never been missed.
+#   * 2026-09-07: a running job was killed by EDITING ITS SCRIPT MID-RUN. Bash
+#     reads a script incrementally by byte offset, so inserting lines into a
+#     file that is currently executing makes the running shell resume parsing
+#     at the wrong place and die with a syntax error. NEVER edit a .sh while
+#     it is running -- stop it, edit, restart. Its checkpoints make that cheap.
+#
+# CONCURRENCY: two workers, one per GPU, pulling from a shared queue under
+# flock. Each job pins itself to the worker's card via $GPU.
+set -u
+cd /home/asosoft/abtin/paper/csai
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+mkdir -p .pipeline_state/locks logs/supervisor
+LOCK=".pipeline_state/supervisor.lock"
+exec 9>"$LOCK"
+if ! flock -n 9; then
+  echo "$(date -Is) another supervisor holds the lock; exiting" \
+    >> logs/supervisor/supervisor.log
+  exit 0
+fi
+
+log () { echo "$(date -Is) $*" >> logs/supervisor/supervisor.log; }
+log "=== supervisor start (pid $$) ==="
+
+# Memory a 7B bf16 job needs before a card counts as usable. The machine is
+# shared -- GPU 0 has belonged to another user's job before -- so a card that
+# is busy with something that is not ours is waited out, never competed with.
+FREE_MIB="${FREE_MIB:-18000}"
+
+# --- the queue ------------------------------------------------------------
+# One line per job: <marker>|<name>|<env assignments>|<command>
+QUEUE=".pipeline_state/queue.txt"
+cat > "$QUEUE" <<'EOQ'
+.pipeline_state/sae_wide_L20/attr.done|sae_wide||bash run_sae_wide.sh
+.pipeline_state/MODEL_COMPLETE_llama3-openbiollm-8b_L20|openbiollm|MODEL_ID=aaditya/Llama3-OpenBioLLM-8B MODEL_TAG=llama3-openbiollm-8b RESULTS_DIR=results/models/llama3-openbiollm-8b|bash run_model.sh
+.pipeline_state/medcalc_v2/ALL_DONE|medcalc_v2||bash run_medcalc_v2.sh
+.pipeline_state/MODEL_COMPLETE_mistral-7b-instruct-v0-2_L20|mistral_instruct|MODEL_ID=mistralai/Mistral-7B-Instruct-v0.2 MODEL_TAG=mistral-7b-instruct-v0-2 RESULTS_DIR=results/models/mistral-7b-instruct-v0-2|bash run_model.sh
+.pipeline_state/MODEL_COMPLETE_biomistral-7b-L16_L16|layer16|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b-L16 RESULTS_DIR=results/layers/L16 LAYER=16|bash run_model.sh
+.pipeline_state/MODEL_COMPLETE_biomistral-7b-L24_L24|layer24|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b-L24 RESULTS_DIR=results/layers/L24 LAYER=24|bash run_model.sh
+.pipeline_state/sae_split_weights_L20/attr.done|sae_qt_weights||bash run_sae_split_weights.sh
+EOQ
+
+CLAIMS=".pipeline_state/claims"
+mkdir -p "$CLAIMS"
+
+# Atomically take the next job nobody has claimed and nothing has finished.
+# `mkdir` is the atomic primitive here: it succeeds for exactly one caller.
+next_job () {
+  local line marker name
+  while IFS= read -r line; do
+    marker="${line%%|*}"
+    name="$(echo "$line" | cut -d'|' -f2)"
+    [ -e "$marker" ] && continue
+    if mkdir "$CLAIMS/$name" 2>/dev/null; then
+      echo "$line"
+      return 0
+    fi
+  done < "$QUEUE"
+  return 1
+}
+
+# Is this card free enough, and free of OUR work?
+card_free () {
+  local i="$1" used total
+  used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i "$i" 2>/dev/null) || return 1
+  total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits -i "$i")
+  [ $((total - used)) -ge "$FREE_MIB" ]
+}
+
+worker () {
+  local gpu="$1" line marker name envs cmd
+  while true; do
+    line="$(next_job)" || { log "[w$gpu] queue empty"; return 0; }
+    marker="${line%%|*}"
+    name="$(echo "$line" | cut -d'|' -f2)"
+    envs="$(echo "$line" | cut -d'|' -f3)"
+    cmd="$(echo "$line" | cut -d'|' -f4-)"
+
+    # Wait for our card. Another user's job on it is waited out, not fought.
+    local waited=0
+    until card_free "$gpu"; do
+      [ $((waited % 900)) -eq 0 ] && log "[w$gpu] waiting for GPU $gpu ($name)"
+      sleep 60; waited=$((waited + 60))
+    done
+
+    log "[w$gpu] run  $name on GPU $gpu"
+    # shellcheck disable=SC2086
+    GPU="$gpu" env $envs $cmd >> "logs/supervisor/${name}.log" 2>&1
+    log "[w$gpu] done $name exit=$?"
+  done
+}
+
+worker 0 & W0=$!
+worker 1 & W1=$!
+wait "$W0" "$W1"
+
+# ---- CPU-only regeneration, always runs so the reports track the artifacts --
+log "[reports] regenerating"
+{
+  python src/make_summary.py --results results
+  python src/make_attribution_report.py
+  MODELS=""
+  for d in results/models/*/; do
+    [ -f "$d/summary_test_medcalc.json" ] && \
+      MODELS="$MODELS $(basename "$d")=$d"
+  done
+  # shellcheck disable=SC2086
+  python src/make_comparison.py --results results --models $MODELS
+  python src/make_paper.py
+} >> logs/supervisor/reports.log 2>&1
+log "[reports] exit=$?"
+
+touch .pipeline_state/SUPERVISOR_ALL_DONE
+log "=== supervisor finished ==="

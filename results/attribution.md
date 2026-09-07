@@ -55,13 +55,26 @@ Features per concept in the top-25 vocabulary (held-out (QT / ondansetron)): `{'
 
 Concepts the layer cannot express at all — no feature with a positive knock-out excess: **['asthma', 'egfr', 'inr', 'potassium', 'pregnancy', 'qt_interval', 'renal_disease']**.
 
-## 4. What this shows, and what it does not
+## 4. A confound in the weighting, and how it was resolved
 
-Read the token result and the concept result together with the expressible-concept list. Where the dictionary has features for the concept a family's decision turns on, the bridge works; where it has none, the layer scores at chance for a reason that is a property of the dictionary, not of the attribution method. That distinction is measurable here and must be carried into any claim made about section 4.2.
+The weight `w_f` is a feature's knock-out excess, and `sae.py score` measured it with `--causal_split test`. **That split contains only `metformin_renal` items.** A `qt_interval` feature cannot move the decision on items whose decision does not depend on QT, so it scores zero excess there by construction.
+
+So the sentence "the layer cannot express `qt_interval`" merged two claims that have to be separated:
+
+1. the dictionary contains no QT feature — a claim about discovery;
+2. QT features were scored on a split where QT is causally inert — a measurement artifact of how the weights were obtained.
+
+Widening the vocabulary from 25 to 100 features does **not** separate them: `qt_interval` still has only two features and both still carry a negative excess. `run_sae_split_weights.sh` does separate them, by scoring the same dictionary on the held-out split, where QT is the decisive variable.
+
+*The split-matched run has not completed yet; this section fills in from `results/faithfulness_medcalc_heldout_biomistral-7b_qtweights.json` on the next build. Until it exists, do not report the QT vocabulary gap as a finding about the dictionary.*
+
+## 5. What this shows, and what it does not
+
+Read the token result and the concept result together with the expressible-concept list. Where the dictionary has features for the concept a family's decision turns on, the bridge works; where it has none, the layer scores at chance — and §4 above is what decides whether that absence is a property of the dictionary or of how the weights were measured.
 
 The faithfulness numbers are small across the board, **including for `occlusion`**, which is exact. A rationale that the model itself barely reacts to when it is deleted is the token-level form of the same null Aim 2 reports for activation patching and feature knock-out. The attribution layer identifies the decisive token; it does not thereby show the model's decision depends on it.
 
-## 5. Reproduce
+## 6. Reproduce
 
 ```bash
 python src/attribution.py \
@@ -69,6 +82,7 @@ python src/attribution.py \
     --sae results/sae/sae_topk_L20.npz \
     --fis results/sae/sae_topk_L20_fis.json \
     --limit 0 --occlusion_items 30
+bash run_sae_split_weights.sh   # split-matched weights, see section 4
 python src/make_attribution_report.py
 ```
 

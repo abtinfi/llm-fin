@@ -54,5 +54,21 @@ if [ -e .pipeline_state/SUPERVISOR_ALL_DONE ]; then
   fi
 fi
 
+# HOT-SWAP. The supervisor writes its own job queue from a heredoc, so adding
+# a job means editing csai_supervisor.sh -- and editing a shell script while it
+# runs kills it (bash reads by byte offset). The fix is to stage the new
+# version as csai_supervisor.sh.next and promote it here, at the one moment
+# when no supervisor is running.
+if [ -f csai_supervisor.sh.next ]; then
+  if bash -n csai_supervisor.sh.next 2>/dev/null; then
+    cp csai_supervisor.sh csai_supervisor.sh.prev
+    mv csai_supervisor.sh.next csai_supervisor.sh
+    chmod +x csai_supervisor.sh
+    log "promoted csai_supervisor.sh.next (previous kept as .prev)"
+  else
+    log "REFUSING to promote csai_supervisor.sh.next -- it does not parse"
+  fi
+fi
+
 tmux new-session -d -s csai_sup "bash csai_supervisor.sh"
 log "started tmux session csai_sup"

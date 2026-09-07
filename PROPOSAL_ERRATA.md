@@ -126,10 +126,14 @@ Keep the sentence; add the constraint the implementation exposed:
 **Why.** See `results/attribution.md`. On the renal family the layer ranks the
 causally edited token at the **98th percentile** and names the right concept
 **90%** of the time against a 25% chance baseline. On the QT family it scores
-at chance — because the scored dictionary contained **no** `qt_interval`
-feature whose knock-out beat its matched random control, so the decisive
-concept was not expressible. That is a vocabulary gap, not an attribution
-failure, and the two must not be reported as the same thing.
+at chance, because the scored dictionary contained **no** `qt_interval`
+feature whose knock-out beat its matched random control.
+
+Whether that is a vocabulary gap or an artifact of our own measurement is a
+separate question, and the implementation settles it separately rather than
+assuming: the weights are knock-out excesses measured on a split of renal
+items only, where a QT feature is causally inert by construction and scores
+zero whether or not it exists. See `results/attribution.md` §4.
 
 Note also a terminology collision the proposal creates for itself: §4.2's
 faithfulness **sufficiency** (an ERASER rationale metric, lower is better) and
