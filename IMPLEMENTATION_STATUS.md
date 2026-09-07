@@ -77,7 +77,7 @@ S_semantic 0.703). Semantic coherence is real; causal relevance is ~0.
 | Causal **necessity** (feature knock-out) | **DONE** | `sae.py::causal_knockout` — each top feature zeroed in the forward pass |
 | **Negative controls** (random features) | **DONE** | a firing-rate-matched random feature is knocked out for *every* scored feature |
 | **ACE** `E[Y\|do(F+Δf)] − E[Y\|do(F)]` | **DONE**, by layer | `src/patching.py` — activation patching at only the edited token positions, plus an identity control (exactly 0.0) and a random-position control |
-| Causal **sufficiency** (clamping features on counterfactual inputs) | **DONE** (2026-09-02) | `src/patching.py --mode sufficiency`, dose sweep + alpha=0 control. Largest excess 0.0134 (test) / 0.0833 (held-out) logits — replicates the knock-out null. `results/rerun_fixes/sufficiency_medcalc_*.json` |
+| Causal **sufficiency** (clamping features on counterfactual inputs) | **DONE** (2026-09-02) | `src/patching.py --mode sufficiency`, dose sweep + alpha=0 control. Largest excess **0.0101 (test, 86 pairs) / 0.0646 (held-out, 30 pairs)** logits — replicates the knock-out null. `results/sufficiency_medcalc_*.json`. (The 0.0134/0.0833 figures previously quoted here came from the superseded 40-pair run in `results/rerun_fixes/`; `make_summary.py` preferred that directory until 2026-09-06.) |
 | "Interventions modify behaviour without degrading perplexity" | **DONE** | `src/perplexity.py`, WikiText-2: base **7.1622** → QT adapter **7.0775**, synthetic adapter **7.1266** |
 | **Human evaluation** — experts blindly rate explanation correctness/usefulness | **NOT IMPLEMENTED** | requires clinicians |
 
@@ -104,7 +104,7 @@ represents one decisive quantity, not the other, and acts on neither.
 | Ablation Matrix of §4.6 | **DONE, and extended** | 8 rows, not 4: rows 5–7 isolate each contribution against the baseline (`src/run_eval.py`, `src/make_table.py`) |
 | RQ3 — no degradation of language ability | **DONE** | perplexity 7.1622 → 7.0775 / 7.1266 (no degradation; both adapters sit slightly *below* base) |
 | **MIMIC-IV** for retrospective evaluation / scenario construction | **PARTIAL — Demo v2.2 arm built 2026-09-02** | `src/build_mimic.py` loads MIMIC-IV Clinical Database Demo v2.2 (ODbL, open access, **no credentialing**) and builds `data/mimic` — 46 items / 23 pairs. **The only arm where both sides of every pair are real measured values**: 23 of the 100 demo patients have two real serum creatinines (itemid 50912) straddling eGFR 30, so no number is invented. Uses the one FDA-attested threshold in the project. Two limits: the demo carries **no free-text notes**, so the note is rendered from structured fields; and the arms are different *timepoints*, so the clinical state genuinely differed. The full credentialed MIMIC-IV, and any *retrospective* claim, remain out of reach |
-| Constraints seeded from **SNOMED CT / UMLS** | **PARTIAL** | The *qualitative* edge comes from MED-RT via `data/umls/causal_graph.json` (5/10 families attested). The *thresholds* are audited against FDA labels by `src/curate_thresholds.py`: **5 of 10 attested, 5 not**, including two `construct_mismatch` cases where a number is present and means something else. `ondansetron_qt` — the family carrying the Aim 3 result — is absent from BOTH openFDA and MED-RT. See `results/threshold_provenance.md` and SUMMARY.md §6 |
+| Constraints seeded from **UMLS / MED-RT** (the proposal says "SNOMED CT / UMLS"; SNOMED CT is used nowhere — see `PROPOSAL_ERRATA.md`) | **PARTIAL** | The *qualitative* edge comes from MED-RT via `data/umls/causal_graph.json` (5/10 families attested). The *thresholds* are audited against FDA labels by `src/curate_thresholds.py`: **5 of 10 attested, 5 not**, including two `construct_mismatch` cases where a number is present and means something else. `ondansetron_qt` — the family carrying the Aim 3 result — is absent from BOTH openFDA and MED-RT. See `results/threshold_provenance.md` and SUMMARY.md §6 |
 
 **Key result:** the layer works exactly where the probe predicted it would and
 fails where the probe predicted it would fail — QT held-out CC **0.000 → 0.767**,
@@ -141,10 +141,16 @@ is a proposal edit, not a bug fix.
 ## 3. What the UMLS key unblocks
 
 The key in `.env` is **live** — verified 2026-09-01 against
-`uts-ws.nlm.nih.gov/rest/search/current` (HTTP 200, release 2026AA). Nothing in
-the codebase reads it yet: `grep -rn "UMLS\|umls" src/` returns nothing.
+`uts-ws.nlm.nih.gov/rest/search/current` (HTTP 200, release 2026AA).
 
-It is the direct unblocker for four items the proposal names explicitly:
+*This section described the key as unread by the codebase. That was true when
+it was written on 2026-09-01 and stopped being true the next day: `src/
+umls_grounding.py` reads it, `L_ontology` consults the graph it builds, and
+`sae.py` scores against CUI-anchored concepts (see the closed item in §4 and
+the Aim 3 row above). The four items below are kept as the record of what the
+key unblocked.*
+
+It was the direct unblocker for four items the proposal names explicitly:
 
 1. **§4.2 — "the SCM is initialized from biomedical ontologies (e.g. UMLS)."**
    Currently `src/rules.py` is 10 hand-written families; there is no causal
@@ -184,7 +190,7 @@ Ordered by how much of the proposal's claim each one blocks.
       conceptual bridge in §4.2 (Token → Activation → SAE feature → Probe →
       Concept → Causal-graph node → Explanation) is implemented up to "Probe"
       and stops there.
-- [x] ~~**UMLS/SNOMED grounding** — the four items in §3 above.~~ Closed
+- [x] ~~**UMLS/MED-RT grounding** — the four items in §3 above.~~ Closed
       2026-09-01/02: the graph exists, `L_ontology` reads it, and `sae.py`
       scores against CUI-anchored concepts. **Still open inside it:** the
       grounding is uneven — see §1. Do not describe `qt_interval` or `age`

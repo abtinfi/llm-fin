@@ -1,0 +1,216 @@
+[wide] scoring top 100 features  2026-09-07T16:12:29+03:00
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 100 features by S_semantic:
+  # 13369  S_sem=0.693  concept=age  fires on 1102/225248 tokens
+  # 13297  S_sem=0.637  concept=age  fires on 978/225248 tokens
+  # 14628  S_sem=0.634  concept=creatinine  fires on 4020/225248 tokens
+  #  4693  S_sem=0.602  concept=age  fires on 2570/225248 tokens
+  #  1894  S_sem=0.557  concept=qt_interval  fires on 84/225248 tokens
+  # 10721  S_sem=0.544  concept=drug  fires on 919/225248 tokens
+  #  7589  S_sem=0.514  concept=age  fires on 2031/225248 tokens
+  #  7787  S_sem=0.479  concept=age  fires on 607/225248 tokens
+  #  9404  S_sem=0.470  concept=heart_rate  fires on 623/225248 tokens
+  # 13261  S_sem=0.444  concept=qt_interval  fires on 43/225248 tokens
+  # 14577  S_sem=0.442  concept=asthma  fires on 48/225248 tokens
+  #  4149  S_sem=0.415  concept=age  fires on 548/225248 tokens
+  # 11828  S_sem=0.400  concept=age  fires on 3730/225248 tokens
+  #  7082  S_sem=0.396  concept=age  fires on 626/225248 tokens
+  # 14315  S_sem=0.394  concept=drug  fires on 296/225248 tokens
+  # 10221  S_sem=0.385  concept=age  fires on 464/225248 tokens
+  # 16268  S_sem=0.384  concept=drug  fires on 270/225248 tokens
+  # 11780  S_sem=0.356  concept=asthma  fires on 220/225248 tokens
+  # 16259  S_sem=0.356  concept=age  fires on 407/225248 tokens
+  # 11512  S_sem=0.356  concept=age  fires on 3905/225248 tokens
+  #  6467  S_sem=0.355  concept=heart_rate  fires on 326/225248 tokens
+  # 14803  S_sem=0.353  concept=age  fires on 513/225248 tokens
+  # 15148  S_sem=0.353  concept=drug  fires on 301/225248 tokens
+  # 15184  S_sem=0.344  concept=creatinine  fires on 1864/225248 tokens
+  # 15987  S_sem=0.343  concept=drug  fires on 494/225248 tokens
+  # 12137  S_sem=0.343  concept=age  fires on 1011/225248 tokens
+  #  6999  S_sem=0.343  concept=drug  fires on 238/225248 tokens
+  #  9828  S_sem=0.330  concept=heart_rate  fires on 542/225248 tokens
+  # 10027  S_sem=0.329  concept=drug  fires on 232/225248 tokens
+  # 13471  S_sem=0.326  concept=drug  fires on 241/225248 tokens
+  #  1814  S_sem=0.325  concept=drug  fires on 385/225248 tokens
+  #  4999  S_sem=0.324  concept=drug  fires on 588/225248 tokens
+  #  7423  S_sem=0.322  concept=drug  fires on 237/225248 tokens
+  #  5438  S_sem=0.320  concept=heart_rate  fires on 2690/225248 tokens
+  # 12245  S_sem=0.318  concept=drug  fires on 228/225248 tokens
+  #  2077  S_sem=0.317  concept=potassium  fires on 264/225248 tokens
+  #  7872  S_sem=0.305  concept=drug  fires on 308/225248 tokens
+  #  2823  S_sem=0.304  concept=asthma  fires on 52/225248 tokens
+  #  2120  S_sem=0.301  concept=creatinine  fires on 2163/225248 tokens
+  #    69  S_sem=0.299  concept=potassium  fires on 133/225248 tokens
+  #  2328  S_sem=0.299  concept=age  fires on 2430/225248 tokens
+  # 13476  S_sem=0.290  concept=drug  fires on 718/225248 tokens
+  #  1656  S_sem=0.290  concept=drug  fires on 320/225248 tokens
+  #  2454  S_sem=0.289  concept=age  fires on 341/225248 tokens
+  #  5754  S_sem=0.288  concept=age  fires on 428/225248 tokens
+  #   355  S_sem=0.285  concept=heart_rate  fires on 933/225248 tokens
+  # 12037  S_sem=0.283  concept=heart_rate  fires on 703/225248 tokens
+  #  1671  S_sem=0.282  concept=creatinine  fires on 21160/225248 tokens
+  # 15032  S_sem=0.280  concept=renal_disease  fires on 511/225248 tokens
+  #  5110  S_sem=0.279  concept=age  fires on 352/225248 tokens
+  #  9976  S_sem=0.279  concept=age  fires on 296/225248 tokens
+  # 11768  S_sem=0.277  concept=renal_disease  fires on 986/225248 tokens
+  # 14817  S_sem=0.277  concept=age  fires on 355/225248 tokens
+  #  9978  S_sem=0.276  concept=age  fires on 278/225248 tokens
+  #  4539  S_sem=0.272  concept=age  fires on 288/225248 tokens
+  # 10255  S_sem=0.272  concept=age  fires on 320/225248 tokens
+  #  1033  S_sem=0.271  concept=creatinine  fires on 934/225248 tokens
+  #  1546  S_sem=0.270  concept=age  fires on 336/225248 tokens
+  # 12447  S_sem=0.263  concept=pregnancy  fires on 56/225248 tokens
+  # 14137  S_sem=0.260  concept=drug  fires on 3614/225248 tokens
+  #   687  S_sem=0.256  concept=age  fires on 304/225248 tokens
+  # 12319  S_sem=0.256  concept=creatinine  fires on 746/225248 tokens
+  # 12989  S_sem=0.252  concept=creatinine  fires on 958/225248 tokens
+  # 12987  S_sem=0.251  concept=drug  fires on 175/225248 tokens
+  # 11335  S_sem=0.251  concept=heart_rate  fires on 124/225248 tokens
+  # 12776  S_sem=0.250  concept=creatinine  fires on 750/225248 tokens
+  # 12158  S_sem=0.250  concept=asthma  fires on 22/225248 tokens
+  # 13808  S_sem=0.250  concept=inr  fires on 42/225248 tokens
+  #  3260  S_sem=0.242  concept=age  fires on 631/225248 tokens
+  # 13258  S_sem=0.236  concept=creatinine  fires on 943/225248 tokens
+  #  3741  S_sem=0.235  concept=creatinine  fires on 1379/225248 tokens
+  # 13126  S_sem=0.235  concept=age  fires on 244/225248 tokens
+  # 15806  S_sem=0.234  concept=age  fires on 3012/225248 tokens
+  #  4754  S_sem=0.233  concept=age  fires on 1048/225248 tokens
+  #   526  S_sem=0.230  concept=creatinine  fires on 2377/225248 tokens
+  #  3022  S_sem=0.222  concept=age  fires on 264/225248 tokens
+  # 10896  S_sem=0.222  concept=age  fires on 606/225248 tokens
+  #  4707  S_sem=0.220  concept=age  fires on 1897/225248 tokens
+  # 12790  S_sem=0.220  concept=drug  fires on 1214/225248 tokens
+  # 15302  S_sem=0.219  concept=drug  fires on 146/225248 tokens
+  # 13071  S_sem=0.218  concept=renal_disease  fires on 222/225248 tokens
+  # 11014  S_sem=0.215  concept=age  fires on 5401/225248 tokens
+  #  2023  S_sem=0.215  concept=age  fires on 709/225248 tokens
+  #  8057  S_sem=0.214  concept=heart_rate  fires on 100/225248 tokens
+  # 14658  S_sem=0.213  concept=creatinine  fires on 6210/225248 tokens
+  # 13423  S_sem=0.212  concept=creatinine  fires on 769/225248 tokens
+  # 10448  S_sem=0.211  concept=renal_disease  fires on 106/225248 tokens
+  #  8049  S_sem=0.210  concept=age  fires on 284/225248 tokens
+  #  6756  S_sem=0.207  concept=creatinine  fires on 1214/225248 tokens
+  #  4227  S_sem=0.207  concept=inr  fires on 332/225248 tokens
+  #  1923  S_sem=0.207  concept=age  fires on 199/225248 tokens
+  #  7658  S_sem=0.207  concept=creatinine  fires on 910/225248 tokens
+  #  1818  S_sem=0.206  concept=potassium  fires on 1187/225248 tokens
+  #  3879  S_sem=0.206  concept=drug  fires on 2153/225248 tokens
+  #  2229  S_sem=0.205  concept=drug  fires on 1233/225248 tokens
+  # 11222  S_sem=0.205  concept=age  fires on 744/225248 tokens
+  #  7954  S_sem=0.198  concept=creatinine  fires on 735/225248 tokens
+  #  4858  S_sem=0.198  concept=renal_disease  fires on 146/225248 tokens
+  #  2086  S_sem=0.198  concept=drug  fires on 2776/225248 tokens
+  #  3582  S_sem=0.197  concept=age  fires on 454/225248 tokens
+  knock-out on 180 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<02:16,  2.12it/s]Loading weights:   1%|          | 2/291 [00:00<02:20,  2.06it/s]Loading weights:   1%|▏         | 4/291 [00:01<01:11,  4.00it/s]Loading weights:   2%|▏         | 5/291 [00:01<01:08,  4.16it/s]Loading weights:   2%|▏         | 6/291 [00:01<01:06,  4.27it/s]Loading weights:   3%|▎         | 10/291 [00:01<00:30,  9.21it/s]Loading weights:   4%|▍         | 13/291 [00:02<00:27,  9.97it/s]Loading weights:   5%|▌         | 15/291 [00:02<00:40,  6.89it/s]Loading weights:   6%|▌         | 18/291 [00:02<00:28,  9.66it/s]Loading weights:   8%|▊         | 22/291 [00:02<00:24, 10.89it/s]Loading weights:   8%|▊         | 24/291 [00:03<00:32,  8.28it/s]Loading weights:  10%|▉         | 28/291 [00:03<00:22, 11.44it/s]Loading weights:  11%|█         | 31/291 [00:03<00:22, 11.78it/s]Loading weights:  11%|█▏        | 33/291 [00:04<00:29,  8.66it/s]Loading weights:  13%|█▎        | 37/291 [00:04<00:21, 11.71it/s]Loading weights:  14%|█▎        | 40/291 [00:04<00:21, 11.91it/s]Loading weights:  14%|█▍        | 42/291 [00:05<00:28,  8.78it/s]Loading weights:  16%|█▌        | 46/291 [00:05<00:20, 11.82it/s]Loading weights:  17%|█▋        | 49/291 [00:05<00:20, 12.03it/s]Loading weights:  18%|█▊        | 51/291 [00:05<00:26,  8.90it/s]Loading weights:  19%|█▉        | 55/291 [00:06<00:19, 12.00it/s]Loading weights:  20%|█▉        | 58/291 [00:06<00:19, 12.23it/s]Loading weights:  21%|██        | 60/291 [00:06<00:25,  8.96it/s]Loading weights:  22%|██▏       | 64/291 [00:06<00:19, 11.80it/s]Loading weights:  23%|██▎       | 67/291 [00:07<00:18, 12.22it/s]Loading weights:  24%|██▎       | 69/291 [00:07<00:24,  8.95it/s]Loading weights:  25%|██▌       | 73/291 [00:07<00:18, 12.03it/s]Loading weights:  26%|██▌       | 76/291 [00:07<00:17, 12.18it/s]Loading weights:  27%|██▋       | 78/291 [00:08<00:23,  8.93it/s]Loading weights:  28%|██▊       | 82/291 [00:08<00:17, 11.98it/s]Loading weights:  29%|██▉       | 85/291 [00:08<00:17, 12.12it/s]Loading weights:  30%|██▉       | 87/291 [00:09<00:22,  8.93it/s]Loading weights:  31%|███▏      | 91/291 [00:09<00:16, 11.94it/s]Loading weights:  32%|███▏      | 94/291 [00:09<00:16, 12.08it/s][transformers] Error during conversion: ReadTimeout('The read operation timed out')
+Loading weights:  33%|███▎      | 96/291 [00:10<00:21,  8.87it/s]Loading weights:  34%|███▍      | 100/291 [00:10<00:16, 11.93it/s]Loading weights:  35%|███▌      | 103/291 [00:10<00:15, 12.01it/s]Loading weights:  36%|███▌      | 105/291 [00:10<00:20,  8.86it/s]Loading weights:  37%|███▋      | 109/291 [00:11<00:15, 11.94it/s]Loading weights:  38%|███▊      | 112/291 [00:11<00:14, 11.96it/s]Loading weights:  39%|███▉      | 114/291 [00:11<00:20,  8.70it/s]Loading weights:  41%|████      | 118/291 [00:11<00:14, 11.74it/s]Loading weights:  42%|████▏     | 121/291 [00:12<00:16, 10.01it/s]Loading weights:  42%|████▏     | 123/291 [00:12<00:21,  7.84it/s]Loading weights:  44%|████▎     | 127/291 [00:12<00:15, 10.78it/s]Loading weights:  45%|████▍     | 130/291 [00:13<00:14, 11.20it/s]Loading weights:  45%|████▌     | 132/291 [00:13<00:18,  8.37it/s]Loading weights:  46%|████▋     | 135/291 [00:13<00:14, 10.80it/s]Loading weights:  47%|████▋     | 137/291 [00:13<00:14, 10.49it/s]Loading weights:  48%|████▊     | 139/291 [00:14<00:15, 10.02it/s]Loading weights:  48%|████▊     | 141/291 [00:14<00:19,  7.56it/s]Loading weights:  50%|████▉     | 145/291 [00:14<00:13, 10.94it/s]Loading weights:  51%|█████     | 148/291 [00:14<00:12, 11.40it/s]Loading weights:  52%|█████▏    | 150/291 [00:15<00:17,  8.27it/s]Loading weights:  53%|█████▎    | 154/291 [00:15<00:12, 11.36it/s]Loading weights:  54%|█████▍    | 157/291 [00:15<00:13, 10.10it/s]Loading weights:  55%|█████▍    | 159/291 [00:16<00:16,  7.91it/s]Loading weights:  56%|█████▌    | 163/291 [00:16<00:11, 10.90it/s]Loading weights:  57%|█████▋    | 166/291 [00:16<00:11, 11.36it/s]Loading weights:  58%|█████▊    | 168/291 [00:17<00:14,  8.55it/s]Loading weights:  59%|█████▉    | 172/291 [00:17<00:10, 11.02it/s]Loading weights:  60%|██████    | 175/291 [00:17<00:10, 11.39it/s]Loading weights:  61%|██████    | 177/291 [00:18<00:16,  6.73it/s]Loading weights:  62%|██████▏   | 180/291 [00:18<00:13,  8.46it/s]Loading weights:  63%|██████▎   | 184/291 [00:18<00:10,  9.78it/s]Loading weights:  64%|██████▍   | 186/291 [00:19<00:13,  7.86it/s]Loading weights:  65%|██████▌   | 190/291 [00:19<00:09, 10.65it/s]Loading weights:  66%|██████▋   | 193/291 [00:19<00:08, 11.06it/s]Loading weights:  67%|██████▋   | 195/291 [00:20<00:11,  8.43it/s]Loading weights:  68%|██████▊   | 199/291 [00:20<00:08, 11.42it/s]Loading weights:  69%|██████▉   | 202/291 [00:20<00:07, 11.77it/s]Loading weights:  70%|███████   | 204/291 [00:20<00:09,  8.80it/s]Loading weights:  71%|███████▏  | 208/291 [00:21<00:06, 11.87it/s]Loading weights:  73%|███████▎  | 211/291 [00:21<00:06, 12.10it/s]Loading weights:  73%|███████▎  | 213/291 [00:21<00:08,  8.93it/s]Loading weights:  75%|███████▍  | 217/291 [00:21<00:06, 12.04it/s]Loading weights:  76%|███████▌  | 220/291 [00:22<00:05, 12.25it/s]Loading weights:  76%|███████▋  | 222/291 [00:22<00:07,  8.96it/s]Loading weights:  78%|███████▊  | 226/291 [00:22<00:05, 12.01it/s]Loading weights:  79%|███████▊  | 229/291 [00:22<00:05, 12.21it/s]Loading weights:  79%|███████▉  | 231/291 [00:23<00:06,  8.92it/s]Loading weights:  81%|████████  | 235/291 [00:23<00:04, 11.77it/s]Loading weights:  82%|████████▏ | 238/291 [00:23<00:04, 12.26it/s]Loading weights:  82%|████████▏ | 240/291 [00:24<00:05,  8.97it/s]Loading weights:  84%|████████▍ | 244/291 [00:24<00:03, 12.05it/s]Loading weights:  85%|████████▍ | 247/291 [00:24<00:03, 12.12it/s]Loading weights:  86%|████████▌ | 249/291 [00:25<00:04,  8.87it/s]Loading weights:  87%|████████▋ | 253/291 [00:25<00:03, 11.95it/s]Loading weights:  88%|████████▊ | 256/291 [00:25<00:02, 12.05it/s]Loading weights:  89%|████████▊ | 258/291 [00:25<00:03,  8.91it/s]Loading weights:  90%|█████████ | 262/291 [00:26<00:02, 11.99it/s]Loading weights:  91%|█████████ | 265/291 [00:26<00:02, 12.15it/s]Loading weights:  92%|█████████▏| 267/291 [00:26<00:02,  8.96it/s]Loading weights:  93%|█████████▎| 271/291 [00:26<00:01, 11.82it/s]Loading weights:  94%|█████████▍| 274/291 [00:27<00:01, 12.15it/s]Loading weights:  95%|█████████▍| 276/291 [00:27<00:01,  8.95it/s]Loading weights:  96%|█████████▌| 280/291 [00:27<00:00, 12.03it/s]Loading weights:  97%|█████████▋| 283/291 [00:27<00:00, 12.14it/s]Loading weights:  98%|█████████▊| 285/291 [00:28<00:00,  8.91it/s]Loading weights:  99%|█████████▉| 289/291 [00:28<00:00, 11.90it/s]Loading weights: 100%|██████████| 291/291 [00:28<00:00, 10.19it/s]
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  knock-out #13369: |Δ margin|=0.0206 (random control #13936: 0.0000, excess +0.0206)
+  knock-out #13297: |Δ margin|=0.0207 (random control #10435: 0.0106, excess +0.0100)
+  knock-out #14628: |Δ margin|=0.0198 (random control #8374: 0.0000, excess +0.0198)
+  knock-out #4693: |Δ margin|=0.0240 (random control #4420: 0.0072, excess +0.0168)
+  knock-out #1894: |Δ margin|=0.0010 (random control #5043: 0.0020, excess -0.0009)
+  knock-out #10721: |Δ margin|=0.0575 (random control #671: 0.0002, excess +0.0573)
+  knock-out #7589: |Δ margin|=0.0190 (random control #1232: 0.0051, excess +0.0139)
+  knock-out #7787: |Δ margin|=0.0199 (random control #270: 0.0153, excess +0.0047)
+  knock-out #9404: |Δ margin|=0.0116 (random control #2871: 0.0014, excess +0.0101)
+  knock-out #13261: |Δ margin|=0.0003 (random control #13324: 0.0035, excess -0.0032)
+  knock-out #14577: |Δ margin|=0.0010 (random control #10640: 0.0173, excess -0.0163)
+  knock-out #4149: |Δ margin|=0.0211 (random control #14954: 0.0003, excess +0.0208)
+  knock-out #11828: |Δ margin|=0.0205 (random control #8251: 0.0006, excess +0.0199)
+  knock-out #7082: |Δ margin|=0.0214 (random control #9939: 0.0008, excess +0.0206)
+  knock-out #14315: |Δ margin|=0.0212 (random control #15904: 0.0211, excess +0.0001)
+  knock-out #10221: |Δ margin|=0.0204 (random control #11952: 0.0000, excess +0.0204)
+  knock-out #16268: |Δ margin|=0.0229 (random control #10359: 0.0040, excess +0.0190)
+  knock-out #11780: |Δ margin|=0.0064 (random control #8906: 0.0113, excess -0.0049)
+  knock-out #16259: |Δ margin|=0.0231 (random control #9173: 0.0074, excess +0.0157)
+  knock-out #11512: |Δ margin|=0.0216 (random control #15320: 0.0007, excess +0.0209)
+  knock-out #6467: |Δ margin|=0.0093 (random control #4544: 0.0036, excess +0.0057)
+  knock-out #14803: |Δ margin|=0.0213 (random control #13366: 0.0163, excess +0.0050)
+  knock-out #15148: |Δ margin|=0.0156 (random control #10991: 0.0051, excess +0.0106)
+  knock-out #15184: |Δ margin|=0.0136 (random control #44: 0.0000, excess +0.0136)
+  knock-out #15987: |Δ margin|=0.0480 (random control #6457: 0.0024, excess +0.0456)
+  knock-out #12137: |Δ margin|=0.0215 (random control #14047: 0.0000, excess +0.0215)
+  knock-out #6999: |Δ margin|=0.0215 (random control #9081: 0.0016, excess +0.0199)
+  knock-out #9828: |Δ margin|=0.0076 (random control #550: 0.0153, excess -0.0077)
+  knock-out #10027: |Δ margin|=0.0195 (random control #12531: 0.0024, excess +0.0171)
+  knock-out #13471: |Δ margin|=0.0174 (random control #11954: 0.0033, excess +0.0142)
+  knock-out #1814: |Δ margin|=0.0186 (random control #13870: 0.0000, excess +0.0186)
+  knock-out #4999: |Δ margin|=0.0338 (random control #2877: 0.0023, excess +0.0315)
+  knock-out #7423: |Δ margin|=0.0298 (random control #1462: 0.0000, excess +0.0298)
+  knock-out #5438: |Δ margin|=0.0191 (random control #14142: 0.0022, excess +0.0168)
+  knock-out #12245: |Δ margin|=0.0212 (random control #362: 0.0009, excess +0.0203)
+  knock-out #2077: |Δ margin|=0.0091 (random control #8871: 0.0227, excess -0.0136)
+  knock-out #7872: |Δ margin|=0.0116 (random control #1317: 0.0000, excess +0.0116)
+  knock-out #2823: |Δ margin|=0.0021 (random control #4910: 0.0014, excess +0.0007)
+  knock-out #2120: |Δ margin|=0.0166 (random control #7881: 0.0000, excess +0.0166)
+  knock-out #69: |Δ margin|=0.0054 (random control #6925: 0.0231, excess -0.0177)
+  knock-out #2328: |Δ margin|=0.0236 (random control #6606: 0.0000, excess +0.0236)
+  knock-out #13476: |Δ margin|=0.0155 (random control #463: 0.0026, excess +0.0129)
+  knock-out #1656: |Δ margin|=0.0132 (random control #87: 0.0213, excess -0.0081)
+  knock-out #2454: |Δ margin|=0.0171 (random control #2036: 0.0081, excess +0.0090)
+  knock-out #5754: |Δ margin|=0.0228 (random control #135: 0.0023, excess +0.0205)
+  knock-out #355: |Δ margin|=0.0071 (random control #10987: 0.0044, excess +0.0027)
+  knock-out #12037: |Δ margin|=0.0166 (random control #8611: 0.0000, excess +0.0166)
+  knock-out #1671: |Δ margin|=0.0214 (random control #10603: 0.0000, excess +0.0214)
+  knock-out #15032: |Δ margin|=0.0137 (random control #4215: 0.0000, excess +0.0137)
+  knock-out #5110: |Δ margin|=0.0241 (random control #10082: 0.0000, excess +0.0241)
+  knock-out #9976: |Δ margin|=0.0226 (random control #12518: 0.0000, excess +0.0226)
+  knock-out #11768: |Δ margin|=0.0158 (random control #6286: 0.0048, excess +0.0110)
+  knock-out #14817: |Δ margin|=0.0251 (random control #7551: 0.0017, excess +0.0234)
+  knock-out #9978: |Δ margin|=0.0185 (random control #16338: 0.0121, excess +0.0064)
+  knock-out #4539: |Δ margin|=0.0194 (random control #13188: 0.0043, excess +0.0151)
+  knock-out #10255: |Δ margin|=0.0219 (random control #16070: 0.0209, excess +0.0009)
+  knock-out #1033: |Δ margin|=0.0205 (random control #6218: 0.0000, excess +0.0205)
+  knock-out #1546: |Δ margin|=0.0136 (random control #11231: 0.0042, excess +0.0094)
+  knock-out #12447: |Δ margin|=0.0025 (random control #15566: 0.0193, excess -0.0168)
+  knock-out #14137: |Δ margin|=0.0240 (random control #10657: 0.0065, excess +0.0174)
+  knock-out #687: |Δ margin|=0.0180 (random control #13767: 0.0149, excess +0.0031)
+  knock-out #12319: |Δ margin|=0.0192 (random control #11279: 0.0000, excess +0.0192)
+  knock-out #12989: |Δ margin|=0.0201 (random control #11534: 0.0000, excess +0.0201)
+  knock-out #12987: |Δ margin|=0.0153 (random control #6372: 0.0028, excess +0.0125)
+  knock-out #11335: |Δ margin|=0.0071 (random control #14338: 0.0012, excess +0.0059)
+  knock-out #12776: |Δ margin|=0.0227 (random control #2213: 0.0009, excess +0.0218)
+  knock-out #12158: |Δ margin|=0.0000 (random control #9484: 0.0139, excess -0.0139)
+  knock-out #13808: |Δ margin|=0.0002 (random control #11820: 0.0091, excess -0.0089)
+  knock-out #3260: |Δ margin|=0.0215 (random control #13852: 0.0200, excess +0.0015)
+  knock-out #13258: |Δ margin|=0.0219 (random control #8607: 0.0230, excess -0.0011)
+  knock-out #3741: |Δ margin|=0.0224 (random control #6150: 0.0000, excess +0.0224)
+  knock-out #13126: |Δ margin|=0.0201 (random control #5083: 0.0000, excess +0.0201)
+  knock-out #15806: |Δ margin|=0.0258 (random control #6929: 0.0000, excess +0.0258)
+  knock-out #4754: |Δ margin|=0.0198 (random control #7959: 0.0000, excess +0.0198)
+  knock-out #526: |Δ margin|=0.0142 (random control #11777: 0.0000, excess +0.0142)
+  knock-out #3022: |Δ margin|=0.0193 (random control #14573: 0.0002, excess +0.0191)
+  knock-out #10896: |Δ margin|=0.0224 (random control #1195: 0.0003, excess +0.0220)
+  knock-out #4707: |Δ margin|=0.0217 (random control #15303: 0.0206, excess +0.0011)
+  knock-out #12790: |Δ margin|=0.0191 (random control #8705: 0.0036, excess +0.0155)
+  knock-out #15302: |Δ margin|=0.0094 (random control #5862: 0.0101, excess -0.0007)
+  knock-out #13071: |Δ margin|=0.0076 (random control #11022: 0.0000, excess +0.0076)
+  knock-out #11014: |Δ margin|=0.0280 (random control #9363: 0.0000, excess +0.0280)
+  knock-out #2023: |Δ margin|=0.0212 (random control #4171: 0.0025, excess +0.0187)
+  knock-out #8057: |Δ margin|=0.0036 (random control #5273: 0.0000, excess +0.0036)
+  knock-out #14658: |Δ margin|=0.0241 (random control #11788: 0.0014, excess +0.0226)
+  knock-out #13423: |Δ margin|=0.0214 (random control #9737: 0.0133, excess +0.0080)
+  knock-out #10448: |Δ margin|=0.0062 (random control #8264: 0.0000, excess +0.0062)
+  knock-out #8049: |Δ margin|=0.0160 (random control #5536: 0.0020, excess +0.0139)
+  knock-out #6756: |Δ margin|=0.0183 (random control #12462: 0.0000, excess +0.0183)
+  knock-out #4227: |Δ margin|=0.0031 (random control #6416: 0.0000, excess +0.0031)
+  knock-out #1923: |Δ margin|=0.0159 (random control #5376: 0.0153, excess +0.0007)
+  knock-out #7658: |Δ margin|=0.0203 (random control #14586: 0.0090, excess +0.0114)
+  knock-out #1818: |Δ margin|=0.0112 (random control #4324: 0.0000, excess +0.0112)
+  knock-out #3879: |Δ margin|=0.0192 (random control #3721: 0.0012, excess +0.0180)
+  knock-out #2229: |Δ margin|=0.0219 (random control #11701: 0.0220, excess -0.0001)
+  knock-out #11222: |Δ margin|=0.0249 (random control #10210: 0.0000, excess +0.0249)
+  knock-out #7954: |Δ margin|=0.0158 (random control #795: 0.0000, excess +0.0158)
+  knock-out #4858: |Δ margin|=0.0064 (random control #1376: 0.0000, excess +0.0064)
+  knock-out #2086: |Δ margin|=0.0240 (random control #6179: 0.0083, excess +0.0157)
+  knock-out #3582: |Δ margin|=0.0114 (random control #13642: 0.0000, excess +0.0114)
+
+wrote results/sae_wide/sae_topk_L20_fis.json
+run_sae_wide.sh: line 38: nts:True: command not found
+[wide] re-running the section 4.2 attribution layer on the wider vocabulary
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.54it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.15it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.20it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.26it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.67it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.05it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.06it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.43it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.15it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.64it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.54it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.09it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.29it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.86it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.32it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.50it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.93it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.30it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.50it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.87it/s]

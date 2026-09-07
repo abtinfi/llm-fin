@@ -96,6 +96,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lm_common import (answer_token_ids, decoder_layers,
+                       wrap_prompt)
+
 
 def read_jsonl(p):
     return [json.loads(l) for l in Path(p).open()]
@@ -232,7 +235,7 @@ class Runner:
         self.model.eval()
         for p in self.model.parameters():
             p.requires_grad_(False)
-        self.layers = self.model.model.layers
+        self.layers = decoder_layers(self.model)
         self.layer = layer
         self.alpha = alpha
         self.max_input_tokens = max_input_tokens
@@ -242,29 +245,11 @@ class Runner:
         self._handle = None
 
     def _answer_ids(self):
-        got = {}
-        for label in ("SAFE", "UNSAFE"):
-            ids = set()
-            for t in (label, f" {label}", f"\n{label}"):
-                for tid in self.tok.encode(t, add_special_tokens=False):
-                    piece = self.tok.convert_ids_to_tokens(tid)
-                    if not piece.replace("▁", "").strip() or piece == "<0x0A>":
-                        continue
-                    ids.add(tid)
-                    break
-            got[label] = ids
-        ov = got["SAFE"] & got["UNSAFE"]
-        got["SAFE"] -= ov
-        got["UNSAFE"] -= ov
-        assert got["SAFE"] and got["UNSAFE"], "answer tokens not separable"
+        got = answer_token_ids(self.tok)
         return sorted(got["SAFE"]), sorted(got["UNSAFE"])
 
     def _wrap(self, p):
-        if self.tok.chat_template:
-            return self.tok.apply_chat_template(
-                [{"role": "user", "content": p}], tokenize=False,
-                add_generation_prompt=True)
-        return f"[INST] {p} [/INST]"
+        return wrap_prompt(self.tok, p)
 
     def encode(self, prompt):
         return self.tok(self._wrap(prompt), return_tensors="pt",

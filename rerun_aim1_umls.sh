@@ -40,7 +40,7 @@ python src/sae.py train --acts results/sae/acts_medcalc_train_L20_umls.npz \
 
 banner "4/4 score: topk (with knock-out), then jumprelu"
 python src/sae.py score --sae results/sae/sae_topk_L20_umls.npz --model_id $M \
-    --top 25 --causal_items 40 --causal_features 8 --causal_split test \
+    --top 25 --causal_items -1 --causal_features 0 --causal_split test \
     --out "$OUT/sae_topk_L20_umls_fis.json"
 python src/sae.py score --sae results/sae/sae_jumprelu_L20_umls.npz \
     --model_id $M --top 25 --causal_items 0 \

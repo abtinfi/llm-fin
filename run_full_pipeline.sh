@@ -48,7 +48,7 @@ banner () { echo; echo "########## $* ##########"; echo; }
 
 # All the stages, in order, so --status can report on them without running
 # anything. Kept in sync with the calls below.
-ALL_STAGES="1a_synth_test 1b_synth_heldout 2a_medcalc_test 2b_medcalc_heldout
+ALL_STAGES="1a_synthctl_test 1b_synthctl_heldout 2a_medcalc_test 2b_medcalc_heldout
 3a_cl_qt 3b_cl_qt_shuffled 3c_cl_renal 3d_cl_synth
 4a_rows_medcalc_heldout 4b_rows_medcalc_test 4c_rows_synth_test
 4d_rows_synth_heldout 5a_ppl_base 5b_ppl_qt 5c_ppl_synth 6_tables

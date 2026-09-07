@@ -39,3 +39,24 @@ __pycache__/
 # --- archives --------------------------------------------------------------
 *.zip
 data/mimic_demo/
+
+# --- added 2026-09-07 ------------------------------------------------------
+# Per-model and per-layer artifact trees. The JSON/Markdown a claim rests on
+# is small and IS tracked; the prediction dumps under them are regenerable and
+# large, and there is one tree per model.
+results/models/*/preds_*.jsonl
+results/layers/*/preds_*.jsonl
+results/sae_wide/*.npz
+
+# Simulated human-eval output. It exists only to prove the plumbing and every
+# file in it is stamped SIMULATED -- committing it would put fabricated
+# ratings one careless grep away from a results table.
+results/human_eval_SIMULATED/
+
+# Blinded rater packets and the answer key. The key must never be committed
+# next to the packets; the sample is regenerable from a seed.
+results/human_eval/answer_key.json
+results/human_eval/packets/
+
+# Supervisor scratch: claims, locks and the generated queue are runtime state.
+.pipeline_state/

@@ -20,8 +20,14 @@ Returns, for every generation:
 
 import math
 import re
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Optional
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lm_common import (answer_token_ids, decoder_layers,
+                       hidden_size, wrap_prompt)
 
 
 @dataclass
@@ -103,48 +109,17 @@ class HFModel:
 
     def _answer_token_ids(self):
         """
-        First *content* token ids for SAFE / UNSAFE under the leading contexts
-        the model actually sees (bare, space-prefixed, newline-prefixed), since
-        SPM tokenizers split a word differently depending on what precedes it.
-        Used to find the decision step in generate() and to compute the logit
-        margin between the two answer classes.
+        First *content* token ids for SAFE / UNSAFE, resolved by
+        `lm_common.answer_token_ids`.
 
-        Leading whitespace-only tokens are skipped: on this tokenizer " SAFE"
-        and " UNSAFE" both begin with the bare-space token, so taking enc[0]
-        naively would put one id in BOTH classes and make the margin
-        meaningless. Any id that still lands in both classes is dropped and
-        reported rather than silently used.
+        This used to strip SentencePiece's U+2581 marker and skip the
+        byte-fallback newline literal by name. That is right for BioMistral and
+        meaningless for a byte-level BPE tokenizer, so the shared version
+        decodes each candidate id and asks whether it carries any
+        non-whitespace character instead. Verified to return identical id sets
+        for BioMistral-7B, Mistral-7B-Instruct-v0.2 and Llama3-OpenBioLLM-8B.
         """
-        variants = {
-            "SAFE": ["SAFE", " SAFE", "\nSAFE"],
-            "UNSAFE": ["UNSAFE", " UNSAFE", "\nUNSAFE"],
-        }
-        ids = {"SAFE": set(), "UNSAFE": set()}
-        for label, texts in variants.items():
-            for t in texts:
-                for tok in self.tokenizer.encode(t, add_special_tokens=False):
-                    piece = self.tokenizer.convert_ids_to_tokens(tok)
-                    # SPM marks a word boundary with U+2581; strip it before
-                    # deciding whether the piece carries any actual characters.
-                    if not piece.replace("▁", "").strip():
-                        continue          # pure whitespace / boundary marker
-                    if piece in ("<0x0A>",):
-                        continue          # byte-fallback newline
-                    ids[label].add(tok)
-                    break
-
-        overlap = ids["SAFE"] & ids["UNSAFE"]
-        if overlap:
-            print(f"[model] WARNING: dropping {len(overlap)} token id(s) "
-                  f"ambiguous between SAFE and UNSAFE: "
-                  f"{[self.tokenizer.convert_ids_to_tokens(i) for i in overlap]}")
-            ids["SAFE"] -= overlap
-            ids["UNSAFE"] -= overlap
-        if not ids["SAFE"] or not ids["UNSAFE"]:
-            raise RuntimeError(
-                "could not resolve distinct SAFE/UNSAFE answer tokens; "
-                "the logit-margin signal cannot be computed for this tokenizer")
-        return ids
+        return answer_token_ids(self.tokenizer)
 
     def attach_adapter(self, path: str, layer: int, alpha: float = 1.0):
         """
@@ -162,6 +137,13 @@ class HFModel:
         import numpy as np
         torch = self.torch
         z = np.load(path)
+        d_model = hidden_size(self.model)
+        if z["W_down"].shape[0] != d_model:
+            raise RuntimeError(
+                f"adapter {path} was trained for hidden_size "
+                f"{z['W_down'].shape[0]} but {self.name} has {d_model}. "
+                f"Adapters are per-model: train one for this model rather "
+                f"than reusing another model's.")
         W_down = torch.tensor(z["W_down"], device=self.device).float()
         W_up = torch.tensor(z["W_up"], device=self.device).float()
         b = torch.tensor(z["b"], device=self.device).float()
@@ -173,7 +155,7 @@ class HFModel:
             return (h,) + output[1:] if isinstance(output, tuple) else h
 
         self.detach_adapter()
-        self._adapter_handle = self.model.model.layers[layer]\
+        self._adapter_handle = decoder_layers(self.model)[layer]\
             .register_forward_hook(hook)
         print(f"[model] constraint layer attached at layer {layer}, "
               f"alpha={alpha}, rank={W_down.shape[1]}")
@@ -184,11 +166,7 @@ class HFModel:
             self._adapter_handle = None
 
     def _wrap(self, prompt: str) -> str:
-        if self.tokenizer.chat_template:
-            return self.tokenizer.apply_chat_template(
-                [{"role": "user", "content": prompt}],
-                tokenize=False, add_generation_prompt=True)
-        return f"[INST] {prompt} [/INST]"
+        return wrap_prompt(self.tokenizer, prompt)
 
     @staticmethod
     def _entropy_from_scores(scores, seq_ids, torch):

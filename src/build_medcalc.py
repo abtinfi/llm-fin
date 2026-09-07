@@ -99,6 +99,34 @@ RULES = {
         "calculators": ["mdrd", "ckd_epi"],
         "held_out": False,
     },
+    "nitrofurantoin_crcl": {
+        "drug": "nitrofurantoin",
+        "quantity": "CrCl",
+        "unit": "mL/min",
+        "threshold": 60.0,
+        "unsafe_when": "below",
+        "proposal": "The team proposes starting nitrofurantoin 100 mg twice "
+                    "daily for seven days.",
+        "source": ("FDA label, nitrofurantoin (Macrobid/Macrodantin): "
+                   "contraindicated in patients with anuria, oliguria, or "
+                   "significant impairment of renal function (creatinine "
+                   "clearance under 60 mL/min)."),
+        "calculators": ["cockcroft_gault"],
+        "held_out": False,
+    },
+    "apixaban_childpugh": {
+        "drug": "apixaban",
+        "quantity": "Child-Pugh score",
+        "unit": "points",
+        "threshold": 10.0,
+        "unsafe_when": "above_or_equal",
+        "proposal": "The team proposes starting apixaban 5 mg twice daily.",
+        "source": ("FDA label, apixaban (Eliquis): use is not recommended in "
+                   "patients with severe hepatic impairment (Child-Pugh "
+                   "class C, i.e. a score of 10 or more)."),
+        "calculators": ["child_pugh"],
+        "held_out": False,
+    },
     "ondansetron_qt": {
         "drug": "ondansetron",
         "quantity": "QTc",
@@ -124,6 +152,9 @@ DERIVED_MENTIONS = {
     "eGFR": [r"\begfr\b", r"\bgfr\b", r"glomerular filtration",
              r"creatinine clearance", r"\bcrcl\b", r"\bccr\b"],
     "QTc": [r"\bqtc\b", r"corrected qt"],
+    "CrCl": [r"\bcrcl\b", r"\bccr\b", r"creatinine clearance",
+             r"\begfr\b", r"\bgfr\b", r"glomerular filtration"],
+    "Child-Pugh score": [r"child[- ]pugh", r"\bctp\b"],
 }
 
 
@@ -165,8 +196,19 @@ def states_derived(note, quantity):
 
 
 def label_for(rule, value):
-    unsafe = (value < rule["threshold"] if rule["unsafe_when"] == "below"
-              else value > rule["threshold"])
+    """
+    `above_or_equal` exists for Child-Pugh, whose class C is defined as a score
+    of 10 OR MORE. Every other rule in this file is a strict inequality on a
+    continuous quantity, where the difference does not arise; on an integer
+    score it decides 11 of the 102 notes, so it cannot be glossed.
+    """
+    when = rule["unsafe_when"]
+    if when == "below":
+        unsafe = value < rule["threshold"]
+    elif when == "above_or_equal":
+        unsafe = value >= rule["threshold"]
+    else:
+        unsafe = value > rule["threshold"]
     return "UNSAFE" if unsafe else "SAFE"
 
 
@@ -177,7 +219,7 @@ def pick_target(rule, want_unsafe, rng, margin_lo, margin_hi):
     return t - d if below else t + d
 
 
-def build_renal(df, rng, cfg):
+def build_renal(df, rng, cfg, rng_ctrl):
     """
     One item family, one rule, one equation.
 
@@ -324,16 +366,65 @@ def build_renal(df, rng, cfg):
                 "presentation": "implicit", "edited_arm": edited,
                 "calculator": "ckd_epi", "source_calculator": kind,
                 "note_id": note_id,
+                "is_control": False,
                 "facts": {"creatinine_raw": craw, "creatinine_unit": unit,
                           "age": ents["age"][0], "sex": ents.get("sex"),
                           "race": ents.get("Race")},
                 "prompt": PROMPT.format(v=note_txt.strip() + "\n"
                                         + rule["proposal"]),
             })
+
+        # CONTROL PAIR: move creatinine a comparable distance WITHOUT crossing
+        # eGFR 30. A model that reacts to any prompt change flips here too; a
+        # model that reacts to the rule does not. Failure to build one is not
+        # a reason to drop the causal pair, so the drop callback is silenced.
+        rows += _renal_control(rule, note, spans, dec, ents, unit, raw, egfr,
+                               real_label, rng_ctrl, cfg, note_id)
     return rows, drops
 
 
-def build_qt(df, rng, cfg):
+def _renal_control(rule, note, spans, dec, ents, unit, raw, egfr, real_label,
+                   rng, cfg, note_id):
+    target = _same_side_target(rule, egfr, rng, cfg["margin_lo"],
+                               cfg["margin_hi"])
+    if target is None:
+        return []
+    solved = solve_creatinine("ckd_epi", target,
+                              {"age": ents["age"], "sex": ents.get("sex")})
+    if solved is None:
+        return []
+    new_raw = round(solved * 88.4 if "mol" in unit.lower() else solved, dec)
+    if new_raw <= 0:
+        return []
+    try:
+        new_scr = to_mgdl(new_raw, unit)
+        new_val = ckd_epi(new_scr, float(ents["age"][0]),
+                          ents.get("sex", "Male"))
+    except Exception:
+        return []
+    if label_for(rule, new_val) != real_label:
+        return []                       # it crossed; that is a causal arm
+    if abs(new_val - rule["threshold"]) < cfg["margin_lo"]:
+        return []
+    if implausible(creatinine_mgdl=new_scr, eGFR=new_val):
+        return []
+    new_txt = f"{new_raw:.{dec}f}" if dec else str(int(new_raw))
+    cf = note
+    for x, y in sorted(spans, reverse=True):
+        cf = cf[:x] + new_txt + cf[y:]
+    men = creatinine_mentions(cf)
+    if len(men) != len(spans) or len({round(m["mgdl"], 6) for m in men}) != 1:
+        return []
+    return _emit(rule, "metformin_renal", note_id, note, cf, egfr, new_val,
+                 real_label, real_label,
+                 {"creatinine_raw": raw, "creatinine_unit": unit,
+                  "age": ents["age"][0], "sex": ents.get("sex")},
+                 {"creatinine_raw": new_raw, "creatinine_unit": unit,
+                  "age": ents["age"][0], "sex": ents.get("sex")},
+                 "ckd_epi", "eGFR", is_control=True)
+
+
+def build_qt(df, rng, cfg, rng_ctrl):
     rule = RULES["ondansetron_qt"]
     rows, drops = [], {}
     sub = df[df["Calculator Name"] == "QTc Bazett Calculator"]
@@ -398,11 +489,396 @@ def build_qt(df, rng, cfg):
                 "vignette": note_txt.strip() + "\n" + rule["proposal"],
                 "presentation": "implicit", "edited_arm": edited,
                 "calculator": "qtc_bazett", "note_id": str(r["Note ID"]),
+                "is_control": False,
                 "facts": {"qt_ms": qtv, "heart_rate": hr},
                 "prompt": PROMPT.format(v=note_txt.strip() + "\n"
                                         + rule["proposal"]),
             })
+
+        # CONTROL PAIR, same construction as the renal family.
+        ct = _same_side_target(rule, gt, rng_ctrl, cfg["qt_margin_lo"],
+                               cfg["qt_margin_hi"])
+        if ct is not None:
+            c_qt = round(ct * math.sqrt(60.0 / hr))
+            if c_qt > 0:
+                c_val = qtc_bazett(c_qt, hr)
+                if (label_for(rule, c_val) == real_label
+                        and abs(c_val - rule["threshold"]) >= cfg["qt_margin_lo"]
+                        and not implausible(qt_ms=c_qt, QTc=c_val)):
+                    c_note = note[:a] + str(int(c_qt)) + note[b:]
+                    rows += _emit(rule, "ondansetron_qt", str(r["Note ID"]),
+                                  note, c_note, gt, c_val,
+                                  real_label, real_label,
+                                  {"qt_ms": qt, "heart_rate": hr},
+                                  {"qt_ms": c_qt, "heart_rate": hr},
+                                  "qtc_bazett", "QTc", is_control=True)
     return rows, drops
+
+
+# --------------------------------------------------------------------------
+# Two rule families added 2026-09-06, and the control (non-flipping) arm.
+#
+# Why these two and not the obvious alternatives, recorded so the choice can be
+# argued with rather than guessed at:
+#
+#   * The four other QTc corrections MedCalc ships (Fridericia, Framingham,
+#     Hodges, Rautaharju) look like a 5x expansion of the QT family and are
+#     not: all five calculators score THE SAME 100 NOTES. 500 rows, 100
+#     distinct Note IDs. The QT family is note-limited at 100 and no
+#     re-slicing of MedCalc changes that.
+#   * CHA2DS2-VASc is the largest pool in the corpus (517 notes) and was
+#     rejected. Its only continuous component is AGE, so the counterfactual
+#     edit would be to the patient's age -- which is not a minimal
+#     intervention. Changing a patient from 64 to 66 changes far more about
+#     them than their stroke score, and the pair would no longer isolate one
+#     causal variable. HAS-BLED (85 notes) fails the same way.
+#
+# Cockcroft-Gault and Child-Pugh both edit a LAB VALUE, which is the same
+# intervention shape the existing two families use, and both thresholds are
+# quoted from an FDA label rather than written from memory.
+# --------------------------------------------------------------------------
+
+def build_crcl(df, rng, cfg, rng_ctrl, exclude_notes=frozenset()):
+    """
+    nitrofurantoin / creatinine clearance, from the Cockcroft-Gault rows.
+
+    These 151 rows were excluded from `build_renal` by its
+    ("mdrd", "ckd_epi") filter and so contributed nothing. They are their own
+    family rather than extra metformin items for two reasons: Cockcroft-Gault
+    reports mL/min rather than mL/min/1.73m2, and nitrofurantoin's label states
+    its own threshold in creatinine-clearance terms, so the note, the equation
+    and the rule agree end to end.
+
+    `exclude_notes` keeps the families disjoint: 9 of the 151 notes also appear
+    under MDRD/CKD-EPI, and the same note must not be a patient in two families.
+    """
+    rule = RULES["nitrofurantoin_crcl"]
+    rows, drops, seen = [], {}, set()
+    sub = df[df["Calculator Name"]
+             == "Creatinine Clearance (Cockcroft-Gault Equation)"]
+
+    for _, r in sub.iterrows():
+        def drop(why):
+            drops[why] = drops.get(why, 0) + 1
+        note = str(r["Patient Note"])
+        note_id = str(r["Note ID"])
+        if note_id in exclude_notes:
+            drop("note already used by metformin_renal"); continue
+        if note_id in seen:
+            drop("duplicate note"); continue
+        try:
+            ents = ast.literal_eval(r["Relevant Entities"])
+            raw, unit = float(ents["creatinine"][0]), ents["creatinine"][1]
+            scr = to_mgdl(raw, unit)
+            crcl = compute("cockcroft_gault", scr, ents)
+        except Exception:
+            drop("unit or entity not parseable"); continue
+
+        # The row's own calculator must reproduce, which is what certifies the
+        # extracted age / sex / weight / height / creatinine.
+        if not (float(r["Lower Limit"]) <= crcl <= float(r["Upper Limit"])):
+            drop("formula disagrees with MedCalc ground truth"); continue
+
+        men = creatinine_mentions(note)
+        if not men:
+            drop("creatinine not stated with a unit"); continue
+        distinct = {round(m["mgdl"], 6) for m in men}
+        if len(distinct) != 1:
+            drop(f"creatinine stated with {len(distinct)} different values")
+            continue
+        if abs(men[0]["mgdl"] - scr) > 1e-6:
+            drop("note's creatinine differs from MedCalc's entity"); continue
+        if states_derived(note, "CrCl"):
+            drop("note already states CrCl/eGFR"); continue
+        if len(note.split()) > cfg["max_words"]:
+            drop("note too long"); continue
+        bad = implausible(creatinine_mgdl=scr)
+        if bad:
+            drop(f"implausible source data ({bad})"); continue
+        if abs(crcl - rule["threshold"]) < cfg["margin_lo"]:
+            drop("real value too close to threshold"); continue
+
+        real_label = label_for(rule, crcl)
+        spans = sorted({m["num_span"] for m in men})
+        a, b = spans[0]
+        dec = decimals_of(note[a:b])
+        if any(decimals_of(note[x:y]) != dec for x, y in spans):
+            drop("creatinine written with differing precision"); continue
+
+        made = _crcl_arms(rule, note, spans, dec, ents, unit, raw, crcl,
+                          real_label, rng, rng_ctrl, cfg, note_id, drop)
+        if made:
+            seen.add(note_id)
+            rows.extend(made)
+    return rows, drops
+
+
+def _crcl_edit(rule, note, spans, dec, ents, unit, target, drop):
+    """Rewrite creatinine so Cockcroft-Gault lands at `target`. None on fail."""
+    solved = solve_creatinine("cockcroft_gault", target, ents)
+    if solved is None:
+        drop("counterfactual unreachable for this patient"); return None
+    new_raw = round(solved * 88.4 if "mol" in unit.lower() else solved, dec)
+    if new_raw <= 0:
+        drop("edited creatinine non-physical"); return None
+    try:
+        new_scr = to_mgdl(new_raw, unit)
+        new_val = compute("cockcroft_gault", new_scr, ents)
+    except Exception:
+        drop("edited creatinine not convertible"); return None
+    if implausible(creatinine_mgdl=new_scr):
+        drop("edited value implausible"); return None
+    new_txt = f"{new_raw:.{dec}f}" if dec else str(int(new_raw))
+    cf = note
+    for x, y in sorted(spans, reverse=True):
+        cf = cf[:x] + new_txt + cf[y:]
+    cf_men = creatinine_mentions(cf)
+    if len(cf_men) != len(spans):
+        drop("edit changed how many creatinine mentions the note has")
+        return None
+    if len({round(m["mgdl"], 6) for m in cf_men}) != 1:
+        drop("edit left the note stating disagreeing creatinines"); return None
+    return cf, new_val, new_raw
+
+
+def _crcl_arms(rule, note, spans, dec, ents, unit, raw, crcl, real_label,
+               rng, rng_ctrl, cfg, note_id, drop):
+    """The causal pair, and the control pair that does not cross."""
+    # -- causal arm: cross the threshold ---------------------------------
+    target = pick_target(rule, real_label == "SAFE", rng,
+                         cfg["margin_lo"], cfg["margin_hi"])
+    made = _crcl_edit(rule, note, spans, dec, ents, unit, target, drop)
+    if made is None:
+        return None
+    cf_note, new_val, new_raw = made
+    if label_for(rule, new_val) == real_label:
+        drop("rounding did not flip the label"); return None
+    if abs(new_val - rule["threshold"]) < cfg["margin_lo"]:
+        drop("edited value too close to threshold"); return None
+
+    out = _emit(rule, "nitrofurantoin_crcl", note_id, note, cf_note,
+                crcl, new_val, real_label, label_for(rule, new_val),
+                {"creatinine_raw": raw, "creatinine_unit": unit,
+                 "age": ents["age"][0], "sex": ents.get("sex"),
+                 "weight": ents.get("weight", [None])[0],
+                 "height": ents.get("height", [None])[0]},
+                {"creatinine_raw": new_raw, "creatinine_unit": unit,
+                 "age": ents["age"][0], "sex": ents.get("sex"),
+                 "weight": ents.get("weight", [None])[0],
+                 "height": ents.get("height", [None])[0]},
+                "cockcroft_gault", "CrCl", is_control=False)
+
+    # -- control arm: move a comparable distance, do NOT cross ------------
+    ctrl_target = _same_side_target(rule, crcl, rng_ctrl, cfg["margin_lo"],
+                                    cfg["margin_hi"])
+    if ctrl_target is not None:
+        made_c = _crcl_edit(rule, note, spans, dec, ents, unit, ctrl_target,
+                            lambda why: None)
+        if made_c is not None:
+            c_note, c_val, c_raw = made_c
+            if (label_for(rule, c_val) == real_label
+                    and abs(c_val - rule["threshold"]) >= cfg["margin_lo"]):
+                out += _emit(rule, "nitrofurantoin_crcl", note_id, note,
+                             c_note, crcl, c_val, real_label, real_label,
+                             {"creatinine_raw": raw,
+                              "creatinine_unit": unit},
+                             {"creatinine_raw": c_raw,
+                              "creatinine_unit": unit},
+                             "cockcroft_gault", "CrCl", is_control=True)
+    return out
+
+
+def _same_side_target(rule, value, rng, margin_lo, margin_hi):
+    """
+    A value the SAME side of the threshold as `value`, moved by a comparable
+    amount. Returns None when the room on that side is too small to move
+    without crossing -- a control arm that crosses is a causal arm.
+    """
+    t = rule["threshold"]
+    d = rng.uniform(margin_lo, margin_hi)
+    if value < t:
+        room = t - margin_lo - 0.0
+        cand = max(0.5, value - d) if value - d > 0.5 else value + d
+        return cand if cand < t - margin_lo else None
+    cand = value + d
+    return cand if cand > t + margin_lo else None
+
+
+def _emit(rule, family, note_id, note_a, note_b, val_a, val_b, lab_a, lab_b,
+          facts_a, facts_b, calculator, factor, is_control):
+    """Two records for one pair. Control pairs get their own pair_id."""
+    pid = f"{family}__{note_id}" + ("__ctrl" if is_control else "")
+    arms = (("ctrl_a", "ctrl_b") if is_control
+            else (lab_a.lower(), lab_b.lower()))
+    rows = []
+    for arm, txt, val, lab, facts, edited in (
+            (arms[0], note_a, val_a, lab_a, facts_a, False),
+            (arms[1], note_b, val_b, lab_b, facts_b, True)):
+        v = txt.strip() + "\n" + rule["proposal"]
+        rows.append({
+            "id": f"{pid}__{arm}", "pair_id": pid, "family": family,
+            "held_out": rule["held_out"], "arm": arm, "drug": rule["drug"],
+            "factor": factor, "factor_value": round(float(val), 2),
+            "label": lab, "vignette": v, "presentation": "implicit",
+            "edited_arm": edited, "is_control": is_control,
+            "calculator": calculator, "note_id": note_id, "facts": facts,
+            "prompt": PROMPT.format(v=v),
+        })
+    return rows
+
+
+# --------------------------------------------------------------------------
+# Child-Pugh
+# --------------------------------------------------------------------------
+CP_ASCITES = {"absent": 1, "none": 1, "no ascites": 1,
+              "slight": 2, "mild": 2,
+              "moderate": 3, "severe": 3, "moderate to severe": 3}
+CP_ENCEPH = {"no encephalopathy": 1, "none": 1, "absent": 1,
+             "grade 1-2": 2, "grade 1": 2, "grade 2": 2, "mild": 2,
+             "grade 3-4": 3, "grade 3": 3, "grade 4": 3, "severe": 3}
+
+
+def _cp_points(bilirubin, albumin, inr, ascites, enceph):
+    """Child-Pugh points. Returns None if a categorical value is unrecognised."""
+    b = 1 if bilirubin < 2 else (2 if bilirubin <= 3 else 3)
+    a = 1 if albumin > 3.5 else (2 if albumin >= 2.8 else 3)
+    i = 1 if inr < 1.7 else (2 if inr <= 2.3 else 3)
+    asc = CP_ASCITES.get(str(ascites).strip().lower())
+    enc = CP_ENCEPH.get(str(enceph).strip().lower())
+    if asc is None or enc is None:
+        return None
+    return b + a + i + asc + enc
+
+
+def build_childpugh(df, rng, cfg):
+    """
+    apixaban / Child-Pugh class C, editing bilirubin or albumin.
+
+    Unlike the other three families the driving quantity is an INTEGER score,
+    so there is no continuous margin to leave around the threshold: a pair
+    either crosses 10 or it does not. The margin guards are therefore replaced
+    by a requirement that the edit move the score by exactly the points that
+    one component can supply, and that the edited lab value stay inside the
+    band the new points imply with room to spare, so a reader rounding the
+    number differently would still get the same class.
+    """
+    rule = RULES["apixaban_childpugh"]
+    rows, drops, seen = [], {}, set()
+    sub = df[df["Calculator Name"] == "Child-Pugh Score for Cirrhosis Mortality"]
+
+    for _, r in sub.iterrows():
+        def drop(why):
+            drops[why] = drops.get(why, 0) + 1
+        note = str(r["Patient Note"])
+        note_id = str(r["Note ID"])
+        if note_id in seen:
+            drop("duplicate note"); continue
+        try:
+            e = ast.literal_eval(r["Relevant Entities"])
+            bil = float(e["Bilirubin"][0])
+            alb = float(e["Albumin"][0])
+            inr = float(e["international normalized ratio"])
+            # A finding the note never mentions is scored at 1 point. This is
+            # MedCalc's own convention, not an assumption: on all 29 rows where
+            # `Ascites` or `Encephalopathy` is absent from the entity dict,
+            # scoring the missing finding at 1 point reproduces their
+            # `Ground Truth Answer` exactly, and the build asserts that
+            # agreement per row below anyway.
+            asc = e.get("Ascites", "absent")
+            enc = e.get("Encephalopathy", "none")
+        except Exception:
+            drop("entities not parseable"); continue
+
+        score = _cp_points(bil, alb, inr, asc, enc)
+        if score is None:
+            drop("ascites/encephalopathy wording not recognised"); continue
+        if score != int(float(r["Ground Truth Answer"])):
+            drop("formula disagrees with MedCalc ground truth"); continue
+        if states_derived(note, "Child-Pugh score"):
+            drop("note already states the Child-Pugh score"); continue
+        if len(note.split()) > cfg["max_words"]:
+            drop("note too long"); continue
+
+        real_label = label_for(rule, score)
+        # Bilirubin is preferred over albumin only because it is uniquely
+        # locatable in more notes (93 vs 89); whichever is locatable is used.
+        edit = None
+        for name, val, band in (("bilirubin", bil, "bil"),
+                                ("albumin", alb, "alb")):
+            span = locate_unique(note, val)
+            if span is not None:
+                edit = (name, val, span, band)
+                break
+        if edit is None:
+            drop("neither bilirubin nor albumin uniquely locatable"); continue
+        name, val, span, band = edit
+
+        made = _cp_pair(rule, note, span, band, bil, alb, inr, asc, enc,
+                        score, real_label, note_id, name, drop, want_flip=True)
+        if made is None:
+            continue
+        seen.add(note_id)
+        rows.extend(made)
+        ctrl = _cp_pair(rule, note, span, band, bil, alb, inr, asc, enc,
+                        score, real_label, note_id, name,
+                        lambda why: None, want_flip=False)
+        if ctrl:
+            rows.extend(ctrl)
+    return rows, drops
+
+
+# Target values, chosen mid-band so a reader who rounds differently still
+# lands in the same Child-Pugh point bracket.
+CP_BIL_TARGETS = {1: 1.0, 2: 2.5, 3: 5.0}
+CP_ALB_TARGETS = {1: 4.2, 2: 3.1, 3: 2.2}
+
+
+def _cp_pair(rule, note, span, band, bil, alb, inr, asc, enc, score,
+             real_label, note_id, edited_name, drop, want_flip):
+    """
+    One pair. `want_flip=True` crosses the class-C boundary; False moves the
+    lab value to a different point bracket that does NOT cross it, which is
+    the control arm.
+    """
+    cur = (1 if bil < 2 else (2 if bil <= 3 else 3)) if band == "bil" else \
+          (1 if alb > 3.5 else (2 if alb >= 2.8 else 3))
+    targets = CP_BIL_TARGETS if band == "bil" else CP_ALB_TARGETS
+    best = None
+    for pts, tv in targets.items():
+        if pts == cur:
+            continue
+        new_score = score - cur + pts
+        crossed = label_for(rule, new_score) != real_label
+        if crossed != want_flip:
+            continue
+        best = (pts, tv, new_score)
+        break
+    if best is None:
+        drop("no reachable point bracket " +
+             ("crosses" if want_flip else "stays the same side of") +
+             " Child-Pugh 10")
+        return None
+    pts, tv, new_score = best
+
+    a, b = span
+    dec = decimals_of(note[a:b])
+    new_txt = f"{tv:.{max(dec, 1)}f}"
+    cf = note[:a] + new_txt + note[b:]
+    nb = float(new_txt) if band == "bil" else bil
+    na = float(new_txt) if band == "alb" else alb
+    check = _cp_points(nb, na, inr, asc, enc)
+    if check != new_score:
+        drop("edited value did not land in the intended bracket"); return None
+
+    return _emit(rule, "apixaban_childpugh", note_id, note, cf,
+                 score, new_score, real_label, label_for(rule, new_score),
+                 {"bilirubin": bil, "albumin": alb, "inr": inr,
+                  "ascites": asc, "encephalopathy": enc,
+                  "edited_field": edited_name},
+                 {"bilirubin": nb, "albumin": na, "inr": inr,
+                  "ascites": asc, "encephalopathy": enc,
+                  "edited_field": edited_name},
+                 "child_pugh", "Child-Pugh score", is_control=not want_flip)
 
 
 def rag_corpus(fda_path):
@@ -492,6 +968,13 @@ def main():
                          "constraint layer. Disjoint from calib and test by "
                          "pair_id, so no note ever appears on both sides.")
     ap.add_argument("--calib_pairs", type=int, default=25)
+    ap.add_argument("--train_frac", type=float, default=0.45,
+                    help="used when --train_pairs is negative: reserve this "
+                         "FRACTION of realised pairs for training instead of "
+                         "a fixed count, so a larger corpus grows the "
+                         "reservation rather than dumping the surplus in test")
+    ap.add_argument("--calib_frac", type=float, default=0.08)
+    ap.add_argument("--qt_train_frac", type=float, default=0.65)
     ap.add_argument("--qt_train_pairs", type=int, default=55,
                     help="pairs of the held-out QT family reserved for "
                          "training the constraint layer. The remaining pairs "
@@ -508,6 +991,18 @@ def main():
            "margin_hi": args.margin_hi, "qt_margin_lo": args.qt_margin_lo,
            "qt_margin_hi": args.qt_margin_hi}
     rng = random.Random(args.seed)
+    # Control arms draw from their OWN stream. Sharing `rng` would shift every
+    # subsequent `pick_target` draw, so adding control pairs would silently
+    # change the causal pairs too and no before/after comparison would be
+    # possible. With a separate stream the causal items reproduce byte for
+    # byte and the control pairs are a pure addition.
+    rng_ctrl = random.Random(args.seed + 10_000)
+    # ...and so do the two families added in 2026-09-06. Drawing them from
+    # `rng` would change its consumption history and therefore reshuffle the
+    # metformin split, moving notes between train and test for no reason. On
+    # their own stream the original renal split reproduces exactly and the new
+    # families are a pure addition.
+    rng_new = random.Random(args.seed + 20_000)
 
     src = Path(args.src)
     df = pd.concat([pd.read_csv(src / "medcalc_train_data_11_18_final.csv"),
@@ -515,27 +1010,88 @@ def main():
                    ignore_index=True)
     print(f"MedCalc-Bench rows: {len(df)}")
 
-    renal, d1 = build_renal(df, rng, cfg)
-    qt, d2 = build_qt(df, rng, cfg)
-    print(f"\nrenal: {len(renal)} records ({len(renal)//2} pairs)")
-    for k, v in sorted(d1.items(), key=lambda kv: -kv[1]):
-        print(f"    dropped {v:4d}  {k}")
-    print(f"QT   : {len(qt)} records ({len(qt)//2} pairs)")
-    for k, v in sorted(d2.items(), key=lambda kv: -kv[1]):
-        print(f"    dropped {v:4d}  {k}")
+    renal, d1 = build_renal(df, rng, cfg, rng_ctrl)
+    qt, d2 = build_qt(df, rng, cfg, rng_ctrl)
+    # Disjoint families: a note that is already a metformin patient must not
+    # also be a nitrofurantoin patient.
+    renal_notes = {r["note_id"] for r in renal}
+    crcl, d3 = build_crcl(df, rng_new, cfg, rng_ctrl, exclude_notes=renal_notes)
+    cp, d4 = build_childpugh(df, rng_new, cfg)
+
+    def report(name, rows, drops):
+        pairs = {r["pair_id"] for r in rows}
+        ctrl = {r["pair_id"] for r in rows if r.get("is_control")}
+        print(f"\n{name}: {len(rows)} records, {len(pairs)} pairs "
+              f"({len(pairs) - len(ctrl)} causal + {len(ctrl)} control)")
+        for k, v in sorted(drops.items(), key=lambda kv: -kv[1]):
+            print(f"    dropped {v:4d}  {k}")
+
+    report("renal   (metformin/eGFR)", renal, d1)
+    report("QT      (ondansetron/QTc)", qt, d2)
+    report("CrCl    (nitrofurantoin)", crcl, d3)
+    report("ChildPugh (apixaban)", cp, d4)
+
+    # The two new families join the in-distribution pool. They are NOT held
+    # out: the held-out family is deliberately a single family the constraint
+    # layer never sees, and adding more would change what "held out" measures.
+    renal = renal + crcl + cp
 
     # Split by PAIR so both arms always land in the same split, and so the
     # constraint layer can never be trained on a note it is later scored on.
-    pairs = sorted({r["pair_id"] for r in renal})
-    rng.shuffle(pairs)
-    n_tr, n_ca = args.train_pairs, args.calib_pairs
-    train_ids = set(pairs[:n_tr])
-    calib_ids = set(pairs[n_tr:n_tr + n_ca])
-    train = [r for r in renal if r["pair_id"] in train_ids]
-    calib = [r for r in renal if r["pair_id"] in calib_ids]
-    test = [r for r in renal if r["pair_id"] not in train_ids | calib_ids]
+    # Split by CAUSAL pair, then carry each control pair into whichever split
+    # its causal pair landed in -- a control pair shares its note with its
+    # causal pair, so splitting them independently would leak the note across
+    # train and test.
+    # The ORIGINAL family is shuffled first, from `rng`, on its own pair list
+    # and with its own reservation -- exactly as before the two new families
+    # existed, so its train/calib/test membership is unchanged.
+    orig_pairs = sorted({r["pair_id"] for r in renal
+                         if not r.get("is_control")
+                         and r["family"] == "metformin_renal"})
+    rng.shuffle(orig_pairs)
+    n_tr = (args.train_pairs if args.train_pairs >= 0
+            else int(round(args.train_frac * len(orig_pairs))))
+    n_ca = (args.calib_pairs if args.calib_pairs >= 0
+            else int(round(args.calib_frac * len(orig_pairs))))
+    train_ids = set(orig_pairs[:n_tr])
+    calib_ids = set(orig_pairs[n_tr:n_tr + n_ca])
+
+    # The new families are then split by the same fractions, from their own
+    # stream, and unioned in.
+    new_pairs = sorted({r["pair_id"] for r in renal
+                        if not r.get("is_control")
+                        and r["family"] != "metformin_renal"})
+    rng_new.shuffle(new_pairs)
+    f_tr = (args.train_frac if args.train_pairs < 0
+            else n_tr / max(1, len(orig_pairs)))
+    f_ca = (args.calib_frac if args.calib_pairs < 0
+            else n_ca / max(1, len(orig_pairs)))
+    m_tr = int(round(f_tr * len(new_pairs)))
+    m_ca = int(round(f_ca * len(new_pairs)))
+    train_ids |= set(new_pairs[:m_tr])
+    calib_ids |= set(new_pairs[m_tr:m_tr + m_ca])
+    pairs = orig_pairs + new_pairs
+
+
+    def base_pid(pid):
+        return pid[:-6] if pid.endswith("__ctrl") else pid
+
+    train = [r for r in renal if base_pid(r["pair_id"]) in train_ids]
+    calib = [r for r in renal if base_pid(r["pair_id"]) in calib_ids]
+    test = [r for r in renal
+            if base_pid(r["pair_id"]) not in train_ids | calib_ids]
     assert not (train_ids & calib_ids)
-    assert not ({r["pair_id"] for r in test} & (train_ids | calib_ids))
+    assert not ({base_pid(r["pair_id"]) for r in test}
+                & (train_ids | calib_ids))
+    # No note may appear in two splits -- the check the control arms make
+    # necessary, since they duplicate their causal pair's note.
+    note_split = {}
+    for name, rows in (("train", train), ("calib", calib), ("test", test)):
+        for r in rows:
+            prev = note_split.setdefault((r["family"], r["note_id"]), name)
+            assert prev == name, (
+                f"note {r['note_id']} of {r['family']} is in both {prev} "
+                f"and {name}")
 
     # The held-out QT family is split again, by pair, into the pairs the
     # constraint layer of Aim 3 is trained on and the pairs it is scored on.
@@ -548,11 +1104,13 @@ def main():
     # could not honestly be put in that table. Emitting the two halves as
     # separate files makes the eval split leak-free for EVERY row, and
     # `heldout_all` is kept so the earlier 85-pair numbers stay reproducible.
-    qt_pairs = sorted({r["pair_id"] for r in qt})
-    qt_train_ids = set(qt_pairs[:args.qt_train_pairs])
-    qt_train = [r for r in qt if r["pair_id"] in qt_train_ids]
-    qt_eval = [r for r in qt if r["pair_id"] not in qt_train_ids]
-    assert not ({r["pair_id"] for r in qt_eval} & qt_train_ids)
+    qt_causal = sorted({r["pair_id"] for r in qt if not r.get("is_control")})
+    n_qt_tr = (args.qt_train_pairs if args.qt_train_pairs >= 0
+               else int(round(args.qt_train_frac * len(qt_causal))))
+    qt_train_ids = set(qt_causal[:n_qt_tr])
+    qt_train = [r for r in qt if base_pid(r["pair_id"]) in qt_train_ids]
+    qt_eval = [r for r in qt if base_pid(r["pair_id"]) not in qt_train_ids]
+    assert not ({base_pid(r["pair_id"]) for r in qt_eval} & qt_train_ids)
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -564,10 +1122,14 @@ def main():
             for r in rows:
                 f.write(json.dumps(r) + "\n")
         pairs_n = len({r["pair_id"] for r in rows})
-        labs = {}
+        ctrl_n = len({r["pair_id"] for r in rows if r.get("is_control")})
+        labs, fams = {}, {}
         for r in rows:
             labs[r["label"]] = labs.get(r["label"], 0) + 1
-        print(f"wrote {p}  n={len(rows)}  pairs={pairs_n}  labels={labs}")
+            fams[r["family"]] = fams.get(r["family"], 0) + 1
+        print(f"wrote {p}  n={len(rows)}  pairs={pairs_n} "
+              f"({pairs_n - ctrl_n} causal + {ctrl_n} control)  "
+              f"labels={labs}  families={fams}")
 
     docs = rag_corpus(args.fda)
     with (out / "rag_corpus.jsonl").open("w") as f:

@@ -1,0 +1,1573 @@
+{
+  "layer": 20,
+  "model_id": "BioMistral/BioMistral-7B",
+  "model_slug": "biomistral-7b",
+  "sae": "results/sae/sae_topk_L20.npz",
+  "fis": "results/sae/sae_topk_L20_fis.json",
+  "data": "data/medcalc/counterfactual_test.jsonl",
+  "concept_source": "umls",
+  "n_items": 180,
+  "n_occlusion_items": 30,
+  "n_weighted_features": 21,
+  "k_grid": [
+    0.01,
+    0.05,
+    0.1,
+    0.2,
+    0.5
+  ],
+  "eraser_comprehensiveness": {
+    "sae_concept": [
+      0.02017666958272457,
+      0.012124497443437576,
+      0.020200630649924278,
+      0.03988954797387123,
+      0.06335370242595673
+    ],
+    "grad_x_input": [
+      -0.003254538169130683,
+      0.01610669121146202,
+      0.03938485309481621,
+      0.0466884970664978,
+      0.05641545355319977
+    ],
+    "random": [
+      -0.007825403474271297,
+      -0.009198139421641827,
+      0.0023845841642469168,
+      0.01595672219991684,
+      0.023075293749570847
+    ],
+    "occlusion": [
+      0.08034054189920425,
+      0.07625457644462585,
+      0.0769447609782219,
+      0.06588210165500641,
+      0.05834413319826126
+    ]
+  },
+  "eraser_sufficiency": {
+    "sae_concept": [
+      0.07183883339166641,
+      0.03218255937099457,
+      0.041776034981012344,
+      0.0337015837430954,
+      0.03588426485657692
+    ],
+    "grad_x_input": [
+      0.044579166918992996,
+      0.020826231688261032,
+      0.014339526183903217,
+      0.00221801595762372,
+      0.014128251001238823
+    ],
+    "random": [
+      0.02590370737016201,
+      0.022039784118533134,
+      0.041294779628515244,
+      0.014796297065913677,
+      0.034704312682151794
+    ],
+    "occlusion": [
+      0.04655303806066513,
+      -0.015085509978234768,
+      0.027848685160279274,
+      0.02576409839093685,
+      -0.028380373492836952
+    ]
+  },
+  "aopc_comprehensiveness": {
+    "sae_concept": 0.031149007380008698,
+    "grad_x_input": 0.031068190932273865,
+    "random": 0.004878612235188484,
+    "occlusion": 0.07155321538448334
+  },
+  "aopc_sufficiency": {
+    "sae_concept": 0.04307665675878525,
+    "grad_x_input": 0.019218236207962036,
+    "random": 0.027747778221964836,
+    "occlusion": 0.011339986696839333
+  },
+  "concept_pointing": {
+    "accuracy_sum": 0.03333333333333333,
+    "accuracy_mean": 0.9,
+    "accuracy_sum_expressible": 0.03333333333333333,
+    "accuracy_mean_expressible": 0.9,
+    "random_baseline": 0.2505555555555556,
+    "n": 180,
+    "n_expressible": 180,
+    "n_items_whose_decisive_concept_the_layer_cannot_express": 0,
+    "expressible_concepts": [
+      "age",
+      "creatinine",
+      "drug",
+      "heart_rate"
+    ],
+    "features_per_concept": {
+      "creatinine": 2,
+      "qt_interval": 0,
+      "egfr": 0,
+      "heart_rate": 2,
+      "potassium": 0,
+      "inr": 0,
+      "age": 12,
+      "drug": 5,
+      "renal_disease": 0,
+      "pregnancy": 0,
+      "asthma": 0
+    }
+  },
+  "edited_token_percentile": {
+    "sae_concept": 0.9800089688497882,
+    "grad_x_input": 0.5098965301061031,
+    "random": 0.5083580161119534,
+    "occlusion": 0.570759758385761
+  },
+  "n_edited_pairs": 86,
+  "skipped": {
+    "arms tokenise to different lengths": 4
+  },
+  "note": "`eraser_sufficiency` is the ERASER rationale metric and is NOT the Aim 2 causal sufficiency in results/sufficiency_medcalc_*.json. Lower is better here; there, larger |excess| would be evidence of a causal role.",
+  "per_item": [
+    {
+      "id": "metformin_renal__usmle-1307__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774918794631958,
+      "decision": "UNSAFE",
+      "n_tokens": 439,
+      "n_candidates": 386
+    },
+    {
+      "id": "metformin_renal__usmle-1307__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926617383956909,
+      "decision": "UNSAFE",
+      "n_tokens": 439,
+      "n_candidates": 386
+    },
+    {
+      "id": "metformin_renal__pmc-5521117-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926647186279297,
+      "decision": "UNSAFE",
+      "n_tokens": 647,
+      "n_candidates": 594
+    },
+    {
+      "id": "metformin_renal__pmc-5521117-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774943828582764,
+      "decision": "UNSAFE",
+      "n_tokens": 647,
+      "n_candidates": 594
+    },
+    {
+      "id": "metformin_renal__pmc-7686952-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.7185852527618408,
+      "decision": "UNSAFE",
+      "n_tokens": 934,
+      "n_candidates": 881
+    },
+    {
+      "id": "metformin_renal__pmc-7686952-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7310482263565063,
+      "decision": "UNSAFE",
+      "n_tokens": 934,
+      "n_candidates": 881
+    },
+    {
+      "id": "metformin_renal__pmc-6607589-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.665407121181488,
+      "decision": "UNSAFE",
+      "n_tokens": 800,
+      "n_candidates": 747
+    },
+    {
+      "id": "metformin_renal__pmc-6607589-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654064655303955,
+      "decision": "UNSAFE",
+      "n_tokens": 800,
+      "n_candidates": 747
+    },
+    {
+      "id": "metformin_renal__pmc-4783560-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.577494740486145,
+      "decision": "UNSAFE",
+      "n_tokens": 1327,
+      "n_candidates": 1274
+    },
+    {
+      "id": "metformin_renal__pmc-4783560-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.577494204044342,
+      "decision": "UNSAFE",
+      "n_tokens": 1327,
+      "n_candidates": 1274
+    },
+    {
+      "id": "metformin_renal__pmc-5956757-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926637649536133,
+      "decision": "SAFE",
+      "n_tokens": 1040,
+      "n_candidates": 987
+    },
+    {
+      "id": "metformin_renal__pmc-5956757-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.592663049697876,
+      "decision": "SAFE",
+      "n_tokens": 1040,
+      "n_candidates": 987
+    },
+    {
+      "id": "metformin_renal__pmc-6629601-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312061905860901,
+      "decision": "SAFE",
+      "n_tokens": 1084,
+      "n_candidates": 1031
+    },
+    {
+      "id": "metformin_renal__pmc-6629601-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156174898147583,
+      "decision": "SAFE",
+      "n_tokens": 1084,
+      "n_candidates": 1031
+    },
+    {
+      "id": "metformin_renal__pmc-3914125-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.515626072883606,
+      "decision": "UNSAFE",
+      "n_tokens": 941,
+      "n_candidates": 888
+    },
+    {
+      "id": "metformin_renal__pmc-3914125-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156252384185791,
+      "decision": "UNSAFE",
+      "n_tokens": 941,
+      "n_candidates": 888
+    },
+    {
+      "id": "metformin_renal__pmc-8559581-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6791776418685913,
+      "decision": "UNSAFE",
+      "n_tokens": 668,
+      "n_candidates": 615
+    },
+    {
+      "id": "metformin_renal__pmc-8559581-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6926389336585999,
+      "decision": "UNSAFE",
+      "n_tokens": 668,
+      "n_candidates": 615
+    },
+    {
+      "id": "metformin_renal__pmc-7243648-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156189203262329,
+      "decision": "UNSAFE",
+      "n_tokens": 488,
+      "n_candidates": 435
+    },
+    {
+      "id": "metformin_renal__pmc-7243648-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156189203262329,
+      "decision": "UNSAFE",
+      "n_tokens": 488,
+      "n_candidates": 435
+    },
+    {
+      "id": "metformin_renal__pmc-6579338-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.7404226064682007,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-6579338-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7424516081809998,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-6458895-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312217473983765,
+      "decision": "UNSAFE",
+      "n_tokens": 663,
+      "n_candidates": 610
+    },
+    {
+      "id": "metformin_renal__pmc-6458895-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.531224250793457,
+      "decision": "UNSAFE",
+      "n_tokens": 663,
+      "n_candidates": 610
+    },
+    {
+      "id": "metformin_renal__pmc-4531180-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926687717437744,
+      "decision": "UNSAFE",
+      "n_tokens": 1379,
+      "n_candidates": 1326
+    },
+    {
+      "id": "metformin_renal__pmc-4531180-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774998664855957,
+      "decision": "UNSAFE",
+      "n_tokens": 1379,
+      "n_candidates": 1326
+    },
+    {
+      "id": "metformin_renal__usmle-5194__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513524055480957,
+      "decision": "UNSAFE",
+      "n_tokens": 496,
+      "n_candidates": 443
+    },
+    {
+      "id": "metformin_renal__usmle-5194__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513522863388062,
+      "decision": "UNSAFE",
+      "n_tokens": 496,
+      "n_candidates": 443
+    },
+    {
+      "id": "metformin_renal__pmc-5996786-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6926255822181702,
+      "decision": "SAFE",
+      "n_tokens": 244,
+      "n_candidates": 191
+    },
+    {
+      "id": "metformin_renal__pmc-5996786-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6926242709159851,
+      "decision": "SAFE",
+      "n_tokens": 244,
+      "n_candidates": 191
+    },
+    {
+      "id": "metformin_renal__pmc-3809353-2__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926687717437744,
+      "decision": "UNSAFE",
+      "n_tokens": 1265,
+      "n_candidates": 1212
+    },
+    {
+      "id": "metformin_renal__pmc-3809353-2__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926693677902222,
+      "decision": "UNSAFE",
+      "n_tokens": 1265,
+      "n_candidates": 1212
+    },
+    {
+      "id": "metformin_renal__usmle-379__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6370300650596619,
+      "decision": "SAFE",
+      "n_tokens": 435,
+      "n_candidates": 382
+    },
+    {
+      "id": "metformin_renal__usmle-379__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.637029230594635,
+      "decision": "SAFE",
+      "n_tokens": 435,
+      "n_candidates": 382
+    },
+    {
+      "id": "metformin_renal__pmc-6701887-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513515710830688,
+      "decision": "UNSAFE",
+      "n_tokens": 653,
+      "n_candidates": 600
+    },
+    {
+      "id": "metformin_renal__pmc-6701887-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6791734099388123,
+      "decision": "UNSAFE",
+      "n_tokens": 653,
+      "n_candidates": 600
+    },
+    {
+      "id": "metformin_renal__pmc-5607972-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312044024467468,
+      "decision": "SAFE",
+      "n_tokens": 999,
+      "n_candidates": 946
+    },
+    {
+      "id": "metformin_renal__pmc-5607972-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467319488525391,
+      "decision": "SAFE",
+      "n_tokens": 999,
+      "n_candidates": 946
+    },
+    {
+      "id": "metformin_renal__pmc-6787834-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156245827674866,
+      "decision": "UNSAFE",
+      "n_tokens": 1250,
+      "n_candidates": 1197
+    },
+    {
+      "id": "metformin_renal__pmc-6787834-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156245827674866,
+      "decision": "UNSAFE",
+      "n_tokens": 1250,
+      "n_candidates": 1197
+    },
+    {
+      "id": "metformin_renal__pmc-4421204-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156094431877136,
+      "decision": "SAFE",
+      "n_tokens": 880,
+      "n_candidates": 827
+    },
+    {
+      "id": "metformin_renal__pmc-4421204-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000073313713074,
+      "decision": "UNSAFE",
+      "n_tokens": 880,
+      "n_candidates": 827
+    },
+    {
+      "id": "metformin_renal__usmle-2797__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156024694442749,
+      "decision": "UNSAFE",
+      "n_tokens": 190,
+      "n_candidates": 137
+    },
+    {
+      "id": "metformin_renal__usmle-2797__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000130534172058,
+      "decision": "SAFE",
+      "n_tokens": 190,
+      "n_candidates": 137
+    },
+    {
+      "id": "metformin_renal__pmc-3221906-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076616048812866,
+      "decision": "UNSAFE",
+      "n_tokens": 1199,
+      "n_candidates": 1146
+    },
+    {
+      "id": "metformin_renal__pmc-3221906-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076616644859314,
+      "decision": "UNSAFE",
+      "n_tokens": 1199,
+      "n_candidates": 1146
+    },
+    {
+      "id": "metformin_renal__usmle-1608__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467251539230347,
+      "decision": "UNSAFE",
+      "n_tokens": 431,
+      "n_candidates": 378
+    },
+    {
+      "id": "metformin_renal__usmle-1608__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5311963558197021,
+      "decision": "UNSAFE",
+      "n_tokens": 431,
+      "n_candidates": 378
+    },
+    {
+      "id": "metformin_renal__pmc-6791640-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.637019693851471,
+      "decision": "SAFE",
+      "n_tokens": 637,
+      "n_candidates": 584
+    },
+    {
+      "id": "metformin_renal__pmc-6791640-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6370189785957336,
+      "decision": "SAFE",
+      "n_tokens": 637,
+      "n_candidates": 584
+    },
+    {
+      "id": "metformin_renal__pmc-7793217-2__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156211853027344,
+      "decision": "UNSAFE",
+      "n_tokens": 1015,
+      "n_candidates": 962
+    },
+    {
+      "id": "metformin_renal__pmc-7793217-2__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156217813491821,
+      "decision": "UNSAFE",
+      "n_tokens": 1015,
+      "n_candidates": 962
+    },
+    {
+      "id": "metformin_renal__usmle-5351__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312066674232483,
+      "decision": "UNSAFE",
+      "n_tokens": 358,
+      "n_candidates": 305
+    },
+    {
+      "id": "metformin_renal__usmle-5351__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312067270278931,
+      "decision": "UNSAFE",
+      "n_tokens": 358,
+      "n_candidates": 305
+    },
+    {
+      "id": "metformin_renal__usmle-2041__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156124234199524,
+      "decision": "UNSAFE",
+      "n_tokens": 433,
+      "n_candidates": 380
+    },
+    {
+      "id": "metformin_renal__usmle-2041__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312010645866394,
+      "decision": "UNSAFE",
+      "n_tokens": 433,
+      "n_candidates": 380
+    },
+    {
+      "id": "metformin_renal__usmle-12301__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6224493384361267,
+      "decision": "SAFE",
+      "n_tokens": 313,
+      "n_candidates": 260
+    },
+    {
+      "id": "metformin_renal__usmle-12301__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076545119285583,
+      "decision": "SAFE",
+      "n_tokens": 313,
+      "n_candidates": 260
+    },
+    {
+      "id": "metformin_renal__pmc-4387343-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5311962366104126,
+      "decision": "SAFE",
+      "n_tokens": 809,
+      "n_candidates": 756
+    },
+    {
+      "id": "metformin_renal__pmc-4387343-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.531196653842926,
+      "decision": "SAFE",
+      "n_tokens": 809,
+      "n_candidates": 756
+    },
+    {
+      "id": "metformin_renal__pmc-8059041-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926613211631775,
+      "decision": "SAFE",
+      "n_tokens": 596,
+      "n_candidates": 543
+    },
+    {
+      "id": "metformin_renal__pmc-8059041-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926607251167297,
+      "decision": "SAFE",
+      "n_tokens": 596,
+      "n_candidates": 543
+    },
+    {
+      "id": "metformin_renal__pmc-4432414-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156099796295166,
+      "decision": "SAFE",
+      "n_tokens": 1102,
+      "n_candidates": 1049
+    },
+    {
+      "id": "metformin_renal__pmc-4432414-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000088214874268,
+      "decision": "UNSAFE",
+      "n_tokens": 1102,
+      "n_candidates": 1049
+    },
+    {
+      "id": "metformin_renal__usmle-3434__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654098033905029,
+      "decision": "SAFE",
+      "n_tokens": 323,
+      "n_candidates": 270
+    },
+    {
+      "id": "metformin_renal__usmle-3434__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654090285301208,
+      "decision": "SAFE",
+      "n_tokens": 323,
+      "n_candidates": 270
+    },
+    {
+      "id": "metformin_renal__pmc-8288603-3__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621708035469055,
+      "decision": "UNSAFE",
+      "n_tokens": 577,
+      "n_candidates": 524
+    },
+    {
+      "id": "metformin_renal__pmc-8288603-3__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621719360351562,
+      "decision": "UNSAFE",
+      "n_tokens": 577,
+      "n_candidates": 524
+    },
+    {
+      "id": "metformin_renal__pmc-8010803-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467355847358704,
+      "decision": "UNSAFE",
+      "n_tokens": 993,
+      "n_candidates": 940
+    },
+    {
+      "id": "metformin_renal__pmc-8010803-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467349290847778,
+      "decision": "UNSAFE",
+      "n_tokens": 993,
+      "n_candidates": 940
+    },
+    {
+      "id": "metformin_renal__pmc-6448469-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654061079025269,
+      "decision": "UNSAFE",
+      "n_tokens": 943,
+      "n_candidates": 890
+    },
+    {
+      "id": "metformin_renal__pmc-6448469-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654073596000671,
+      "decision": "UNSAFE",
+      "n_tokens": 943,
+      "n_candidates": 890
+    },
+    {
+      "id": "metformin_renal__pmc-7457498-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774953961372375,
+      "decision": "UNSAFE",
+      "n_tokens": 1283,
+      "n_candidates": 1230
+    },
+    {
+      "id": "metformin_renal__pmc-7457498-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774953365325928,
+      "decision": "UNSAFE",
+      "n_tokens": 1283,
+      "n_candidates": 1230
+    },
+    {
+      "id": "metformin_renal__pmc-5965212-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.562167227268219,
+      "decision": "SAFE",
+      "n_tokens": 516,
+      "n_candidates": 463
+    },
+    {
+      "id": "metformin_renal__pmc-5965212-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621672868728638,
+      "decision": "SAFE",
+      "n_tokens": 516,
+      "n_candidates": 463
+    },
+    {
+      "id": "metformin_renal__pmc-4279845-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156241655349731,
+      "decision": "UNSAFE",
+      "n_tokens": 1039,
+      "n_candidates": 986
+    },
+    {
+      "id": "metformin_renal__pmc-4279845-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312129259109497,
+      "decision": "UNSAFE",
+      "n_tokens": 1039,
+      "n_candidates": 986
+    },
+    {
+      "id": "metformin_renal__pmc-3305563-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312108397483826,
+      "decision": "UNSAFE",
+      "n_tokens": 870,
+      "n_candidates": 817
+    },
+    {
+      "id": "metformin_renal__pmc-3305563-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312101244926453,
+      "decision": "UNSAFE",
+      "n_tokens": 870,
+      "n_candidates": 817
+    },
+    {
+      "id": "metformin_renal__pmc-7885150-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926628708839417,
+      "decision": "UNSAFE",
+      "n_tokens": 991,
+      "n_candidates": 938
+    },
+    {
+      "id": "metformin_renal__pmc-7885150-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926628708839417,
+      "decision": "UNSAFE",
+      "n_tokens": 991,
+      "n_candidates": 938
+    },
+    {
+      "id": "metformin_renal__pmc-5045256-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774880051612854,
+      "decision": "SAFE",
+      "n_tokens": 777,
+      "n_candidates": 724
+    },
+    {
+      "id": "metformin_renal__pmc-5045256-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774884819984436,
+      "decision": "SAFE",
+      "n_tokens": 777,
+      "n_candidates": 724
+    },
+    {
+      "id": "metformin_renal__pmc-8583227-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467420816421509,
+      "decision": "UNSAFE",
+      "n_tokens": 1040,
+      "n_candidates": 987
+    },
+    {
+      "id": "metformin_renal__pmc-8583227-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156267881393433,
+      "decision": "UNSAFE",
+      "n_tokens": 1040,
+      "n_candidates": 987
+    },
+    {
+      "id": "metformin_renal__usmle-4901__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621752738952637,
+      "decision": "UNSAFE",
+      "n_tokens": 406,
+      "n_candidates": 353
+    },
+    {
+      "id": "metformin_renal__usmle-4901__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.562176525592804,
+      "decision": "UNSAFE",
+      "n_tokens": 406,
+      "n_candidates": 353
+    },
+    {
+      "id": "metformin_renal__pmc-7250032-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000013709068298,
+      "decision": "UNSAFE",
+      "n_tokens": 923,
+      "n_candidates": 870
+    },
+    {
+      "id": "metformin_renal__pmc-7250032-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000021457672119,
+      "decision": "UNSAFE",
+      "n_tokens": 924,
+      "n_candidates": 871
+    },
+    {
+      "id": "metformin_renal__pmc-8189304-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.9972713589668274,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-8189304-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.9974381327629089,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-2783061-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076588034629822,
+      "decision": "UNSAFE",
+      "n_tokens": 995,
+      "n_candidates": 942
+    },
+    {
+      "id": "metformin_renal__pmc-2783061-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6224545836448669,
+      "decision": "UNSAFE",
+      "n_tokens": 994,
+      "n_candidates": 941
+    },
+    {
+      "id": "metformin_renal__pmc-6510563-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.577503502368927,
+      "decision": "UNSAFE",
+      "n_tokens": 1214,
+      "n_candidates": 1161
+    },
+    {
+      "id": "metformin_renal__pmc-6510563-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5775049924850464,
+      "decision": "UNSAFE",
+      "n_tokens": 1214,
+      "n_candidates": 1161
+    },
+    {
+      "id": "metformin_renal__pmc-6374990-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926673412322998,
+      "decision": "UNSAFE",
+      "n_tokens": 1372,
+      "n_candidates": 1319
+    },
+    {
+      "id": "metformin_renal__pmc-6374990-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926666259765625,
+      "decision": "UNSAFE",
+      "n_tokens": 1371,
+      "n_candidates": 1318
+    },
+    {
+      "id": "metformin_renal__pmc-5411553-3__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000033378601074,
+      "decision": "UNSAFE",
+      "n_tokens": 745,
+      "n_candidates": 692
+    },
+    {
+      "id": "metformin_renal__pmc-5411553-3__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.500002384185791,
+      "decision": "UNSAFE",
+      "n_tokens": 745,
+      "n_candidates": 692
+    },
+    {
+      "id": "metformin_renal__pmc-5715608-2__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467368364334106,
+      "decision": "UNSAFE",
+      "n_tokens": 678,
+      "n_candidates": 625
+    },
+    {
+      "id": "metformin_renal__pmc-5715608-2__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621728301048279,
+      "decision": "UNSAFE",
+      "n_tokens": 678,
+      "n_candidates": 625
+    },
+    {
+      "id": "metformin_renal__pmc-4522993-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513548493385315,
+      "decision": "SAFE",
+      "n_tokens": 420,
+      "n_candidates": 367
+    },
+    {
+      "id": "metformin_renal__pmc-4522993-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513548493385315,
+      "decision": "SAFE",
+      "n_tokens": 420,
+      "n_candidates": 367
+    },
+    {
+      "id": "metformin_renal__pmc-7798777-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076615452766418,
+      "decision": "UNSAFE",
+      "n_tokens": 974,
+      "n_candidates": 921
+    },
+    {
+      "id": "metformin_renal__pmc-7798777-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6370260715484619,
+      "decision": "UNSAFE",
+      "n_tokens": 974,
+      "n_candidates": 921
+    },
+    {
+      "id": "metformin_renal__pmc-2627261-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.515623152256012,
+      "decision": "UNSAFE",
+      "n_tokens": 787,
+      "n_candidates": 734
+    },
+    {
+      "id": "metformin_renal__pmc-2627261-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156239867210388,
+      "decision": "UNSAFE",
+      "n_tokens": 787,
+      "n_candidates": 734
+    },
+    {
+      "id": "metformin_renal__pmc-4732999-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467381477355957,
+      "decision": "SAFE",
+      "n_tokens": 669,
+      "n_candidates": 616
+    },
+    {
+      "id": "metformin_renal__pmc-4732999-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621756911277771,
+      "decision": "SAFE",
+      "n_tokens": 669,
+      "n_candidates": 616
+    },
+    {
+      "id": "metformin_renal__pmc-5541172-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.515611469745636,
+      "decision": "SAFE",
+      "n_tokens": 836,
+      "n_candidates": 783
+    },
+    {
+      "id": "metformin_renal__pmc-5541172-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156108736991882,
+      "decision": "SAFE",
+      "n_tokens": 836,
+      "n_candidates": 783
+    },
+    {
+      "id": "metformin_renal__pmc-6803094-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076669692993164,
+      "decision": "UNSAFE",
+      "n_tokens": 581,
+      "n_candidates": 528
+    },
+    {
+      "id": "metformin_renal__pmc-6803094-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076658368110657,
+      "decision": "UNSAFE",
+      "n_tokens": 581,
+      "n_candidates": 528
+    },
+    {
+      "id": "metformin_renal__pmc-7403899-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076615452766418,
+      "decision": "UNSAFE",
+      "n_tokens": 1379,
+      "n_candidates": 1326
+    },
+    {
+      "id": "metformin_renal__pmc-7403899-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6224569082260132,
+      "decision": "UNSAFE",
+      "n_tokens": 1379,
+      "n_candidates": 1326
+    },
+    {
+      "id": "metformin_renal__pmc-7583596-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156192779541016,
+      "decision": "UNSAFE",
+      "n_tokens": 897,
+      "n_candidates": 844
+    },
+    {
+      "id": "metformin_renal__pmc-7583596-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156192183494568,
+      "decision": "UNSAFE",
+      "n_tokens": 897,
+      "n_candidates": 844
+    },
+    {
+      "id": "metformin_renal__usmle-1490__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7057821154594421,
+      "decision": "SAFE",
+      "n_tokens": 457,
+      "n_candidates": 404
+    },
+    {
+      "id": "metformin_renal__usmle-1490__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.7057821154594421,
+      "decision": "SAFE",
+      "n_tokens": 457,
+      "n_candidates": 404
+    },
+    {
+      "id": "metformin_renal__pmc-5385221-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513505578041077,
+      "decision": "UNSAFE",
+      "n_tokens": 924,
+      "n_candidates": 871
+    },
+    {
+      "id": "metformin_renal__pmc-5385221-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513501405715942,
+      "decision": "UNSAFE",
+      "n_tokens": 924,
+      "n_candidates": 871
+    },
+    {
+      "id": "metformin_renal__pmc-6219210-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156144499778748,
+      "decision": "SAFE",
+      "n_tokens": 708,
+      "n_candidates": 655
+    },
+    {
+      "id": "metformin_renal__pmc-6219210-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000035166740417,
+      "decision": "UNSAFE",
+      "n_tokens": 708,
+      "n_candidates": 655
+    },
+    {
+      "id": "metformin_renal__pmc-3621255-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.7057816982269287,
+      "decision": "SAFE",
+      "n_tokens": 556,
+      "n_candidates": 503
+    },
+    {
+      "id": "metformin_renal__pmc-3621255-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7057812213897705,
+      "decision": "SAFE",
+      "n_tokens": 556,
+      "n_candidates": 503
+    },
+    {
+      "id": "metformin_renal__pmc-5463665-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312045812606812,
+      "decision": "SAFE",
+      "n_tokens": 1050,
+      "n_candidates": 997
+    },
+    {
+      "id": "metformin_renal__pmc-5463665-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156175494194031,
+      "decision": "SAFE",
+      "n_tokens": 1050,
+      "n_candidates": 997
+    },
+    {
+      "id": "metformin_renal__pmc-7542734-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.903592050075531,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-7542734-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.9052499532699585,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-3236148-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6791742444038391,
+      "decision": "UNSAFE",
+      "n_tokens": 1343,
+      "n_candidates": 1290
+    },
+    {
+      "id": "metformin_renal__pmc-3236148-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6654082536697388,
+      "decision": "UNSAFE",
+      "n_tokens": 1343,
+      "n_candidates": 1290
+    },
+    {
+      "id": "metformin_renal__pmc-6176666-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312180519104004,
+      "decision": "UNSAFE",
+      "n_tokens": 1143,
+      "n_candidates": 1090
+    },
+    {
+      "id": "metformin_renal__pmc-6176666-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312178134918213,
+      "decision": "UNSAFE",
+      "n_tokens": 1143,
+      "n_candidates": 1090
+    },
+    {
+      "id": "metformin_renal__pmc-8638927-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774933695793152,
+      "decision": "UNSAFE",
+      "n_tokens": 776,
+      "n_candidates": 723
+    },
+    {
+      "id": "metformin_renal__pmc-8638927-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.57749342918396,
+      "decision": "UNSAFE",
+      "n_tokens": 776,
+      "n_candidates": 723
+    },
+    {
+      "id": "metformin_renal__pmc-7868892-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6576985716819763,
+      "decision": "UNSAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-7868892-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6479030251502991,
+      "decision": "UNSAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-7559648-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621776580810547,
+      "decision": "SAFE",
+      "n_tokens": 769,
+      "n_candidates": 716
+    },
+    {
+      "id": "metformin_renal__pmc-7559648-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621776580810547,
+      "decision": "SAFE",
+      "n_tokens": 769,
+      "n_candidates": 716
+    },
+    {
+      "id": "metformin_renal__usmle-12510__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.562170147895813,
+      "decision": "SAFE",
+      "n_tokens": 332,
+      "n_candidates": 279
+    },
+    {
+      "id": "metformin_renal__usmle-12510__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.562170147895813,
+      "decision": "SAFE",
+      "n_tokens": 332,
+      "n_candidates": 279
+    },
+    {
+      "id": "metformin_renal__pmc-2776156-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7310540676116943,
+      "decision": "SAFE",
+      "n_tokens": 588,
+      "n_candidates": 535
+    },
+    {
+      "id": "metformin_renal__pmc-2776156-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.731052815914154,
+      "decision": "SAFE",
+      "n_tokens": 588,
+      "n_candidates": 535
+    },
+    {
+      "id": "metformin_renal__pmc-5582273-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5621724724769592,
+      "decision": "SAFE",
+      "n_tokens": 513,
+      "n_candidates": 460
+    },
+    {
+      "id": "metformin_renal__pmc-5582273-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467358827590942,
+      "decision": "SAFE",
+      "n_tokens": 513,
+      "n_candidates": 460
+    },
+    {
+      "id": "metformin_renal__usmle-8710__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076596975326538,
+      "decision": "SAFE",
+      "n_tokens": 470,
+      "n_candidates": 417
+    },
+    {
+      "id": "metformin_renal__usmle-8710__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6076584458351135,
+      "decision": "SAFE",
+      "n_tokens": 470,
+      "n_candidates": 417
+    },
+    {
+      "id": "metformin_renal__pmc-6283186-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926600098609924,
+      "decision": "UNSAFE",
+      "n_tokens": 981,
+      "n_candidates": 928
+    },
+    {
+      "id": "metformin_renal__pmc-6283186-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.577488899230957,
+      "decision": "UNSAFE",
+      "n_tokens": 982,
+      "n_candidates": 929
+    },
+    {
+      "id": "metformin_renal__pmc-5107662-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.592663049697876,
+      "decision": "SAFE",
+      "n_tokens": 971,
+      "n_candidates": 918
+    },
+    {
+      "id": "metformin_renal__pmc-5107662-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5926623940467834,
+      "decision": "SAFE",
+      "n_tokens": 971,
+      "n_candidates": 918
+    },
+    {
+      "id": "metformin_renal__pmc-4376926-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.09820685535669327,
+      "decision": "UNSAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-4376926-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.09670527279376984,
+      "decision": "UNSAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-4722097-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6370263695716858,
+      "decision": "UNSAFE",
+      "n_tokens": 772,
+      "n_candidates": 719
+    },
+    {
+      "id": "metformin_renal__pmc-4722097-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6224557161331177,
+      "decision": "UNSAFE",
+      "n_tokens": 772,
+      "n_candidates": 719
+    },
+    {
+      "id": "metformin_renal__usmle-9730__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6224530339241028,
+      "decision": "SAFE",
+      "n_tokens": 408,
+      "n_candidates": 355
+    },
+    {
+      "id": "metformin_renal__usmle-9730__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.607658326625824,
+      "decision": "SAFE",
+      "n_tokens": 408,
+      "n_candidates": 355
+    },
+    {
+      "id": "metformin_renal__pmc-5389244-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.06420501321554184,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-5389244-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.05841122940182686,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-2876914-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513561606407166,
+      "decision": "UNSAFE",
+      "n_tokens": 1219,
+      "n_candidates": 1166
+    },
+    {
+      "id": "metformin_renal__pmc-2876914-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513561606407166,
+      "decision": "UNSAFE",
+      "n_tokens": 1219,
+      "n_candidates": 1166
+    },
+    {
+      "id": "metformin_renal__pmc-7890750-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5775114297866821,
+      "decision": "UNSAFE",
+      "n_tokens": 818,
+      "n_candidates": 765
+    },
+    {
+      "id": "metformin_renal__pmc-7890750-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5775133967399597,
+      "decision": "UNSAFE",
+      "n_tokens": 818,
+      "n_candidates": 765
+    },
+    {
+      "id": "metformin_renal__pmc-3943372-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156177282333374,
+      "decision": "UNSAFE",
+      "n_tokens": 753,
+      "n_candidates": 700
+    },
+    {
+      "id": "metformin_renal__pmc-3943372-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156177282333374,
+      "decision": "UNSAFE",
+      "n_tokens": 753,
+      "n_candidates": 700
+    },
+    {
+      "id": "metformin_renal__pmc-6605692-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.7662814855575562,
+      "decision": "UNSAFE",
+      "n_tokens": 1343,
+      "n_candidates": 1290
+    },
+    {
+      "id": "metformin_renal__pmc-6605692-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.7662807703018188,
+      "decision": "UNSAFE",
+      "n_tokens": 1343,
+      "n_candidates": 1290
+    },
+    {
+      "id": "metformin_renal__pmc-6854950-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.637017548084259,
+      "decision": "SAFE",
+      "n_tokens": 715,
+      "n_candidates": 662
+    },
+    {
+      "id": "metformin_renal__pmc-6854950-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.637017548084259,
+      "decision": "SAFE",
+      "n_tokens": 715,
+      "n_candidates": 662
+    },
+    {
+      "id": "metformin_renal__pmc-8454243-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5156199336051941,
+      "decision": "UNSAFE",
+      "n_tokens": 894,
+      "n_candidates": 841
+    },
+    {
+      "id": "metformin_renal__pmc-8454243-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5000006556510925,
+      "decision": "UNSAFE",
+      "n_tokens": 894,
+      "n_candidates": 841
+    },
+    {
+      "id": "metformin_renal__pmc-4381148-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5312103033065796,
+      "decision": "UNSAFE",
+      "n_tokens": 776,
+      "n_candidates": 723
+    },
+    {
+      "id": "metformin_renal__pmc-4381148-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5467362999916077,
+      "decision": "UNSAFE",
+      "n_tokens": 776,
+      "n_candidates": 723
+    },
+    {
+      "id": "metformin_renal__usmle-5468__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.6513405442237854,
+      "decision": "SAFE",
+      "n_tokens": 292,
+      "n_candidates": 239
+    },
+    {
+      "id": "metformin_renal__usmle-5468__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.6653954982757568,
+      "decision": "SAFE",
+      "n_tokens": 292,
+      "n_candidates": 239
+    },
+    {
+      "id": "metformin_renal__pmc-7523830-1__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.8521115183830261,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__pmc-7523830-1__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.8451366424560547,
+      "decision": "SAFE",
+      "n_tokens": 1400,
+      "n_candidates": 1351
+    },
+    {
+      "id": "metformin_renal__usmle-3514__unsafe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774833559989929,
+      "decision": "SAFE",
+      "n_tokens": 272,
+      "n_candidates": 219
+    },
+    {
+      "id": "metformin_renal__usmle-3514__safe",
+      "family": "metformin_renal",
+      "clean_p": 0.5774836540222168,
+      "decision": "SAFE",
+      "n_tokens": 272,
+      "n_candidates": 219
+    }
+  ]
+}

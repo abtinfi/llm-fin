@@ -109,7 +109,7 @@ Their reports hold the detail. The three causal rows are computed from the post-
 | Is the decisive fact represented internally? | QT yes (pair-CC 0.976), creatinine no (0.042) | `results/aim123_internals.md` |
 | Does it causally drive the answer? | No — patching effects 0.0064 to 0.0221 logits, ~100x too small to flip a decision | `results/aim123_internals.md` |
 | ...and by SAE feature knock-out? | No — -0.0163 to 0.0573 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
-| ...and by feature injection (sufficiency)? | No — 0.0134 to 0.0833 logits | `results/rerun_fixes/COMPARISON.md` |
+| ...and by feature injection (sufficiency)? | No — 0.0101 to 0.0646 logits | `results/sufficiency_medcalc_{test,heldout}.json` |
 
 See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.
 

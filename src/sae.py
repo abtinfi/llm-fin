@@ -71,6 +71,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lm_common import (answer_token_ids, producer_module,
+                       wrap_prompt)
+
 # ---------------------------------------------------------------------------
 # Concept vocabulary. A feature is "semantic" to the extent that it fires on
 # the tokens of exactly one of these and not on the others. Spans are found in
@@ -228,11 +231,7 @@ def cmd_collect(args):
         args.model_id, torch_dtype=torch.bfloat16, device_map="cuda").eval()
 
     def wrap(p):
-        if tok.chat_template:
-            return tok.apply_chat_template([{"role": "user", "content": p}],
-                                           tokenize=False,
-                                           add_generation_prompt=True)
-        return f"[INST] {p} [/INST]"
+        return wrap_prompt(tok, p)
 
     X, L, ids, budget = [], [], [], args.max_tokens
     for i, r in enumerate(records):
@@ -609,26 +608,11 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
     model = AutoModelForCausalLM.from_pretrained(
         args.model_id, torch_dtype=torch.bfloat16, device_map="cuda").eval()
 
-    def answer_ids(label):
-        ids = set()
-        for t in (label, f" {label}", f"\n{label}"):
-            for tid in tok.encode(t, add_special_tokens=False):
-                piece = tok.convert_ids_to_tokens(tid)
-                if not piece.replace("▁", "").strip() or piece == "<0x0A>":
-                    continue
-                ids.add(tid)
-                break
-        return ids
-    safe_ids, unsafe_ids = answer_ids("SAFE"), answer_ids("UNSAFE")
-    ov = safe_ids & unsafe_ids
-    safe_ids, unsafe_ids = safe_ids - ov, unsafe_ids - ov
+    _aids = answer_token_ids(tok)
+    safe_ids, unsafe_ids = _aids["SAFE"], _aids["UNSAFE"]
 
     def wrap(p):
-        if tok.chat_template:
-            return tok.apply_chat_template([{"role": "user", "content": p}],
-                                           tokenize=False,
-                                           add_generation_prompt=True)
-        return f"[INST] {p} [/INST]"
+        return wrap_prompt(tok, p)
 
     W_dec = sae.W_dec.detach()
     state = {"feature": None}
@@ -663,8 +647,7 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
     #
     # At layer 0 the producing module is the embedding table, which returns a
     # bare tensor rather than a tuple; `hook` already handles both shapes.
-    target = (model.model.embed_tokens if layer == 0
-              else model.model.layers[layer - 1])
+    target = producer_module(model, layer)
     print(f"  knock-out hook on {'embed_tokens' if layer == 0 else f'layers[{layer-1}]'}"
           f", which produces hidden_states[{layer}] -- the stream the SAE was "
           f"fitted on")

@@ -145,6 +145,23 @@ REQUIRED = [
     ("data/umls/causal_graph.json", "constraint_layer.py L_ontology"),
 ]
 
+# The EXPANDED medcalc arm (2026-09-06). Optional in the same sense as MIMIC:
+# `data/medcalc` remains the arm every published number was computed on, and
+# `data/medcalc_v2` is a strict superset -- every original item reproduces
+# byte for byte under the same id, plus the two new rule families
+# (nitrofurantoin/CrCl, apixaban/Child-Pugh) and, for the first time, CONTROL
+# pairs whose driving value moves without crossing the threshold.
+MEDCALC_V2 = [
+    ("data/medcalc_v2/counterfactual_test.jsonl",
+     "run_eval.py --data data/medcalc_v2 --tag _medcalc2"),
+    ("data/medcalc_v2/counterfactual_heldout.jsonl", "medcalc_v2 heldout"),
+    ("data/medcalc_v2/counterfactual_calib.jsonl", "medcalc_v2 UQ calibration"),
+    ("data/medcalc_v2/counterfactual_train.jsonl", "medcalc_v2 CL training"),
+    ("data/medcalc_v2/counterfactual_heldout_train.jsonl",
+     "medcalc_v2 QT CL training half"),
+    ("data/medcalc_v2/rag_corpus.jsonl", "medcalc_v2 RAG variants"),
+]
+
 # The MIMIC arm is OPTIONAL by design: it is rebuilt from a download, and the
 # pipeline must keep running for anyone who has not fetched it.
 MIMIC = [
@@ -199,10 +216,22 @@ def check_split(path):
                 issues.append(f"record {r.get('id', '?')} missing `{field}`")
         by_pair[r.get("pair_id")].append(r)
 
-    complete = incomplete = 0
+    complete = incomplete = control = 0
     for pid, arms in by_pair.items():
         labels = sorted(a.get("label") for a in arms)
-        if len(arms) == 2 and labels == ["SAFE", "UNSAFE"]:
+        # CONTROL pairs deliberately carry the SAME label on both arms: the
+        # driving value moves without crossing the threshold. They are not
+        # malformed causal pairs and must not be counted as such -- but they
+        # DO have to be flagged, because a causal pair whose arms share a
+        # label is a real defect and the two look identical without the flag.
+        if len(arms) == 2 and all(a.get("is_control") for a in arms):
+            if labels[0] == labels[1]:
+                control += 1
+            else:
+                incomplete += 1
+                issues.append(f"control pair {pid}: labels {labels} differ; a "
+                              f"control arm must not cross the threshold")
+        elif len(arms) == 2 and labels == ["SAFE", "UNSAFE"]:
             complete += 1
         else:
             incomplete += 1
@@ -217,6 +246,7 @@ def check_split(path):
         "n_items": len(recs),
         "n_pairs": len(by_pair),
         "complete_pairs": complete,
+        "control_pairs": control,
         "incomplete_pairs": incomplete,
         "families": sorted({r.get("family") for r in recs if r.get("family")}),
         "issues": issues,
@@ -307,7 +337,7 @@ def main():
                                    "used_by": used_by})
 
     print("\nOPTIONAL (a stage degrades or is skipped, nothing breaks)")
-    for rel, used_by in OPTIONAL:
+    for rel, used_by in OPTIONAL + MEDCALC_V2:
         p = root / rel
         ok = p.is_file()
         print(f"  [{'ok' if ok else '--'}] {rel:52s} "
@@ -319,7 +349,7 @@ def main():
     print("SPLIT INTEGRITY")
     print("=" * 72)
     pair_sets = {}
-    for rel, _ in REQUIRED + OPTIONAL:
+    for rel, _ in REQUIRED + OPTIONAL + MEDCALC_V2:
         if "counterfactual_" not in rel:
             continue
         p = root / rel
@@ -335,8 +365,10 @@ def main():
         pair_sets[rel] = {r["pair_id"] for r in read_jsonl(p)}
         flag = "ok" if not info["issues"] else "ISSUES"
         print(f"  [{flag}] {rel}")
+        ctrl = info.get("control_pairs", 0)
         print(f"         {info['n_items']} items, {info['complete_pairs']} "
-              f"complete pairs, {info['incomplete_pairs']} incomplete, "
+              f"causal pairs, {ctrl} control pairs, "
+              f"{info['incomplete_pairs']} incomplete, "
               f"families={info['families']}")
         for m in info["issues"][:4]:
             print(f"         - {m}")
@@ -349,10 +381,26 @@ def main():
     # SUPPOSED to overlap them; it is kept only for continuity with the
     # patching/steering runs that predate the re-partition.
     superset = "data/medcalc/counterfactual_heldout_all.jsonl"
-    leaks = [l for l in check_leakage(pair_sets)
-             if superset not in (l["a"], l["b"])]
-    expected = [l for l in check_leakage(pair_sets)
-                if superset in (l["a"], l["b"])]
+
+    def _same_lineage(a, b):
+        """
+        `data/medcalc_v2` is a strict superset of `data/medcalc`: the same
+        notes under the same pair_ids, plus two new families and the control
+        pairs. Overlap between the two is the DEFINITION of that relationship,
+        not a leak. What would be a leak -- v2's train sharing pairs with v2's
+        test -- is still checked, because that comparison is within one arm.
+        """
+        na = a.replace("/medcalc_v2/", "/medcalc/")
+        nb = b.replace("/medcalc_v2/", "/medcalc/")
+        return na == nb and a != b
+
+    def _is_expected(l):
+        return (superset in (l["a"], l["b"])
+                or _same_lineage(l["a"], l["b"]))
+
+    all_leaks = check_leakage(pair_sets)
+    leaks = [l for l in all_leaks if not _is_expected(l)]
+    expected = [l for l in all_leaks if _is_expected(l)]
     report["leakage"] = leaks
     if leaks:
         for l in leaks:
@@ -363,8 +411,13 @@ def main():
         print("  none — every evaluation split is pair-disjoint from every "
               "other")
     for l in expected:
-        print(f"  (expected) {l['n_shared']} shared with the "
-              f"heldout_all continuity superset")
+        if _same_lineage(l["a"], l["b"]):
+            print(f"  (expected) {l['n_shared']} shared between "
+                  f"{Path(l['a']).parent.name} and "
+                  f"{Path(l['b']).parent.name} -- v2 is a superset of v1")
+        else:
+            print(f"  (expected) {l['n_shared']} shared with the "
+                  f"heldout_all continuity superset")
 
     print("\n" + "=" * 72)
     print(f"{'PASS' if problems == 0 else f'{problems} PROBLEM(S)'}"

@@ -63,13 +63,38 @@ def score(records: List[Dict]) -> Dict:
     pairs = defaultdict(list)
     for r in records:
         pairs[r["pair_id"]].append(r)
-    cc_flags = []
+    cc_flags, causal_flip, spurious_flip = [], [], []
     for pid, arms in pairs.items():
         if len(arms) != 2:
             continue
+        # CONTROL PAIRS. Both arms carry the SAME label: the driving value
+        # moves, by a comparable amount, but does not cross the threshold. They
+        # are excluded from Causal Consistency -- there is no flip to be
+        # consistent with -- and instead measure how often the model changes
+        # its answer when the truth did not change.
+        #
+        # Why this exists: on 8,000 MCQ items this model's discrimination was
+        # -0.013 [-0.037, +0.013] (results/mcqpairs.md), i.e. it flipped at the
+        # same rate whether or not the truth changed. Without control pairs a
+        # Causal Consistency number cannot tell causal sensitivity from plain
+        # prompt sensitivity. Records with no `is_control` key are treated as
+        # causal pairs, so every number computed before control pairs existed
+        # reproduces exactly.
+        is_ctrl = any(a.get("is_control") for a in arms)
+        answered_both = all(not a["abstained"] and a["pred"] is not None
+                            for a in arms)
+        flipped = (answered_both and arms[0]["pred"] != arms[1]["pred"])
+        if is_ctrl:
+            if answered_both:
+                spurious_flip.append(flipped)
+            continue
+        if answered_both:
+            causal_flip.append(flipped)
         cc_flags.append(all((not a["abstained"]) and a["pred"] == a["label"]
                             for a in arms))
     cc = float(np.mean(cc_flags)) if cc_flags else 0.0
+    sf = float(np.mean(spurious_flip)) if spurious_flip else None
+    cf = float(np.mean(causal_flip)) if causal_flip else None
 
     return {
         "n": n,
@@ -77,11 +102,20 @@ def score(records: List[Dict]) -> Dict:
         "accuracy": float(acc),
         "selective_accuracy": float(sel_acc),
         "causal_consistency": cc,
+        # None (not 0.0) when the split carries no control pairs: "not
+        # measured" and "measured at zero" are different claims and a table
+        # must not print the second when it means the first.
+        "spurious_flip_rate": sf,
+        "causal_flip_rate": cf,
+        "discrimination": (None if (sf is None or cf is None) else cf - sf),
+        "n_control_pairs": len(spurious_flip),
         "violation_rate": float(viol),
         "abstention_rate": float(np.mean([r["abstained"] for r in records])),
         "coverage": float(np.mean([not r["abstained"] for r in records])),
         "unparsable_rate": float(1 - len(parsed) / n) if n else 0.0,
         "_cc_flags": cc_flags,
+        "_spurious_flip_flags": spurious_flip,
+        "_causal_flip_flags": causal_flip,
         "_item_correct": [(not r["abstained"]) and r["pred"] == r["label"]
                           for r in records],
     }

@@ -64,6 +64,9 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from lm_common import (answer_token_ids, decoder_layers,
+                       producer_module, wrap_prompt)
 from probe import grouped_folds, read_jsonl        # noqa: E402
 
 
@@ -107,34 +110,16 @@ class Steerer:
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
         self.model.eval()
-        self.layers = self.model.model.layers
+        self.layers = decoder_layers(self.model)
         self.max_input_tokens = max_input_tokens
         self.safe_ids, self.unsafe_ids = self._answer_ids()
 
     def _answer_ids(self):
-        got = {}
-        for label in ("SAFE", "UNSAFE"):
-            ids = set()
-            for t in (label, f" {label}", f"\n{label}"):
-                for tid in self.tok.encode(t, add_special_tokens=False):
-                    piece = self.tok.convert_ids_to_tokens(tid)
-                    if not piece.replace("▁", "").strip() or piece == "<0x0A>":
-                        continue
-                    ids.add(tid)
-                    break
-            got[label] = ids
-        overlap = got["SAFE"] & got["UNSAFE"]
-        got["SAFE"] -= overlap
-        got["UNSAFE"] -= overlap
-        assert got["SAFE"] and got["UNSAFE"]
+        got = answer_token_ids(self.tok)
         return got["SAFE"], got["UNSAFE"]
 
     def _wrap(self, p):
-        if self.tok.chat_template:
-            return self.tok.apply_chat_template(
-                [{"role": "user", "content": p}], tokenize=False,
-                add_generation_prompt=True)
-        return f"[INST] {p} [/INST]"
+        return wrap_prompt(self.tok, p)
 
     def _producer(self, layer):
         """
@@ -147,9 +132,7 @@ class Steerer:
         the direction in one representation and injected it into the next one
         down, so the vector being added was not the vector that was learned.
         """
-        if layer == 0:
-            return self.model.model.embed_tokens
-        return self.layers[layer - 1]
+        return producer_module(self.model, layer)
 
     def margin(self, prompt, layer=None, vec=None, alpha=0.0):
         """logit(SAFE) - logit(UNSAFE), optionally steering at `layer`."""

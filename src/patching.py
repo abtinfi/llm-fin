@@ -42,6 +42,8 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lm_common import answer_token_ids, decoder_layers, wrap_prompt
+
 
 def read_jsonl(p):
     return [json.loads(l) for l in Path(p).open()]
@@ -58,40 +60,21 @@ class Patcher:
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id, torch_dtype=getattr(torch, dtype), device_map="cuda")
         self.model.eval()
-        self.layers = self.model.model.layers
+        self.layers = decoder_layers(self.model)
         self.max_input_tokens = max_input_tokens
         self.safe_ids, self.unsafe_ids = self._answer_ids()
 
     def _answer_ids(self):
         """
-        Same tokenizer guard as model.py: skip whitespace-only pieces and drop
-        ids claimed by both classes. Getting this wrong makes every margin in
-        this file meaningless (P1 in HANDOFF.md).
+        Delegated to `lm_common.answer_token_ids`, which is tokenizer-agnostic.
+        Getting this wrong makes every margin in this file meaningless
+        (P1 in HANDOFF.md).
         """
-        got = {}
-        for label in ("SAFE", "UNSAFE"):
-            ids = set()
-            for t in (label, f" {label}", f"\n{label}"):
-                for tid in self.tok.encode(t, add_special_tokens=False):
-                    piece = self.tok.convert_ids_to_tokens(tid)
-                    if not piece.replace("▁", "").strip() or piece == "<0x0A>":
-                        continue
-                    ids.add(tid)
-                    break
-            got[label] = ids
-        overlap = got["SAFE"] & got["UNSAFE"]
-        if overlap:
-            got["SAFE"] -= overlap
-            got["UNSAFE"] -= overlap
-        assert got["SAFE"] and got["UNSAFE"], "answer tokens not separable"
+        got = answer_token_ids(self.tok)
         return got["SAFE"], got["UNSAFE"]
 
     def _wrap(self, p):
-        if self.tok.chat_template:
-            return self.tok.apply_chat_template(
-                [{"role": "user", "content": p}], tokenize=False,
-                add_generation_prompt=True)
-        return f"[INST] {p} [/INST]"
+        return wrap_prompt(self.tok, p)
 
     def encode(self, prompt):
         return self.tok(self._wrap(prompt), return_tensors="pt",
@@ -201,8 +184,11 @@ def analyse(args):
     by_pair = defaultdict(dict)
     for r in recs:
         by_pair[r["pair_id"]][r["arm"]] = r
+    # `set(v) == {"safe", "unsafe"}` rather than `len(v) == 2`: control pairs
+    # carry arms named ctrl_a/ctrl_b and would raise a KeyError here. They have
+    # no causal edit to patch, so skipping them is correct as well as safe.
     pairs = [(k, v["safe"], v["unsafe"])
-             for k, v in by_pair.items() if len(v) == 2]
+             for k, v in by_pair.items() if set(v) == {"safe", "unsafe"}]
     pairs.sort()
     print(f"{len(pairs)} complete pairs in {args.data}")
 
@@ -338,8 +324,11 @@ def sufficiency(args):
     by_pair = defaultdict(dict)
     for r in recs:
         by_pair[r["pair_id"]][r["arm"]] = r
+    # `set(v) == {"safe", "unsafe"}` rather than `len(v) == 2`: control pairs
+    # carry arms named ctrl_a/ctrl_b and would raise a KeyError here. They have
+    # no causal edit to patch, so skipping them is correct as well as safe.
     pairs = [(k, v["safe"], v["unsafe"])
-             for k, v in by_pair.items() if len(v) == 2]
+             for k, v in by_pair.items() if set(v) == {"safe", "unsafe"}]
     pairs.sort()
     print(f"{len(pairs)} complete pairs in {args.data}")
     print(f"SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) "
@@ -347,7 +336,14 @@ def sufficiency(args):
 
     P = Patcher(args.model_id)
     n_layers = len(P.layers)
-    rng = np.random.default_rng(args.seed)
+    # The matched-norm random control below was drawn from torch's GLOBAL
+    # generator, which nothing seeds. `--seed` therefore did not reach it and
+    # `random_control` -- and so `excess`, the headline quantity -- changed
+    # between otherwise identical runs. Two runs of the held-out split on
+    # 2026-09-02 agreed on `ace` and `shuffled_control` to the last digit and
+    # disagreed on `random_control` on 30/32 rows for exactly this reason.
+    # A dedicated seeded generator on the activation device fixes it.
+    gen = P.torch.Generator(device=P.model.device).manual_seed(args.seed)
     alphas = [float(a) for a in args.alphas.split(",")]
     layers = ([int(x) for x in args.layers.split(",")] if args.layers
               else list(range(0, n_layers, max(1, n_layers // 8))))
@@ -379,7 +375,8 @@ def sufficiency(args):
         for l in layers:
             d = (hs_b[l + 1][0, diff, :] - hs_a[l + 1][0, diff, :])
             # matched-norm random control, per position
-            g = P.torch.randn_like(d)
+            g = P.torch.randn(d.shape, generator=gen,
+                              device=d.device, dtype=d.dtype)
             g = g / g.norm(dim=-1, keepdim=True) * d.norm(dim=-1, keepdim=True)
             sh = prev_delta.get(l)
             for al in alphas:

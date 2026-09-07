@@ -1,0 +1,132 @@
+=== llama3-openbiollm-8b (layer 20) on GPU 0 -> results/models/llama3-openbiollm-8b   2026-09-07T16:18:39+03:00 ===
+========================================================================
+DATA PROVENANCE — does anything here need credentials to RUN?
+========================================================================
+
+  data/synthetic_control   [open access]
+    what   : SYNTHETIC CONTROL benchmark, 10 hand-written rule families
+    origin : Generated in-repo by src/build_dataset.py + src/hardening.py
+    note   : Templated vignettes with hand-written thresholds. This is a CONTROL ARM, not evidence about clinical text: it exists to show what the pipeline does when the causal factor is stated cleanly and the label is guaranteed. Every claim about real notes must cite data/medcalc instead. Renamed from data/ on 2026-09-02 so the distinction cannot be lost in a path.
+
+  data/medcalc   [open access]
+    what   : Real clinical notes benchmark, 680 items across 5 splits
+    origin : Derived by src/build_medcalc.py from MedCalc-Bench PMC case-report notes (data/external/*.csv)
+    note   : Real published clinical prose. This is the pipeline's 'real notes' arm and needs no data-use agreement.
+
+  data/mimic   [open access]
+    what   : MIMIC-IV Real-Value Cohort, 142 items across 4 splits
+    origin : Derived by src/build_mimic.py from MIMIC-IV Clinical Database Demo v2.2 (data/mimic_demo, hosp/labevents itemid 50912)
+    note   : Open access under ODbL -- NO PhysioNet credentialing, no DUA. The only arm in this repository where BOTH sides of every counterfactual pair are real measured values. FOUR families (expanded 2026-09-02): metformin_egfr30 and metformin_egfr45 (attested_exact), spironolactone_k5_5 (construct_mismatch, flagged not hidden), warfarin_inr4 (attested_exact, HELD OUT -- 8 mechanistically-distinct patients excluded from every other family's pool). 71 pairs / 142 items total, up from 23 pairs single-family. Nothing is invented. Caveat carried in data/mimic/build_meta.json: arms are different TIMEPOINTS in the same patient, so the clinical state genuinely differed; the rendered note is minimal so prompts differ in one number only. metformin_egfr30/45 share the same underlying creatinine measurements -- not independent evidence.
+
+  data/mimic_demo   [open access]
+    what   : MIMIC-IV Demo v2.2 source tables (6 of 22)
+    origin : physionet.org/content/mimic-iv-demo/2.2/ -- open download
+    note   : ODbL. Downloaded 2026-09-02. Git-ignored: it is not ours to vendor and src/build_mimic.py re-fetches it.
+
+  data/external   [open access]
+    what   : MedCalc-Bench source CSVs (train + test)
+    origin : Third-party, redistributed by the MedCalc-Bench authors
+    note   : Open download, no credentialing. Git-ignored (54 MB) as it is not ours to vendor; re-fetch from the MedCalc-Bench release.
+
+  data/umls   [open to run / key to rebuild]
+    what   : Causal knowledge graph + cached UMLS responses
+    origin : UMLS UTS REST API (release 2026AA), cached to disk
+    note   : RUNNING needs nothing: causal_graph.json and the response cache are committed and umls_grounding.py makes zero HTTP calls with a warm cache. REBUILDING (`umls_grounding.py build --refresh`) needs a free UTS licence key in ../.env.
+
+------------------------------------------------------------------------
+RESULT: no credentialed data source is required to run the
+        pipeline. PhysioNet / MIMIC-IV is NOT a dependency —
+        no loader, data path or token check exists in src/.
+
+========================================================================
+REQUIRED FILES
+========================================================================
+  [ok] data/synthetic_control/counterfactual_calib.jsonl        43 KB
+  [ok] data/synthetic_control/counterfactual_test.jsonl        170 KB
+  [ok] data/synthetic_control/counterfactual_heldout.jsonl      41 KB
+  [ok] data/synthetic_control/rag_corpus.jsonl                   4 KB
+  [ok] data/medcalc/counterfactual_calib.jsonl                 314 KB
+  [ok] data/medcalc/counterfactual_test.jsonl                 1107 KB
+  [ok] data/medcalc/counterfactual_heldout.jsonl                47 KB
+  [ok] data/medcalc/counterfactual_heldout_train.jsonl          87 KB
+  [ok] data/medcalc/counterfactual_train.jsonl                1649 KB
+  [ok] data/medcalc/rag_corpus.jsonl                             4 KB
+  [ok] data/umls/causal_graph.json                             136 KB
+
+OPTIONAL (a stage degrades or is skipped, nothing breaks)
+  [ok] data/medcalc/counterfactual_heldout_all.jsonl        
+  [ok] data/external/medcalc_train_data_11_18_final.csv     
+  [ok] data/external/medcalc_test_data_11_18_final.csv      
+  [ok] results/acts/medcalc_heldout.npz                     
+  [ok] data/mimic/counterfactual_test.jsonl                 
+  [ok] data/mimic/counterfactual_calib.jsonl                
+  [ok] data/mimic/counterfactual_train.jsonl                
+  [ok] data/mimic/counterfactual_heldout.jsonl              
+  [ok] data/mimic/rag_corpus.jsonl                          
+  [ok] data/medcalc_v2/counterfactual_test.jsonl            
+  [ok] data/medcalc_v2/counterfactual_heldout.jsonl         
+  [ok] data/medcalc_v2/counterfactual_calib.jsonl           
+  [ok] data/medcalc_v2/counterfactual_train.jsonl           
+  [ok] data/medcalc_v2/counterfactual_heldout_train.jsonl   
+  [ok] data/medcalc_v2/rag_corpus.jsonl                     
+
+========================================================================
+SPLIT INTEGRITY
+========================================================================
+  [ok] data/synthetic_control/counterfactual_calib.jsonl
+         32 items, 16 causal pairs, 0 control pairs, 0 incomplete, families=['acei_pregnancy', 'aspirin_reye', 'betablocker_asthma', 'metformin_renal', 'nsaid_renal', 'spironolactone_hyperkalaemia', 'statin_macrolide', 'warfarin_inr']
+  [ok] data/synthetic_control/counterfactual_test.jsonl
+         128 items, 64 causal pairs, 0 control pairs, 0 incomplete, families=['acei_pregnancy', 'aspirin_reye', 'betablocker_asthma', 'metformin_renal', 'nsaid_renal', 'spironolactone_hyperkalaemia', 'statin_macrolide', 'warfarin_inr']
+  [ok] data/synthetic_control/counterfactual_heldout.jsonl
+         32 items, 16 causal pairs, 0 control pairs, 0 incomplete, families=['nitrofurantoin_renal', 'ondansetron_qt']
+  [ok] data/medcalc/counterfactual_calib.jsonl
+         50 items, 25 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_renal']
+  [ok] data/medcalc/counterfactual_test.jsonl
+         180 items, 90 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_renal']
+  [ok] data/medcalc/counterfactual_heldout.jsonl
+         60 items, 30 causal pairs, 0 control pairs, 0 incomplete, families=['ondansetron_qt']
+  [ok] data/medcalc/counterfactual_heldout_train.jsonl
+         110 items, 55 causal pairs, 0 control pairs, 0 incomplete, families=['ondansetron_qt']
+  [ok] data/medcalc/counterfactual_train.jsonl
+         280 items, 140 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_renal']
+  [ok] data/medcalc/counterfactual_heldout_all.jsonl
+         170 items, 85 causal pairs, 0 control pairs, 0 incomplete, families=['ondansetron_qt']
+  [ok] data/mimic/counterfactual_test.jsonl
+         58 items, 29 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
+  [ok] data/mimic/counterfactual_calib.jsonl
+         30 items, 15 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
+  [ok] data/mimic/counterfactual_train.jsonl
+         38 items, 19 causal pairs, 0 control pairs, 0 incomplete, families=['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
+  [ok] data/mimic/counterfactual_heldout.jsonl
+         16 items, 8 causal pairs, 0 control pairs, 0 incomplete, families=['warfarin_inr4']
+  [ok] data/medcalc_v2/counterfactual_test.jsonl
+         448 items, 115 causal pairs, 109 control pairs, 0 incomplete, families=['apixaban_childpugh', 'metformin_renal', 'nitrofurantoin_crcl']
+  [ok] data/medcalc_v2/counterfactual_heldout.jsonl
+         108 items, 30 causal pairs, 24 control pairs, 0 incomplete, families=['ondansetron_qt']
+  [ok] data/medcalc_v2/counterfactual_calib.jsonl
+         124 items, 32 causal pairs, 30 control pairs, 0 incomplete, families=['apixaban_childpugh', 'metformin_renal', 'nitrofurantoin_crcl']
+  [ok] data/medcalc_v2/counterfactual_train.jsonl
+         698 items, 180 causal pairs, 169 control pairs, 0 incomplete, families=['apixaban_childpugh', 'metformin_renal', 'nitrofurantoin_crcl']
+  [ok] data/medcalc_v2/counterfactual_heldout_train.jsonl
+         210 items, 55 causal pairs, 50 control pairs, 0 incomplete, families=['ondansetron_qt']
+
+========================================================================
+CROSS-SPLIT LEAKAGE (shared pair_id between splits)
+========================================================================
+  none — every evaluation split is pair-disjoint from every other
+  (expected) 25 shared between medcalc and medcalc_v2 -- v2 is a superset of v1
+  (expected) 90 shared between medcalc and medcalc_v2 -- v2 is a superset of v1
+  (expected) 30 shared with the heldout_all continuity superset
+  (expected) 30 shared between medcalc and medcalc_v2 -- v2 is a superset of v1
+  (expected) 55 shared with the heldout_all continuity superset
+  (expected) 55 shared between medcalc and medcalc_v2 -- v2 is a superset of v1
+  (expected) 140 shared between medcalc and medcalc_v2 -- v2 is a superset of v1
+  (expected) 30 shared with the heldout_all continuity superset
+  (expected) 55 shared with the heldout_all continuity superset
+
+========================================================================
+PASS — pipeline data is ready and credential-free
+========================================================================
+wrote results/models/llama3-openbiollm-8b/data_provenance.json
+run_model.sh: line 44: syntax error near unexpected token `('
+run_model.sh: line 44: `echo "=== $TAG (layer $LAYER) on GPU $GPU -> $R   $(date -Is) ==="'

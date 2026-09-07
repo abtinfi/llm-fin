@@ -1,0 +1,2127 @@
+{
+  "sae": "results/sae/sae_topk_L20.npz",
+  "kind": "topk",
+  "fvu": 0.051496490836143494,
+  "l0": 31.7310791015625,
+  "dead": 6851,
+  "d_hidden": 16384,
+  "concepts": [
+    "creatinine",
+    "qt_interval",
+    "egfr",
+    "heart_rate",
+    "potassium",
+    "inr",
+    "age",
+    "drug",
+    "renal_disease",
+    "pregnancy",
+    "asthma"
+  ],
+  "concept_source": "umls",
+  "concept_provenance": {
+    "creatinine": {
+      "cui": "C0201976",
+      "preferred_name": "Creatinine measurement, serum (procedure)",
+      "n_umls_terms": 16,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "qt_interval": {
+      "cui": "C0429028",
+      "preferred_name": "QT interval feature (observable entity)",
+      "n_umls_terms": 13,
+      "n_curated_terms": 4,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "egfr": {
+      "cui": "C3811844",
+      "preferred_name": "Estimated Glomerular Filtration Rate",
+      "n_umls_terms": 2,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "heart_rate": {
+      "cui": "C0018810",
+      "preferred_name": "heart rate",
+      "n_umls_terms": 18,
+      "n_curated_terms": 3,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "potassium": {
+      "cui": "C0302353",
+      "preferred_name": "Serum potassium measurement",
+      "n_umls_terms": 19,
+      "n_curated_terms": 2,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "inr": {
+      "cui": "C0525032",
+      "preferred_name": "International Normalized Ratio",
+      "n_umls_terms": 26,
+      "n_curated_terms": 1,
+      "numeric_tail": true,
+      "source": "umls"
+    },
+    "age": {
+      "cui": "",
+      "preferred_name": "age",
+      "n_umls_terms": 0,
+      "n_curated_terms": 0,
+      "numeric_tail": false,
+      "source": "lexical-fallback"
+    },
+    "drug": {
+      "cui": "C0025598",
+      "preferred_name": "metformin",
+      "n_umls_terms": 192,
+      "n_curated_terms": 0,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "renal_disease": {
+      "cui": "C0035078",
+      "preferred_name": "Kidney Failure",
+      "n_umls_terms": 97,
+      "n_curated_terms": 7,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "pregnancy": {
+      "cui": "C0032961",
+      "preferred_name": "Pregnancy",
+      "n_umls_terms": 17,
+      "n_curated_terms": 4,
+      "numeric_tail": false,
+      "source": "umls"
+    },
+    "asthma": {
+      "cui": "C0004096",
+      "preferred_name": "Asthma",
+      "n_umls_terms": 27,
+      "n_curated_terms": 7,
+      "numeric_tail": false,
+      "source": "umls"
+    }
+  },
+  "concept_note": "S_semantic is measured against a UMLS-grounded vocabulary: each concept is anchored to a CUI and matched on a provenance-tracked union of UMLS atoms and a curated lexical layer, plus a regex numeric tail where the concept is a measurement (UMLS cannot express '2.1 mg/dL'). `concept_provenance` gives the atom-vs-curated split per concept; a concept whose n_umls_terms is small rests mostly on curation and must not be reported as UMLS-matched.",
+  "features": [
+    {
+      "feature": 13369,
+      "s_semantic": 0.6933523945675483,
+      "concept": "age",
+      "n_active": 1102,
+      "s_causal": 0.020567491319444443,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020567491319444443,
+        "control_feature": 13936,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020567491319444443
+      },
+      "fis": 0.35695994294349637
+    },
+    {
+      "feature": 13297,
+      "s_semantic": 0.637247569184742,
+      "concept": "age",
+      "n_active": 978,
+      "s_causal": 0.010042317708333331,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020654296875,
+        "control_feature": 10435,
+        "control_mean_abs_delta_logit": 0.010611979166666667,
+        "excess": 0.010042317708333331
+      },
+      "fis": 0.32364494344653766
+    },
+    {
+      "feature": 14628,
+      "s_semantic": 0.6339670468948035,
+      "concept": "creatinine",
+      "n_active": 4020,
+      "s_causal": 0.01982421875,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01982421875,
+        "control_feature": 8374,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.01982421875
+      },
+      "fis": 0.32689563282240175
+    },
+    {
+      "feature": 4693,
+      "s_semantic": 0.6019690576652602,
+      "concept": "age",
+      "n_active": 2570,
+      "s_causal": 0.01682400173611111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.023990885416666666,
+        "control_feature": 4420,
+        "control_mean_abs_delta_logit": 0.007166883680555555,
+        "excess": 0.01682400173611111
+      },
+      "fis": 0.30939652970068565
+    },
+    {
+      "feature": 1894,
+      "s_semantic": 0.5573770491803278,
+      "concept": "qt_interval",
+      "n_active": 84,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0010416666666666667,
+        "control_feature": 5043,
+        "control_mean_abs_delta_logit": 0.0019856770833333332,
+        "excess": -0.0009440104166666666
+      },
+      "fis": 0.2786885245901639
+    },
+    {
+      "feature": 10721,
+      "s_semantic": 0.5444717444717445,
+      "concept": "drug",
+      "n_active": 919,
+      "s_causal": 0.057280815972222225,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.057454427083333336,
+        "control_feature": 671,
+        "control_mean_abs_delta_logit": 0.00017361111111111112,
+        "excess": 0.057280815972222225
+      },
+      "fis": 0.30087628022198337
+    },
+    {
+      "feature": 7589,
+      "s_semantic": 0.5140863965656024,
+      "concept": "age",
+      "n_active": 2031,
+      "s_causal": 0.013872612847222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01895073784722222,
+        "control_feature": 1232,
+        "control_mean_abs_delta_logit": 0.005078125,
+        "excess": 0.013872612847222222
+      },
+      "fis": 0.2639795047064123
+    },
+    {
+      "feature": 7787,
+      "s_semantic": 0.4793747286148502,
+      "concept": "age",
+      "n_active": 607,
+      "s_causal": 0.0046603732638888905,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019938151041666668,
+        "control_feature": 270,
+        "control_mean_abs_delta_logit": 0.015277777777777777,
+        "excess": 0.0046603732638888905
+      },
+      "fis": 0.24201755093936955
+    },
+    {
+      "feature": 9404,
+      "s_semantic": 0.47039740470397406,
+      "concept": "heart_rate",
+      "n_active": 623,
+      "s_causal": 0.010145399305555556,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.011583116319444444,
+        "control_feature": 2871,
+        "control_mean_abs_delta_logit": 0.001437717013888889,
+        "excess": 0.010145399305555556
+      },
+      "fis": 0.24027140200476482
+    },
+    {
+      "feature": 13261,
+      "s_semantic": 0.4444444444444444,
+      "concept": "qt_interval",
+      "n_active": 43,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.00034722222222222224,
+        "control_feature": 13324,
+        "control_mean_abs_delta_logit": 0.0035481770833333333,
+        "excess": -0.003200954861111111
+      },
+      "fis": 0.2222222222222222
+    },
+    {
+      "feature": 14577,
+      "s_semantic": 0.44155844155844154,
+      "concept": "asthma",
+      "n_active": 48,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0010416666666666667,
+        "control_feature": 10640,
+        "control_mean_abs_delta_logit": 0.017317708333333334,
+        "excess": -0.016276041666666668
+      },
+      "fis": 0.22077922077922077
+    },
+    {
+      "feature": 4149,
+      "s_semantic": 0.41532976827094475,
+      "concept": "age",
+      "n_active": 548,
+      "s_causal": 0.02082790798611111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02112087673611111,
+        "control_feature": 14954,
+        "control_mean_abs_delta_logit": 0.00029296875,
+        "excess": 0.02082790798611111
+      },
+      "fis": 0.21807883812852794
+    },
+    {
+      "feature": 11828,
+      "s_semantic": 0.3995576852193144,
+      "concept": "age",
+      "n_active": 3730,
+      "s_causal": 0.01989474826388889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020491536458333334,
+        "control_feature": 8251,
+        "control_mean_abs_delta_logit": 0.0005967881944444445,
+        "excess": 0.01989474826388889
+      },
+      "fis": 0.20972621674160163
+    },
+    {
+      "feature": 7082,
+      "s_semantic": 0.3962101636520241,
+      "concept": "age",
+      "n_active": 626,
+      "s_causal": 0.020572916666666666,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02139214409722222,
+        "control_feature": 9939,
+        "control_mean_abs_delta_logit": 0.0008192274305555556,
+        "excess": 0.020572916666666666
+      },
+      "fis": 0.20839154015934538
+    },
+    {
+      "feature": 14315,
+      "s_semantic": 0.3937677053824363,
+      "concept": "drug",
+      "n_active": 296,
+      "s_causal": 8.680555555555525e-05,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 15904,
+        "control_mean_abs_delta_logit": 0.02109375,
+        "excess": 8.680555555555525e-05
+      },
+      "fis": 0.19692725546899592
+    },
+    {
+      "feature": 10221,
+      "s_semantic": 0.3851851851851852,
+      "concept": "age",
+      "n_active": 464,
+      "s_causal": 0.020448133680555557,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020448133680555557,
+        "control_feature": 11952,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020448133680555557
+      },
+      "fis": 0.20281665943287036
+    },
+    {
+      "feature": 16268,
+      "s_semantic": 0.3838383838383838,
+      "concept": "drug",
+      "n_active": 270,
+      "s_causal": 0.018961588541666668,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02292751736111111,
+        "control_feature": 10359,
+        "control_mean_abs_delta_logit": 0.003965928819444444,
+        "excess": 0.018961588541666668
+      },
+      "fis": 0.20139998619002525
+    },
+    {
+      "feature": 11780,
+      "s_semantic": 0.3558282208588957,
+      "concept": "asthma",
+      "n_active": 220,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.006380208333333333,
+        "control_feature": 8906,
+        "control_mean_abs_delta_logit": 0.011284722222222222,
+        "excess": -0.004904513888888889
+      },
+      "fis": 0.17791411042944785
+    },
+    {
+      "feature": 16259,
+      "s_semantic": 0.35568235853542557,
+      "concept": "age",
+      "n_active": 407,
+      "s_causal": 0.015700954861111113,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.023063151041666667,
+        "control_feature": 9173,
+        "control_mean_abs_delta_logit": 0.007362196180555555,
+        "excess": 0.015700954861111113
+      },
+      "fis": 0.18569165669826834
+    },
+    {
+      "feature": 11512,
+      "s_semantic": 0.3556507766470273,
+      "concept": "age",
+      "n_active": 3905,
+      "s_causal": 0.02092556423611111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021620008680555556,
+        "control_feature": 15320,
+        "control_mean_abs_delta_logit": 0.0006944444444444445,
+        "excess": 0.02092556423611111
+      },
+      "fis": 0.1882881704415692
+    },
+    {
+      "feature": 6467,
+      "s_semantic": 0.3547008547008547,
+      "concept": "heart_rate",
+      "n_active": 326,
+      "s_causal": 0.005674913194444444,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.009320746527777778,
+        "control_feature": 4544,
+        "control_mean_abs_delta_logit": 0.0036458333333333334,
+        "excess": 0.005674913194444444
+      },
+      "fis": 0.1801878839476496
+    },
+    {
+      "feature": 14803,
+      "s_semantic": 0.3531009506564056,
+      "concept": "age",
+      "n_active": 513,
+      "s_causal": 0.005034722222222225,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021316189236111113,
+        "control_feature": 13366,
+        "control_mean_abs_delta_logit": 0.016281467013888887,
+        "excess": 0.005034722222222225
+      },
+      "fis": 0.17906783643931393
+    },
+    {
+      "feature": 15148,
+      "s_semantic": 0.35285815102328866,
+      "concept": "drug",
+      "n_active": 301,
+      "s_causal": 0.010557725694444443,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.015625,
+        "control_feature": 10991,
+        "control_mean_abs_delta_logit": 0.005067274305555556,
+        "excess": 0.010557725694444443
+      },
+      "fis": 0.18170793835886656
+    },
+    {
+      "feature": 15184,
+      "s_semantic": 0.3442622950819672,
+      "concept": "creatinine",
+      "n_active": 1864,
+      "s_causal": 0.013579644097222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.013579644097222222,
+        "control_feature": 44,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.013579644097222222
+      },
+      "fis": 0.17892096958959472
+    },
+    {
+      "feature": 15987,
+      "s_semantic": 0.34285714285714286,
+      "concept": "drug",
+      "n_active": 494,
+      "s_causal": 0.04557291666666667,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.048003472222222225,
+        "control_feature": 6457,
+        "control_mean_abs_delta_logit": 0.0024305555555555556,
+        "excess": 0.04557291666666667
+      },
+      "fis": 0.19421502976190477
+    },
+    {
+      "feature": 12137,
+      "s_semantic": 0.34281492427041005,
+      "concept": "age",
+      "n_active": 1011,
+      "s_causal": 0.021544053819444443,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021544053819444443,
+        "control_feature": 14047,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.021544053819444443
+      },
+      "fis": 0.18217948904492726
+    },
+    {
+      "feature": 6999,
+      "s_semantic": 0.34268833087149186,
+      "concept": "drug",
+      "n_active": 238,
+      "s_causal": 0.019921875,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021527777777777778,
+        "control_feature": 9081,
+        "control_mean_abs_delta_logit": 0.0016059027777777777,
+        "excess": 0.019921875
+      },
+      "fis": 0.18130510293574592
+    },
+    {
+      "feature": 9828,
+      "s_semantic": 0.3298611111111111,
+      "concept": "heart_rate",
+      "n_active": 542,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.007606336805555555,
+        "control_feature": 550,
+        "control_mean_abs_delta_logit": 0.015294053819444445,
+        "excess": -0.007687717013888889
+      },
+      "fis": 0.16493055555555555
+    },
+    {
+      "feature": 10027,
+      "s_semantic": 0.3293768545994065,
+      "concept": "drug",
+      "n_active": 232,
+      "s_causal": 0.01708984375,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01953125,
+        "control_feature": 12531,
+        "control_mean_abs_delta_logit": 0.00244140625,
+        "excess": 0.01708984375
+      },
+      "fis": 0.17323334917470326
+    },
+    {
+      "feature": 13471,
+      "s_semantic": 0.32571849668386144,
+      "concept": "drug",
+      "n_active": 241,
+      "s_causal": 0.014154730902777779,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.017447916666666667,
+        "control_feature": 11954,
+        "control_mean_abs_delta_logit": 0.003293185763888889,
+        "excess": 0.014154730902777779
+      },
+      "fis": 0.16993661379331962
+    },
+    {
+      "feature": 1814,
+      "s_semantic": 0.3251165889407062,
+      "concept": "drug",
+      "n_active": 385,
+      "s_causal": 0.01857638888888889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01857638888888889,
+        "control_feature": 13870,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.01857638888888889
+      },
+      "fis": 0.17184648891479756
+    },
+    {
+      "feature": 4999,
+      "s_semantic": 0.323943661971831,
+      "concept": "drug",
+      "n_active": 588,
+      "s_causal": 0.03153211805555556,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.033848741319444445,
+        "control_feature": 2877,
+        "control_mean_abs_delta_logit": 0.002316623263888889,
+        "excess": 0.03153211805555556
+      },
+      "fis": 0.17773789001369328
+    },
+    {
+      "feature": 7423,
+      "s_semantic": 0.3222468588322247,
+      "concept": "drug",
+      "n_active": 237,
+      "s_causal": 0.029839409722222224,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.029839409722222224,
+        "control_feature": 1462,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.029839409722222224
+      },
+      "fis": 0.17604313427722346
+    },
+    {
+      "feature": 5438,
+      "s_semantic": 0.32,
+      "concept": "heart_rate",
+      "n_active": 2690,
+      "s_causal": 0.01681857638888889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019053819444444446,
+        "control_feature": 14142,
+        "control_mean_abs_delta_logit": 0.0022352430555555554,
+        "excess": 0.01681857638888889
+      },
+      "fis": 0.16840928819444445
+    },
+    {
+      "feature": 12245,
+      "s_semantic": 0.31845238095238093,
+      "concept": "drug",
+      "n_active": 228,
+      "s_causal": 0.020307074652777778,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 362,
+        "control_mean_abs_delta_logit": 0.0008734809027777778,
+        "excess": 0.020307074652777778
+      },
+      "fis": 0.16937972780257934
+    },
+    {
+      "feature": 2077,
+      "s_semantic": 0.3170731707317073,
+      "concept": "potassium",
+      "n_active": 264,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.009098307291666666,
+        "control_feature": 8871,
+        "control_mean_abs_delta_logit": 0.022699652777777777,
+        "excess": -0.01360134548611111
+      },
+      "fis": 0.15853658536585366
+    },
+    {
+      "feature": 7872,
+      "s_semantic": 0.3047752808988764,
+      "concept": "drug",
+      "n_active": 308,
+      "s_causal": 0.011631944444444445,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.011631944444444445,
+        "control_feature": 1317,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011631944444444445
+      },
+      "fis": 0.15820361267166042
+    },
+    {
+      "feature": 2823,
+      "s_semantic": 0.3037974683544304,
+      "concept": "asthma",
+      "n_active": 52,
+      "s_causal": 0.0006944444444444444,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0020833333333333333,
+        "control_feature": 4910,
+        "control_mean_abs_delta_logit": 0.001388888888888889,
+        "excess": 0.0006944444444444444
+      },
+      "fis": 0.15224595639943742
+    },
+    {
+      "feature": 2120,
+      "s_semantic": 0.30134261561412234,
+      "concept": "creatinine",
+      "n_active": 2163,
+      "s_causal": 0.016606987847222223,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.016606987847222223,
+        "control_feature": 7881,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.016606987847222223
+      },
+      "fis": 0.15897480173067227
+    },
+    {
+      "feature": 69,
+      "s_semantic": 0.29916897506925205,
+      "concept": "potassium",
+      "n_active": 133,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.005409071180555555,
+        "control_feature": 6925,
+        "control_mean_abs_delta_logit": 0.02314453125,
+        "excess": -0.017735460069444445
+      },
+      "fis": 0.14958448753462603
+    },
+    {
+      "feature": 2328,
+      "s_semantic": 0.2985942801745031,
+      "concept": "age",
+      "n_active": 2430,
+      "s_causal": 0.02357855902777778,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02357855902777778,
+        "control_feature": 6606,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.02357855902777778
+      },
+      "fis": 0.16108641960114045
+    },
+    {
+      "feature": 13476,
+      "s_semantic": 0.2900763358778626,
+      "concept": "drug",
+      "n_active": 718,
+      "s_causal": 0.012868923611111112,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.015473090277777778,
+        "control_feature": 463,
+        "control_mean_abs_delta_logit": 0.0026041666666666665,
+        "excess": 0.012868923611111112
+      },
+      "fis": 0.15147262974448686
+    },
+    {
+      "feature": 1656,
+      "s_semantic": 0.28969359331476324,
+      "concept": "drug",
+      "n_active": 320,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.013194444444444444,
+        "control_feature": 87,
+        "control_mean_abs_delta_logit": 0.021256510416666666,
+        "excess": -0.008062065972222221
+      },
+      "fis": 0.14484679665738162
+    },
+    {
+      "feature": 2454,
+      "s_semantic": 0.28865979381443296,
+      "concept": "age",
+      "n_active": 341,
+      "s_causal": 0.008962673611111109,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.017078993055555554,
+        "control_feature": 2036,
+        "control_mean_abs_delta_logit": 0.008116319444444445,
+        "excess": 0.008962673611111109
+      },
+      "fis": 0.14881123371277202
+    },
+    {
+      "feature": 5754,
+      "s_semantic": 0.288135593220339,
+      "concept": "age",
+      "n_active": 428,
+      "s_causal": 0.0205078125,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.022764756944444443,
+        "control_feature": 135,
+        "control_mean_abs_delta_logit": 0.0022569444444444442,
+        "excess": 0.0205078125
+      },
+      "fis": 0.1543217028601695
+    },
+    {
+      "feature": 355,
+      "s_semantic": 0.2851587815942968,
+      "concept": "heart_rate",
+      "n_active": 933,
+      "s_causal": 0.0026692708333333334,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.007096354166666667,
+        "control_feature": 10987,
+        "control_mean_abs_delta_logit": 0.004427083333333333,
+        "excess": 0.0026692708333333334
+      },
+      "fis": 0.14391402621381508
+    },
+    {
+      "feature": 12037,
+      "s_semantic": 0.2833206397562833,
+      "concept": "heart_rate",
+      "n_active": 703,
+      "s_causal": 0.016612413194444446,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.016612413194444446,
+        "control_feature": 8611,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.016612413194444446
+      },
+      "fis": 0.14996652647536388
+    },
+    {
+      "feature": 1671,
+      "s_semantic": 0.2820615261685977,
+      "concept": "creatinine",
+      "n_active": 21160,
+      "s_causal": 0.021430121527777776,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021430121527777776,
+        "control_feature": 10603,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.021430121527777776
+      },
+      "fis": 0.15174582384818774
+    },
+    {
+      "feature": 15032,
+      "s_semantic": 0.2798479087452472,
+      "concept": "renal_disease",
+      "n_active": 511,
+      "s_causal": 0.013726128472222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.013726128472222222,
+        "control_feature": 4215,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.013726128472222222
+      },
+      "fis": 0.1467870186087347
+    },
+    {
+      "feature": 5110,
+      "s_semantic": 0.279296875,
+      "concept": "age",
+      "n_active": 352,
+      "s_causal": 0.024093967013888887,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.024093967013888887,
+        "control_feature": 10082,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.024093967013888887
+      },
+      "fis": 0.15169542100694444
+    },
+    {
+      "feature": 9976,
+      "s_semantic": 0.2791164658634538,
+      "concept": "age",
+      "n_active": 296,
+      "s_causal": 0.022639973958333334,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.022639973958333334,
+        "control_feature": 12518,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.022639973958333334
+      },
+      "fis": 0.15087821991089356
+    },
+    {
+      "feature": 11768,
+      "s_semantic": 0.2770949720670391,
+      "concept": "renal_disease",
+      "n_active": 986,
+      "s_causal": 0.010980902777777777,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01577690972222222,
+        "control_feature": 6286,
+        "control_mean_abs_delta_logit": 0.004796006944444445,
+        "excess": 0.010980902777777777
+      },
+      "fis": 0.14403793742240845
+    },
+    {
+      "feature": 14817,
+      "s_semantic": 0.27693807898586054,
+      "concept": "age",
+      "n_active": 355,
+      "s_causal": 0.023394097222222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.025130208333333334,
+        "control_feature": 7551,
+        "control_mean_abs_delta_logit": 0.001736111111111111,
+        "excess": 0.023394097222222222
+      },
+      "fis": 0.1501660881040414
+    },
+    {
+      "feature": 9978,
+      "s_semantic": 0.2755825734549139,
+      "concept": "age",
+      "n_active": 278,
+      "s_causal": 0.0063639322916666675,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.018473307291666668,
+        "control_feature": 16338,
+        "control_mean_abs_delta_logit": 0.012109375,
+        "excess": 0.0063639322916666675
+      },
+      "fis": 0.14097325287329027
+    },
+    {
+      "feature": 4539,
+      "s_semantic": 0.2721774193548387,
+      "concept": "age",
+      "n_active": 288,
+      "s_causal": 0.015142144097222221,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01943901909722222,
+        "control_feature": 13188,
+        "control_mean_abs_delta_logit": 0.004296875,
+        "excess": 0.015142144097222221
+      },
+      "fis": 0.14365978172603044
+    },
+    {
+      "feature": 10255,
+      "s_semantic": 0.2718253968253968,
+      "concept": "age",
+      "n_active": 320,
+      "s_causal": 0.0009331597222222224,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02185329861111111,
+        "control_feature": 16070,
+        "control_mean_abs_delta_logit": 0.020920138888888887,
+        "excess": 0.0009331597222222224
+      },
+      "fis": 0.13637927827380952
+    },
+    {
+      "feature": 1033,
+      "s_semantic": 0.2714404662781016,
+      "concept": "creatinine",
+      "n_active": 934,
+      "s_causal": 0.020469835069444445,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020469835069444445,
+        "control_feature": 6218,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020469835069444445
+      },
+      "fis": 0.14595515067377302
+    },
+    {
+      "feature": 1546,
+      "s_semantic": 0.26968503937007876,
+      "concept": "age",
+      "n_active": 336,
+      "s_causal": 0.009407552083333333,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.013606770833333334,
+        "control_feature": 11231,
+        "control_mean_abs_delta_logit": 0.00419921875,
+        "excess": 0.009407552083333333
+      },
+      "fis": 0.13954629572670604
+    },
+    {
+      "feature": 12447,
+      "s_semantic": 0.2631578947368421,
+      "concept": "pregnancy",
+      "n_active": 56,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0024522569444444444,
+        "control_feature": 15566,
+        "control_mean_abs_delta_logit": 0.019297960069444446,
+        "excess": -0.016845703125
+      },
+      "fis": 0.13157894736842105
+    },
+    {
+      "feature": 14137,
+      "s_semantic": 0.26046511627906976,
+      "concept": "drug",
+      "n_active": 3614,
+      "s_causal": 0.01743706597222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.023952907986111112,
+        "control_feature": 10657,
+        "control_mean_abs_delta_logit": 0.006515842013888889,
+        "excess": 0.01743706597222222
+      },
+      "fis": 0.138951091125646
+    },
+    {
+      "feature": 687,
+      "s_semantic": 0.256,
+      "concept": "age",
+      "n_active": 304,
+      "s_causal": 0.0030544704861111115,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.017985026041666668,
+        "control_feature": 13767,
+        "control_mean_abs_delta_logit": 0.014930555555555556,
+        "excess": 0.0030544704861111115
+      },
+      "fis": 0.12952723524305557
+    },
+    {
+      "feature": 12319,
+      "s_semantic": 0.255632582322357,
+      "concept": "creatinine",
+      "n_active": 746,
+      "s_causal": 0.019243706597222222,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019243706597222222,
+        "control_feature": 11279,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.019243706597222222
+      },
+      "fis": 0.13743814445978964
+    },
+    {
+      "feature": 12989,
+      "s_semantic": 0.251864125932063,
+      "concept": "creatinine",
+      "n_active": 958,
+      "s_causal": 0.02009006076388889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.02009006076388889,
+        "control_feature": 11534,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.02009006076388889
+      },
+      "fis": 0.13597709334797592
+    },
+    {
+      "feature": 12987,
+      "s_semantic": 0.2509682416731216,
+      "concept": "drug",
+      "n_active": 175,
+      "s_causal": 0.012456597222222221,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.015277777777777777,
+        "control_feature": 6372,
+        "control_mean_abs_delta_logit": 0.0028211805555555555,
+        "excess": 0.012456597222222221
+      },
+      "fis": 0.1317124194476719
+    },
+    {
+      "feature": 11335,
+      "s_semantic": 0.2506811989100817,
+      "concept": "heart_rate",
+      "n_active": 124,
+      "s_causal": 0.005886501736111111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.007118055555555555,
+        "control_feature": 14338,
+        "control_mean_abs_delta_logit": 0.0012315538194444444,
+        "excess": 0.005886501736111111
+      },
+      "fis": 0.12828385032309642
+    },
+    {
+      "feature": 12776,
+      "s_semantic": 0.2502164502164502,
+      "concept": "creatinine",
+      "n_active": 750,
+      "s_causal": 0.02177734375,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.022688802083333334,
+        "control_feature": 2213,
+        "control_mean_abs_delta_logit": 0.0009114583333333333,
+        "excess": 0.02177734375
+      },
+      "fis": 0.13599689698322512
+    },
+    {
+      "feature": 12158,
+      "s_semantic": 0.25,
+      "concept": "asthma",
+      "n_active": 22,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 9484,
+        "control_mean_abs_delta_logit": 0.013937717013888889,
+        "excess": -0.013937717013888889
+      },
+      "fis": 0.125
+    },
+    {
+      "feature": 13808,
+      "s_semantic": 0.25,
+      "concept": "inr",
+      "n_active": 42,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.00021701388888888888,
+        "control_feature": 11820,
+        "control_mean_abs_delta_logit": 0.009098307291666666,
+        "excess": -0.008881293402777778
+      },
+      "fis": 0.125
+    },
+    {
+      "feature": 3260,
+      "s_semantic": 0.24237215298667814,
+      "concept": "age",
+      "n_active": 631,
+      "s_causal": 0.0014811197916666692,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021489800347222223,
+        "control_feature": 13852,
+        "control_mean_abs_delta_logit": 0.020008680555555554,
+        "excess": 0.0014811197916666692
+      },
+      "fis": 0.12192663638917241
+    },
+    {
+      "feature": 13258,
+      "s_semantic": 0.2356118844795346,
+      "concept": "creatinine",
+      "n_active": 943,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021918402777777776,
+        "control_feature": 8607,
+        "control_mean_abs_delta_logit": 0.02297092013888889,
+        "excess": -0.0010525173611111126
+      },
+      "fis": 0.1178059422397673
+    },
+    {
+      "feature": 3741,
+      "s_semantic": 0.23547342350923986,
+      "concept": "creatinine",
+      "n_active": 1379,
+      "s_causal": 0.022401258680555557,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.022401258680555557,
+        "control_feature": 6150,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.022401258680555557
+      },
+      "fis": 0.1289373410948977
+    },
+    {
+      "feature": 13126,
+      "s_semantic": 0.23505154639175257,
+      "concept": "age",
+      "n_active": 244,
+      "s_causal": 0.020062934027777778,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020062934027777778,
+        "control_feature": 5083,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020062934027777778
+      },
+      "fis": 0.12755724020976517
+    },
+    {
+      "feature": 15806,
+      "s_semantic": 0.2344944774851317,
+      "concept": "age",
+      "n_active": 3012,
+      "s_causal": 0.025830078125,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.025830078125,
+        "control_feature": 6929,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.025830078125
+      },
+      "fis": 0.13016227780506584
+    },
+    {
+      "feature": 4754,
+      "s_semantic": 0.23323615160349853,
+      "concept": "age",
+      "n_active": 1048,
+      "s_causal": 0.019780815972222223,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019780815972222223,
+        "control_feature": 7959,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.019780815972222223
+      },
+      "fis": 0.12650848378786037
+    },
+    {
+      "feature": 526,
+      "s_semantic": 0.22955018408836242,
+      "concept": "creatinine",
+      "n_active": 2377,
+      "s_causal": 0.014241536458333334,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.014241536458333334,
+        "control_feature": 11777,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.014241536458333334
+      },
+      "fis": 0.12189586027334788
+    },
+    {
+      "feature": 3022,
+      "s_semantic": 0.22244897959183674,
+      "concept": "age",
+      "n_active": 264,
+      "s_causal": 0.019124348958333336,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0193359375,
+        "control_feature": 14573,
+        "control_mean_abs_delta_logit": 0.00021158854166666667,
+        "excess": 0.019124348958333336
+      },
+      "fis": 0.12078666427508504
+    },
+    {
+      "feature": 10896,
+      "s_semantic": 0.22241529105125976,
+      "concept": "age",
+      "n_active": 606,
+      "s_causal": 0.022032335069444447,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.022379557291666668,
+        "control_feature": 1195,
+        "control_mean_abs_delta_logit": 0.00034722222222222224,
+        "excess": 0.022032335069444447
+      },
+      "fis": 0.1222238130603521
+    },
+    {
+      "feature": 4707,
+      "s_semantic": 0.22042861118842194,
+      "concept": "age",
+      "n_active": 1897,
+      "s_causal": 0.0011230468749999986,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021685112847222222,
+        "control_feature": 15303,
+        "control_mean_abs_delta_logit": 0.020562065972222224,
+        "excess": 0.0011230468749999986
+      },
+      "fis": 0.11077582903171097
+    },
+    {
+      "feature": 12790,
+      "s_semantic": 0.21974248927038625,
+      "concept": "drug",
+      "n_active": 1214,
+      "s_causal": 0.01545138888888889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019097222222222224,
+        "control_feature": 8705,
+        "control_mean_abs_delta_logit": 0.0036458333333333334,
+        "excess": 0.01545138888888889
+      },
+      "fis": 0.11759693907963757
+    },
+    {
+      "feature": 15302,
+      "s_semantic": 0.21870047543581617,
+      "concept": "drug",
+      "n_active": 146,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.009375,
+        "control_feature": 5862,
+        "control_mean_abs_delta_logit": 0.010112847222222223,
+        "excess": -0.0007378472222222231
+      },
+      "fis": 0.10935023771790808
+    },
+    {
+      "feature": 13071,
+      "s_semantic": 0.21832358674463936,
+      "concept": "renal_disease",
+      "n_active": 222,
+      "s_causal": 0.007552083333333333,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.007552083333333333,
+        "control_feature": 11022,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.007552083333333333
+      },
+      "fis": 0.11293783503898634
+    },
+    {
+      "feature": 11014,
+      "s_semantic": 0.21530224038326054,
+      "concept": "age",
+      "n_active": 5401,
+      "s_causal": 0.027967664930555556,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.027967664930555556,
+        "control_feature": 9363,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.027967664930555556
+      },
+      "fis": 0.12163495265690805
+    },
+    {
+      "feature": 2023,
+      "s_semantic": 0.21455301455301456,
+      "concept": "age",
+      "n_active": 709,
+      "s_causal": 0.01872829861111111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 4171,
+        "control_mean_abs_delta_logit": 0.0024522569444444444,
+        "excess": 0.01872829861111111
+      },
+      "fis": 0.11664065658206284
+    },
+    {
+      "feature": 8057,
+      "s_semantic": 0.2140845070422535,
+      "concept": "heart_rate",
+      "n_active": 100,
+      "s_causal": 0.0035753038194444443,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0035753038194444443,
+        "control_feature": 5273,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0035753038194444443
+      },
+      "fis": 0.10882990543084897
+    },
+    {
+      "feature": 14658,
+      "s_semantic": 0.21329365079365079,
+      "concept": "creatinine",
+      "n_active": 6210,
+      "s_causal": 0.02262912326388889,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.024061414930555556,
+        "control_feature": 11788,
+        "control_mean_abs_delta_logit": 0.0014322916666666666,
+        "excess": 0.02262912326388889
+      },
+      "fis": 0.11796138702876983
+    },
+    {
+      "feature": 13423,
+      "s_semantic": 0.21168355248976073,
+      "concept": "creatinine",
+      "n_active": 769,
+      "s_causal": 0.008024088541666667,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021370442708333333,
+        "control_feature": 9737,
+        "control_mean_abs_delta_logit": 0.013346354166666666,
+        "excess": 0.008024088541666667
+      },
+      "fis": 0.1098538205157137
+    },
+    {
+      "feature": 10448,
+      "s_semantic": 0.210989010989011,
+      "concept": "renal_disease",
+      "n_active": 106,
+      "s_causal": 0.006190321180555555,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.006190321180555555,
+        "control_feature": 8264,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.006190321180555555
+      },
+      "fis": 0.10858966608478327
+    },
+    {
+      "feature": 8049,
+      "s_semantic": 0.2101010101010101,
+      "concept": "age",
+      "n_active": 284,
+      "s_causal": 0.013921440972222223,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.01596137152777778,
+        "control_feature": 5536,
+        "control_mean_abs_delta_logit": 0.0020399305555555557,
+        "excess": 0.013921440972222223
+      },
+      "fis": 0.11201122553661616
+    },
+    {
+      "feature": 6756,
+      "s_semantic": 0.2073170731707317,
+      "concept": "creatinine",
+      "n_active": 1214,
+      "s_causal": 0.018310546875,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.018310546875,
+        "control_feature": 12462,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.018310546875
+      },
+      "fis": 0.11281381002286585
+    },
+    {
+      "feature": 4227,
+      "s_semantic": 0.20725388601036268,
+      "concept": "inr",
+      "n_active": 332,
+      "s_causal": 0.0031358506944444446,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.0031358506944444446,
+        "control_feature": 6416,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0031358506944444446
+      },
+      "fis": 0.10519486835240356
+    },
+    {
+      "feature": 1923,
+      "s_semantic": 0.20686015831134566,
+      "concept": "age",
+      "n_active": 199,
+      "s_causal": 0.0006618923611111122,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.015923394097222224,
+        "control_feature": 5376,
+        "control_mean_abs_delta_logit": 0.015261501736111112,
+        "excess": 0.0006618923611111122
+      },
+      "fis": 0.10376102533622839
+    },
+    {
+      "feature": 7658,
+      "s_semantic": 0.20669456066945607,
+      "concept": "creatinine",
+      "n_active": 910,
+      "s_causal": 0.011355251736111113,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.020339626736111113,
+        "control_feature": 14586,
+        "control_mean_abs_delta_logit": 0.008984375,
+        "excess": 0.011355251736111113
+      },
+      "fis": 0.1090249062027836
+    },
+    {
+      "feature": 1818,
+      "s_semantic": 0.20636042402826854,
+      "concept": "potassium",
+      "n_active": 1187,
+      "s_causal": 0.011208767361111111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.011208767361111111,
+        "control_feature": 4324,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011208767361111111
+      },
+      "fis": 0.10878459569468983
+    },
+    {
+      "feature": 3879,
+      "s_semantic": 0.20556745182012848,
+      "concept": "drug",
+      "n_active": 2153,
+      "s_causal": 0.017985026041666668,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.019173177083333333,
+        "control_feature": 3721,
+        "control_mean_abs_delta_logit": 0.0011881510416666666,
+        "excess": 0.017985026041666668
+      },
+      "fis": 0.11177623893089757
+    },
+    {
+      "feature": 2229,
+      "s_semantic": 0.205193699446573,
+      "concept": "drug",
+      "n_active": 1233,
+      "s_causal": 0.0,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.021875,
+        "control_feature": 11701,
+        "control_mean_abs_delta_logit": 0.021978081597222223,
+        "excess": -0.00010308159722222446
+      },
+      "fis": 0.1025968497232865
+    },
+    {
+      "feature": 11222,
+      "s_semantic": 0.20491803278688525,
+      "concept": "age",
+      "n_active": 744,
+      "s_causal": 0.024896918402777777,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.024896918402777777,
+        "control_feature": 10210,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.024896918402777777
+      },
+      "fis": 0.11490747559483151
+    },
+    {
+      "feature": 7954,
+      "s_semantic": 0.1984799131378936,
+      "concept": "creatinine",
+      "n_active": 735,
+      "s_causal": 0.015793185763888887,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.015793185763888887,
+        "control_feature": 795,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.015793185763888887
+      },
+      "fis": 0.10713654945089124
+    },
+    {
+      "feature": 4858,
+      "s_semantic": 0.19789473684210526,
+      "concept": "renal_disease",
+      "n_active": 146,
+      "s_causal": 0.006374782986111111,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.006374782986111111,
+        "control_feature": 1376,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.006374782986111111
+      },
+      "fis": 0.10213475991410818
+    },
+    {
+      "feature": 2086,
+      "s_semantic": 0.19784172661870503,
+      "concept": "drug",
+      "n_active": 2776,
+      "s_causal": 0.015711805555555555,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.024012586805555555,
+        "control_feature": 6179,
+        "control_mean_abs_delta_logit": 0.00830078125,
+        "excess": 0.015711805555555555
+      },
+      "fis": 0.1067767660871303
+    },
+    {
+      "feature": 3582,
+      "s_semantic": 0.1972093023255814,
+      "concept": "age",
+      "n_active": 454,
+      "s_causal": 0.011409505208333334,
+      "causal_detail": {
+        "mean_abs_delta_logit": 0.011409505208333334,
+        "control_feature": 13642,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011409505208333334
+      },
+      "fis": 0.10430940376695737
+    }
+  ],
+  "causal": {
+    "n_items": 180,
+    "clean_margin_mean": 0.06656358506944444,
+    "per_feature": {
+      "13369": {
+        "mean_abs_delta_logit": 0.020567491319444443,
+        "control_feature": 13936,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020567491319444443
+      },
+      "13297": {
+        "mean_abs_delta_logit": 0.020654296875,
+        "control_feature": 10435,
+        "control_mean_abs_delta_logit": 0.010611979166666667,
+        "excess": 0.010042317708333331
+      },
+      "14628": {
+        "mean_abs_delta_logit": 0.01982421875,
+        "control_feature": 8374,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.01982421875
+      },
+      "4693": {
+        "mean_abs_delta_logit": 0.023990885416666666,
+        "control_feature": 4420,
+        "control_mean_abs_delta_logit": 0.007166883680555555,
+        "excess": 0.01682400173611111
+      },
+      "1894": {
+        "mean_abs_delta_logit": 0.0010416666666666667,
+        "control_feature": 5043,
+        "control_mean_abs_delta_logit": 0.0019856770833333332,
+        "excess": -0.0009440104166666666
+      },
+      "10721": {
+        "mean_abs_delta_logit": 0.057454427083333336,
+        "control_feature": 671,
+        "control_mean_abs_delta_logit": 0.00017361111111111112,
+        "excess": 0.057280815972222225
+      },
+      "7589": {
+        "mean_abs_delta_logit": 0.01895073784722222,
+        "control_feature": 1232,
+        "control_mean_abs_delta_logit": 0.005078125,
+        "excess": 0.013872612847222222
+      },
+      "7787": {
+        "mean_abs_delta_logit": 0.019938151041666668,
+        "control_feature": 270,
+        "control_mean_abs_delta_logit": 0.015277777777777777,
+        "excess": 0.0046603732638888905
+      },
+      "9404": {
+        "mean_abs_delta_logit": 0.011583116319444444,
+        "control_feature": 2871,
+        "control_mean_abs_delta_logit": 0.001437717013888889,
+        "excess": 0.010145399305555556
+      },
+      "13261": {
+        "mean_abs_delta_logit": 0.00034722222222222224,
+        "control_feature": 13324,
+        "control_mean_abs_delta_logit": 0.0035481770833333333,
+        "excess": -0.003200954861111111
+      },
+      "14577": {
+        "mean_abs_delta_logit": 0.0010416666666666667,
+        "control_feature": 10640,
+        "control_mean_abs_delta_logit": 0.017317708333333334,
+        "excess": -0.016276041666666668
+      },
+      "4149": {
+        "mean_abs_delta_logit": 0.02112087673611111,
+        "control_feature": 14954,
+        "control_mean_abs_delta_logit": 0.00029296875,
+        "excess": 0.02082790798611111
+      },
+      "11828": {
+        "mean_abs_delta_logit": 0.020491536458333334,
+        "control_feature": 8251,
+        "control_mean_abs_delta_logit": 0.0005967881944444445,
+        "excess": 0.01989474826388889
+      },
+      "7082": {
+        "mean_abs_delta_logit": 0.02139214409722222,
+        "control_feature": 9939,
+        "control_mean_abs_delta_logit": 0.0008192274305555556,
+        "excess": 0.020572916666666666
+      },
+      "14315": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 15904,
+        "control_mean_abs_delta_logit": 0.02109375,
+        "excess": 8.680555555555525e-05
+      },
+      "10221": {
+        "mean_abs_delta_logit": 0.020448133680555557,
+        "control_feature": 11952,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020448133680555557
+      },
+      "16268": {
+        "mean_abs_delta_logit": 0.02292751736111111,
+        "control_feature": 10359,
+        "control_mean_abs_delta_logit": 0.003965928819444444,
+        "excess": 0.018961588541666668
+      },
+      "11780": {
+        "mean_abs_delta_logit": 0.006380208333333333,
+        "control_feature": 8906,
+        "control_mean_abs_delta_logit": 0.011284722222222222,
+        "excess": -0.004904513888888889
+      },
+      "16259": {
+        "mean_abs_delta_logit": 0.023063151041666667,
+        "control_feature": 9173,
+        "control_mean_abs_delta_logit": 0.007362196180555555,
+        "excess": 0.015700954861111113
+      },
+      "11512": {
+        "mean_abs_delta_logit": 0.021620008680555556,
+        "control_feature": 15320,
+        "control_mean_abs_delta_logit": 0.0006944444444444445,
+        "excess": 0.02092556423611111
+      },
+      "6467": {
+        "mean_abs_delta_logit": 0.009320746527777778,
+        "control_feature": 4544,
+        "control_mean_abs_delta_logit": 0.0036458333333333334,
+        "excess": 0.005674913194444444
+      },
+      "14803": {
+        "mean_abs_delta_logit": 0.021316189236111113,
+        "control_feature": 13366,
+        "control_mean_abs_delta_logit": 0.016281467013888887,
+        "excess": 0.005034722222222225
+      },
+      "15148": {
+        "mean_abs_delta_logit": 0.015625,
+        "control_feature": 10991,
+        "control_mean_abs_delta_logit": 0.005067274305555556,
+        "excess": 0.010557725694444443
+      },
+      "15184": {
+        "mean_abs_delta_logit": 0.013579644097222222,
+        "control_feature": 44,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.013579644097222222
+      },
+      "15987": {
+        "mean_abs_delta_logit": 0.048003472222222225,
+        "control_feature": 6457,
+        "control_mean_abs_delta_logit": 0.0024305555555555556,
+        "excess": 0.04557291666666667
+      },
+      "12137": {
+        "mean_abs_delta_logit": 0.021544053819444443,
+        "control_feature": 14047,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.021544053819444443
+      },
+      "6999": {
+        "mean_abs_delta_logit": 0.021527777777777778,
+        "control_feature": 9081,
+        "control_mean_abs_delta_logit": 0.0016059027777777777,
+        "excess": 0.019921875
+      },
+      "9828": {
+        "mean_abs_delta_logit": 0.007606336805555555,
+        "control_feature": 550,
+        "control_mean_abs_delta_logit": 0.015294053819444445,
+        "excess": -0.007687717013888889
+      },
+      "10027": {
+        "mean_abs_delta_logit": 0.01953125,
+        "control_feature": 12531,
+        "control_mean_abs_delta_logit": 0.00244140625,
+        "excess": 0.01708984375
+      },
+      "13471": {
+        "mean_abs_delta_logit": 0.017447916666666667,
+        "control_feature": 11954,
+        "control_mean_abs_delta_logit": 0.003293185763888889,
+        "excess": 0.014154730902777779
+      },
+      "1814": {
+        "mean_abs_delta_logit": 0.01857638888888889,
+        "control_feature": 13870,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.01857638888888889
+      },
+      "4999": {
+        "mean_abs_delta_logit": 0.033848741319444445,
+        "control_feature": 2877,
+        "control_mean_abs_delta_logit": 0.002316623263888889,
+        "excess": 0.03153211805555556
+      },
+      "7423": {
+        "mean_abs_delta_logit": 0.029839409722222224,
+        "control_feature": 1462,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.029839409722222224
+      },
+      "5438": {
+        "mean_abs_delta_logit": 0.019053819444444446,
+        "control_feature": 14142,
+        "control_mean_abs_delta_logit": 0.0022352430555555554,
+        "excess": 0.01681857638888889
+      },
+      "12245": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 362,
+        "control_mean_abs_delta_logit": 0.0008734809027777778,
+        "excess": 0.020307074652777778
+      },
+      "2077": {
+        "mean_abs_delta_logit": 0.009098307291666666,
+        "control_feature": 8871,
+        "control_mean_abs_delta_logit": 0.022699652777777777,
+        "excess": -0.01360134548611111
+      },
+      "7872": {
+        "mean_abs_delta_logit": 0.011631944444444445,
+        "control_feature": 1317,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011631944444444445
+      },
+      "2823": {
+        "mean_abs_delta_logit": 0.0020833333333333333,
+        "control_feature": 4910,
+        "control_mean_abs_delta_logit": 0.001388888888888889,
+        "excess": 0.0006944444444444444
+      },
+      "2120": {
+        "mean_abs_delta_logit": 0.016606987847222223,
+        "control_feature": 7881,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.016606987847222223
+      },
+      "69": {
+        "mean_abs_delta_logit": 0.005409071180555555,
+        "control_feature": 6925,
+        "control_mean_abs_delta_logit": 0.02314453125,
+        "excess": -0.017735460069444445
+      },
+      "2328": {
+        "mean_abs_delta_logit": 0.02357855902777778,
+        "control_feature": 6606,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.02357855902777778
+      },
+      "13476": {
+        "mean_abs_delta_logit": 0.015473090277777778,
+        "control_feature": 463,
+        "control_mean_abs_delta_logit": 0.0026041666666666665,
+        "excess": 0.012868923611111112
+      },
+      "1656": {
+        "mean_abs_delta_logit": 0.013194444444444444,
+        "control_feature": 87,
+        "control_mean_abs_delta_logit": 0.021256510416666666,
+        "excess": -0.008062065972222221
+      },
+      "2454": {
+        "mean_abs_delta_logit": 0.017078993055555554,
+        "control_feature": 2036,
+        "control_mean_abs_delta_logit": 0.008116319444444445,
+        "excess": 0.008962673611111109
+      },
+      "5754": {
+        "mean_abs_delta_logit": 0.022764756944444443,
+        "control_feature": 135,
+        "control_mean_abs_delta_logit": 0.0022569444444444442,
+        "excess": 0.0205078125
+      },
+      "355": {
+        "mean_abs_delta_logit": 0.007096354166666667,
+        "control_feature": 10987,
+        "control_mean_abs_delta_logit": 0.004427083333333333,
+        "excess": 0.0026692708333333334
+      },
+      "12037": {
+        "mean_abs_delta_logit": 0.016612413194444446,
+        "control_feature": 8611,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.016612413194444446
+      },
+      "1671": {
+        "mean_abs_delta_logit": 0.021430121527777776,
+        "control_feature": 10603,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.021430121527777776
+      },
+      "15032": {
+        "mean_abs_delta_logit": 0.013726128472222222,
+        "control_feature": 4215,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.013726128472222222
+      },
+      "5110": {
+        "mean_abs_delta_logit": 0.024093967013888887,
+        "control_feature": 10082,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.024093967013888887
+      },
+      "9976": {
+        "mean_abs_delta_logit": 0.022639973958333334,
+        "control_feature": 12518,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.022639973958333334
+      },
+      "11768": {
+        "mean_abs_delta_logit": 0.01577690972222222,
+        "control_feature": 6286,
+        "control_mean_abs_delta_logit": 0.004796006944444445,
+        "excess": 0.010980902777777777
+      },
+      "14817": {
+        "mean_abs_delta_logit": 0.025130208333333334,
+        "control_feature": 7551,
+        "control_mean_abs_delta_logit": 0.001736111111111111,
+        "excess": 0.023394097222222222
+      },
+      "9978": {
+        "mean_abs_delta_logit": 0.018473307291666668,
+        "control_feature": 16338,
+        "control_mean_abs_delta_logit": 0.012109375,
+        "excess": 0.0063639322916666675
+      },
+      "4539": {
+        "mean_abs_delta_logit": 0.01943901909722222,
+        "control_feature": 13188,
+        "control_mean_abs_delta_logit": 0.004296875,
+        "excess": 0.015142144097222221
+      },
+      "10255": {
+        "mean_abs_delta_logit": 0.02185329861111111,
+        "control_feature": 16070,
+        "control_mean_abs_delta_logit": 0.020920138888888887,
+        "excess": 0.0009331597222222224
+      },
+      "1033": {
+        "mean_abs_delta_logit": 0.020469835069444445,
+        "control_feature": 6218,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020469835069444445
+      },
+      "1546": {
+        "mean_abs_delta_logit": 0.013606770833333334,
+        "control_feature": 11231,
+        "control_mean_abs_delta_logit": 0.00419921875,
+        "excess": 0.009407552083333333
+      },
+      "12447": {
+        "mean_abs_delta_logit": 0.0024522569444444444,
+        "control_feature": 15566,
+        "control_mean_abs_delta_logit": 0.019297960069444446,
+        "excess": -0.016845703125
+      },
+      "14137": {
+        "mean_abs_delta_logit": 0.023952907986111112,
+        "control_feature": 10657,
+        "control_mean_abs_delta_logit": 0.006515842013888889,
+        "excess": 0.01743706597222222
+      },
+      "687": {
+        "mean_abs_delta_logit": 0.017985026041666668,
+        "control_feature": 13767,
+        "control_mean_abs_delta_logit": 0.014930555555555556,
+        "excess": 0.0030544704861111115
+      },
+      "12319": {
+        "mean_abs_delta_logit": 0.019243706597222222,
+        "control_feature": 11279,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.019243706597222222
+      },
+      "12989": {
+        "mean_abs_delta_logit": 0.02009006076388889,
+        "control_feature": 11534,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.02009006076388889
+      },
+      "12987": {
+        "mean_abs_delta_logit": 0.015277777777777777,
+        "control_feature": 6372,
+        "control_mean_abs_delta_logit": 0.0028211805555555555,
+        "excess": 0.012456597222222221
+      },
+      "11335": {
+        "mean_abs_delta_logit": 0.007118055555555555,
+        "control_feature": 14338,
+        "control_mean_abs_delta_logit": 0.0012315538194444444,
+        "excess": 0.005886501736111111
+      },
+      "12776": {
+        "mean_abs_delta_logit": 0.022688802083333334,
+        "control_feature": 2213,
+        "control_mean_abs_delta_logit": 0.0009114583333333333,
+        "excess": 0.02177734375
+      },
+      "12158": {
+        "mean_abs_delta_logit": 0.0,
+        "control_feature": 9484,
+        "control_mean_abs_delta_logit": 0.013937717013888889,
+        "excess": -0.013937717013888889
+      },
+      "13808": {
+        "mean_abs_delta_logit": 0.00021701388888888888,
+        "control_feature": 11820,
+        "control_mean_abs_delta_logit": 0.009098307291666666,
+        "excess": -0.008881293402777778
+      },
+      "3260": {
+        "mean_abs_delta_logit": 0.021489800347222223,
+        "control_feature": 13852,
+        "control_mean_abs_delta_logit": 0.020008680555555554,
+        "excess": 0.0014811197916666692
+      },
+      "13258": {
+        "mean_abs_delta_logit": 0.021918402777777776,
+        "control_feature": 8607,
+        "control_mean_abs_delta_logit": 0.02297092013888889,
+        "excess": -0.0010525173611111126
+      },
+      "3741": {
+        "mean_abs_delta_logit": 0.022401258680555557,
+        "control_feature": 6150,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.022401258680555557
+      },
+      "13126": {
+        "mean_abs_delta_logit": 0.020062934027777778,
+        "control_feature": 5083,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.020062934027777778
+      },
+      "15806": {
+        "mean_abs_delta_logit": 0.025830078125,
+        "control_feature": 6929,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.025830078125
+      },
+      "4754": {
+        "mean_abs_delta_logit": 0.019780815972222223,
+        "control_feature": 7959,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.019780815972222223
+      },
+      "526": {
+        "mean_abs_delta_logit": 0.014241536458333334,
+        "control_feature": 11777,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.014241536458333334
+      },
+      "3022": {
+        "mean_abs_delta_logit": 0.0193359375,
+        "control_feature": 14573,
+        "control_mean_abs_delta_logit": 0.00021158854166666667,
+        "excess": 0.019124348958333336
+      },
+      "10896": {
+        "mean_abs_delta_logit": 0.022379557291666668,
+        "control_feature": 1195,
+        "control_mean_abs_delta_logit": 0.00034722222222222224,
+        "excess": 0.022032335069444447
+      },
+      "4707": {
+        "mean_abs_delta_logit": 0.021685112847222222,
+        "control_feature": 15303,
+        "control_mean_abs_delta_logit": 0.020562065972222224,
+        "excess": 0.0011230468749999986
+      },
+      "12790": {
+        "mean_abs_delta_logit": 0.019097222222222224,
+        "control_feature": 8705,
+        "control_mean_abs_delta_logit": 0.0036458333333333334,
+        "excess": 0.01545138888888889
+      },
+      "15302": {
+        "mean_abs_delta_logit": 0.009375,
+        "control_feature": 5862,
+        "control_mean_abs_delta_logit": 0.010112847222222223,
+        "excess": -0.0007378472222222231
+      },
+      "13071": {
+        "mean_abs_delta_logit": 0.007552083333333333,
+        "control_feature": 11022,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.007552083333333333
+      },
+      "11014": {
+        "mean_abs_delta_logit": 0.027967664930555556,
+        "control_feature": 9363,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.027967664930555556
+      },
+      "2023": {
+        "mean_abs_delta_logit": 0.021180555555555557,
+        "control_feature": 4171,
+        "control_mean_abs_delta_logit": 0.0024522569444444444,
+        "excess": 0.01872829861111111
+      },
+      "8057": {
+        "mean_abs_delta_logit": 0.0035753038194444443,
+        "control_feature": 5273,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0035753038194444443
+      },
+      "14658": {
+        "mean_abs_delta_logit": 0.024061414930555556,
+        "control_feature": 11788,
+        "control_mean_abs_delta_logit": 0.0014322916666666666,
+        "excess": 0.02262912326388889
+      },
+      "13423": {
+        "mean_abs_delta_logit": 0.021370442708333333,
+        "control_feature": 9737,
+        "control_mean_abs_delta_logit": 0.013346354166666666,
+        "excess": 0.008024088541666667
+      },
+      "10448": {
+        "mean_abs_delta_logit": 0.006190321180555555,
+        "control_feature": 8264,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.006190321180555555
+      },
+      "8049": {
+        "mean_abs_delta_logit": 0.01596137152777778,
+        "control_feature": 5536,
+        "control_mean_abs_delta_logit": 0.0020399305555555557,
+        "excess": 0.013921440972222223
+      },
+      "6756": {
+        "mean_abs_delta_logit": 0.018310546875,
+        "control_feature": 12462,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.018310546875
+      },
+      "4227": {
+        "mean_abs_delta_logit": 0.0031358506944444446,
+        "control_feature": 6416,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.0031358506944444446
+      },
+      "1923": {
+        "mean_abs_delta_logit": 0.015923394097222224,
+        "control_feature": 5376,
+        "control_mean_abs_delta_logit": 0.015261501736111112,
+        "excess": 0.0006618923611111122
+      },
+      "7658": {
+        "mean_abs_delta_logit": 0.020339626736111113,
+        "control_feature": 14586,
+        "control_mean_abs_delta_logit": 0.008984375,
+        "excess": 0.011355251736111113
+      },
+      "1818": {
+        "mean_abs_delta_logit": 0.011208767361111111,
+        "control_feature": 4324,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011208767361111111
+      },
+      "3879": {
+        "mean_abs_delta_logit": 0.019173177083333333,
+        "control_feature": 3721,
+        "control_mean_abs_delta_logit": 0.0011881510416666666,
+        "excess": 0.017985026041666668
+      },
+      "2229": {
+        "mean_abs_delta_logit": 0.021875,
+        "control_feature": 11701,
+        "control_mean_abs_delta_logit": 0.021978081597222223,
+        "excess": -0.00010308159722222446
+      },
+      "11222": {
+        "mean_abs_delta_logit": 0.024896918402777777,
+        "control_feature": 10210,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.024896918402777777
+      },
+      "7954": {
+        "mean_abs_delta_logit": 0.015793185763888887,
+        "control_feature": 795,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.015793185763888887
+      },
+      "4858": {
+        "mean_abs_delta_logit": 0.006374782986111111,
+        "control_feature": 1376,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.006374782986111111
+      },
+      "2086": {
+        "mean_abs_delta_logit": 0.024012586805555555,
+        "control_feature": 6179,
+        "control_mean_abs_delta_logit": 0.00830078125,
+        "excess": 0.015711805555555555
+      },
+      "3582": {
+        "mean_abs_delta_logit": 0.011409505208333334,
+        "control_feature": 13642,
+        "control_mean_abs_delta_logit": 0.0,
+        "excess": 0.011409505208333334
+      }
+    }
+  },
+  "fis_weights": {
+    "alpha_semantic": 0.5,
+    "beta_causal": 0.5,
+    "gamma_human": 0.0,
+    "gamma_note": "S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them."
+  }
+}

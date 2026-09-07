@@ -37,6 +37,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from components import GateResult                       # noqa: E402
 from renal import (ckd_epi, mdrd, to_mgdl, qtc_bazett,   # noqa: E402
+                   cockcroft_gault,
                    PLAUSIBLE, implausible)
 
 NUM = r"(\d+(?:\.\d+)?)"
@@ -171,6 +172,110 @@ def extract_qt(note):
     return out
 
 
+
+# --------------------------------------------------------------------------
+# Extractors for the two families added 2026-09-06.
+#
+# These exist to MEASURE something, not to raise the gate's headline accuracy.
+# The repository's sharpest Aim 3 finding is that the symbolic gate, whatever
+# its accuracy when it fires, can only fire on 42.7% of real renal notes. That
+# number was measured on a THREE-variable rule (creatinine, age, sex). The two
+# new families need five (creatinine, age, sex, weight, height) and five again
+# (bilirubin, albumin, INR, ascites, encephalopathy), so they turn a single
+# ceiling into a curve of applicability against rule complexity -- which is a
+# claim about neuro-symbolic gating in general rather than about one rule.
+#
+# Every extractor below declines rather than guesses. A rule that needs five
+# values from prose declining most of the time IS the result.
+# --------------------------------------------------------------------------
+
+WEIGHT_PATTERNS = [
+    re.compile(r"weigh(?:s|ing|t)[^.\n]{0,30}?(\d{2,3}(?:\.\d+)?)\s*kg", re.I),
+    re.compile(r"(?<![\d.])(\d{2,3}(?:\.\d+)?)\s*kg\b", re.I),
+    re.compile(r"weight[^.\n]{0,20}?(\d{2,3}(?:\.\d+)?)\s*kg", re.I),
+]
+HEIGHT_CM_PATTERNS = [
+    re.compile(r"height[^.\n]{0,20}?(\d{2,3}(?:\.\d+)?)\s*cm", re.I),
+    re.compile(r"(?<![\d.])(1\d{2}(?:\.\d+)?)\s*cm\b", re.I),
+    re.compile(r"(\d{2,3}(?:\.\d+)?)\s*(?:centimet(?:er|re)s?)\b", re.I),
+]
+BILIRUBIN_PATTERNS = [
+    re.compile(r"(?:total\s+)?bilirubin[^.\n]{0,40}?(\d+(?:\.\d+)?)\s*mg/dl", re.I),
+    re.compile(r"bilirubin[^.\n]{0,25}?(\d+(?:\.\d+)?)", re.I),
+]
+ALBUMIN_PATTERNS = [
+    re.compile(r"albumin[^.\n]{0,40}?(\d+(?:\.\d+)?)\s*g/dl", re.I),
+    re.compile(r"albumin[^.\n]{0,25}?(\d+(?:\.\d+)?)", re.I),
+]
+INR_PATTERNS = [
+    re.compile(r"\b(?:inr|international normali[sz]ed ratio)[^.\n]{0,25}?"
+               r"(\d+(?:\.\d+)?)", re.I),
+]
+# Real notes describe ascites clinically ("a positive fluid wave consistent
+# with ascites", "no sonographic evidence of ascites") rather than by grade,
+# so these are deliberately generous: the point of the measurement below is to
+# find the gate's real ceiling, and a stingy regex would flatter the argument.
+ASCITES_NONE = re.compile(
+    r"\bno\b[^.\n]{0,40}?\bascites\b|ascites[:\s]*(?:absent|none|negative)"
+    r"|without\s+ascites|\bascites\b[^.\n]{0,20}?\b(?:absent|resolved)\b", re.I)
+ASCITES_MILD = re.compile(
+    r"\b(?:slight|mild|small|trace|minimal|scant)\b[^.\n]{0,25}?\bascites\b"
+    r"|ascites[:\s]*(?:slight|mild|small|trace)", re.I)
+ASCITES_MOD = re.compile(
+    r"\b(?:moderate|severe|large|tense|massive|gross|marked)\b[^.\n]{0,25}?"
+    r"\bascites\b|ascites[:\s]*(?:moderate|severe|large|tense)", re.I)
+ENCEPH_NONE = re.compile(r"\bno (?:hepatic )?encephalopathy|encephalopathy[:\s]*(?:absent|none)|without encephalopathy", re.I)
+ENCEPH_12 = re.compile(r"encephalopathy[^.\n]{0,20}?grade\s*(?:1|2|i{1,2})\b|\bgrade\s*(?:1|2|i{1,2})\s+(?:hepatic )?encephalopathy", re.I)
+ENCEPH_34 = re.compile(r"encephalopathy[^.\n]{0,20}?grade\s*(?:3|4|iii|iv)\b|\bgrade\s*(?:3|4|iii|iv)\s+(?:hepatic )?encephalopathy", re.I)
+
+
+def extract_crcl(note):
+    """creatinine, age, sex, weight, height -- Cockcroft-Gault needs all five."""
+    out = extract_renal(note)
+    w = _first(WEIGHT_PATTERNS, note)
+    if w:
+        out["weight_kg"] = float(w)
+    h = _first(HEIGHT_CM_PATTERNS, note)
+    if h:
+        out["height_cm"] = float(h)
+    return out
+
+
+def extract_childpugh(note):
+    """
+    The five Child-Pugh components.
+
+    The two categorical components are read only when the note states them
+    explicitly. Silence is NOT scored as absence here, even though that is how
+    MedCalc-Bench's own ground truth treats it: a gate that assumes the best
+    case for anything a note does not mention would call a cirrhotic patient
+    class A on a note that simply never discussed ascites.
+    """
+    out = {}
+    b = _first(BILIRUBIN_PATTERNS, note)
+    if b:
+        out["bilirubin"] = float(b)
+    a = _first(ALBUMIN_PATTERNS, note)
+    if a:
+        out["albumin"] = float(a)
+    i = _first(INR_PATTERNS, note)
+    if i:
+        out["inr"] = float(i)
+    if ASCITES_MOD.search(note):
+        out["ascites_pts"] = 3
+    elif ASCITES_MILD.search(note):
+        out["ascites_pts"] = 2
+    elif ASCITES_NONE.search(note):
+        out["ascites_pts"] = 1
+    if ENCEPH_34.search(note):
+        out["enceph_pts"] = 3
+    elif ENCEPH_12.search(note):
+        out["enceph_pts"] = 2
+    elif ENCEPH_NONE.search(note):
+        out["enceph_pts"] = 1
+    return out
+
+
 class MedCalcGate:
     """
     Extract -> compute -> compare. Declines unless every input is present and
@@ -185,6 +290,8 @@ class MedCalcGate:
 
     EGFR_THRESHOLD = 30.0     # FDA metformin label
     QTC_THRESHOLD = 500.0     # FDA ondansetron label
+    CRCL_THRESHOLD = 60.0     # FDA nitrofurantoin label
+    CHILDPUGH_THRESHOLD = 10.0   # FDA apixaban label, Child-Pugh class C
 
     def __init__(self, calculator="ckd_epi"):
         self.calculator = calculator
@@ -225,6 +332,37 @@ class MedCalcGate:
             f["QTc"] = qtc
             return GateResult(True, qtc > self.QTC_THRESHOLD,
                               "ondansetron_qt", f)
+
+        if "nitrofurantoin" in low:
+            f = extract_crcl(vignette)
+            need = ("creatinine_mgdl", "age", "sex", "weight_kg", "height_cm")
+            if any(k not in f for k in need):
+                return GateResult(False, False, None, f)
+            try:
+                crcl = cockcroft_gault(f["creatinine_mgdl"], f["age"],
+                                       f["weight_kg"], f["sex"],
+                                       f["height_cm"])
+            except Exception:
+                return GateResult(False, False, None, f)
+            if implausible(creatinine_mgdl=f["creatinine_mgdl"]):
+                return GateResult(False, False, None, f)
+            f["CrCl"] = crcl
+            return GateResult(True, crcl < self.CRCL_THRESHOLD,
+                              "nitrofurantoin_crcl", f)
+
+        if "apixaban" in low:
+            f = extract_childpugh(vignette)
+            need = ("bilirubin", "albumin", "inr", "ascites_pts",
+                    "enceph_pts")
+            if any(k not in f for k in need):
+                return GateResult(False, False, None, f)
+            b = 1 if f["bilirubin"] < 2 else (2 if f["bilirubin"] <= 3 else 3)
+            a = 1 if f["albumin"] > 3.5 else (2 if f["albumin"] >= 2.8 else 3)
+            i = 1 if f["inr"] < 1.7 else (2 if f["inr"] <= 2.3 else 3)
+            score = b + a + i + f["ascites_pts"] + f["enceph_pts"]
+            f["child_pugh"] = score
+            return GateResult(True, score >= self.CHILDPUGH_THRESHOLD,
+                              "apixaban_childpugh", f)
 
         return GateResult(False, False, None, {})
 
