@@ -214,3 +214,40 @@ run_sae_wide.sh: line 38: nts:True: command not found
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
 Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.54it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.15it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.20it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.26it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.67it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.05it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.06it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.43it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.15it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.64it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.54it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.09it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.29it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.86it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.32it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.50it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.93it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.30it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.50it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.87it/s]
+[attribution] layer 20, 86 features carry a positive knock-out excess (14 clipped to zero), concept vocabulary 'umls' with 11 concepts
+[attribution] expressible concepts: {'creatinine': 15, 'heart_rate': 7, 'potassium': 1, 'inr': 1, 'age': 37, 'drug': 19, 'renal_disease': 5, 'asthma': 1}
+[attribution] NOT expressible (no positively weighted feature): ['egfr', 'pregnancy', 'qt_interval']
+  20/180 items
+  40/180 items
+  60/180 items
+  80/180 items
+  100/180 items
+  120/180 items
+  140/180 items
+  160/180 items
+  180/180 items
+
+wrote results/faithfulness_medcalc_test_biomistral-7b_wide.json
+  sae_concept    AOPC comp=0.012177162803709507 suff=0.06672006845474243 edited-token pct=0.970170808834666
+  grad_x_input   AOPC comp=0.030790438875555992 suff=0.019806891679763794 edited-token pct=0.510230261670964
+  random         AOPC comp=0.004878612235188484 suff=0.027747778221964836 edited-token pct=0.5083580161119534
+  occlusion      AOPC comp=0.07155321538448334 suff=0.011339986696839333 edited-token pct=0.570759758385761
+  concept pointing {'accuracy_sum': 0.5722222222222222, 'accuracy_mean': 0.7, 'accuracy_sum_expressible': 0.5722222222222222, 'accuracy_mean_expressible': 0.7, 'random_baseline': 0.2505555555555556, 'n': 180, 'n_expressible': 180, 'n_items_whose_decisive_concept_the_layer_cannot_express': 0, 'expressible_concepts': ['age', 'asthma', 'creatinine', 'drug', 'heart_rate', 'inr', 'potassium', 'renal_disease'], 'features_per_concept': {'creatinine': 15, 'qt_interval': 0, 'egfr': 0, 'heart_rate': 7, 'potassium': 1, 'inr': 1, 'age': 37, 'drug': 19, 'renal_disease': 5, 'pregnancy': 0, 'asthma': 1}}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.71it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.31it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.43it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.31it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.86it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.34it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.39it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.89it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.59it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.03it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.80it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.31it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.47it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.06it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.51it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.72it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.20it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.63it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.77it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.15it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[attribution] layer 20, 86 features carry a positive knock-out excess (14 clipped to zero), concept vocabulary 'umls' with 11 concepts
+[attribution] expressible concepts: {'creatinine': 15, 'heart_rate': 7, 'potassium': 1, 'inr': 1, 'age': 37, 'drug': 19, 'renal_disease': 5, 'asthma': 1}
+[attribution] NOT expressible (no positively weighted feature): ['egfr', 'pregnancy', 'qt_interval']
+  20/60 items
+  40/60 items
+  60/60 items
+
+wrote results/faithfulness_medcalc_heldout_biomistral-7b_wide.json
+  sae_concept    AOPC comp=0.1065981537103653 suff=0.10282409936189651 edited-token pct=0.6562446167097329
+  grad_x_input   AOPC comp=0.1233052983880043 suff=0.21270301938056946 edited-token pct=0.5590839178048479
+  random         AOPC comp=0.1430271863937378 suff=0.20069794356822968 edited-token pct=0.49626861080349444
+  occlusion      AOPC comp=0.27295368909835815 suff=0.2087780237197876 edited-token pct=0.1578134613018334
+  concept pointing {'accuracy_sum': 0.0, 'accuracy_mean': 1.0, 'accuracy_sum_expressible': 0.0, 'accuracy_mean_expressible': 1.0, 'random_baseline': 0.6666666666666664, 'n': 60, 'n_expressible': 60, 'n_items_whose_decisive_concept_the_layer_cannot_express': 0, 'expressible_concepts': ['age', 'asthma', 'creatinine', 'drug', 'heart_rate', 'inr', 'potassium', 'renal_disease'], 'features_per_concept': {'creatinine': 15, 'qt_interval': 0, 'egfr': 0, 'heart_rate': 7, 'potassium': 1, 'inr': 1, 'age': 37, 'drug': 19, 'renal_disease': 5, 'pregnancy': 0, 'asthma': 1}}
+[wide] done 2026-09-07T18:08:12+03:00

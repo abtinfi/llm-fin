@@ -12,3 +12,335 @@
 2026-09-07T17:10:50+03:00 [w0] done sae_wide exit=0
 2026-09-07T17:10:50+03:00 [w0] run  medcalc_v2 on GPU 0
 2026-09-07T17:25:51+03:00 [w1] waiting for GPU 1 (openbiollm)
+2026-09-07T17:40:52+03:00 [w1] waiting for GPU 1 (openbiollm)
+2026-09-07T17:44:17+03:00 [w0] done medcalc_v2 exit=2
+2026-09-07T17:44:17+03:00 [w0] run  mistral_instruct on GPU 0
+2026-09-07T17:55:53+03:00 [w1] waiting for GPU 1 (openbiollm)
+2026-09-07T18:08:30+03:00 sae_wide outputs present; marker written
+2026-09-07T18:08:54+03:00 [w1] run  openbiollm on GPU 1
+2026-09-07T19:21:29+03:00 [w1] done openbiollm exit=0
+2026-09-07T19:21:29+03:00 [w1] run  layer16 on GPU 1
+2026-09-07T19:23:49+03:00 [w0] done mistral_instruct exit=0
+2026-09-07T19:23:49+03:00 [w0] run  layer24 on GPU 0
+2026-09-07T20:57:14+03:00 [w1] done layer16 exit=0
+2026-09-07T20:57:14+03:00 [w1] queue empty
+2026-09-07T20:57:48+03:00 [w0] done layer24 exit=0
+2026-09-07T20:57:49+03:00 [w0] queue empty
+2026-09-07T20:57:49+03:00 [reports] regenerating
+2026-09-07T20:57:49+03:00 [reports] exit=0
+2026-09-07T20:57:49+03:00 === supervisor finished ===
+2026-09-07T21:00:01+03:00 === supervisor start (pid 319052) ===
+2026-09-07T21:00:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T21:00:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T21:00:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T21:00:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T21:00:02+03:00 [w0] queue empty
+2026-09-07T21:00:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T21:00:02+03:00 [w1] done seed_sweep exit=3
+2026-09-07T21:00:02+03:00 [w1] queue empty
+2026-09-07T21:00:02+03:00 [reports] regenerating
+2026-09-07T21:00:02+03:00 [reports] exit=127
+2026-09-07T21:00:02+03:00 === supervisor finished ===
+2026-09-07T21:15:01+03:00 === supervisor start (pid 324856) ===
+2026-09-07T21:15:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T21:15:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T21:15:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T21:15:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T21:15:02+03:00 [w1] queue empty
+2026-09-07T21:15:02+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T21:15:02+03:00 [w0] done seed_sweep exit=3
+2026-09-07T21:15:02+03:00 [w0] queue empty
+2026-09-07T21:15:02+03:00 [reports] regenerating
+2026-09-07T21:15:02+03:00 [reports] exit=127
+2026-09-07T21:15:02+03:00 === supervisor finished ===
+2026-09-07T21:30:01+03:00 === supervisor start (pid 332388) ===
+2026-09-07T21:30:02+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T21:30:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T21:30:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T21:30:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T21:30:02+03:00 [w1] queue empty
+2026-09-07T21:30:02+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T21:30:02+03:00 [w0] done seed_sweep exit=3
+2026-09-07T21:30:02+03:00 [w0] queue empty
+2026-09-07T21:30:02+03:00 [reports] regenerating
+2026-09-07T21:30:02+03:00 [reports] exit=127
+2026-09-07T21:30:02+03:00 === supervisor finished ===
+2026-09-07T21:45:02+03:00 === supervisor start (pid 340118) ===
+2026-09-07T21:45:02+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T21:45:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T21:45:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T21:45:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T21:45:02+03:00 [w0] queue empty
+2026-09-07T21:45:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T21:45:02+03:00 [w1] done seed_sweep exit=3
+2026-09-07T21:45:02+03:00 [w1] queue empty
+2026-09-07T21:45:02+03:00 [reports] regenerating
+2026-09-07T21:45:02+03:00 [reports] exit=127
+2026-09-07T21:45:02+03:00 === supervisor finished ===
+2026-09-07T22:00:01+03:00 === supervisor start (pid 346492) ===
+2026-09-07T22:00:01+03:00 [w1] run  medcalc_v2 on GPU 1
+2026-09-07T22:00:01+03:00 [w1] done medcalc_v2 exit=4
+2026-09-07T22:00:01+03:00 [w0] run  sae_qt_weights on GPU 0
+2026-09-07T22:00:01+03:00 [w0] done sae_qt_weights exit=1
+2026-09-07T22:00:01+03:00 [w0] queue empty
+2026-09-07T22:00:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T22:00:01+03:00 [w1] done seed_sweep exit=3
+2026-09-07T22:00:01+03:00 [w1] queue empty
+2026-09-07T22:00:01+03:00 [reports] regenerating
+2026-09-07T22:00:01+03:00 [reports] exit=127
+2026-09-07T22:00:01+03:00 === supervisor finished ===
+2026-09-07T22:15:01+03:00 === supervisor start (pid 353446) ===
+2026-09-07T22:15:01+03:00 [w1] run  medcalc_v2 on GPU 1
+2026-09-07T22:15:01+03:00 [w0] run  sae_qt_weights on GPU 0
+2026-09-07T22:15:01+03:00 [w0] done sae_qt_weights exit=1
+2026-09-07T22:15:01+03:00 [w1] done medcalc_v2 exit=4
+2026-09-07T22:15:01+03:00 [w1] queue empty
+2026-09-07T22:15:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T22:15:01+03:00 [w0] done seed_sweep exit=3
+2026-09-07T22:15:01+03:00 [w0] queue empty
+2026-09-07T22:15:01+03:00 [reports] regenerating
+2026-09-07T22:15:01+03:00 [reports] exit=127
+2026-09-07T22:15:01+03:00 === supervisor finished ===
+2026-09-07T22:30:01+03:00 === supervisor start (pid 360210) ===
+2026-09-07T22:30:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T22:30:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T22:30:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T22:30:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T22:30:01+03:00 [w1] queue empty
+2026-09-07T22:30:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T22:30:01+03:00 [w0] done seed_sweep exit=3
+2026-09-07T22:30:01+03:00 [w0] queue empty
+2026-09-07T22:30:01+03:00 [reports] regenerating
+2026-09-07T22:30:01+03:00 [reports] exit=127
+2026-09-07T22:30:01+03:00 === supervisor finished ===
+2026-09-07T22:45:01+03:00 === supervisor start (pid 365240) ===
+2026-09-07T22:45:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T22:45:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T22:45:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T22:45:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T22:45:01+03:00 [w1] queue empty
+2026-09-07T22:45:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T22:45:01+03:00 [w0] done seed_sweep exit=3
+2026-09-07T22:45:01+03:00 [w0] queue empty
+2026-09-07T22:45:01+03:00 [reports] regenerating
+2026-09-07T22:45:01+03:00 [reports] exit=127
+2026-09-07T22:45:01+03:00 === supervisor finished ===
+2026-09-07T23:00:01+03:00 === supervisor start (pid 369696) ===
+2026-09-07T23:00:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T23:00:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T23:00:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T23:00:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T23:00:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-07T23:00:01+03:00 [w1] queue empty
+2026-09-07T23:00:01+03:00 [w0] done seed_sweep exit=3
+2026-09-07T23:00:01+03:00 [w0] queue empty
+2026-09-07T23:00:01+03:00 [reports] regenerating
+2026-09-07T23:00:01+03:00 [reports] exit=127
+2026-09-07T23:00:01+03:00 === supervisor finished ===
+2026-09-07T23:15:01+03:00 === supervisor start (pid 382219) ===
+2026-09-07T23:15:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T23:15:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T23:15:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T23:15:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T23:15:01+03:00 [w0] queue empty
+2026-09-07T23:15:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T23:15:01+03:00 [w1] done seed_sweep exit=3
+2026-09-07T23:15:01+03:00 [w1] queue empty
+2026-09-07T23:15:01+03:00 [reports] regenerating
+2026-09-07T23:15:01+03:00 [reports] exit=127
+2026-09-07T23:15:01+03:00 === supervisor finished ===
+2026-09-07T23:30:01+03:00 === supervisor start (pid 392443) ===
+2026-09-07T23:30:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T23:30:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T23:30:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T23:30:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T23:30:01+03:00 [w0] queue empty
+2026-09-07T23:30:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T23:30:01+03:00 [w1] done seed_sweep exit=3
+2026-09-07T23:30:01+03:00 [w1] queue empty
+2026-09-07T23:30:01+03:00 [reports] regenerating
+2026-09-07T23:30:01+03:00 [reports] exit=127
+2026-09-07T23:30:01+03:00 === supervisor finished ===
+2026-09-07T23:45:01+03:00 === supervisor start (pid 403233) ===
+2026-09-07T23:45:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-07T23:45:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-07T23:45:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-07T23:45:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-07T23:45:01+03:00 [w0] queue empty
+2026-09-07T23:45:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-07T23:45:01+03:00 [w1] done seed_sweep exit=3
+2026-09-07T23:45:01+03:00 [w1] queue empty
+2026-09-07T23:45:01+03:00 [reports] regenerating
+2026-09-07T23:45:01+03:00 [reports] exit=127
+2026-09-07T23:45:01+03:00 === supervisor finished ===
+2026-09-08T00:00:01+03:00 === supervisor start (pid 411171) ===
+2026-09-08T00:00:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T00:00:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T00:00:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T00:00:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T00:00:01+03:00 [w1] queue empty
+2026-09-08T00:00:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T00:00:01+03:00 [w0] done seed_sweep exit=3
+2026-09-08T00:00:01+03:00 [w0] queue empty
+2026-09-08T00:00:01+03:00 [reports] regenerating
+2026-09-08T00:00:01+03:00 [reports] exit=127
+2026-09-08T00:00:01+03:00 === supervisor finished ===
+2026-09-08T00:15:01+03:00 === supervisor start (pid 421200) ===
+2026-09-08T00:15:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T00:15:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T00:15:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T00:15:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T00:15:01+03:00 [w0] queue empty
+2026-09-08T00:15:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T00:15:01+03:00 [w1] done seed_sweep exit=3
+2026-09-08T00:15:01+03:00 [w1] queue empty
+2026-09-08T00:15:01+03:00 [reports] regenerating
+2026-09-08T00:15:01+03:00 [reports] exit=127
+2026-09-08T00:15:01+03:00 === supervisor finished ===
+2026-09-08T00:30:01+03:00 === supervisor start (pid 432193) ===
+2026-09-08T00:30:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T00:30:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T00:30:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T00:30:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T00:30:01+03:00 [w0] queue empty
+2026-09-08T00:30:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T00:30:01+03:00 [w1] done seed_sweep exit=3
+2026-09-08T00:30:01+03:00 [w1] queue empty
+2026-09-08T00:30:01+03:00 [reports] regenerating
+2026-09-08T00:30:01+03:00 [reports] exit=127
+2026-09-08T00:30:01+03:00 === supervisor finished ===
+2026-09-08T00:45:01+03:00 === supervisor start (pid 442026) ===
+2026-09-08T00:45:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T00:45:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T00:45:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T00:45:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T00:45:01+03:00 [w0] queue empty
+2026-09-08T00:45:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T00:45:01+03:00 [w1] done seed_sweep exit=3
+2026-09-08T00:45:01+03:00 [w1] queue empty
+2026-09-08T00:45:01+03:00 [reports] regenerating
+2026-09-08T00:45:01+03:00 [reports] exit=127
+2026-09-08T00:45:01+03:00 === supervisor finished ===
+2026-09-08T01:00:01+03:00 === supervisor start (pid 451472) ===
+2026-09-08T01:00:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T01:00:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T01:00:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T01:00:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T01:00:01+03:00 [w1] queue empty
+2026-09-08T01:00:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T01:00:01+03:00 [w0] done seed_sweep exit=3
+2026-09-08T01:00:02+03:00 [w0] queue empty
+2026-09-08T01:00:02+03:00 [reports] regenerating
+2026-09-08T01:00:02+03:00 [reports] exit=127
+2026-09-08T01:00:02+03:00 === supervisor finished ===
+2026-09-08T01:15:01+03:00 === supervisor start (pid 461595) ===
+2026-09-08T01:15:01+03:00 [w1] run  medcalc_v2 on GPU 1
+2026-09-08T01:15:01+03:00 [w1] done medcalc_v2 exit=4
+2026-09-08T01:15:01+03:00 [w0] run  sae_qt_weights on GPU 0
+2026-09-08T01:15:01+03:00 [w0] done sae_qt_weights exit=1
+2026-09-08T01:15:01+03:00 [w0] queue empty
+2026-09-08T01:15:01+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T01:15:01+03:00 [w1] done seed_sweep exit=3
+2026-09-08T01:15:01+03:00 [w1] queue empty
+2026-09-08T01:15:01+03:00 [reports] regenerating
+2026-09-08T01:15:01+03:00 [reports] exit=127
+2026-09-08T01:15:01+03:00 === supervisor finished ===
+2026-09-08T01:30:01+03:00 === supervisor start (pid 471914) ===
+2026-09-08T01:30:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T01:30:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T01:30:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T01:30:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T01:30:01+03:00 [w0] queue empty
+2026-09-08T01:30:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T01:30:02+03:00 [w1] done seed_sweep exit=3
+2026-09-08T01:30:02+03:00 [w1] queue empty
+2026-09-08T01:30:02+03:00 [reports] regenerating
+2026-09-08T01:30:02+03:00 [reports] exit=127
+2026-09-08T01:30:02+03:00 === supervisor finished ===
+2026-09-08T01:45:01+03:00 === supervisor start (pid 483470) ===
+2026-09-08T01:45:01+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T01:45:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T01:45:01+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T01:45:01+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T01:45:01+03:00 [w0] queue empty
+2026-09-08T01:45:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T01:45:02+03:00 [w1] done seed_sweep exit=3
+2026-09-08T01:45:02+03:00 [w1] queue empty
+2026-09-08T01:45:02+03:00 [reports] regenerating
+2026-09-08T01:45:02+03:00 [reports] exit=127
+2026-09-08T01:45:02+03:00 === supervisor finished ===
+2026-09-08T02:00:01+03:00 === supervisor start (pid 489459) ===
+2026-09-08T02:00:01+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T02:00:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T02:00:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T02:00:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T02:00:02+03:00 [w0] queue empty
+2026-09-08T02:00:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T02:00:02+03:00 [w1] done seed_sweep exit=3
+2026-09-08T02:00:02+03:00 [w1] queue empty
+2026-09-08T02:00:02+03:00 [reports] regenerating
+2026-09-08T02:00:02+03:00 [reports] exit=127
+2026-09-08T02:00:02+03:00 === supervisor finished ===
+2026-09-08T02:15:01+03:00 === supervisor start (pid 498526) ===
+2026-09-08T02:15:02+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T02:15:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T02:15:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T02:15:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T02:15:02+03:00 [w1] queue empty
+2026-09-08T02:15:02+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T02:15:02+03:00 [w0] done seed_sweep exit=3
+2026-09-08T02:15:02+03:00 [w0] queue empty
+2026-09-08T02:15:02+03:00 [reports] regenerating
+2026-09-08T02:15:02+03:00 [reports] exit=127
+2026-09-08T02:15:02+03:00 === supervisor finished ===
+2026-09-08T02:30:01+03:00 === supervisor start (pid 502052) ===
+2026-09-08T02:30:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T02:30:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T02:30:02+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T02:30:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T02:30:02+03:00 [w0] queue empty
+2026-09-08T02:30:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T02:30:02+03:00 [w1] done seed_sweep exit=3
+2026-09-08T02:30:02+03:00 [w1] queue empty
+2026-09-08T02:30:02+03:00 [reports] regenerating
+2026-09-08T02:30:02+03:00 [reports] exit=127
+2026-09-08T02:30:02+03:00 === supervisor finished ===
+2026-09-08T02:45:02+03:00 === supervisor start (pid 504776) ===
+2026-09-08T02:45:02+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T02:45:02+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T02:45:02+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T02:45:02+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T02:45:02+03:00 [w0] queue empty
+2026-09-08T02:45:02+03:00 [w1] run  seed_sweep on GPU 1
+2026-09-08T02:45:02+03:00 [w1] done seed_sweep exit=3
+2026-09-08T02:45:02+03:00 [w1] queue empty
+2026-09-08T02:45:02+03:00 [reports] regenerating
+2026-09-08T02:45:02+03:00 [reports] exit=127
+2026-09-08T02:45:02+03:00 === supervisor finished ===
+2026-09-08T03:00:01+03:00 === supervisor start (pid 508660) ===
+2026-09-08T03:00:01+03:00 [w0] run  sae_qt_weights on GPU 0
+2026-09-08T03:00:01+03:00 [w0] done sae_qt_weights exit=1
+2026-09-08T03:00:01+03:00 [w1] run  medcalc_v2 on GPU 1
+2026-09-08T03:00:01+03:00 [w1] done medcalc_v2 exit=4
+2026-09-08T03:00:01+03:00 [w1] queue empty
+2026-09-08T03:00:01+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T03:00:01+03:00 [w0] done seed_sweep exit=3
+2026-09-08T03:00:01+03:00 [w0] queue empty
+2026-09-08T03:00:01+03:00 [reports] regenerating
+2026-09-08T03:00:01+03:00 [reports] exit=127
+2026-09-08T03:00:01+03:00 === supervisor finished ===
+2026-09-08T03:03:21+03:00 === supervisor start (pid 4631) ===
+2026-09-08T03:03:21+03:00 [w0] run  medcalc_v2 on GPU 0
+2026-09-08T03:03:21+03:00 [w0] done medcalc_v2 exit=4
+2026-09-08T03:03:21+03:00 [w1] run  sae_qt_weights on GPU 1
+2026-09-08T03:03:21+03:00 [w1] done sae_qt_weights exit=1
+2026-09-08T03:03:21+03:00 [w1] queue empty
+2026-09-08T03:03:21+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T03:03:21+03:00 [w0] done seed_sweep exit=3
+2026-09-08T03:03:21+03:00 [w0] queue empty
+2026-09-08T03:03:21+03:00 [reports] regenerating
+2026-09-08T03:03:21+03:00 [reports] exit=127
+2026-09-08T03:03:21+03:00 === supervisor finished ===
+2026-09-08T03:04:27+03:00 === supervisor start (pid 5240) ===
+2026-09-08T03:04:27+03:00 [w1] run  medcalc_v2 on GPU 1
+2026-09-08T03:04:27+03:00 [w0] run  sae_qt_weights on GPU 0

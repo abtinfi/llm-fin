@@ -9,3 +9,98 @@
 2026-09-07T17:12:48+03:00 a supervisor holds the lock; nothing to do
 2026-09-07T17:15:01+03:00 a supervisor holds the lock; nothing to do
 2026-09-07T17:30:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T17:45:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T18:00:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T18:15:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T18:30:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T18:45:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T19:00:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T19:15:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T19:30:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T19:45:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T20:00:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T20:15:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T20:30:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T20:45:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-07T21:00:01+03:00 clearing stale claims: layer16 layer24 medcalc_v2 mistral_instruct openbiollm sae_wide 
+2026-09-07T21:00:01+03:00 SUPERVISOR_ALL_DONE present but 1 job marker(s) missing -- removing it and restarting
+2026-09-07T21:00:01+03:00 promoted csai_supervisor.sh.next (previous kept as .prev)
+2026-09-07T21:00:01+03:00 started tmux session csai_sup
+2026-09-07T21:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T21:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T21:15:01+03:00 started tmux session csai_sup
+2026-09-07T21:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T21:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T21:30:01+03:00 started tmux session csai_sup
+2026-09-07T21:45:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T21:45:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T21:45:01+03:00 started tmux session csai_sup
+2026-09-07T22:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T22:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T22:00:01+03:00 started tmux session csai_sup
+2026-09-07T22:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T22:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T22:15:01+03:00 started tmux session csai_sup
+2026-09-07T22:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T22:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T22:30:01+03:00 started tmux session csai_sup
+2026-09-07T22:45:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T22:45:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T22:45:01+03:00 started tmux session csai_sup
+2026-09-07T23:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T23:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T23:00:01+03:00 started tmux session csai_sup
+2026-09-07T23:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T23:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T23:15:01+03:00 started tmux session csai_sup
+2026-09-07T23:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T23:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T23:30:01+03:00 started tmux session csai_sup
+2026-09-07T23:45:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-07T23:45:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-07T23:45:01+03:00 started tmux session csai_sup
+2026-09-08T00:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T00:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T00:00:01+03:00 started tmux session csai_sup
+2026-09-08T00:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T00:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T00:15:01+03:00 started tmux session csai_sup
+2026-09-08T00:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T00:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T00:30:01+03:00 started tmux session csai_sup
+2026-09-08T00:45:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T00:45:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T00:45:01+03:00 started tmux session csai_sup
+2026-09-08T01:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T01:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T01:00:01+03:00 started tmux session csai_sup
+2026-09-08T01:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T01:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T01:15:01+03:00 started tmux session csai_sup
+2026-09-08T01:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T01:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T01:30:01+03:00 started tmux session csai_sup
+2026-09-08T01:45:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T01:45:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T01:45:01+03:00 started tmux session csai_sup
+2026-09-08T02:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T02:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T02:00:01+03:00 started tmux session csai_sup
+2026-09-08T02:15:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T02:15:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T02:15:01+03:00 started tmux session csai_sup
+2026-09-08T02:30:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T02:30:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T02:30:01+03:00 started tmux session csai_sup
+2026-09-08T02:45:02+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T02:45:02+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T02:45:02+03:00 started tmux session csai_sup
+2026-09-08T03:00:01+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T03:00:01+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T03:00:01+03:00 started tmux session csai_sup
+2026-09-08T03:03:21+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T03:03:21+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T03:03:21+03:00 started tmux session csai_sup
+2026-09-08T03:04:27+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
+2026-09-08T03:04:27+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
+2026-09-08T03:04:27+03:00 started tmux session csai_sup

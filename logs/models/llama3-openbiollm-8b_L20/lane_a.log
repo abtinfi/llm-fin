@@ -1,5 +1,5 @@
-+ export CUDA_VISIBLE_DEVICES=0
-+ CUDA_VISIBLE_DEVICES=0
++ export CUDA_VISIBLE_DEVICES=1
++ CUDA_VISIBLE_DEVICES=1
 + export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
 + PYTHONPATH=/home/asosoft/abtin/paper/csai/src
 + export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
@@ -21,689 +21,153 @@
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done ']'
-+ banner A1_constraint_qt
-+ echo
-
-+ echo '########## [A] A1_constraint_qt ##########'
-########## [A] A1_constraint_qt ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --out results/models/llama3-openbiollm-8b/constraint_qt.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 110 items / 55 pairs
-test  180 items / 90 pairs (same family as train)
-held  60 items / 30 pairs (['ondansetron_qt'])
-train families: ['ondansetron_qt']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 178.75it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.41it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 242.81it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 251.30it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 255.51it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 258.93it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 261.27it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 262.91it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 263.62it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 270.56it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.59it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.517  CC=0.033
-  heldout acc=0.500  CC=0.000
-
-=== decision entropy on REDACTED notes, base model ===
-  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
-  heldout 0.6700 nats over 60 items
-
-=== L_ontology, required margin per family ===
-    ondansetron_qt                 required margin 1.000  [curated]
-
-=== training on 110 items (real labels) ===
-  epoch 1/8  L_causal=0.6925  L_KL=0.0263  L_ont=0.9852(on 55/55 pairs)  L_unc=0.0064  train-decision-acc=0.509
-  epoch 2/8  L_causal=0.5209  L_KL=0.3566  L_ont=0.3091(on 55/55 pairs)  L_unc=0.1603  train-decision-acc=0.809
-  epoch 3/8  L_causal=0.4050  L_KL=0.4315  L_ont=0.1342(on 55/55 pairs)  L_unc=0.0266  train-decision-acc=0.855
-  epoch 4/8  L_causal=0.4023  L_KL=0.4826  L_ont=0.0455(on 55/55 pairs)  L_unc=0.0432  train-decision-acc=0.818
-  epoch 5/8  L_causal=0.3098  L_KL=0.7107  L_ont=0.1091(on 55/55 pairs)  L_unc=0.1098  train-decision-acc=0.882
-  epoch 6/8  L_causal=0.2653  L_KL=0.6265  L_ont=0.0534(on 55/55 pairs)  L_unc=0.0161  train-decision-acc=0.909
-  epoch 7/8  L_causal=0.2660  L_KL=0.8222  L_ont=0.0137(on 55/55 pairs)  L_unc=0.0996  train-decision-acc=0.900
-  epoch 8/8  L_causal=0.2445  L_KL=0.7903  L_ont=0.0148(on 55/55 pairs)  L_unc=0.0644  train-decision-acc=0.909
-
-=== with constraint layer ===
-  test    acc=0.489  CC=0.044   (base 0.033, delta +0.011)
-  heldout acc=0.883  CC=0.767   (base 0.000, delta +0.767)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    0.6256 -> 0.4569 nats
-  heldout 0.6700 -> 0.5533 nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_qt.json
-wrote results/models/llama3-openbiollm-8b/adapter_qt.npz
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done
-+ echo '[A][ok] A1_constraint_qt'
-[A][ok] A1_constraint_qt
++ echo '[A][skip] A1_constraint_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done)'
+[A][skip] A1_constraint_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done)
++ return 0
 + stage A2_constraint_renal python src/constraint_layer.py --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --out results/models/llama3-openbiollm-8b/constraint_renal.json
 + local name=A2_constraint_renal
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done ']'
-+ banner A2_constraint_renal
-+ echo
-
-+ echo '########## [A] A2_constraint_renal ##########'
-########## [A] A2_constraint_renal ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --out results/models/llama3-openbiollm-8b/constraint_renal.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 280 items / 140 pairs
-test  180 items / 90 pairs (same family as train)
-held  60 items / 30 pairs (['ondansetron_qt'])
-train families: ['metformin_renal']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 178.51it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.83it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 242.83it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 247.88it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 265.83it/s]Loading weights:  56%|█████▌    | 163/291 [00:00<00:00, 272.20it/s]Loading weights:  66%|██████▌   | 191/291 [00:00<00:00, 272.45it/s]Loading weights:  75%|███████▌  | 219/291 [00:00<00:00, 273.40it/s]Loading weights:  85%|████████▍ | 247/291 [00:00<00:00, 253.35it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 256.76it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.42it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.517  CC=0.033
-  heldout acc=0.500  CC=0.000
-
-=== decision entropy on REDACTED notes, base model ===
-  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
-  heldout 0.6700 nats over 60 items
-
-=== L_ontology, required margin per family ===
-    metformin_renal                required margin 1.250  [exact]
-
-=== training on 280 items (real labels) ===
-  epoch 1/8  L_causal=0.7997  L_KL=0.0044  L_ont=1.3198(on 140/140 pairs)  L_unc=0.0626  train-decision-acc=0.496
-  epoch 2/8  L_causal=0.7741  L_KL=0.0094  L_ont=1.2467(on 140/140 pairs)  L_unc=0.0595  train-decision-acc=0.521
-  epoch 3/8  L_causal=0.7736  L_KL=0.0135  L_ont=1.1541(on 140/140 pairs)  L_unc=0.0589  train-decision-acc=0.536
-  epoch 4/8  L_causal=0.8225  L_KL=0.0144  L_ont=1.1675(on 140/140 pairs)  L_unc=0.0410  train-decision-acc=0.529
-  epoch 5/8  L_causal=0.7162  L_KL=0.0168  L_ont=1.1598(on 140/140 pairs)  L_unc=0.0296  train-decision-acc=0.546
-  epoch 6/8  L_causal=0.7017  L_KL=0.0278  L_ont=1.1580(on 140/140 pairs)  L_unc=0.0312  train-decision-acc=0.539
-  epoch 7/8  L_causal=0.7128  L_KL=0.0236  L_ont=1.1534(on 140/140 pairs)  L_unc=0.0349  train-decision-acc=0.536
-  epoch 8/8  L_causal=0.7435  L_KL=0.0220  L_ont=1.1534(on 140/140 pairs)  L_unc=0.0356  train-decision-acc=0.554
-
-=== with constraint layer ===
-  test    acc=0.500  CC=0.011   (base 0.033, delta -0.022)
-  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    0.6256 -> 0.6522 nats
-  heldout 0.6700 -> 0.6911 nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_renal.json
-wrote results/models/llama3-openbiollm-8b/adapter_renal.npz
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done
-+ echo '[A][ok] A2_constraint_renal'
-[A][ok] A2_constraint_renal
++ echo '[A][skip] A2_constraint_renal already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done)'
+[A][skip] A2_constraint_renal already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done)
++ return 0
 + stage A3_constraint_qt_shuffled python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_qt_shuffled.json
 + local name=A3_constraint_qt_shuffled
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done ']'
-+ banner A3_constraint_qt_shuffled
-+ echo
-
-+ echo '########## [A] A3_constraint_qt_shuffled ##########'
-########## [A] A3_constraint_qt_shuffled ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_qt_shuffled.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 110 items / 55 pairs
-test  180 items / 90 pairs (same family as train)
-held  60 items / 30 pairs (['ondansetron_qt'])
-train families: ['ondansetron_qt']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 175.90it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 224.10it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 249.98it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 251.77it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 250.03it/s]Loading weights:  55%|█████▌    | 161/291 [00:00<00:00, 266.07it/s]Loading weights:  65%|██████▌   | 190/291 [00:00<00:00, 272.63it/s]Loading weights:  75%|███████▍  | 218/291 [00:00<00:00, 272.96it/s]Loading weights:  85%|████████▍ | 246/291 [00:00<00:00, 273.99it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 253.86it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.14it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.517  CC=0.033
-  heldout acc=0.500  CC=0.000
-
-=== decision entropy on REDACTED notes, base model ===
-  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
-  heldout 0.6700 nats over 60 items
-  [control] lam_ont forced to 0: the ontology term is defined on the true arm ordering and would leak the real labels back into a run whose whole purpose is to have none.
-
-=== L_ontology, required margin per family ===
-    ondansetron_qt                 required margin 1.000  [curated]
-
-=== training on 110 items (SHUFFLED-LABEL CONTROL) ===
-  epoch 1/8  L_causal=0.6937  L_KL=0.0259  L_unc=0.0053  train-decision-acc=0.464
-  epoch 2/8  L_causal=0.6908  L_KL=0.0256  L_unc=0.0038  train-decision-acc=0.518
-  epoch 3/8  L_causal=0.6885  L_KL=0.0268  L_unc=0.0035  train-decision-acc=0.527
-  epoch 4/8  L_causal=0.6889  L_KL=0.0283  L_unc=0.0029  train-decision-acc=0.545
-  epoch 5/8  L_causal=0.6890  L_KL=0.0300  L_unc=0.0032  train-decision-acc=0.536
-  epoch 6/8  L_causal=0.6884  L_KL=0.0284  L_unc=0.0028  train-decision-acc=0.527
-  epoch 7/8  L_causal=0.6862  L_KL=0.0306  L_unc=0.0034  train-decision-acc=0.536
-  epoch 8/8  L_causal=0.6887  L_KL=0.0315  L_unc=0.0042  train-decision-acc=0.564
-
-=== with constraint layer ===
-  test    acc=0.500  CC=0.000   (base 0.033, delta -0.033)
-  heldout acc=0.583  CC=0.200   (base 0.000, delta +0.200)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    0.6256 -> 0.6236 nats
-  heldout 0.6700 -> 0.6897 nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_qt_shuffled.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done
-+ echo '[A][ok] A3_constraint_qt_shuffled'
-[A][ok] A3_constraint_qt_shuffled
++ echo '[A][skip] A3_constraint_qt_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done)'
+[A][skip] A3_constraint_qt_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done)
++ return 0
 + stage A4_constraint_synth python src/constraint_layer.py --layer 30 --data data/synthetic_control --train_on calib --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --out results/models/llama3-openbiollm-8b/constraint_synth.json
 + local name=A4_constraint_synth
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done ']'
-+ banner A4_constraint_synth
-+ echo
-
-+ echo '########## [A] A4_constraint_synth ##########'
-########## [A] A4_constraint_synth ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/synthetic_control --train_on calib --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --out results/models/llama3-openbiollm-8b/constraint_synth.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 32 items / 16 pairs
-test  128 items / 64 pairs (same family as train)
-held  32 items / 16 pairs (['nitrofurantoin_renal', 'ondansetron_qt'])
-train families: ['acei_pregnancy', 'aspirin_reye', 'betablocker_asthma', 'metformin_renal', 'nsaid_renal', 'spironolactone_hyperkalaemia', 'statin_macrolide', 'warfarin_inr']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 177.97it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 225.35it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 243.40it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 251.53it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 256.38it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 259.61it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 260.80it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 261.54it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 262.54it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 263.94it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.23it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.602  CC=0.234
-  heldout acc=0.656  CC=0.312
-
-=== decision entropy on REDACTED notes, base model ===
-  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
-  heldout 0.6457 nats over 8 items
-
-=== L_ontology, required margin per family ===
-    metformin_renal                required margin 1.250  [exact]
-    nsaid_renal                    required margin 1.000  [curated]
-    acei_pregnancy                 required margin 1.250  [exact]
-    betablocker_asthma             required margin 1.250  [exact]
-    aspirin_reye                   required margin 1.000  [curated]
-    spironolactone_hyperkalaemia   required margin 1.250  [synonymous]
-    warfarin_inr                   required margin 1.250  [exact]
-    statin_macrolide               required margin 1.000  [curated]
-
-=== training on 32 items (real labels) ===
-  epoch 1/8  L_causal=0.6549  L_KL=0.0067  L_ont=0.9375(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.656
-  epoch 2/8  L_causal=0.6144  L_KL=0.0184  L_ont=0.7110(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
-  epoch 3/8  L_causal=0.6711  L_KL=0.1204  L_ont=0.5313(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.562
-  epoch 4/8  L_causal=0.6038  L_KL=0.0544  L_ont=0.5469(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
-  epoch 5/8  L_causal=0.5599  L_KL=0.0680  L_ont=0.4492(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.719
-  epoch 6/8  L_causal=0.5831  L_KL=0.1228  L_ont=0.4297(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
-  epoch 7/8  L_causal=0.5465  L_KL=0.1047  L_ont=0.4180(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
-  epoch 8/8  L_causal=0.5574  L_KL=0.1235  L_ont=0.3985(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.719
-
-=== with constraint layer ===
-  test    acc=0.734  CC=0.469   (base 0.234, delta +0.234)
-  heldout acc=0.656  CC=0.375   (base 0.312, delta +0.062)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    nan -> nan nats
-  heldout 0.6457 -> 0.6732 nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_synth.json
-wrote results/models/llama3-openbiollm-8b/adapter_synth.npz
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done
-+ echo '[A][ok] A4_constraint_synth'
-[A][ok] A4_constraint_synth
++ echo '[A][skip] A4_constraint_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done)'
+[A][skip] A4_constraint_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done)
++ return 0
 + stage A5_synthctl_ablation_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
 + local name=A5_synthctl_ablation_test
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done ']'
-+ banner A5_synthctl_ablation_test
-+ echo
-
-+ echo '########## [A] A5_synthctl_ablation_test ##########'
-########## [A] A5_synthctl_ablation_test ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [01:43<05:11, 103.73s/it]Fetching 4 files:  50%|█████     | 2/4 [03:01<02:57, 88.70s/it] Fetching 4 files:  75%|███████▌  | 3/4 [03:18<00:55, 55.69s/it]Fetching 4 files: 100%|██████████| 4/4 [03:21<00:00, 34.86s/it]Fetching 4 files: 100%|██████████| 4/4 [03:21<00:00, 50.31s/it]
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:43,  6.70it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 129.30it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 166.14it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 201.16it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 223.23it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 236.61it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 244.48it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 251.31it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 260.02it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 260.92it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 260.35it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 232.63it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] rag       acc=0.461 cc=0.016 viol=0.812 cov=1.000
-[seed 0] sym       acc=0.781 cc=0.562 viol=0.438 cov=1.000
-[seed 0] uq        acc=0.055 cc=0.000 viol=0.047 cov=0.078
-[seed 0] nsai      acc=0.742 cc=0.562 viol=0.328 cov=1.000
-[seed 0] nsai_uq   acc=0.609 cc=0.562 viol=0.031 cov=0.625
-
-wrote results/models/llama3-openbiollm-8b/summary_test.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done
-+ echo '[A][ok] A5_synthctl_ablation_test'
-[A][ok] A5_synthctl_ablation_test
++ echo '[A][skip] A5_synthctl_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done)'
+[A][skip] A5_synthctl_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done)
++ return 0
 + stage A5_synthctl_ablation_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
 + local name=A5_synthctl_ablation_heldout
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done ']'
-+ banner A5_synthctl_ablation_heldout
-+ echo
-
-+ echo '########## [A] A5_synthctl_ablation_heldout ##########'
-########## [A] A5_synthctl_ablation_heldout ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:43,  6.63it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 128.36it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 173.29it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 198.66it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 221.67it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 235.45it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 243.76it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 251.41it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 260.40it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 261.76it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 260.63it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 232.64it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] rag       acc=0.500 cc=0.062 viol=0.750 cov=1.000
-[seed 0] sym       acc=0.750 cc=0.500 viol=0.500 cov=1.000
-[seed 0] uq        acc=0.062 cc=0.000 viol=0.125 cov=0.125
-[seed 0] nsai      acc=0.750 cc=0.500 viol=0.500 cov=1.000
-[seed 0] nsai_uq   acc=0.594 cc=0.500 viol=0.125 cov=0.656
-
-wrote results/models/llama3-openbiollm-8b/summary_heldout.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done
-+ echo '[A][ok] A5_synthctl_ablation_heldout'
-[A][ok] A5_synthctl_ablation_heldout
++ echo '[A][skip] A5_synthctl_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done)'
+[A][skip] A5_synthctl_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done)
++ return 0
 + stage A6_synthctl_cl_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
 + local name=A6_synthctl_cl_test
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done ']'
-+ banner A6_synthctl_cl_test
-+ echo
-
-+ echo '########## [A] A6_synthctl_cl_test ##########'
-########## [A] A6_synthctl_cl_test ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:21, 13.34it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 127.23it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 164.36it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 207.21it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 220.64it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 235.04it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 249.77it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 251.97it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 258.57it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 260.72it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 260.28it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 232.95it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] nsai_uq_cl acc=0.609 cc=0.562 viol=0.031 cov=0.625
-
-wrote results/models/llama3-openbiollm-8b/summary_test.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done
-+ echo '[A][ok] A6_synthctl_cl_test'
-[A][ok] A6_synthctl_cl_test
++ echo '[A][skip] A6_synthctl_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done)'
+[A][skip] A6_synthctl_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done)
++ return 0
 + stage A6_synthctl_cl_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
 + local name=A6_synthctl_cl_heldout
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done ']'
-+ banner A6_synthctl_cl_heldout
-+ echo
-
-+ echo '########## [A] A6_synthctl_cl_heldout ##########'
-########## [A] A6_synthctl_cl_heldout ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:21, 13.62it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 100.94it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 174.07it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 198.70it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 221.67it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 235.33it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 243.58it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 256.67it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 258.18it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 259.58it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 259.50it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 231.22it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] nsai_uq_cl acc=0.625 cc=0.500 viol=0.125 cov=0.688
-
-wrote results/models/llama3-openbiollm-8b/summary_heldout.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done
-+ echo '[A][ok] A6_synthctl_cl_heldout'
-[A][ok] A6_synthctl_cl_heldout
++ echo '[A][skip] A6_synthctl_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done)'
+[A][skip] A6_synthctl_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done)
++ return 0
 + stage A7_perplexity_base python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200
 + local name=A7_perplexity_base
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done ']'
-+ banner A7_perplexity_base
-+ echo
-
-+ echo '########## [A] A7_perplexity_base ##########'
-########## [A] A7_perplexity_base ##########
-+ echo
-
-+ python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:43,  6.70it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 129.21it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 165.55it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 208.07it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 221.02it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 240.96it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 247.24it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 249.78it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 256.20it/s]Loading weights:  82%|████████▏ | 239/291 [00:01<00:00, 255.46it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 254.07it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 232.52it/s]
-model=aaditya/Llama3-OpenBioLLM-8B  base (no intervention)  wikitext-2 perplexity = 7.7875
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done
-+ echo '[A][ok] A7_perplexity_base'
-[A][ok] A7_perplexity_base
++ echo '[A][skip] A7_perplexity_base already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done)'
+[A][skip] A7_perplexity_base already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done)
++ return 0
 + stage A7_perplexity_qt python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --layer 30
 + local name=A7_perplexity_qt
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done ']'
-+ banner A7_perplexity_qt
-+ echo
-
-+ echo '########## [A] A7_perplexity_qt ##########'
-########## [A] A7_perplexity_qt ##########
-+ echo
-
-+ python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --layer 30
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:42,  6.85it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 131.04it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 167.32it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 210.37it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 222.77it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 235.82it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 250.19it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 252.07it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 249.56it/s]Loading weights:  83%|████████▎ | 242/291 [00:01<00:00, 264.11it/s]Loading weights:  92%|█████████▏| 269/291 [00:01<00:00, 263.40it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 233.95it/s]
-constraint layer attached at layer 30, alpha=1.0, rank=32
-model=aaditya/Llama3-OpenBioLLM-8B  +constraint layer L30  wikitext-2 perplexity = 7.8043
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done
-+ echo '[A][ok] A7_perplexity_qt'
-[A][ok] A7_perplexity_qt
++ echo '[A][skip] A7_perplexity_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done)'
+[A][skip] A7_perplexity_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done)
++ return 0
 + stage A7_perplexity_synth python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --layer 30
 + local name=A7_perplexity_synth
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done ']'
-+ banner A7_perplexity_synth
-+ echo
-
-+ echo '########## [A] A7_perplexity_synth ##########'
-########## [A] A7_perplexity_synth ##########
-+ echo
-
-+ python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --layer 30
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:20, 13.85it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 106.38it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 168.95it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 207.62it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 224.86it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 230.16it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 246.24it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 246.27it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 251.24it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 255.06it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 256.16it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 231.36it/s]
-constraint layer attached at layer 30, alpha=1.0, rank=32
-model=aaditya/Llama3-OpenBioLLM-8B  +constraint layer L30  wikitext-2 perplexity = 7.7822
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done
-+ echo '[A][ok] A7_perplexity_synth'
-[A][ok] A7_perplexity_synth
++ echo '[A][skip] A7_perplexity_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done)'
+[A][skip] A7_perplexity_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done)
++ return 0
 + stage A8_mimic_dataset_present test -s data/mimic/counterfactual_train.jsonl
 + local name=A8_mimic_dataset_present
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done ']'
-+ banner A8_mimic_dataset_present
-+ echo
-
-+ echo '########## [A] A8_mimic_dataset_present ##########'
-########## [A] A8_mimic_dataset_present ##########
-+ echo
-
-+ test -s data/mimic/counterfactual_train.jsonl
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done
-+ echo '[A][ok] A8_mimic_dataset_present'
-[A][ok] A8_mimic_dataset_present
++ echo '[A][skip] A8_mimic_dataset_present already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done)'
+[A][skip] A8_mimic_dataset_present already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done)
++ return 0
 + stage A9_constraint_mimic python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --out results/models/llama3-openbiollm-8b/constraint_mimic.json
 + local name=A9_constraint_mimic
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done ']'
-+ banner A9_constraint_mimic
-+ echo
-
-+ echo '########## [A] A9_constraint_mimic ##########'
-########## [A] A9_constraint_mimic ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --out results/models/llama3-openbiollm-8b/constraint_mimic.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 38 items / 19 pairs
-test  58 items / 29 pairs (same family as train)
-held  16 items / 8 pairs (['warfarin_inr4'])
-train families: ['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 180.22it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 227.85it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 252.61it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 257.67it/s]Loading weights:  45%|████▌     | 131/291 [00:00<00:00, 257.94it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 257.70it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 267.41it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 267.40it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 266.88it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 266.94it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.00it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.552  CC=0.103
-  heldout acc=0.500  CC=0.000
-
-=== decision entropy on REDACTED notes, base model ===
-  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
-  heldout nan nats over 0 items
-
-=== L_ontology, required margin per family ===
-    metformin_egfr30               NOT IN GRAPH -- term silent (0.0)
-    metformin_egfr45               NOT IN GRAPH -- term silent (0.0)
-    spironolactone_k5_5            NOT IN GRAPH -- term silent (0.0)
-
-=== training on 38 items (real labels) ===
-  epoch 1/8  L_causal=0.7088  L_KL=0.0670  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.500
-  epoch 2/8  L_causal=0.6824  L_KL=0.0736  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.553
-  epoch 3/8  L_causal=0.6711  L_KL=0.0810  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.632
-  epoch 4/8  L_causal=0.6761  L_KL=0.0876  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.579
-  epoch 5/8  L_causal=0.6679  L_KL=0.0874  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.605
-  epoch 6/8  L_causal=0.6875  L_KL=0.0877  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.579
-[transformers] Error during conversion: ReadTimeout('The read operation timed out')
-  epoch 7/8  L_causal=0.6701  L_KL=0.0963  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.605
-  epoch 8/8  L_causal=0.6566  L_KL=0.0993  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.658
-
-=== with constraint layer ===
-  test    acc=0.500  CC=0.069   (base 0.103, delta -0.034)
-  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    nan -> nan nats
-  heldout nan -> nan nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_mimic.json
-wrote results/models/llama3-openbiollm-8b/adapter_mimic.npz
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done
-+ echo '[A][ok] A9_constraint_mimic'
-[A][ok] A9_constraint_mimic
++ echo '[A][skip] A9_constraint_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done)'
+[A][skip] A9_constraint_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done)
++ return 0
 + stage A10_constraint_mimic_shuffled python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_mimic_shuffled.json
 + local name=A10_constraint_mimic_shuffled
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done ']'
-+ banner A10_constraint_mimic_shuffled
-+ echo
-
-+ echo '########## [A] A10_constraint_mimic_shuffled ##########'
-########## [A] A10_constraint_mimic_shuffled ##########
-+ echo
-
-+ python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_mimic_shuffled.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-train 38 items / 19 pairs
-test  58 items / 29 pairs (same family as train)
-held  16 items / 8 pairs (['warfarin_inr4'])
-train families: ['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 181.72it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 229.04it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 246.74it/s]Loading weights:  37%|███▋      | 107/291 [00:00<00:00, 265.45it/s]Loading weights:  47%|████▋     | 137/291 [00:00<00:00, 276.90it/s]Loading weights:  57%|█████▋    | 165/291 [00:00<00:00, 277.21it/s]Loading weights:  66%|██████▋   | 193/291 [00:00<00:00, 256.20it/s]Loading weights:  76%|███████▌  | 220/291 [00:00<00:00, 259.96it/s]Loading weights:  86%|████████▌ | 249/291 [00:00<00:00, 268.84it/s]Loading weights:  95%|█████████▌| 277/291 [00:01<00:00, 271.45it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 265.07it/s]
-/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
-Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  tot["causal"] += float(l_causal)
-
-adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
-
-=== base model, same decision rule ===
-  test    acc=0.552  CC=0.103
-  heldout acc=0.500  CC=0.000
-
-=== decision entropy on REDACTED notes, base model ===
-  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
-  heldout nan nats over 0 items
-  [control] lam_ont forced to 0: the ontology term is defined on the true arm ordering and would leak the real labels back into a run whose whole purpose is to have none.
-
-=== L_ontology, required margin per family ===
-    metformin_egfr30               NOT IN GRAPH -- term silent (0.0)
-    metformin_egfr45               NOT IN GRAPH -- term silent (0.0)
-    spironolactone_k5_5            NOT IN GRAPH -- term silent (0.0)
-
-=== training on 38 items (SHUFFLED-LABEL CONTROL) ===
-  epoch 1/8  L_causal=0.7270  L_KL=0.0641  L_unc=0.0000  train-decision-acc=0.526
-  epoch 2/8  L_causal=0.6921  L_KL=0.0631  L_unc=0.0000  train-decision-acc=0.526
-  epoch 3/8  L_causal=0.6872  L_KL=0.0752  L_unc=0.0000  train-decision-acc=0.447
-  epoch 4/8  L_causal=0.6824  L_KL=0.0741  L_unc=0.0000  train-decision-acc=0.500
-  epoch 5/8  L_causal=0.6851  L_KL=0.0749  L_unc=0.0000  train-decision-acc=0.500
-  epoch 6/8  L_causal=0.6814  L_KL=0.0787  L_unc=0.0000  train-decision-acc=0.553
-  epoch 7/8  L_causal=0.6863  L_KL=0.0695  L_unc=0.0000  train-decision-acc=0.579
-  epoch 8/8  L_causal=0.6795  L_KL=0.0823  L_unc=0.0000  train-decision-acc=0.632
-
-=== with constraint layer ===
-  test    acc=0.448  CC=0.034   (base 0.103, delta -0.069)
-  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
-
-=== decision entropy on REDACTED notes, with constraint layer ===
-  test    nan -> nan nats
-  heldout nan -> nan nats
-
-wrote results/models/llama3-openbiollm-8b/constraint_mimic_shuffled.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done
-+ echo '[A][ok] A10_constraint_mimic_shuffled'
-[A][ok] A10_constraint_mimic_shuffled
++ echo '[A][skip] A10_constraint_mimic_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done)'
+[A][skip] A10_constraint_mimic_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done)
++ return 0
 + stage A11_mimic_ablation_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
 + local name=A11_mimic_ablation_test
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done ']'
-+ banner A11_mimic_ablation_test
-+ echo
-
-+ echo '########## [A] A11_mimic_ablation_test ##########'
-########## [A] A11_mimic_ablation_test ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:21, 13.41it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 128.17it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 173.92it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 207.14it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 221.34it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 235.76it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 250.72it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 252.90it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 252.99it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 256.49it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 257.33it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 234.03it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] rag       acc=0.431 cc=0.000 viol=0.621 cov=1.000
-[seed 0] sym       acc=0.690 cc=0.379 viol=0.621 cov=1.000
-[seed 0] uq        acc=0.052 cc=0.000 viol=0.069 cov=0.086
-[seed 0] nsai      acc=0.690 cc=0.379 viol=0.621 cov=1.000
-[seed 0] nsai_uq   acc=0.379 cc=0.379 viol=0.034 cov=0.397
-
-wrote results/models/llama3-openbiollm-8b/summary_test_mimic.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done
-+ echo '[A][ok] A11_mimic_ablation_test'
-[A][ok] A11_mimic_ablation_test
++ echo '[A][skip] A11_mimic_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done)'
+[A][skip] A11_mimic_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done)
++ return 0
 + stage A11_mimic_ablation_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
 + local name=A11_mimic_ablation_heldout
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done ']'
-+ banner A11_mimic_ablation_heldout
-+ echo
-
-+ echo '########## [A] A11_mimic_ablation_heldout ##########'
-########## [A] A11_mimic_ablation_heldout ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:42,  6.76it/s]Loading weights:   9%|▉         | 26/291 [00:00<00:02, 124.09it/s]Loading weights:  18%|█▊        | 53/291 [00:00<00:01, 181.42it/s]Loading weights:  27%|██▋       | 80/291 [00:00<00:00, 211.13it/s]Loading weights:  37%|███▋      | 109/291 [00:00<00:00, 236.88it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 239.78it/s]Loading weights:  55%|█████▌    | 161/291 [00:00<00:00, 247.30it/s]Loading weights:  65%|██████▍   | 188/291 [00:00<00:00, 254.00it/s]Loading weights:  75%|███████▍  | 217/291 [00:00<00:00, 263.54it/s]Loading weights:  84%|████████▍ | 244/291 [00:01<00:00, 264.47it/s]Loading weights:  93%|█████████▎| 271/291 [00:01<00:00, 263.00it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 234.77it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] rag       acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
-[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
-[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
-[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
-
-wrote results/models/llama3-openbiollm-8b/summary_heldout_mimic.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done
-+ echo '[A][ok] A11_mimic_ablation_heldout'
-[A][ok] A11_mimic_ablation_heldout
++ echo '[A][skip] A11_mimic_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done)'
+[A][skip] A11_mimic_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done)
++ return 0
 + stage A12_mimic_cl_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
 + local name=A12_mimic_cl_test
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done ']'
-+ banner A12_mimic_cl_test
-+ echo
-
-+ echo '########## [A] A12_mimic_cl_test ##########'
-########## [A] A12_mimic_cl_test ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:42,  6.82it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 106.11it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 173.09it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 206.26it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 227.29it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 239.23it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 246.28it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 250.06it/s]Loading weights:  74%|███████▍  | 215/291 [00:00<00:00, 268.11it/s]Loading weights:  84%|████████▎ | 243/291 [00:01<00:00, 268.08it/s]Loading weights:  93%|█████████▎| 270/291 [00:01<00:00, 265.78it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 233.91it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] nsai_uq_cl acc=0.379 cc=0.379 viol=0.034 cov=0.397
-
-wrote results/models/llama3-openbiollm-8b/summary_test_mimic.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done
-+ echo '[A][ok] A12_mimic_cl_test'
-[A][ok] A12_mimic_cl_test
++ echo '[A][skip] A12_mimic_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done)'
+[A][skip] A12_mimic_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done)
++ return 0
 + stage A12_mimic_cl_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
 + local name=A12_mimic_cl_heldout
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done ']'
-+ banner A12_mimic_cl_heldout
-+ echo
-
-+ echo '########## [A] A12_mimic_cl_heldout ##########'
-########## [A] A12_mimic_cl_heldout ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   1%|          | 2/291 [00:00<00:21, 13.74it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 129.44it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 166.15it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 208.56it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 221.36it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 241.32it/s]Loading weights:  54%|█████▍    | 158/291 [00:00<00:00, 243.79it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 248.10it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 258.22it/s]Loading weights:  82%|████████▏ | 240/291 [00:01<00:00, 259.91it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 260.82it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 233.78it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] nsai_uq_cl acc=1.000 cc=1.000 viol=0.000 cov=1.000
-
-wrote results/models/llama3-openbiollm-8b/summary_heldout_mimic.json
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done
-+ echo '[A][ok] A12_mimic_cl_heldout'
-[A][ok] A12_mimic_cl_heldout
++ echo '[A][skip] A12_mimic_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done)'
+[A][skip] A12_mimic_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done)
++ return 0
 + stage A13_perplexity_mimic python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --layer 30
 + local name=A13_perplexity_mimic
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done ']'
-+ banner A13_perplexity_mimic
-+ echo
-
-+ echo '########## [A] A13_perplexity_mimic ##########'
-########## [A] A13_perplexity_mimic ##########
-+ echo
-
-+ python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --layer 30
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:42,  6.83it/s]Loading weights:   9%|▉         | 27/291 [00:00<00:02, 130.41it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 166.89it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:01, 209.61it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 222.98it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 237.01it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 251.43it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 253.23it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 253.22it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 256.61it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 263.75it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 234.24it/s]
-constraint layer attached at layer 30, alpha=1.0, rank=32
-model=aaditya/Llama3-OpenBioLLM-8B  +constraint layer L30  wikitext-2 perplexity = 7.7888
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done
-+ echo '[A][ok] A13_perplexity_mimic'
-[A][ok] A13_perplexity_mimic
++ echo '[A][skip] A13_perplexity_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done)'
+[A][skip] A13_perplexity_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done)
++ return 0
 + '[' 0 -eq 0 ']'
 + touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/ALL_DONE
 + banner 'LANE A DONE (0 stage(s) failed)'

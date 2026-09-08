@@ -1,0 +1,4 @@
+{"id": "guideline::metformin_egfr30", "text": "Metformin is contraindicated in severe renal impairment (eGFR below 30 mL/min/1.73 m2). [FDA label, CONTRAINDICATIONS -- attested_exact]"}
+{"id": "guideline::metformin_egfr45", "text": "Metformin initiation is not recommended in patients with an eGFR between 30 and less than 45 mL/min/1.73 m2. [FDA label, DOSAGE AND ADMINISTRATION -- attested_exact]"}
+{"id": "guideline::spironolactone_k5_5", "text": "Spironolactone should be used with caution in patients with elevated serum potassium; a level above 5.5 mEq/L is treated here as a contraindication threshold. [threshold_status: construct_mismatch -- the FDA label's 5.0 mEq/L figure is an initiation criterion, not this ceiling]"}
+{"id": "guideline::warfarin_inr4", "text": "An INR greater than 4 provides no additional therapeutic benefit and is associated with a higher risk of bleeding. [FDA label, WARNINGS AND CAUTIONS -- attested_exact]"}

@@ -1,0 +1,692 @@
++ export CUDA_VISIBLE_DEVICES=0
++ CUDA_VISIBLE_DEVICES=0
++ export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ cd /home/asosoft/abtin/paper/csai
++ M=BioMistral/BioMistral-7B
++ TAG=biomistral-7b-L24
++ R=results/layers/L24
++ LAYER=24
++ ADAPTER_LAYER=30
++ mkdir -p results/layers/L24
++ V6='base rag sym uq nsai nsai_uq'
++ STATE_DIR=.pipeline_state/scaled_b_biomistral-7b-L24_L24
++ mkdir -p .pipeline_state/scaled_b_biomistral-7b-L24_L24
++ FAILED=0
++ stage B1_medcalc_ablation_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
++ local name=B1_medcalc_ablation_test
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_test.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_test.done ']'
++ banner B1_medcalc_ablation_test
++ echo
+
++ echo '########## [B] B1_medcalc_ablation_test ##########'
+########## [B] B1_medcalc_ablation_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 180.97it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 228.31it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 245.34it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 260.89it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 262.74it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 261.44it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 260.42it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 260.09it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 260.33it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 262.24it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 260.35it/s]
+[seed 0] base      acc=0.506 cc=0.011 viol=0.322 cov=1.000
+[seed 0] rag       acc=0.494 cc=0.000 viol=0.022 cov=1.000
+[seed 0] sym       acc=0.994 cc=0.989 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=0.994 cc=0.989 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.994 cc=0.989 viol=0.000 cov=1.000
+
+wrote results/layers/L24/summary_test_medcalc.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_test.done
++ echo '[B][ok] B1_medcalc_ablation_test'
+[B][ok] B1_medcalc_ablation_test
++ stage B1_medcalc_ablation_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
++ local name=B1_medcalc_ablation_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_heldout.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_heldout.done ']'
++ banner B1_medcalc_ablation_heldout
++ echo
+
++ echo '########## [B] B1_medcalc_ablation_heldout ##########'
+########## [B] B1_medcalc_ablation_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 181.34it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 228.18it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 254.05it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 255.04it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 256.08it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 260.08it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 268.74it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 268.64it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 268.55it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 268.49it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.91it/s]
+[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/layers/L24/summary_heldout_medcalc.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B1_medcalc_ablation_heldout.done
++ echo '[B][ok] B1_medcalc_ablation_heldout'
+[B][ok] B1_medcalc_ablation_heldout
++ stage B2_sae_collect python src/sae.py collect --data data/medcalc --split train --layer 24 --model_id BioMistral/BioMistral-7B --other_mult 1000 --max_tokens 300000 --out results/layers/L24/sae/acts_medcalc_train_L24.npz
++ local name=B2_sae_collect
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B2_sae_collect.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B2_sae_collect.done ']'
++ banner B2_sae_collect
++ echo
+
++ echo '########## [B] B2_sae_collect ##########'
+########## [B] B2_sae_collect ##########
++ echo
+
++ python src/sae.py collect --data data/medcalc --split train --layer 24 --model_id BioMistral/BioMistral-7B --other_mult 1000 --max_tokens 300000 --out results/layers/L24/sae/acts_medcalc_train_L24.npz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+  concept vocabulary: umls (11 concepts)
+    creatinine     C0201976   umls_atoms= 16 curated=  3  +numeric_tail
+    qt_interval    C0429028   umls_atoms= 13 curated=  4  +numeric_tail
+    egfr           C3811844   umls_atoms=  2 curated=  3  +numeric_tail
+    heart_rate     C0018810   umls_atoms= 18 curated=  3  +numeric_tail
+    potassium      C0302353   umls_atoms= 19 curated=  2  +numeric_tail
+    inr            C0525032   umls_atoms= 26 curated=  1  +numeric_tail
+    age                       umls_atoms=  0 curated=  0
+    drug           C0025598   umls_atoms=192 curated=  0
+    renal_disease  C0035078   umls_atoms= 97 curated=  7
+    pregnancy      C0032961   umls_atoms= 17 curated=  4
+    asthma         C0004096   umls_atoms= 27 curated=  7
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 182.03it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 228.79it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 254.80it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 256.30it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 266.58it/s]Loading weights:  56%|█████▌    | 163/291 [00:00<00:00, 274.01it/s]Loading weights:  66%|██████▌   | 191/291 [00:00<00:00, 274.95it/s]Loading weights:  75%|███████▌  | 219/291 [00:00<00:00, 276.39it/s]Loading weights:  85%|████████▍ | 247/291 [00:00<00:00, 255.86it/s]Loading weights:  96%|█████████▌| 278/291 [00:01<00:00, 271.08it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 265.02it/s]
+  50/280 items, 39604 tokens
+  100/280 items, 82590 tokens
+  150/280 items, 123778 tokens
+  200/280 items, 160511 tokens
+  250/280 items, 200128 tokens
+wrote results/layers/L24/sae/acts_medcalc_train_L24.npz: X(225248, 4096) labels(225248, 11)
+  concept token counts: creatinine=3870, qt_interval=38, egfr=0, heart_rate=610, potassium=228, inr=54, age=1696, drug=1116, renal_disease=804, pregnancy=20, asthma=106
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B2_sae_collect.done
++ echo '[B][ok] B2_sae_collect'
+[B][ok] B2_sae_collect
++ stage B3_sae_train_topk python src/sae.py train --acts results/layers/L24/sae/acts_medcalc_train_L24.npz --kind topk --expansion 4 --k 32 --epochs 30 --batch 2048 --out results/layers/L24/sae/sae_topk_L24.npz
++ local name=B3_sae_train_topk
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B3_sae_train_topk.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B3_sae_train_topk.done ']'
++ banner B3_sae_train_topk
++ echo
+
++ echo '########## [B] B3_sae_train_topk ##########'
+########## [B] B3_sae_train_topk ##########
++ echo
+
++ python src/sae.py train --acts results/layers/L24/sae/acts_medcalc_train_L24.npz --kind topk --expansion 4 --k 32 --epochs 30 --batch 2048 --out results/layers/L24/sae/sae_topk_L24.npz
+input scale 3.6872 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+225248 tokens x 4096 dims -> 16384 features (topk, k=32)
+train 217056 / val 8192 tokens
+  epoch 1/30  train_mse=0.61957  val_FVU=0.1520  val_L0=32.0  dead=5467
+  epoch 2/30  train_mse=0.24445  val_FVU=0.1209  val_L0=31.9  dead=5424
+  epoch 3/30  train_mse=0.21081  val_FVU=0.1117  val_L0=31.8  dead=5434
+  epoch 4/30  train_mse=0.19676  val_FVU=0.1073  val_L0=31.8  dead=5498
+  epoch 5/30  train_mse=0.18902  val_FVU=0.1046  val_L0=31.9  dead=5543
+  epoch 6/30  train_mse=0.18538  val_FVU=0.1043  val_L0=31.9  dead=5563
+  epoch 7/30  train_mse=0.18727  val_FVU=0.1039  val_L0=31.9  dead=5634
+  epoch 8/30  train_mse=0.18319  val_FVU=0.1011  val_L0=31.9  dead=5677
+  epoch 9/30  train_mse=0.17810  val_FVU=0.1002  val_L0=32.0  dead=5710
+  epoch 10/30  train_mse=0.17718  val_FVU=0.1002  val_L0=32.0  dead=5723
+  epoch 11/30  train_mse=0.17820  val_FVU=0.1045  val_L0=32.0  dead=5765
+  epoch 12/30  train_mse=0.17640  val_FVU=0.0991  val_L0=32.0  dead=5821
+  epoch 13/30  train_mse=0.17411  val_FVU=0.0989  val_L0=32.0  dead=5813
+  epoch 14/30  train_mse=0.17390  val_FVU=0.0988  val_L0=31.9  dead=5860
+  epoch 15/30  train_mse=0.17378  val_FVU=0.0983  val_L0=31.9  dead=5840
+  epoch 16/30  train_mse=0.17330  val_FVU=0.0984  val_L0=31.9  dead=5916
+  epoch 17/30  train_mse=0.17620  val_FVU=0.1012  val_L0=31.9  dead=5933
+  epoch 18/30  train_mse=0.17276  val_FVU=0.0985  val_L0=31.9  dead=5941
+  epoch 19/30  train_mse=0.17203  val_FVU=0.0977  val_L0=31.8  dead=5957
+  epoch 20/30  train_mse=0.17161  val_FVU=0.0975  val_L0=31.8  dead=5990
+  epoch 21/30  train_mse=0.17106  val_FVU=0.0972  val_L0=31.8  dead=6008
+  epoch 22/30  train_mse=0.17066  val_FVU=0.0972  val_L0=31.8  dead=6053
+  epoch 23/30  train_mse=0.17042  val_FVU=0.0968  val_L0=31.7  dead=6050
+  epoch 24/30  train_mse=0.17037  val_FVU=0.0971  val_L0=31.7  dead=6098
+  epoch 25/30  train_mse=0.17023  val_FVU=0.0970  val_L0=31.7  dead=6104
+  epoch 26/30  train_mse=0.16993  val_FVU=0.0970  val_L0=31.6  dead=6106
+  epoch 27/30  train_mse=0.16988  val_FVU=0.0971  val_L0=31.6  dead=6130
+  epoch 28/30  train_mse=0.17000  val_FVU=0.0969  val_L0=31.6  dead=6134
+  epoch 29/30  train_mse=0.17013  val_FVU=0.0971  val_L0=31.6  dead=6152
+  epoch 30/30  train_mse=0.16965  val_FVU=0.0969  val_L0=31.6  dead=6173
+wrote results/layers/L24/sae/sae_topk_L24.npz
+  final val FVU=0.0969  L0=31.6  dead features=6173/16384 (37.7%)
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B3_sae_train_topk.done
++ echo '[B][ok] B3_sae_train_topk'
+[B][ok] B3_sae_train_topk
++ stage B4_sae_train_jumprelu python src/sae.py train --acts results/layers/L24/sae/acts_medcalc_train_L24.npz --kind jumprelu --expansion 4 --epochs 30 --batch 2048 --out results/layers/L24/sae/sae_jumprelu_L24.npz
++ local name=B4_sae_train_jumprelu
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B4_sae_train_jumprelu.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B4_sae_train_jumprelu.done ']'
++ banner B4_sae_train_jumprelu
++ echo
+
++ echo '########## [B] B4_sae_train_jumprelu ##########'
+########## [B] B4_sae_train_jumprelu ##########
++ echo
+
++ python src/sae.py train --acts results/layers/L24/sae/acts_medcalc_train_L24.npz --kind jumprelu --expansion 4 --epochs 30 --batch 2048 --out results/layers/L24/sae/sae_jumprelu_L24.npz
+input scale 3.6872 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+225248 tokens x 4096 dims -> 16384 features (jumprelu, k=32)
+train 217056 / val 8192 tokens
+  epoch 1/30  train_mse=1.56265  val_FVU=0.4712  val_L0=12.8  dead=8578
+  epoch 2/30  train_mse=0.92035  val_FVU=0.4086  val_L0=11.8  dead=8553
+  epoch 3/30  train_mse=0.82117  val_FVU=0.3705  val_L0=13.2  dead=8860
+  epoch 4/30  train_mse=0.75868  val_FVU=0.3439  val_L0=14.1  dead=8947
+  epoch 5/30  train_mse=0.71765  val_FVU=0.3250  val_L0=15.3  dead=8879
+  epoch 6/30  train_mse=0.68057  val_FVU=0.3006  val_L0=17.4  dead=8929
+  epoch 7/30  train_mse=0.63863  val_FVU=0.2792  val_L0=19.0  dead=8909
+  epoch 8/30  train_mse=0.60362  val_FVU=0.2599  val_L0=20.1  dead=8982
+  epoch 9/30  train_mse=0.57044  val_FVU=0.2440  val_L0=21.4  dead=9127
+  epoch 10/30  train_mse=0.54242  val_FVU=0.2298  val_L0=22.2  dead=9285
+  epoch 11/30  train_mse=0.51774  val_FVU=0.2169  val_L0=23.2  dead=9447
+  epoch 12/30  train_mse=0.49581  val_FVU=0.2057  val_L0=23.5  dead=9586
+  epoch 13/30  train_mse=0.47771  val_FVU=0.1972  val_L0=23.8  dead=9797
+  epoch 14/30  train_mse=0.46323  val_FVU=0.1898  val_L0=24.2  dead=9974
+  epoch 15/30  train_mse=0.45040  val_FVU=0.1838  val_L0=24.6  dead=10006
+  epoch 16/30  train_mse=0.43938  val_FVU=0.1781  val_L0=24.9  dead=10131
+  epoch 17/30  train_mse=0.42865  val_FVU=0.1728  val_L0=25.1  dead=10231
+  epoch 18/30  train_mse=0.41908  val_FVU=0.1683  val_L0=25.2  dead=10265
+  epoch 19/30  train_mse=0.41066  val_FVU=0.1642  val_L0=25.3  dead=10316
+  epoch 20/30  train_mse=0.40318  val_FVU=0.1605  val_L0=25.4  dead=10309
+  epoch 21/30  train_mse=0.39640  val_FVU=0.1573  val_L0=25.4  dead=10277
+  epoch 22/30  train_mse=0.39017  val_FVU=0.1543  val_L0=25.4  dead=10252
+  epoch 23/30  train_mse=0.38437  val_FVU=0.1515  val_L0=25.4  dead=10194
+  epoch 24/30  train_mse=0.37920  val_FVU=0.1489  val_L0=25.4  dead=10128
+  epoch 25/30  train_mse=0.37433  val_FVU=0.1469  val_L0=25.2  dead=10104
+  epoch 26/30  train_mse=0.36981  val_FVU=0.1446  val_L0=25.2  dead=10037
+  epoch 27/30  train_mse=0.36557  val_FVU=0.1427  val_L0=25.1  dead=9883
+  epoch 28/30  train_mse=0.36159  val_FVU=0.1409  val_L0=25.0  dead=9893
+  epoch 29/30  train_mse=0.35795  val_FVU=0.1391  val_L0=25.0  dead=9805
+  epoch 30/30  train_mse=0.35433  val_FVU=0.1375  val_L0=24.8  dead=9727
+wrote results/layers/L24/sae/sae_jumprelu_L24.npz
+  final val FVU=0.1375  L0=24.8  dead features=9727/16384 (59.4%)
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B4_sae_train_jumprelu.done
++ echo '[B][ok] B4_sae_train_jumprelu'
+[B][ok] B4_sae_train_jumprelu
++ stage B5_sae_score_topk python src/sae.py score --sae results/layers/L24/sae/sae_topk_L24.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items -1 --causal_features 0 --causal_split test
++ local name=B5_sae_score_topk
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B5_sae_score_topk.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B5_sae_score_topk.done ']'
++ banner B5_sae_score_topk
++ echo
+
++ echo '########## [B] B5_sae_score_topk ##########'
+########## [B] B5_sae_score_topk ##########
++ echo
+
++ python src/sae.py score --sae results/layers/L24/sae/sae_topk_L24.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items -1 --causal_features 0 --causal_split test
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  # 13369  S_sem=0.738  concept=age  fires on 1479/225248 tokens
+  # 12213  S_sem=0.619  concept=heart_rate  fires on 443/225248 tokens
+  #  3338  S_sem=0.588  concept=age  fires on 1381/225248 tokens
+  #  4329  S_sem=0.582  concept=creatinine  fires on 8203/225248 tokens
+  #  7589  S_sem=0.539  concept=age  fires on 1391/225248 tokens
+  # 11396  S_sem=0.536  concept=age  fires on 1154/225248 tokens
+  #   647  S_sem=0.506  concept=heart_rate  fires on 323/225248 tokens
+  # 14775  S_sem=0.500  concept=qt_interval  fires on 90/225248 tokens
+  # 16251  S_sem=0.487  concept=age  fires on 1094/225248 tokens
+  #  8392  S_sem=0.477  concept=age  fires on 668/225248 tokens
+  # 15537  S_sem=0.476  concept=creatinine  fires on 2766/225248 tokens
+  # 10721  S_sem=0.475  concept=drug  fires on 1209/225248 tokens
+  # 10501  S_sem=0.472  concept=asthma  fires on 38/225248 tokens
+  #     0  S_sem=0.464  concept=heart_rate  fires on 399/225248 tokens
+  # 15626  S_sem=0.461  concept=creatinine  fires on 1962/225248 tokens
+  # 16231  S_sem=0.452  concept=age  fires on 4033/225248 tokens
+  #  9669  S_sem=0.449  concept=asthma  fires on 90/225248 tokens
+  #  6513  S_sem=0.445  concept=drug  fires on 1353/225248 tokens
+  #  3446  S_sem=0.441  concept=age  fires on 708/225248 tokens
+  #  9828  S_sem=0.434  concept=heart_rate  fires on 1112/225248 tokens
+  # 11870  S_sem=0.432  concept=inr  fires on 94/225248 tokens
+  #  5215  S_sem=0.431  concept=potassium  fires on 556/225248 tokens
+  #  4661  S_sem=0.429  concept=qt_interval  fires on 46/225248 tokens
+  #  8064  S_sem=0.427  concept=age  fires on 2935/225248 tokens
+  # 14604  S_sem=0.413  concept=age  fires on 531/225248 tokens
+  knock-out on 180 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 211.78it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 221.43it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 241.37it/s]Loading weights:  37%|███▋      | 107/291 [00:00<00:00, 261.76it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 264.43it/s]Loading weights:  55%|█████▌    | 161/291 [00:00<00:00, 266.05it/s]Loading weights:  66%|██████▌   | 191/291 [00:00<00:00, 276.43it/s]Loading weights:  75%|███████▌  | 219/291 [00:00<00:00, 277.17it/s]Loading weights:  85%|████████▍ | 247/291 [00:00<00:00, 257.00it/s]Loading weights:  94%|█████████▍| 274/291 [00:01<00:00, 260.64it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 265.24it/s]
+  knock-out hook on layers[23], which produces hidden_states[24] -- the stream the SAE was fitted on
+  knock-out #13369: |Δ margin|=0.0189 (random control #13936: 0.0010, excess +0.0179)
+  knock-out #12213: |Δ margin|=0.0109 (random control #10435: 0.0000, excess +0.0109)
+  knock-out #3338: |Δ margin|=0.0222 (random control #8374: 0.0018, excess +0.0203)
+  knock-out #4329: |Δ margin|=0.0216 (random control #4420: 0.0007, excess +0.0209)
+  knock-out #7589: |Δ margin|=0.0223 (random control #5043: 0.0031, excess +0.0193)
+  knock-out #11396: |Δ margin|=0.0198 (random control #671: 0.0000, excess +0.0198)
+  knock-out #647: |Δ margin|=0.0060 (random control #1232: 0.0000, excess +0.0060)
+  knock-out #14775: |Δ margin|=0.0010 (random control #270: 0.0010, excess +0.0000)
+  knock-out #16251: |Δ margin|=0.0167 (random control #2871: 0.0013, excess +0.0154)
+  knock-out #8392: |Δ margin|=0.0173 (random control #13324: 0.0038, excess +0.0135)
+  knock-out #15537: |Δ margin|=0.0190 (random control #10640: 0.0179, excess +0.0010)
+  knock-out #10721: |Δ margin|=0.0349 (random control #14954: 0.0078, excess +0.0271)
+  knock-out #10501: |Δ margin|=0.0007 (random control #8251: 0.0000, excess +0.0007)
+  knock-out #0: |Δ margin|=0.0100 (random control #9939: 0.0138, excess -0.0038)
+  knock-out #15626: |Δ margin|=0.0194 (random control #15904: 0.0000, excess +0.0194)
+  knock-out #16231: |Δ margin|=0.0197 (random control #11952: 0.0088, excess +0.0109)
+  knock-out #9669: |Δ margin|=0.0017 (random control #10359: 0.0021, excess -0.0004)
+  knock-out #6513: |Δ margin|=0.0202 (random control #8906: 0.0111, excess +0.0091)
+  knock-out #3446: |Δ margin|=0.0211 (random control #9173: 0.0000, excess +0.0211)
+  knock-out #9828: |Δ margin|=0.0080 (random control #15320: 0.0000, excess +0.0080)
+  knock-out #11870: |Δ margin|=0.0025 (random control #4544: 0.0022, excess +0.0003)
+  knock-out #5215: |Δ margin|=0.0070 (random control #13366: 0.0092, excess -0.0022)
+  knock-out #4661: |Δ margin|=0.0021 (random control #10991: 0.0024, excess -0.0004)
+  knock-out #8064: |Δ margin|=0.0223 (random control #44: 0.0088, excess +0.0134)
+  knock-out #14604: |Δ margin|=0.0182 (random control #6457: 0.0000, excess +0.0182)
+
+wrote results/layers/L24/sae/sae_topk_L24_fis.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B5_sae_score_topk.done
++ echo '[B][ok] B5_sae_score_topk'
+[B][ok] B5_sae_score_topk
++ stage B6_sae_score_jumprelu python src/sae.py score --sae results/layers/L24/sae/sae_jumprelu_L24.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 0
++ local name=B6_sae_score_jumprelu
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B6_sae_score_jumprelu.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B6_sae_score_jumprelu.done ']'
++ banner B6_sae_score_jumprelu
++ echo
+
++ echo '########## [B] B6_sae_score_jumprelu ##########'
+########## [B] B6_sae_score_jumprelu ##########
++ echo
+
++ python src/sae.py score --sae results/layers/L24/sae/sae_jumprelu_L24.npz --model_id BioMistral/BioMistral-7B --top 25 --causal_items 0
+
+top 25 features by S_semantic:
+  #  5039  S_sem=0.530  concept=creatinine  fires on 4103/225248 tokens
+  #  3432  S_sem=0.424  concept=creatinine  fires on 3410/225248 tokens
+  #  4752  S_sem=0.408  concept=creatinine  fires on 2899/225248 tokens
+  # 12226  S_sem=0.394  concept=age  fires on 1543/225248 tokens
+  # 10306  S_sem=0.394  concept=drug  fires on 936/225248 tokens
+  #  8278  S_sem=0.378  concept=creatinine  fires on 1829/225248 tokens
+  # 16025  S_sem=0.374  concept=age  fires on 985/225248 tokens
+  # 12467  S_sem=0.357  concept=creatinine  fires on 4937/225248 tokens
+  #  7209  S_sem=0.340  concept=drug  fires on 794/225248 tokens
+  #  8340  S_sem=0.334  concept=renal_disease  fires on 1160/225248 tokens
+  # 12758  S_sem=0.328  concept=asthma  fires on 150/225248 tokens
+  #   693  S_sem=0.328  concept=heart_rate  fires on 891/225248 tokens
+  # 13801  S_sem=0.327  concept=renal_disease  fires on 737/225248 tokens
+  # 12323  S_sem=0.316  concept=age  fires on 1076/225248 tokens
+  # 13179  S_sem=0.312  concept=age  fires on 2313/225248 tokens
+  #  4946  S_sem=0.308  concept=asthma  fires on 76/225248 tokens
+  #  8065  S_sem=0.305  concept=age  fires on 2105/225248 tokens
+  #  1391  S_sem=0.299  concept=creatinine  fires on 1714/225248 tokens
+  # 10583  S_sem=0.290  concept=creatinine  fires on 3253/225248 tokens
+  # 10485  S_sem=0.290  concept=creatinine  fires on 1868/225248 tokens
+  #  7469  S_sem=0.289  concept=heart_rate  fires on 3001/225248 tokens
+  # 13169  S_sem=0.285  concept=age  fires on 1363/225248 tokens
+  #  8996  S_sem=0.251  concept=age  fires on 997/225248 tokens
+  #  5823  S_sem=0.248  concept=heart_rate  fires on 986/225248 tokens
+  #  3164  S_sem=0.242  concept=creatinine  fires on 1232/225248 tokens
+
+wrote results/layers/L24/sae/sae_jumprelu_L24_fis.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B6_sae_score_jumprelu.done
++ echo '[B][ok] B6_sae_score_jumprelu'
+[B][ok] B6_sae_score_jumprelu
++ wait_for results/layers/L24/adapter_qt.npz adapter_qt
++ local waited=0
++ '[' '!' -s results/layers/L24/adapter_qt.npz ']'
++ echo '[B] adapter_qt is present after 0s'
+[B] adapter_qt is present after 0s
++ wait_for results/layers/L24/adapter_renal.npz adapter_renal
++ local waited=0
++ '[' '!' -s results/layers/L24/adapter_renal.npz ']'
++ echo '[B] adapter_renal is present after 0s'
+[B] adapter_renal is present after 0s
++ stage B7_medcalc_cl_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/layers/L24/adapter_qt.npz --adapter_layer 30 --batch_size 4
++ local name=B7_medcalc_cl_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_heldout.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_heldout.done ']'
++ banner B7_medcalc_cl_heldout
++ echo
+
++ echo '########## [B] B7_medcalc_cl_heldout ##########'
+########## [B] B7_medcalc_cl_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/layers/L24/adapter_qt.npz --adapter_layer 30 --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.79it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 236.37it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 249.54it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 251.62it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 253.12it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 263.90it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 264.85it/s]Loading weights:  73%|███████▎  | 213/291 [00:00<00:00, 265.09it/s]Loading weights:  82%|████████▏ | 240/291 [00:00<00:00, 265.61it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 265.22it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.82it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.883 cc=0.767 viol=0.133 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/layers/L24/summary_heldout_medcalc.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_heldout.done
++ echo '[B][ok] B7_medcalc_cl_heldout'
+[B][ok] B7_medcalc_cl_heldout
++ stage B7_medcalc_cl_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/layers/L24/adapter_renal.npz --adapter_layer 30 --batch_size 4
++ local name=B7_medcalc_cl_test
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_test.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_test.done ']'
++ banner B7_medcalc_cl_test
++ echo
+
++ echo '########## [B] B7_medcalc_cl_test ##########'
+########## [B] B7_medcalc_cl_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L24 --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/layers/L24/adapter_renal.npz --adapter_layer 30 --batch_size 4
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 179.40it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 228.04it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 240.25it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 240.44it/s]Loading weights:  46%|████▌     | 134/291 [00:00<00:00, 260.13it/s]Loading weights:  56%|█████▋    | 164/291 [00:00<00:00, 272.75it/s]Loading weights:  66%|██████▌   | 192/291 [00:00<00:00, 274.67it/s]Loading weights:  76%|███████▌  | 220/291 [00:00<00:00, 255.22it/s]Loading weights:  85%|████████▍ | 247/291 [00:00<00:00, 258.96it/s]Loading weights:  95%|█████████▍| 276/291 [00:01<00:00, 267.75it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 261.13it/s]
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.483 cc=0.011 viol=0.156 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.994 cc=0.989 viol=0.000 cov=1.000
+
+wrote results/layers/L24/summary_test_medcalc.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B7_medcalc_cl_test.done
++ echo '[B][ok] B7_medcalc_cl_test'
+[B][ok] B7_medcalc_cl_test
++ stage B8_sufficiency_test python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --alphas 0.5,1,2,4 --out results/layers/L24/sufficiency_medcalc_test.json
++ local name=B8_sufficiency_test
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_test.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_test.done ']'
++ banner B8_sufficiency_test
++ echo
+
++ echo '########## [B] B8_sufficiency_test ##########'
+########## [B] B8_sufficiency_test ##########
++ echo
+
++ python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --alphas 0.5,1,2,4 --out results/layers/L24/sufficiency_medcalc_test.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+90 complete pairs in data/medcalc/counterfactual_test.jsonl
+SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
+
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 192.01it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 234.22it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 249.29it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 255.77it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 259.97it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 262.19it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 264.30it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 265.12it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 265.62it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 271.75it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 264.97it/s]
+  10/90 pairs
+  20/90 pairs
+  30/90 pairs
+  40/90 pairs
+  50/90 pairs
+  60/90 pairs
+  70/90 pairs
+  80/90 pairs
+
+usable pairs: 86
+  skipped 4: different token length
+alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
+
+ layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
+     0    0.50      -0.0040    -0.0012    -0.0093    -0.0028
+     0    1.00      -0.0016    -0.0033     0.0007     0.0017
+     0    2.00      -0.0020     0.0001    -0.0029    -0.0020
+     0    4.00      -0.0046    -0.0059    -0.0191     0.0013
+     4    0.50       0.0016    -0.0008     0.0015     0.0024
+     4    1.00       0.0018     0.0012    -0.0046     0.0006
+     4    2.00      -0.0086     0.0037     0.0058    -0.0123
+     4    4.00      -0.0044     0.0064    -0.0059    -0.0108
+     8    0.50      -0.0040    -0.0006     0.0005    -0.0033
+     8    1.00      -0.0038    -0.0041     0.0098     0.0003
+     8    2.00      -0.0046     0.0014    -0.0086    -0.0060
+     8    4.00       0.0002     0.0016     0.0071    -0.0014
+    12    0.50       0.0007    -0.0003    -0.0115     0.0010
+    12    1.00      -0.0032    -0.0042    -0.0045     0.0010
+    12    2.00      -0.0063     0.0021     0.0071    -0.0083
+    12    4.00      -0.0059     0.0025    -0.0125    -0.0083
+    16    0.50      -0.0022    -0.0074     0.0029     0.0052
+    16    1.00       0.0036    -0.0027    -0.0040     0.0062
+    16    2.00      -0.0041    -0.0047    -0.0027     0.0007
+    16    4.00       0.0020    -0.0014     0.0000     0.0035
+    20    0.50      -0.0016    -0.0066     0.0069     0.0050
+    20    1.00      -0.0022     0.0013     0.0007    -0.0035
+    20    2.00       0.0019    -0.0031    -0.0012     0.0050
+    20    4.00      -0.0054     0.0001     0.0006    -0.0055
+    24    0.50       0.0054    -0.0056    -0.0007     0.0111
+    24    1.00       0.0029    -0.0014    -0.0016     0.0043
+    24    2.00       0.0033    -0.0010    -0.0007     0.0043
+    24    4.00       0.0005    -0.0025     0.0049     0.0031
+    28    0.50       0.0002     0.0010    -0.0003    -0.0008
+    28    1.00       0.0017     0.0027     0.0039    -0.0010
+    28    2.00       0.0056    -0.0010     0.0009     0.0067
+    28    4.00       0.0028    -0.0006     0.0071     0.0034
+
+largest excess over the matched random control: -0.0123 logits at layer 4, alpha=2.0
+monotone dose-response in 0/8 layers tested
+  -> injection does NOT produce the decision at any dose tested.
+     Read together with the necessity run: the edited quantity is neither
+     necessary nor sufficient for the answer on this model.
+wrote results/layers/L24/sufficiency_medcalc_test.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_test.done
++ echo '[B][ok] B8_sufficiency_test'
+[B][ok] B8_sufficiency_test
++ stage B8_sufficiency_heldout python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --alphas 0.5,1,2,4 --out results/layers/L24/sufficiency_medcalc_heldout.json
++ local name=B8_sufficiency_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_heldout.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_heldout.done ']'
++ banner B8_sufficiency_heldout
++ echo
+
++ echo '########## [B] B8_sufficiency_heldout ##########'
+########## [B] B8_sufficiency_heldout ##########
++ echo
+
++ python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --alphas 0.5,1,2,4 --out results/layers/L24/sufficiency_medcalc_heldout.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+30 complete pairs in data/medcalc/counterfactual_heldout.jsonl
+SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
+
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 181.09it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 227.87it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 252.99it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 254.88it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 256.67it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 260.68it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 262.54it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 264.21it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 265.00it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 272.00it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.71it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  10/30 pairs
+  20/30 pairs
+  30/30 pairs
+
+usable pairs: 30
+alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
+
+ layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
+     0    0.50      -0.0042     0.0021     0.0179    -0.0063
+     0    1.00       0.0187     0.0229     0.0357    -0.0042
+     0    2.00       0.0333     0.0271     0.0625     0.0062
+     0    4.00       0.0229    -0.0583     0.0268     0.0813
+     4    0.50      -0.0021    -0.0042     0.0179     0.0021
+     4    1.00       0.0125     0.0208     0.0089    -0.0083
+     4    2.00       0.0312     0.0500     0.0714    -0.0188
+     4    4.00       0.0479     0.0792     0.0848    -0.0312
+     8    0.50      -0.0021     0.0292     0.0179    -0.0312
+     8    1.00       0.0187     0.0250     0.0625    -0.0063
+     8    2.00       0.0688     0.0646     0.1071     0.0042
+     8    4.00       0.1000     0.0813     0.1027     0.0188
+    12    0.50       0.0063    -0.0146     0.0312     0.0208
+    12    1.00       0.0167     0.0063     0.0312     0.0104
+    12    2.00       0.0208     0.0125     0.0312     0.0083
+    12    4.00       0.0187     0.0229     0.0402    -0.0042
+    16    0.50       0.0042     0.0021     0.0000     0.0021
+    16    1.00      -0.0063    -0.0021     0.0045    -0.0042
+    16    2.00       0.0042     0.0104     0.0045    -0.0062
+    16    4.00       0.0063    -0.0021     0.0179     0.0083
+    20    0.50       0.0167    -0.0042    -0.0089     0.0208
+    20    1.00       0.0167     0.0083     0.0000     0.0083
+    20    2.00       0.0125     0.0125     0.0134     0.0000
+    20    4.00       0.0104     0.0021     0.0179     0.0083
+    24    0.50       0.0083    -0.0083     0.0045     0.0167
+    24    1.00       0.0021    -0.0021     0.0000     0.0042
+    24    2.00       0.0042     0.0063     0.0134    -0.0021
+    24    4.00       0.0125    -0.0063    -0.0134     0.0188
+    28    0.50       0.0083    -0.0042    -0.0089     0.0125
+    28    1.00       0.0125     0.0042     0.0045     0.0083
+    28    2.00       0.0021     0.0021    -0.0089     0.0000
+    28    4.00      -0.0042    -0.0021    -0.0312    -0.0021
+
+largest excess over the matched random control: +0.0813 logits at layer 0, alpha=4.0
+monotone dose-response in 3/8 layers tested
+wrote results/layers/L24/sufficiency_medcalc_heldout.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B8_sufficiency_heldout.done
++ echo '[B][ok] B8_sufficiency_heldout'
+[B][ok] B8_sufficiency_heldout
++ stage B9_necessity_test python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --out results/layers/L24/patching_medcalc_test.json
++ local name=B9_necessity_test
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_test.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_test.done ']'
++ banner B9_necessity_test
++ echo
+
++ echo '########## [B] B9_necessity_test ##########'
+########## [B] B9_necessity_test ##########
++ echo
+
++ python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --out results/layers/L24/patching_medcalc_test.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+90 complete pairs in data/medcalc/counterfactual_test.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 180.31it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 228.02it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 245.92it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 254.18it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 259.14it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 262.04it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 264.04it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 265.38it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 266.09it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 266.17it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.94it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  10/90 pairs
+  20/90 pairs
+  30/90 pairs
+  40/90 pairs
+  50/90 pairs
+  60/90 pairs
+  70/90 pairs
+  80/90 pairs
+
+usable pairs: 86
+  skipped 4: different token length
+identity control, max |error|: 0.00e+00 (hook is correctly placed)
+
+clean margin gap between arms (unsafe - safe): -0.0011 logits
+  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
+
+ layer   ACE (logits)    control     excess
+     0         0.0025    -0.0010     0.0035
+     1        -0.0026    -0.0048     0.0023
+     2        -0.0041    -0.0034    -0.0007
+     3        -0.0038    -0.0029    -0.0009
+     4         0.0014     0.0003     0.0010
+     5         0.0025    -0.0035     0.0059
+     6        -0.0021     0.0017    -0.0038
+     7        -0.0005     0.0027    -0.0031
+     8         0.0013    -0.0051     0.0064
+     9        -0.0024    -0.0023    -0.0001
+    10         0.0033    -0.0028     0.0061
+    11        -0.0003    -0.0008     0.0006
+    12        -0.0024     0.0000    -0.0024
+    13         0.0007    -0.0006     0.0014
+    14        -0.0010    -0.0029     0.0019
+    15         0.0068     0.0026     0.0041
+    16         0.0015    -0.0029     0.0043
+    17        -0.0054     0.0002    -0.0056
+    18         0.0025     0.0008     0.0017
+    19         0.0004     0.0028    -0.0025
+    20        -0.0010    -0.0018     0.0008
+    21        -0.0023    -0.0021    -0.0002
+    22        -0.0050     0.0013    -0.0063
+    23        -0.0009    -0.0041     0.0032
+    24        -0.0006    -0.0013     0.0007
+    25        -0.0009    -0.0012     0.0003
+    26        -0.0018     0.0017    -0.0035
+    27         0.0049    -0.0000     0.0049
+    28         0.0027    -0.0007     0.0034
+    29         0.0008     0.0028    -0.0021
+    30        -0.0009     0.0005    -0.0014
+    31         0.0000     0.0000     0.0000
+
+largest effect over control at layer 8: +0.0064 logits
+  -> the edited value has essentially no causal effect on the decision at ANY layer.
+     The quantity is not on a causal path to the answer.
+wrote results/layers/L24/patching_medcalc_test.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_test.done
++ echo '[B][ok] B9_necessity_test'
+[B][ok] B9_necessity_test
++ stage B9_necessity_heldout python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --out results/layers/L24/patching_medcalc_heldout.json
++ local name=B9_necessity_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_heldout.done
++ '[' -f .pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_heldout.done ']'
++ banner B9_necessity_heldout
++ echo
+
++ echo '########## [B] B9_necessity_heldout ##########'
+########## [B] B9_necessity_heldout ##########
++ echo
+
++ python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id BioMistral/BioMistral-7B --limit 0 --out results/layers/L24/patching_medcalc_heldout.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+85 complete pairs in data/medcalc/counterfactual_heldout_all.jsonl
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 180.64it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 238.22it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 251.39it/s]Loading weights:  36%|███▌      | 104/291 [00:00<00:00, 253.55it/s]Loading weights:  45%|████▌     | 132/291 [00:00<00:00, 262.10it/s]Loading weights:  55%|█████▍    | 159/291 [00:00<00:00, 263.85it/s]Loading weights:  64%|██████▍   | 186/291 [00:00<00:00, 262.23it/s]Loading weights:  74%|███████▍  | 216/291 [00:00<00:00, 273.24it/s]Loading weights:  84%|████████▍ | 244/291 [00:00<00:00, 272.66it/s]Loading weights:  93%|█████████▎| 272/291 [00:01<00:00, 273.90it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 263.83it/s]
+  10/85 pairs
+  20/85 pairs
+  30/85 pairs
+  40/85 pairs
+  50/85 pairs
+  60/85 pairs
+  70/85 pairs
+  80/85 pairs
+
+usable pairs: 85
+identity control, max |error|: 0.00e+00 (hook is correctly placed)
+
+clean margin gap between arms (unsafe - safe): +0.0051 logits
+  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
+
+ layer   ACE (logits)    control     excess
+     0         0.0022    -0.0044     0.0066
+     1        -0.0044    -0.0029    -0.0015
+     2         0.0022    -0.0037     0.0059
+     3        -0.0015     0.0015    -0.0029
+     4         0.0007     0.0007     0.0000
+     5         0.0081    -0.0029     0.0110
+     6        -0.0007    -0.0022     0.0015
+     7        -0.0007    -0.0022     0.0015
+     8         0.0044    -0.0051     0.0096
+     9         0.0051     0.0022     0.0029
+    10         0.0154    -0.0059     0.0213
+    11         0.0118    -0.0029     0.0147
+    12         0.0081    -0.0007     0.0088
+    13         0.0029    -0.0051     0.0081
+    14         0.0044    -0.0081     0.0125
+    15        -0.0051     0.0015    -0.0066
+    16         0.0000    -0.0015     0.0015
+    17         0.0029    -0.0044     0.0074
+    18         0.0074    -0.0051     0.0125
+    19         0.0140    -0.0081     0.0221
+    20         0.0096    -0.0007     0.0103
+    21         0.0037    -0.0022     0.0059
+    22         0.0088    -0.0015     0.0103
+    23         0.0037    -0.0007     0.0044
+    24        -0.0044    -0.0029    -0.0015
+    25         0.0022    -0.0007     0.0029
+    26         0.0029     0.0007     0.0022
+    27         0.0007    -0.0037     0.0044
+    28         0.0059    -0.0051     0.0110
+    29         0.0044     0.0007     0.0037
+    30         0.0007    -0.0015     0.0022
+    31         0.0000     0.0000     0.0000
+
+largest effect over control at layer 19: +0.0221 logits
+  -> the edited value has essentially no causal effect on the decision at ANY layer.
+     The quantity is not on a causal path to the answer.
+wrote results/layers/L24/patching_medcalc_heldout.json
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/B9_necessity_heldout.done
++ echo '[B][ok] B9_necessity_heldout'
+[B][ok] B9_necessity_heldout
++ '[' 0 -eq 0 ']'
++ touch .pipeline_state/scaled_b_biomistral-7b-L24_L24/ALL_DONE
++ banner 'LANE B DONE (0 stage(s) failed)'
++ echo
+
++ echo '########## [B] LANE B DONE (0 stage(s) failed) ##########'
+########## [B] LANE B DONE (0 stage(s) failed) ##########
++ echo
+
++ exit 0

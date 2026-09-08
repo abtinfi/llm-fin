@@ -162,6 +162,21 @@ MEDCALC_V2 = [
     ("data/medcalc_v2/rag_corpus.jsonl", "medcalc_v2 RAG variants"),
 ]
 
+# The EXPANDED MIMIC arm (2026-09-07). Same relationship to data/mimic that
+# data/medcalc_v2 has to data/medcalc: every causal item reproduces byte for
+# byte, plus a CONTROL pair per patient built from two more of that patient's
+# real measurements on the SAME side of the threshold. It is the only place in
+# the project where a control pair contains no invented number at all -- every
+# other arm has to edit one.
+MIMIC_V2 = [
+    ("data/mimic_v2/counterfactual_test.jsonl",
+     "run_eval.py --data data/mimic_v2 --tag _mimic2"),
+    ("data/mimic_v2/counterfactual_heldout.jsonl", "mimic_v2 heldout"),
+    ("data/mimic_v2/counterfactual_calib.jsonl", "mimic_v2 UQ calibration"),
+    ("data/mimic_v2/counterfactual_train.jsonl", "mimic_v2 CL training"),
+    ("data/mimic_v2/rag_corpus.jsonl", "mimic_v2 RAG variants"),
+]
+
 # The MIMIC arm is OPTIONAL by design: it is rebuilt from a download, and the
 # pipeline must keep running for anyone who has not fetched it.
 MIMIC = [
@@ -337,7 +352,7 @@ def main():
                                    "used_by": used_by})
 
     print("\nOPTIONAL (a stage degrades or is skipped, nothing breaks)")
-    for rel, used_by in OPTIONAL + MEDCALC_V2:
+    for rel, used_by in OPTIONAL + MEDCALC_V2 + MIMIC_V2:
         p = root / rel
         ok = p.is_file()
         print(f"  [{'ok' if ok else '--'}] {rel:52s} "
@@ -349,7 +364,7 @@ def main():
     print("SPLIT INTEGRITY")
     print("=" * 72)
     pair_sets = {}
-    for rel, _ in REQUIRED + OPTIONAL + MEDCALC_V2:
+    for rel, _ in REQUIRED + OPTIONAL + MEDCALC_V2 + MIMIC_V2:
         if "counterfactual_" not in rel:
             continue
         p = root / rel
@@ -390,8 +405,8 @@ def main():
         not a leak. What would be a leak -- v2's train sharing pairs with v2's
         test -- is still checked, because that comparison is within one arm.
         """
-        na = a.replace("/medcalc_v2/", "/medcalc/")
-        nb = b.replace("/medcalc_v2/", "/medcalc/")
+        na = a.replace("/medcalc_v2/", "/medcalc/").replace("/mimic_v2/", "/mimic/")
+        nb = b.replace("/medcalc_v2/", "/medcalc/").replace("/mimic_v2/", "/mimic/")
         return na == nb and a != b
 
     def _is_expected(l):

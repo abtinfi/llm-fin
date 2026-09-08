@@ -1,0 +1,23 @@
+120 prompts from data/synthetic_control/counterfactual_test.jsonl + data/medcalc/counterfactual_test.jsonl
+
+concept        CUI         UMLS  cur  old hits  new hits  umls-only  note
+------------------------------------------------------------------------------------------------
+creatinine     C0201976      16    3        58        58         24  same
+qt_interval    C0429028      13    4         4         4          0  same
+egfr           C3811844       2    3        16        16          0  same
+heart_rate     C0018810      18    3        28        34          2  +6
+potassium      C0302353      19    2         4         4          0  same
+inr            C0525032      26    1         8         8          8  same
+age                           0    0       120       120          0  same
+drug           C0025598     192    0       138       140        140  +2
+renal_disease  C0035078      97    7        52        60         44  +8
+pregnancy      C0032961      17    4        20        20          2  same
+asthma         C0004096      27    7        14        14          3  same
+------------------------------------------------------------------------------------------------
+TOTAL                                      462       478
+
+Read the `umls-only` column before quoting anything as UMLS-grounded: it is
+what the ontology's own surface forms match without the curated lexical layer.
+Where it is far below `new hits`, the concept is grounded to a CUI but matched
+largely by curated morphology, and S_semantic for it should be described as
+CUI-anchored, not UMLS-matched.

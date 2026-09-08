@@ -1,0 +1,715 @@
++ export CUDA_VISIBLE_DEVICES=1
++ CUDA_VISIBLE_DEVICES=1
++ export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ cd /home/asosoft/abtin/paper/csai
++ M=BioMistral/BioMistral-7B
++ TAG=biomistral-7b-L16
++ R=results/layers/L16
++ LAYER=16
++ ADAPTER_LAYER=30
++ mkdir -p results/layers/L16
++ V6='base rag sym uq nsai nsai_uq'
++ G=data/umls/causal_graph.json
++ STATE_DIR=.pipeline_state/scaled_a_biomistral-7b-L16_L16
++ mkdir -p .pipeline_state/scaled_a_biomistral-7b-L16_L16
++ FAILED=0
++ stage A1_constraint_qt python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_qt.npz --out results/layers/L16/constraint_qt.json
++ local name=A1_constraint_qt
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A1_constraint_qt.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A1_constraint_qt.done ']'
++ banner A1_constraint_qt
++ echo
+
++ echo '########## [A] A1_constraint_qt ##########'
+########## [A] A1_constraint_qt ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_qt.npz --out results/layers/L16/constraint_qt.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.09it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.80it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.04it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.21it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.71it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.15it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.27it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.81it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.53it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.95it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.79it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.29it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.50it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.98it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.31it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.47it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.13it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.58it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.58it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.93it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+
+=== L_ontology, required margin per family ===
+    ondansetron_qt                 required margin 1.000  [curated]
+
+=== training on 110 items (real labels) ===
+  epoch 1/8  L_causal=0.6925  L_KL=0.0263  L_ont=0.9852(on 55/55 pairs)  L_unc=0.0064  train-decision-acc=0.509
+  epoch 2/8  L_causal=0.5209  L_KL=0.3566  L_ont=0.3091(on 55/55 pairs)  L_unc=0.1603  train-decision-acc=0.809
+  epoch 3/8  L_causal=0.4050  L_KL=0.4315  L_ont=0.1342(on 55/55 pairs)  L_unc=0.0266  train-decision-acc=0.855
+  epoch 4/8  L_causal=0.4023  L_KL=0.4826  L_ont=0.0455(on 55/55 pairs)  L_unc=0.0432  train-decision-acc=0.818
+  epoch 5/8  L_causal=0.3098  L_KL=0.7107  L_ont=0.1091(on 55/55 pairs)  L_unc=0.1098  train-decision-acc=0.882
+  epoch 6/8  L_causal=0.2653  L_KL=0.6265  L_ont=0.0534(on 55/55 pairs)  L_unc=0.0161  train-decision-acc=0.909
+  epoch 7/8  L_causal=0.2660  L_KL=0.8222  L_ont=0.0137(on 55/55 pairs)  L_unc=0.0996  train-decision-acc=0.900
+  epoch 8/8  L_causal=0.2445  L_KL=0.7903  L_ont=0.0148(on 55/55 pairs)  L_unc=0.0644  train-decision-acc=0.909
+
+=== with constraint layer ===
+  test    acc=0.489  CC=0.044   (base 0.033, delta +0.011)
+  heldout acc=0.883  CC=0.767   (base 0.000, delta +0.767)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.4569 nats
+  heldout 0.6700 -> 0.5533 nats
+
+wrote results/layers/L16/constraint_qt.json
+wrote results/layers/L16/adapter_qt.npz
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A1_constraint_qt.done
++ echo '[A][ok] A1_constraint_qt'
+[A][ok] A1_constraint_qt
++ stage A2_constraint_renal python src/constraint_layer.py --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_renal.npz --out results/layers/L16/constraint_renal.json
++ local name=A2_constraint_renal
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A2_constraint_renal.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A2_constraint_renal.done ']'
++ banner A2_constraint_renal
++ echo
+
++ echo '########## [A] A2_constraint_renal ##########'
+########## [A] A2_constraint_renal ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_renal.npz --out results/layers/L16/constraint_renal.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 280 items / 140 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['metformin_renal']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 47.98it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.63it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 107.92it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.06it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.62it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.17it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.16it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.64it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.32it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.70it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.51it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 133.94it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.24it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.97it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.45it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.51it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.12it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.65it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.80it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.94it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+
+=== L_ontology, required margin per family ===
+    metformin_renal                required margin 1.250  [exact]
+
+=== training on 280 items (real labels) ===
+  epoch 1/8  L_causal=0.7988  L_KL=0.0045  L_ont=1.3162(on 140/140 pairs)  L_unc=0.0626  train-decision-acc=0.500
+  epoch 2/8  L_causal=0.7739  L_KL=0.0092  L_ont=1.2443(on 140/140 pairs)  L_unc=0.0601  train-decision-acc=0.504
+  epoch 3/8  L_causal=0.7777  L_KL=0.0133  L_ont=1.1592(on 140/140 pairs)  L_unc=0.0575  train-decision-acc=0.521
+  epoch 4/8  L_causal=0.8074  L_KL=0.0145  L_ont=1.1542(on 140/140 pairs)  L_unc=0.0407  train-decision-acc=0.564
+  epoch 5/8  L_causal=0.7353  L_KL=0.0165  L_ont=1.1563(on 140/140 pairs)  L_unc=0.0360  train-decision-acc=0.543
+  epoch 6/8  L_causal=0.7194  L_KL=0.0187  L_ont=1.1556(on 140/140 pairs)  L_unc=0.0320  train-decision-acc=0.539
+  epoch 7/8  L_causal=0.7069  L_KL=0.0195  L_ont=1.1569(on 140/140 pairs)  L_unc=0.0385  train-decision-acc=0.536
+  epoch 8/8  L_causal=0.7171  L_KL=0.0181  L_ont=1.1583(on 140/140 pairs)  L_unc=0.0287  train-decision-acc=0.536
+
+=== with constraint layer ===
+  test    acc=0.506  CC=0.011   (base 0.033, delta -0.022)
+  heldout acc=0.483  CC=0.067   (base 0.000, delta +0.067)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.6471 nats
+  heldout 0.6700 -> 0.6919 nats
+
+wrote results/layers/L16/constraint_renal.json
+wrote results/layers/L16/adapter_renal.npz
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A2_constraint_renal.done
++ echo '[A][ok] A2_constraint_renal'
+[A][ok] A2_constraint_renal
++ stage A3_constraint_qt_shuffled python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/layers/L16/constraint_qt_shuffled.json
++ local name=A3_constraint_qt_shuffled
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A3_constraint_qt_shuffled.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A3_constraint_qt_shuffled.done ']'
++ banner A3_constraint_qt_shuffled
++ echo
+
++ echo '########## [A] A3_constraint_qt_shuffled ##########'
+########## [A] A3_constraint_qt_shuffled ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/layers/L16/constraint_qt_shuffled.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.18it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.94it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.16it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.21it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.79it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.25it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.33it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.89it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.55it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.99it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.83it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.33it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.59it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.13it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.52it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.72it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.24it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.54it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.74it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.08it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.517  CC=0.033
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.6256 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6700 nats over 60 items
+  [control] lam_ont forced to 0: the ontology term is defined on the true arm ordering and would leak the real labels back into a run whose whole purpose is to have none.
+
+=== L_ontology, required margin per family ===
+    ondansetron_qt                 required margin 1.000  [curated]
+
+=== training on 110 items (SHUFFLED-LABEL CONTROL) ===
+  epoch 1/8  L_causal=0.6937  L_KL=0.0259  L_unc=0.0053  train-decision-acc=0.464
+  epoch 2/8  L_causal=0.6908  L_KL=0.0256  L_unc=0.0038  train-decision-acc=0.518
+  epoch 3/8  L_causal=0.6885  L_KL=0.0268  L_unc=0.0035  train-decision-acc=0.527
+  epoch 4/8  L_causal=0.6889  L_KL=0.0283  L_unc=0.0029  train-decision-acc=0.545
+  epoch 5/8  L_causal=0.6890  L_KL=0.0300  L_unc=0.0032  train-decision-acc=0.536
+  epoch 6/8  L_causal=0.6884  L_KL=0.0284  L_unc=0.0028  train-decision-acc=0.527
+  epoch 7/8  L_causal=0.6862  L_KL=0.0306  L_unc=0.0034  train-decision-acc=0.536
+  epoch 8/8  L_causal=0.6887  L_KL=0.0315  L_unc=0.0042  train-decision-acc=0.564
+
+=== with constraint layer ===
+  test    acc=0.500  CC=0.000   (base 0.033, delta -0.033)
+  heldout acc=0.583  CC=0.200   (base 0.000, delta +0.200)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.6256 -> 0.6236 nats
+  heldout 0.6700 -> 0.6897 nats
+
+wrote results/layers/L16/constraint_qt_shuffled.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A3_constraint_qt_shuffled.done
++ echo '[A][ok] A3_constraint_qt_shuffled'
+[A][ok] A3_constraint_qt_shuffled
++ stage A4_constraint_synth python src/constraint_layer.py --layer 30 --data data/synthetic_control --train_on calib --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_synth.npz --out results/layers/L16/constraint_synth.json
++ local name=A4_constraint_synth
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A4_constraint_synth.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A4_constraint_synth.done ']'
++ banner A4_constraint_synth
++ echo
+
++ echo '########## [A] A4_constraint_synth ##########'
+########## [A] A4_constraint_synth ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/synthetic_control --train_on calib --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_synth.npz --out results/layers/L16/constraint_synth.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 32 items / 16 pairs
+test  128 items / 64 pairs (same family as train)
+held  32 items / 16 pairs (['nitrofurantoin_renal', 'ondansetron_qt'])
+train families: ['acei_pregnancy', 'aspirin_reye', 'betablocker_asthma', 'metformin_renal', 'nsaid_renal', 'spironolactone_hyperkalaemia', 'statin_macrolide', 'warfarin_inr']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.13it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.99it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.19it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.35it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.80it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.41it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.46it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.94it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.61it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.01it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.85it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.34it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.59it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.19it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.59it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.77it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.25it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.69it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.81it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.16it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.602  CC=0.234
+  heldout acc=0.656  CC=0.312
+
+=== decision entropy on REDACTED notes, base model ===
+  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
+  heldout 0.6457 nats over 8 items
+
+=== L_ontology, required margin per family ===
+    metformin_renal                required margin 1.250  [exact]
+    nsaid_renal                    required margin 1.000  [curated]
+    acei_pregnancy                 required margin 1.250  [exact]
+    betablocker_asthma             required margin 1.250  [exact]
+    aspirin_reye                   required margin 1.000  [curated]
+    spironolactone_hyperkalaemia   required margin 1.250  [synonymous]
+    warfarin_inr                   required margin 1.250  [exact]
+    statin_macrolide               required margin 1.000  [curated]
+
+=== training on 32 items (real labels) ===
+  epoch 1/8  L_causal=0.6549  L_KL=0.0067  L_ont=0.9375(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.656
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  epoch 2/8  L_causal=0.6144  L_KL=0.0184  L_ont=0.7110(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
+  epoch 3/8  L_causal=0.6711  L_KL=0.1204  L_ont=0.5313(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.562
+  epoch 4/8  L_causal=0.6038  L_KL=0.0544  L_ont=0.5469(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
+  epoch 5/8  L_causal=0.5599  L_KL=0.0680  L_ont=0.4492(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.719
+  epoch 6/8  L_causal=0.5831  L_KL=0.1228  L_ont=0.4297(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
+  epoch 7/8  L_causal=0.5465  L_KL=0.1047  L_ont=0.4180(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.688
+  epoch 8/8  L_causal=0.5574  L_KL=0.1235  L_ont=0.3985(on 16/16 pairs)  L_unc=0.0000  train-decision-acc=0.719
+
+=== with constraint layer ===
+  test    acc=0.734  CC=0.469   (base 0.234, delta +0.234)
+  heldout acc=0.656  CC=0.375   (base 0.312, delta +0.062)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    nan -> nan nats
+  heldout 0.6457 -> 0.6732 nats
+
+wrote results/layers/L16/constraint_synth.json
+wrote results/layers/L16/adapter_synth.npz
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A4_constraint_synth.done
++ echo '[A][ok] A4_constraint_synth'
+[A][ok] A4_constraint_synth
++ stage A5_synthctl_ablation_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
++ local name=A5_synthctl_ablation_test
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_test.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_test.done ']'
++ banner A5_synthctl_ablation_test
++ echo
+
++ echo '########## [A] A5_synthctl_ablation_test ##########'
+########## [A] A5_synthctl_ablation_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.20it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.01it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.23it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.35it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.76it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.37it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.43it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 136.00it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.65it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.14it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.92it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.41it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.64it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.23it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.59it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.76it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.30it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.69it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.86it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.18it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.602 cc=0.219 viol=0.125 cov=1.000
+[seed 0] rag       acc=0.648 cc=0.312 viol=0.141 cov=1.000
+[seed 0] sym       acc=0.805 cc=0.609 viol=0.062 cov=1.000
+[seed 0] uq        acc=0.211 cc=0.016 viol=0.031 cov=0.234
+[seed 0] nsai      acc=0.836 cc=0.672 viol=0.125 cov=1.000
+[seed 0] nsai_uq   acc=0.633 cc=0.562 viol=0.000 cov=0.633
+
+wrote results/layers/L16/summary_test.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_test.done
++ echo '[A][ok] A5_synthctl_ablation_test'
+[A][ok] A5_synthctl_ablation_test
++ stage A5_synthctl_ablation_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
++ local name=A5_synthctl_ablation_heldout
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_heldout.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_heldout.done ']'
++ banner A5_synthctl_ablation_heldout
++ echo
+
++ echo '########## [A] A5_synthctl_ablation_heldout ##########'
+########## [A] A5_synthctl_ablation_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.36it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.08it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.23it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.41it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.96it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.51it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.50it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.93it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.56it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.01it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.77it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.24it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.56it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.15it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.51it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.67it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.21it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.56it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.75it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.14it/s]
+[seed 0] base      acc=0.594 cc=0.250 viol=0.062 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=0.750 cc=0.562 viol=0.062 cov=1.000
+[seed 0] uq        acc=0.094 cc=0.000 viol=0.000 cov=0.188
+[seed 0] nsai      acc=0.750 cc=0.500 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.688 cc=0.500 viol=0.000 cov=0.750
+
+wrote results/layers/L16/summary_heldout.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A5_synthctl_ablation_heldout.done
++ echo '[A][ok] A5_synthctl_ablation_heldout'
+[A][ok] A5_synthctl_ablation_heldout
++ stage A6_synthctl_cl_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_synth.npz --adapter_layer 30 --batch_size 8
++ local name=A6_synthctl_cl_test
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_test.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_test.done ']'
++ banner A6_synthctl_cl_test
++ echo
+
++ echo '########## [A] A6_synthctl_cl_test ##########'
+########## [A] A6_synthctl_cl_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_synth.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.06it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.79it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.19it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.30it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.85it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.43it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.48it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 136.14it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.84it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.22it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 137.01it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.44it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.72it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.22it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.64it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.79it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.27it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.68it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.76it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.19it/s]
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.727 cc=0.453 viol=0.375 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.578 cc=0.562 viol=0.000 cov=0.578
+
+wrote results/layers/L16/summary_test.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_test.done
++ echo '[A][ok] A6_synthctl_cl_test'
+[A][ok] A6_synthctl_cl_test
++ stage A6_synthctl_cl_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_synth.npz --adapter_layer 30 --batch_size 8
++ local name=A6_synthctl_cl_heldout
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_heldout.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_heldout.done ']'
++ banner A6_synthctl_cl_heldout
++ echo
+
++ echo '########## [A] A6_synthctl_cl_heldout ##########'
+########## [A] A6_synthctl_cl_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_synth.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.14it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.75it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.03it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.12it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.63it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.20it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.23it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.79it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.49it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.97it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.79it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.28it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.42it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.89it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.32it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.51it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.95it/s]Loading weights:  90%|████████▉ | 261/291 [00:02<00:00, 125.96it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 129.68it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.91it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.656 cc=0.375 viol=0.375 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.500 cc=0.500 viol=0.000 cov=0.500
+
+wrote results/layers/L16/summary_heldout.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A6_synthctl_cl_heldout.done
++ echo '[A][ok] A6_synthctl_cl_heldout'
+[A][ok] A6_synthctl_cl_heldout
++ stage A7_perplexity_base python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200
++ local name=A7_perplexity_base
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_base.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_base.done ']'
++ banner A7_perplexity_base
++ echo
+
++ echo '########## [A] A7_perplexity_base ##########'
+########## [A] A7_perplexity_base ##########
++ echo
+
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.43it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.98it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.11it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.13it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.61it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.13it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.22it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.83it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.51it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.93it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.74it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.16it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.35it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.88it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.32it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.49it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.92it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.29it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.43it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.91it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+model=BioMistral/BioMistral-7B  base (no intervention)  wikitext-2 perplexity = 7.1622
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_base.done
++ echo '[A][ok] A7_perplexity_base'
+[A][ok] A7_perplexity_base
++ stage A7_perplexity_qt python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_qt.npz --layer 30
++ local name=A7_perplexity_qt
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_qt.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_qt.done ']'
++ banner A7_perplexity_qt
++ echo
+
++ echo '########## [A] A7_perplexity_qt ##########'
+########## [A] A7_perplexity_qt ##########
++ echo
+
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_qt.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.63it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.10it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.25it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.24it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.63it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.12it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.16it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.81it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.54it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.01it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.75it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.30it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.47it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.10it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.49it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.71it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.23it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.64it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.77it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.08it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+constraint layer attached at layer 30, alpha=1.0, rank=32
+model=BioMistral/BioMistral-7B  +constraint layer L30  wikitext-2 perplexity = 7.0775
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_qt.done
++ echo '[A][ok] A7_perplexity_qt'
+[A][ok] A7_perplexity_qt
++ stage A7_perplexity_synth python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_synth.npz --layer 30
++ local name=A7_perplexity_synth
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_synth.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_synth.done ']'
++ banner A7_perplexity_synth
++ echo
+
++ echo '########## [A] A7_perplexity_synth ##########'
+########## [A] A7_perplexity_synth ##########
++ echo
+
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_synth.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.40it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.07it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.17it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.18it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.68it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.11it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.14it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.63it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.36it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.78it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.70it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.23it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.51it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.08it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.44it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.54it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 136.97it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.41it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.67it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 131.96it/s]
+constraint layer attached at layer 30, alpha=1.0, rank=32
+model=BioMistral/BioMistral-7B  +constraint layer L30  wikitext-2 perplexity = 7.1306
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A7_perplexity_synth.done
++ echo '[A][ok] A7_perplexity_synth'
+[A][ok] A7_perplexity_synth
++ stage A8_mimic_dataset_present test -s data/mimic/counterfactual_train.jsonl
++ local name=A8_mimic_dataset_present
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A8_mimic_dataset_present.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A8_mimic_dataset_present.done ']'
++ banner A8_mimic_dataset_present
++ echo
+
++ echo '########## [A] A8_mimic_dataset_present ##########'
+########## [A] A8_mimic_dataset_present ##########
++ echo
+
++ test -s data/mimic/counterfactual_train.jsonl
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A8_mimic_dataset_present.done
++ echo '[A][ok] A8_mimic_dataset_present'
+[A][ok] A8_mimic_dataset_present
++ stage A9_constraint_mimic python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_mimic.npz --out results/layers/L16/constraint_mimic.json
++ local name=A9_constraint_mimic
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A9_constraint_mimic.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A9_constraint_mimic.done ']'
++ banner A9_constraint_mimic
++ echo
+
++ echo '########## [A] A9_constraint_mimic ##########'
+########## [A] A9_constraint_mimic ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/layers/L16/adapter_mimic.npz --out results/layers/L16/constraint_mimic.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 38 items / 19 pairs
+test  58 items / 29 pairs (same family as train)
+held  16 items / 8 pairs (['warfarin_inr4'])
+train families: ['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 47.95it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.63it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 107.91it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.11it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.65it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.32it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.42it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.97it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.62it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.05it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.84it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.31it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.51it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.13it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.65it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.82it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.33it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.71it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.89it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.13it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.552  CC=0.103
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
+  heldout nan nats over 0 items
+
+=== L_ontology, required margin per family ===
+    metformin_egfr30               NOT IN GRAPH -- term silent (0.0)
+    metformin_egfr45               NOT IN GRAPH -- term silent (0.0)
+    spironolactone_k5_5            NOT IN GRAPH -- term silent (0.0)
+
+=== training on 38 items (real labels) ===
+  epoch 1/8  L_causal=0.7088  L_KL=0.0670  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.500
+  epoch 2/8  L_causal=0.6824  L_KL=0.0736  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.553
+  epoch 3/8  L_causal=0.6711  L_KL=0.0810  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.632
+  epoch 4/8  L_causal=0.6761  L_KL=0.0876  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.579
+  epoch 5/8  L_causal=0.6679  L_KL=0.0874  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.605
+  epoch 6/8  L_causal=0.6875  L_KL=0.0877  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.579
+  epoch 7/8  L_causal=0.6701  L_KL=0.0963  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.605
+  epoch 8/8  L_causal=0.6566  L_KL=0.0993  L_ont=0.0000(on 0/19 pairs)  L_unc=0.0000  train-decision-acc=0.658
+
+=== with constraint layer ===
+  test    acc=0.500  CC=0.069   (base 0.103, delta -0.034)
+  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    nan -> nan nats
+  heldout nan -> nan nats
+
+wrote results/layers/L16/constraint_mimic.json
+wrote results/layers/L16/adapter_mimic.npz
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A9_constraint_mimic.done
++ echo '[A][ok] A9_constraint_mimic'
+[A][ok] A9_constraint_mimic
++ stage A10_constraint_mimic_shuffled python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/layers/L16/constraint_mimic_shuffled.json
++ local name=A10_constraint_mimic_shuffled
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A10_constraint_mimic_shuffled.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A10_constraint_mimic_shuffled.done ']'
++ banner A10_constraint_mimic_shuffled
++ echo
+
++ echo '########## [A] A10_constraint_mimic_shuffled ##########'
+########## [A] A10_constraint_mimic_shuffled ##########
++ echo
+
++ python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/layers/L16/constraint_mimic_shuffled.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 38 items / 19 pairs
+test  58 items / 29 pairs (same family as train)
+held  16 items / 8 pairs (['warfarin_inr4'])
+train families: ['metformin_egfr30', 'metformin_egfr45', 'spironolactone_k5_5']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.15it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.92it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.13it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.25it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.82it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.28it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.30it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.88it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.52it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.95it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.75it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.24it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.41it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.06it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.45it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.70it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.17it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.54it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.72it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.06it/s]
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.552  CC=0.103
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    nan nats over 0 items (ln 2 = 0.6931 is maximal)
+  heldout nan nats over 0 items
+  [control] lam_ont forced to 0: the ontology term is defined on the true arm ordering and would leak the real labels back into a run whose whole purpose is to have none.
+
+=== L_ontology, required margin per family ===
+    metformin_egfr30               NOT IN GRAPH -- term silent (0.0)
+    metformin_egfr45               NOT IN GRAPH -- term silent (0.0)
+    spironolactone_k5_5            NOT IN GRAPH -- term silent (0.0)
+
+=== training on 38 items (SHUFFLED-LABEL CONTROL) ===
+  epoch 1/8  L_causal=0.7270  L_KL=0.0641  L_unc=0.0000  train-decision-acc=0.526
+  epoch 2/8  L_causal=0.6921  L_KL=0.0631  L_unc=0.0000  train-decision-acc=0.526
+  epoch 3/8  L_causal=0.6872  L_KL=0.0752  L_unc=0.0000  train-decision-acc=0.447
+  epoch 4/8  L_causal=0.6824  L_KL=0.0741  L_unc=0.0000  train-decision-acc=0.500
+  epoch 5/8  L_causal=0.6851  L_KL=0.0749  L_unc=0.0000  train-decision-acc=0.500
+  epoch 6/8  L_causal=0.6814  L_KL=0.0787  L_unc=0.0000  train-decision-acc=0.553
+  epoch 7/8  L_causal=0.6863  L_KL=0.0695  L_unc=0.0000  train-decision-acc=0.579
+  epoch 8/8  L_causal=0.6795  L_KL=0.0823  L_unc=0.0000  train-decision-acc=0.632
+
+=== with constraint layer ===
+  test    acc=0.448  CC=0.034   (base 0.103, delta -0.069)
+  heldout acc=0.500  CC=0.000   (base 0.000, delta +0.000)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    nan -> nan nats
+  heldout nan -> nan nats
+
+wrote results/layers/L16/constraint_mimic_shuffled.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A10_constraint_mimic_shuffled.done
++ echo '[A][ok] A10_constraint_mimic_shuffled'
+[A][ok] A10_constraint_mimic_shuffled
++ stage A11_mimic_ablation_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
++ local name=A11_mimic_ablation_test
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_test.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_test.done ']'
++ banner A11_mimic_ablation_test
++ echo
+
++ echo '########## [A] A11_mimic_ablation_test ##########'
+########## [A] A11_mimic_ablation_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 47.86it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.60it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 107.80it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.03it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.60it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.16it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.23it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.84it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.40it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.86it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.62it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.09it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.38it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.02it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.33it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 130.93it/s]Loading weights:  84%|████████▍ | 244/291 [00:01<00:00, 132.99it/s]Loading weights:  89%|████████▊ | 258/291 [00:02<00:00, 125.02it/s]Loading weights:  94%|█████████▍| 274/291 [00:02<00:00, 133.64it/s]Loading weights:  99%|█████████▉| 288/291 [00:02<00:00, 130.05it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 130.36it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.534 cc=0.069 viol=0.862 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=0.690 cc=0.379 viol=0.621 cov=1.000
+[seed 0] uq        acc=0.034 cc=0.000 viol=0.034 cov=0.052
+[seed 0] nsai      acc=0.690 cc=0.379 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=0.379 cc=0.379 viol=0.000 cov=0.379
+
+wrote results/layers/L16/summary_test_mimic.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_test.done
++ echo '[A][ok] A11_mimic_ablation_test'
+[A][ok] A11_mimic_ablation_test
++ stage A11_mimic_ablation_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
++ local name=A11_mimic_ablation_heldout
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_heldout.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_heldout.done ']'
++ banner A11_mimic_ablation_heldout
++ echo
+
++ echo '########## [A] A11_mimic_ablation_heldout ##########'
+########## [A] A11_mimic_ablation_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.01it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.91it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.14it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.36it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.87it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.35it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.37it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.94it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.62it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.03it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.81it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.40it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.61it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.19it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.58it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.74it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.25it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.66it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.80it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.13it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[seed 0] base      acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] rag       acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
+[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/layers/L16/summary_heldout_mimic.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A11_mimic_ablation_heldout.done
++ echo '[A][ok] A11_mimic_ablation_heldout'
+[A][ok] A11_mimic_ablation_heldout
++ stage A12_mimic_cl_test python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_mimic.npz --adapter_layer 30 --batch_size 8
++ local name=A12_mimic_cl_test
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_test.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_test.done ']'
++ banner A12_mimic_cl_test
++ echo
+
++ echo '########## [A] A12_mimic_cl_test ##########'
+########## [A] A12_mimic_cl_test ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split test --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_mimic.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 47.90it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.67it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.09it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.19it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.60it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.32it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.39it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.88it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.56it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.98it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.77it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.27it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.56it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.05it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.45it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.75it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.22it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.60it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.63it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.04it/s]
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.534 cc=0.069 viol=0.552 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.379 cc=0.379 viol=0.000 cov=0.379
+
+wrote results/layers/L16/summary_test_mimic.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_test.done
++ echo '[A][ok] A12_mimic_cl_test'
+[A][ok] A12_mimic_cl_test
++ stage A12_mimic_cl_heldout python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_mimic.npz --adapter_layer 30 --batch_size 8
++ local name=A12_mimic_cl_heldout
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_heldout.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_heldout.done ']'
++ banner A12_mimic_cl_heldout
++ echo
+
++ echo '########## [A] A12_mimic_cl_heldout ##########'
+########## [A] A12_mimic_cl_heldout ##########
++ echo
+
++ python src/run_eval.py --backend hf --model_id BioMistral/BioMistral-7B --out results/layers/L16 --seeds 0 --split heldout --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/layers/L16/adapter_mimic.npz --adapter_layer 30 --batch_size 8
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.06it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 108.81it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.05it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.19it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.69it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.28it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.33it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.88it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.59it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 131.99it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.82it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.20it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.39it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.94it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.34it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.59it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.16it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.55it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.75it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.04it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.500 cc=0.000 viol=0.000 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=1.000 cc=1.000 viol=0.000 cov=1.000
+
+wrote results/layers/L16/summary_heldout_mimic.json
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A12_mimic_cl_heldout.done
++ echo '[A][ok] A12_mimic_cl_heldout'
+[A][ok] A12_mimic_cl_heldout
++ stage A13_perplexity_mimic python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_mimic.npz --layer 30
++ local name=A13_perplexity_mimic
++ shift
++ local marker=.pipeline_state/scaled_a_biomistral-7b-L16_L16/A13_perplexity_mimic.done
++ '[' -f .pipeline_state/scaled_a_biomistral-7b-L16_L16/A13_perplexity_mimic.done ']'
++ banner A13_perplexity_mimic
++ echo
+
++ echo '########## [A] A13_perplexity_mimic ##########'
+########## [A] A13_perplexity_mimic ##########
++ echo
+
++ python src/perplexity.py --model_id BioMistral/BioMistral-7B --n 200 --adapter results/layers/L16/adapter_mimic.npz --layer 30
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:05, 48.55it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:02, 109.36it/s]Loading weights:  11%|█▏        | 33/291 [00:00<00:02, 108.39it/s]Loading weights:  17%|█▋        | 50/291 [00:00<00:01, 124.38it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 132.94it/s]Loading weights:  28%|██▊       | 81/291 [00:00<00:01, 131.50it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:01, 130.51it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:01, 135.96it/s]Loading weights:  43%|████▎     | 126/291 [00:00<00:01, 133.54it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 132.02it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:00, 136.85it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 134.36it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 132.56it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 137.11it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 134.53it/s]Loading weights:  79%|███████▉  | 230/291 [00:01<00:00, 132.75it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 137.27it/s]Loading weights:  90%|████████▉ | 261/291 [00:01<00:00, 134.68it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.85it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 132.20it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+constraint layer attached at layer 30, alpha=1.0, rank=32
+model=BioMistral/BioMistral-7B  +constraint layer L30  wikitext-2 perplexity = 7.2003
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/A13_perplexity_mimic.done
++ echo '[A][ok] A13_perplexity_mimic'
+[A][ok] A13_perplexity_mimic
++ '[' 0 -eq 0 ']'
++ touch .pipeline_state/scaled_a_biomistral-7b-L16_L16/ALL_DONE
++ banner 'LANE A DONE (0 stage(s) failed)'
++ echo
+
++ echo '########## [A] LANE A DONE (0 stage(s) failed) ##########'
+########## [A] LANE A DONE (0 stage(s) failed) ##########
++ echo
+
++ exit 0

@@ -32,6 +32,7 @@ TAG_DATA = {
     "_medcalc":  "data/medcalc",
     "_medcalc2": "data/medcalc_v2",
     "_mimic":    "data/mimic",
+    "_mimic2":   "data/mimic_v2",
 }
 
 ARMS = [
@@ -43,6 +44,8 @@ ARMS = [
     ("_medcalc2", "heldout", "real notes v2, held-out QT"),
     ("_mimic",    "test",    "MIMIC-IV real values, test"),
     ("_mimic",    "heldout", "MIMIC-IV real values, held-out warfarin"),
+    ("_mimic2",   "test",    "MIMIC-IV v2 (+real control pairs), test"),
+    ("_mimic2",   "heldout", "MIMIC-IV v2, held-out warfarin"),
 ]
 
 # The single contribution each isolating row adds to the base model.
@@ -281,7 +284,30 @@ def main():
                          f"{fmt(s['spurious_flip_rate'])} | "
                          f"{signed(s['discrimination'])} | "
                          f"{s['n_control_pairs']} |")
-        L += [""]
+        L += [
+            "",
+            "**How to read these two rows differently.**",
+            "",
+            "For the **base model** this is a genuine measurement and the "
+            "headline result of the control pairs: discrimination near zero "
+            "means the model flips at the same rate whether or not crossing "
+            "the threshold changed the truth. On the held-out family it "
+            "instead flips on *neither* arm — it answers the same thing to "
+            "everything — so a discrimination of 0.000 there means \"never "
+            "flips\", not \"flips equally\". The causal flip rate beside it "
+            "is what distinguishes the two cases.",
+            "",
+            "For the **gated system** a discrimination near 1.0 is largely "
+            "*by construction*: on items where the gate fires it computes the "
+            "threshold comparison itself, so it cannot spuriously flip any "
+            "more than a calculator can. The number confirms the gate is "
+            "wired up correctly; it is not independent evidence that the "
+            "gate is clinically valuable. The uncircular number for the gate "
+            "remains its **coverage** — how often it can fire at all — which "
+            "falls with rule complexity and reaches zero on a rule needing a "
+            "graded clinical judgement.",
+            "",
+        ]
 
     L += [
         "## 5. Two things that must travel with this table",

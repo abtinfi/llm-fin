@@ -8,6 +8,12 @@
 # per-feature knock-out excesses. Run it after lane B, never before.
 set -u
 cd "$(dirname "$0")"
+# PATH. cron does not run a login shell, so miniconda is not on PATH and
+# `python` resolves to nothing -- every stage of the 2026-09-07 night run
+# that cron started failed with "python: command not found" in under a
+# second. Naming the interpreter directory explicitly is the fix; relying on
+# the caller's environment is what broke.
+export PATH="/home/asosoft/abtin/miniconda3/bin:$PATH"
 
 # SINGLE-INSTANCE LOCK. This script can be launched three ways -- by hand, by
 # csai_supervisor.sh, or by the @reboot cron -- and two copies would write the

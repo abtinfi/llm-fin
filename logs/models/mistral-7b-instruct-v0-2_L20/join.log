@@ -1,0 +1,1263 @@
++ export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ PYTHONPATH=/home/asosoft/abtin/paper/csai/src
++ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ cd /home/asosoft/abtin/paper/csai
++ TAG=mistral-7b-instruct-v0-2
++ R=results/models/mistral-7b-instruct-v0-2
++ STATE_DIR=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2
++ mkdir -p .pipeline_state/scaled_join_mistral-7b-instruct-v0-2
++ FAILED=0
++ stage J1_table_synth_test python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --out results/models/mistral-7b-instruct-v0-2/table_test_final.md
++ local name=J1_table_synth_test
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_test.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_test.done ']'
++ banner J1_table_synth_test
++ echo
+
++ echo '########## [JOIN] J1_table_synth_test ##########'
+########## [JOIN] J1_table_synth_test ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --out results/models/mistral-7b-instruct-v0-2/table_test_final.md
+## Ablation matrix -- split=`test`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.570 | +0.000 | 0.141 | +0.000 | 0.734 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.703 | +0.133 | 0.422 | +0.281 | 0.266 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.875 | +0.305 | 0.750 | +0.609 | 0.109 | 1.000 | 0.562 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.734 | +0.164 | 0.562 | +0.422 | 0.000 | 0.766 | 0.562 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.789 | +0.219 | 0.578 | +0.438 | 0.422 | 1.000 | 0.562 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.094 | -0.477 | 0.000 | -0.141 | 0.000 | 0.094 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.578 | +0.008 | 0.156 | +0.016 | 0.703 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.750 | +0.180 | 0.562 | +0.422 | 0.000 | 0.789 | 0.562 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.570 | [0.484, 0.656] | 0.141 | [0.062, 0.234] |
+| (2) + RAG | 0.703 | [0.625, 0.781] | 0.422 | [0.297, 0.531] |
+| (3) + Symbolic Gate (NS-AI) | 0.875 | [0.812, 0.930] | 0.750 | [0.641, 0.844] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.734 | [0.656, 0.805] | 0.562 | [0.438, 0.688] |
+| (5) Base + Symbolic Gate only | 0.789 | [0.719, 0.859] | 0.578 | [0.453, 0.703] |
+| (6) Base + UQ only | 0.094 | [0.047, 0.148] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.578 | [0.492, 0.664] | 0.156 | [0.078, 0.250] |
+| (8) All four contributions | 0.750 | [0.672, 0.820] | 0.562 | [0.438, 0.688] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 47 | 30 | 0.06755 | 0.1351 |
+| base→nsai | 48 | 9 | 1.52e-07 | 7.601e-07 |
+| base→nsai_uq | 40 | 19 | 0.008641 | 0.02592 |
+| base→sym | 28 | 0 | 7.451e-09 | 4.47e-08 |
+| base→uq | 0 | 61 | 8.674e-19 | 6.072e-18 |
+| base→cl | 2 | 1 | 1 | 1 |
+| base→nsai_uq_cl | 40 | 17 | 0.003202 | 0.01281 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 47 | 30 | 0.06755 | 0.06755 |
+| rag→nsai | 22 | 0 | 4.768e-07 | 1.431e-06 |
+| nsai→nsai_uq | 0 | 18 | 7.629e-06 | 1.526e-05 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 72 | 1.000 | 0.611 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 56 | 0.714 | 0.518 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 72 | 1.000 | 0.611 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 56 | 0.393 | 0.518 |
+| (5) Base + Symbolic Gate only | gate fired | 72 | 1.000 | 0.611 |
+| (5) Base + Symbolic Gate only | gate declined | 56 | 0.518 | 0.518 |
+| (8) All four contributions | gate fired | 72 | 1.000 | 0.611 |
+| (8) All four contributions | gate declined | 56 | 0.429 | 0.518 |
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_test_final.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_test.done
++ echo '[JOIN][ok] J1_table_synth_test'
+[JOIN][ok] J1_table_synth_test
++ stage J1_table_synth_heldout python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --out results/models/mistral-7b-instruct-v0-2/table_heldout_final.md
++ local name=J1_table_synth_heldout
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_heldout.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_heldout.done ']'
++ banner J1_table_synth_heldout
++ echo
+
++ echo '########## [JOIN] J1_table_synth_heldout ##########'
+########## [JOIN] J1_table_synth_heldout ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --out results/models/mistral-7b-instruct-v0-2/table_heldout_final.md
+## Ablation matrix -- split=`heldout`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.562 | +0.062 | 0.125 | +0.125 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.812 | +0.312 | 0.625 | +0.625 | 0.000 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.688 | +0.188 | 0.500 | +0.500 | 0.000 | 0.844 | 0.500 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.250 | 0.500 | +0.500 | 0.500 | 1.000 | 0.500 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.062 | -0.438 | 0.000 | +0.000 | 0.000 | 0.062 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.688 | +0.188 | 0.500 | +0.500 | 0.000 | 0.875 | 0.500 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.500 | [0.312, 0.656] | 0.000 | [0.000, 0.000] |
+| (2) + RAG | 0.562 | [0.406, 0.719] | 0.125 | [0.000, 0.312] |
+| (3) + Symbolic Gate (NS-AI) | 0.812 | [0.656, 0.938] | 0.625 | [0.375, 0.875] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.688 | [0.531, 0.844] | 0.500 | [0.250, 0.750] |
+| (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
+| (6) Base + UQ only | 0.062 | [0.000, 0.156] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.500 | [0.312, 0.656] | 0.000 | [0.000, 0.000] |
+| (8) All four contributions | 0.688 | [0.531, 0.844] | 0.500 | [0.250, 0.750] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 16 | 14 | 0.8555 | 1 |
+| base→nsai | 16 | 6 | 0.05248 | 0.2624 |
+| base→nsai_uq | 14 | 8 | 0.2863 | 1 |
+| base→sym | 8 | 0 | 0.007812 | 0.04688 |
+| base→uq | 0 | 14 | 0.0001221 | 0.0008545 |
+| base→cl | 0 | 0 | 1 | 1 |
+| base→nsai_uq_cl | 14 | 8 | 0.2863 | 1 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 16 | 14 | 0.8555 | 0.8555 |
+| rag→nsai | 8 | 0 | 0.007812 | 0.02344 |
+| nsai→nsai_uq | 0 | 4 | 0.125 | 0.25 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 16 | 1.000 | 0.500 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 16 | 0.625 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 16 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 16 | 0.375 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.500 |
+| (5) Base + Symbolic Gate only | gate declined | 16 | 0.500 | 0.500 |
+| (8) All four contributions | gate fired | 16 | 1.000 | 0.500 |
+| (8) All four contributions | gate declined | 16 | 0.375 | 0.500 |
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_heldout_final.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_synth_heldout.done
++ echo '[JOIN][ok] J1_table_synth_heldout'
+[JOIN][ok] J1_table_synth_heldout
++ cp results/models/mistral-7b-instruct-v0-2/table_test_final.md results/models/mistral-7b-instruct-v0-2/table.md
++ stage J1_table_medcalc_test python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _medcalc --out results/models/mistral-7b-instruct-v0-2/table_medcalc_test.md
++ local name=J1_table_medcalc_test
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_test.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_test.done ']'
++ banner J1_table_medcalc_test
++ echo
+
++ echo '########## [JOIN] J1_table_medcalc_test ##########'
+########## [JOIN] J1_table_medcalc_test ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _medcalc --out results/models/mistral-7b-instruct-v0-2/table_medcalc_test.md
+## Ablation matrix -- split=`test`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.506 | +0.000 | 0.011 | +0.000 | 0.389 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.500 | -0.006 | 0.000 | -0.011 | 0.011 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.011 | -0.494 | 0.000 | -0.011 | 0.011 | 0.022 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.511 | +0.006 | 0.033 | +0.022 | 0.356 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.994 | +0.489 | 0.989 | +0.978 | 0.000 | 1.000 | 0.989 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.506 | [0.433, 0.578] | 0.011 | [0.000, 0.033] |
+| (2) + RAG | 0.500 | [0.428, 0.578] | 0.000 | [0.000, 0.000] |
+| (3) + Symbolic Gate (NS-AI) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (5) Base + Symbolic Gate only | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+| (6) Base + UQ only | 0.011 | [0.000, 0.028] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.511 | [0.439, 0.583] | 0.033 | [0.000, 0.078] |
+| (8) All four contributions | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 34 | 35 | 1 | 1 |
+| base→nsai | 88 | 0 | 6.462e-27 | 3.877e-26 |
+| base→nsai_uq | 88 | 0 | 6.462e-27 | 3.877e-26 |
+| base→sym | 88 | 0 | 6.462e-27 | 3.877e-26 |
+| base→uq | 0 | 89 | 3.231e-27 | 2.262e-26 |
+| base→cl | 3 | 2 | 1 | 1 |
+| base→nsai_uq_cl | 88 | 0 | 6.462e-27 | 3.877e-26 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 34 | 35 | 1 | 1 |
+| rag→nsai | 89 | 0 | 3.231e-27 | 9.694e-27 |
+| nsai→nsai_uq | 0 | 0 | 1 | 1 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 178 | 1.000 | 0.506 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 2 | 0.500 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 178 | 1.000 | 0.506 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 2 | 0.500 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 178 | 1.000 | 0.506 |
+| (5) Base + Symbolic Gate only | gate declined | 2 | 0.500 | 0.500 |
+| (8) All four contributions | gate fired | 178 | 1.000 | 0.506 |
+| (8) All four contributions | gate declined | 2 | 0.500 | 0.500 |
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_medcalc_test.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_test.done
++ echo '[JOIN][ok] J1_table_medcalc_test'
+[JOIN][ok] J1_table_medcalc_test
++ stage J1_table_medcalc_heldout python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _medcalc --out results/models/mistral-7b-instruct-v0-2/table_medcalc_heldout.md
++ local name=J1_table_medcalc_heldout
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_heldout.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_heldout.done ']'
++ banner J1_table_medcalc_heldout
++ echo
+
++ echo '########## [JOIN] J1_table_medcalc_heldout ##########'
+########## [JOIN] J1_table_medcalc_heldout ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _medcalc --out results/models/mistral-7b-instruct-v0-2/table_medcalc_heldout.md
+## Ablation matrix -- split=`heldout`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.450 | +0.000 | 0.033 | +0.000 | 0.233 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.500 | +0.050 | 0.033 | +0.000 | 0.033 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.550 | 1.000 | +0.967 | 0.000 | 1.000 | 1.000 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.550 | 1.000 | +0.967 | 0.000 | 1.000 | 1.000 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.550 | 1.000 | +0.967 | 0.000 | 1.000 | 1.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.450 | 0.000 | -0.033 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.533 | +0.083 | 0.067 | +0.033 | 0.000 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.550 | 1.000 | +0.967 | 0.000 | 1.000 | 1.000 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.450 | [0.333, 0.583] | 0.033 | [0.000, 0.100] |
+| (2) + RAG | 0.500 | [0.383, 0.633] | 0.033 | [0.000, 0.100] |
+| (3) + Symbolic Gate (NS-AI) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.533 | [0.417, 0.667] | 0.067 | [0.000, 0.167] |
+| (8) All four contributions | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 7 | 4 | 0.5488 | 0.5488 |
+| base→nsai | 33 | 0 | 2.328e-10 | 1.63e-09 |
+| base→nsai_uq | 33 | 0 | 2.328e-10 | 1.63e-09 |
+| base→sym | 33 | 0 | 2.328e-10 | 1.63e-09 |
+| base→uq | 0 | 27 | 1.49e-08 | 4.47e-08 |
+| base→cl | 7 | 2 | 0.1797 | 0.3594 |
+| base→nsai_uq_cl | 33 | 0 | 2.328e-10 | 1.63e-09 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 7 | 4 | 0.5488 | 1 |
+| rag→nsai | 30 | 0 | 1.863e-09 | 5.588e-09 |
+| nsai→nsai_uq | 0 | 0 | 1 | 1 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 60 | 1.000 | 0.450 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 60 | 1.000 | 0.450 |
+| (5) Base + Symbolic Gate only | gate fired | 60 | 1.000 | 0.450 |
+| (8) All four contributions | gate fired | 60 | 1.000 | 0.450 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 50 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 2.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_medcalc_heldout.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_medcalc_heldout.done
++ echo '[JOIN][ok] J1_table_medcalc_heldout'
+[JOIN][ok] J1_table_medcalc_heldout
++ stage J1_table_mimic_test python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _mimic --out results/models/mistral-7b-instruct-v0-2/table_mimic_test.md
++ local name=J1_table_mimic_test
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_test.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_test.done ']'
++ banner J1_table_mimic_test
++ echo
+
++ echo '########## [JOIN] J1_table_mimic_test ##########'
+########## [JOIN] J1_table_mimic_test ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _mimic --out results/models/mistral-7b-instruct-v0-2/table_mimic_test.md
+## Ablation matrix -- split=`test`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.552 | +0.052 | 0.138 | +0.138 | 0.034 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.672 | +0.172 | 0.379 | +0.379 | 0.034 | 1.000 | 0.379 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.397 | -0.103 | 0.379 | +0.379 | 0.000 | 0.448 | 0.379 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.690 | +0.190 | 0.379 | +0.379 | 0.621 | 1.000 | 0.379 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.069 | -0.431 | 0.000 | +0.000 | 0.069 | 0.103 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.397 | -0.103 | 0.379 | +0.379 | 0.000 | 0.414 | 0.379 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.500 | [0.379, 0.638] | 0.000 | [0.000, 0.000] |
+| (2) + RAG | 0.552 | [0.414, 0.690] | 0.138 | [0.034, 0.276] |
+| (3) + Symbolic Gate (NS-AI) | 0.672 | [0.552, 0.793] | 0.379 | [0.207, 0.552] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.397 | [0.276, 0.517] | 0.379 | [0.207, 0.552] |
+| (5) Base + Symbolic Gate only | 0.690 | [0.569, 0.810] | 0.379 | [0.207, 0.552] |
+| (6) Base + UQ only | 0.069 | [0.017, 0.138] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.500 | [0.379, 0.638] | 0.000 | [0.000, 0.000] |
+| (8) All four contributions | 0.397 | [0.276, 0.517] | 0.379 | [0.207, 0.552] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 28 | 25 | 0.7838 | 1 |
+| base→nsai | 28 | 18 | 0.1839 | 0.9196 |
+| base→nsai_uq | 12 | 18 | 0.3616 | 1 |
+| base→sym | 11 | 0 | 0.0009766 | 0.005859 |
+| base→uq | 0 | 25 | 5.96e-08 | 4.172e-07 |
+| base→cl | 0 | 0 | 1 | 1 |
+| base→nsai_uq_cl | 12 | 18 | 0.3616 | 1 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 28 | 25 | 0.7838 | 0.7838 |
+| rag→nsai | 7 | 0 | 0.01562 | 0.03125 |
+| nsai→nsai_uq | 0 | 16 | 3.052e-05 | 9.155e-05 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 22 | 1.000 | 0.500 |
+| (3) + Symbolic Gate (NS-AI) | gate declined | 36 | 0.472 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 22 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 36 | 0.028 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 22 | 1.000 | 0.500 |
+| (5) Base + Symbolic Gate only | gate declined | 36 | 0.500 | 0.500 |
+| (8) All four contributions | gate fired | 22 | 1.000 | 0.500 |
+| (8) All four contributions | gate declined | 36 | 0.028 | 0.500 |
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_mimic_test.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_test.done
++ echo '[JOIN][ok] J1_table_mimic_test'
+[JOIN][ok] J1_table_mimic_test
++ stage J1_table_mimic_heldout python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _mimic --out results/models/mistral-7b-instruct-v0-2/table_mimic_heldout.md
++ local name=J1_table_mimic_heldout
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_heldout.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_heldout.done ']'
++ banner J1_table_mimic_heldout
++ echo
+
++ echo '########## [JOIN] J1_table_mimic_heldout ##########'
+########## [JOIN] J1_table_mimic_heldout ##########
++ echo
+
++ python src/make_table.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _mimic --out results/models/mistral-7b-instruct-v0-2/table_mimic_heldout.md
+## Ablation matrix -- split=`heldout`, model=`mistralai/Mistral-7B-Instruct-v0.2`, seeds=[0]
+
+UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision tokens, the respecified 4.7 term: AUROC 0.687 [0.675, 0.700] over 6,456 items. Rank-equivalent to `logit_margin` for K=2.)
+
+Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.750 | +0.250 | 0.500 | +0.500 | 0.375 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.500 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+
+### 95% bootstrap CI over items (seed 0)
+
+| Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
+|---|---|---|---|---|
+| (1) Base LLM | 0.500 | [0.250, 0.750] | 0.000 | [0.000, 0.000] |
+| (2) + RAG | 0.750 | [0.562, 0.938] | 0.500 | [0.125, 0.875] |
+| (3) + Symbolic Gate (NS-AI) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.500 | [0.250, 0.750] | 0.000 | [0.000, 0.000] |
+| (8) All four contributions | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
+
+### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
+
+This is the supervisor's question: what does adding this contribution to the base model do?
+
+| Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 5 | 1 | 0.2188 | 0.4375 |
+| base→nsai | 8 | 0 | 0.007812 | 0.05469 |
+| base→nsai_uq | 8 | 0 | 0.007812 | 0.05469 |
+| base→sym | 8 | 0 | 0.007812 | 0.05469 |
+| base→uq | 0 | 8 | 0.007812 | 0.05469 |
+| base→cl | 0 | 0 | 1 | 1 |
+| base→nsai_uq_cl | 8 | 0 | 0.007812 | 0.05469 |
+
+### Paired McNemar along the cumulative ladder (seed 0)
+
+| Comparison | B01 | B10 | p (exact) | p (Holm) |
+|---|---|---|---|---|
+| base→rag | 5 | 1 | 0.2188 | 0.4375 |
+| rag→nsai | 4 | 0 | 0.125 | 0.375 |
+| nsai→nsai_uq | 0 | 0 | 1 | 1 |
+
+### Where the gate's contribution comes from (seed 0)
+
+The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
+
+| Variant | subset | n | accuracy | base accuracy on the same subset |
+|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 16 | 1.000 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 16 | 1.000 | 0.500 |
+| (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.500 |
+| (8) All four contributions | gate fired | 16 | 1.000 | 0.500 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 30 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 6.7% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
+
+### Notes
+
+- Causal Consistency is pair-level: both counterfactual arms must be correct. A constant-answer model scores 0.
+- Abstentions count as failures for accuracy and causal consistency, and as non-violations for violation rate. Coverage is reported so this trade-off is visible.
+- **Accuracy (strict)** counts an abstention as wrong and is the row-comparable number. Selective accuracy is in `summary_*.json`; it rises trivially as coverage falls and must never be compared across rows without coverage.
+- Rows (5)-(7) add ONE contribution to the base model. Rows (1)-(4) are the cumulative ladder of the proposal's section 4.6. Row (8) is everything at once.
+- **The gate's accuracy is an upper bound.** It evaluates the same constraint the ground truth was generated from, so on items it fires on it cannot be wrong unless extraction is. The figure to quote next to it is its firing rate here, and its coverage on unfiltered real notes (42.7%, `results/medcalc_ablation.md`).
+- The constraint layer is scored through the identical readout as every other row (generate, then parse the first decision word), not by argmax over answer logits, so the numbers are comparable down the column.
+
+wrote results/models/mistral-7b-instruct-v0-2/table_mimic_heldout.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J1_table_mimic_heldout.done
++ echo '[JOIN][ok] J1_table_mimic_heldout'
+[JOIN][ok] J1_table_mimic_heldout
++ stage J2_coverage bash -c '
+    set -ex
+    for sp in test heldout; do
+      python src/coverage_report.py --results "$1" --split $sp --variant nsai_uq
+      python src/coverage_report.py --results "$1" --split $sp --variant uq
+      python src/coverage_report.py --results "$1" --split $sp --tag _medcalc --variant nsai_uq
+      python src/coverage_report.py --results "$1" --split $sp --tag _mimic --variant nsai_uq
+    done' _ results/models/mistral-7b-instruct-v0-2
++ local name=J2_coverage
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J2_coverage.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J2_coverage.done ']'
++ banner J2_coverage
++ echo
+
++ echo '########## [JOIN] J2_coverage ##########'
+########## [JOIN] J2_coverage ##########
++ echo
+
++ bash -c '
+    set -ex
+    for sp in test heldout; do
+      python src/coverage_report.py --results "$1" --split $sp --variant nsai_uq
+      python src/coverage_report.py --results "$1" --split $sp --variant uq
+      python src/coverage_report.py --results "$1" --split $sp --tag _medcalc --variant nsai_uq
+      python src/coverage_report.py --results "$1" --split $sp --tag _mimic --variant nsai_uq
+    done' _ results/models/mistral-7b-instruct-v0-2
++ for sp in test heldout
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split test --variant nsai_uq
+# UQ coverage report -- `test`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 128.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.766 | 0.041 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.766 | 0.041 |
+| **ACI** | **0.922** | **0.110** |
+
+alpha_t ends at 0.2151 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 128 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| acei_pregnancy | 16 | 0.750 | 1.000 | 0.000 |
+| aspirin_reye | 16 | 1.000 | 1.000 | 0.000 |
+| betablocker_asthma | 16 | 1.000 | 0.750 | 0.000 |
+| metformin_renal | 16 | 0.625 | 1.000 | 0.000 |
+| nsaid_renal | 16 | 0.562 | 1.000 | 0.000 |
+| spironolactone_hyperkalaemia | 16 | 0.750 | 1.000 | 0.000 |
+| statin_macrolide | 16 | 0.750 | 1.000 | 0.000 |
+| warfarin_inr | 16 | 0.688 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 64 | 0.781 | 0.920 | 0.000 |
+| UNSAFE | 64 | 0.750 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 56 | 0.464 | 0.846 | 0.000 |
+| True | 72 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.536** (min 0.464, max 1.000). Marginal coverage is 0.766.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_test_nsai_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split test --variant uq
+# UQ coverage report -- `test`, variant `uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 128.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.094 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.094 | 0.000 |
+| **ACI** | **0.953** | **0.426** |
+
+alpha_t ends at 0.0001 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 128 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| acei_pregnancy | 16 | 0.188 | 1.000 | 0.000 |
+| aspirin_reye | 16 | 0.000 | — | 0.000 |
+| betablocker_asthma | 16 | 0.250 | 1.000 | 0.000 |
+| metformin_renal | 16 | 0.062 | 1.000 | 0.000 |
+| nsaid_renal | 16 | 0.000 | — | 0.000 |
+| spironolactone_hyperkalaemia | 16 | 0.000 | — | 0.000 |
+| statin_macrolide | 16 | 0.250 | 1.000 | 0.000 |
+| warfarin_inr | 16 | 0.000 | — | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 64 | 0.188 | 1.000 | 0.000 |
+| UNSAFE | 64 | 0.000 | — | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 128 | 0.094 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.250** (min 0.000, max 0.250). Marginal coverage is 0.094.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_test_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _medcalc --variant nsai_uq
+# UQ coverage report -- `test_medcalc`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 180.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 1.000 | 0.006 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 1.000 | 0.006 |
+| **ACI** | **0.433** | **0.000** |
+
+alpha_t ends at 0.9950 (started at 0.1). 
+ACI holds the target on this split.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| metformin_renal | 180 | 1.000 | 0.994 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 90 | 1.000 | 0.989 | 0.000 |
+| UNSAFE | 90 | 1.000 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 2  ⚠️ n<5 | 1.000 | 0.500 | 0.000 |
+| True | 178 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 1.000, max 1.000). Marginal coverage is 1.000.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_test_medcalc_nsai_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split test --tag _mimic --variant nsai_uq
+# UQ coverage report -- `test_mimic`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 58.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.448 | 0.115 | 0.10 |
+
+Target **violated** on this split.
+
+A frozen threshold is only valid while the test stream is exchangeable with the calibration split. This split is a different rule family, so it is not, and the guarantee does not transfer. That is not a bug in the calibration -- it is the documented limit of split conformal, and the reason the proposal names the adaptive variant.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.448 | 0.115 |
+| **ACI** | **0.966** | **0.321** |
+
+alpha_t ends at 0.0051 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 58 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| metformin_egfr30 | 16 | 0.250 | 0.250 | 0.000 |
+| metformin_egfr45 | 20 | 0.000 | — | 0.000 |
+| spironolactone_k5_5 | 22 | 1.000 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 29 | 0.483 | 0.786 | 0.000 |
+| UNSAFE | 29 | 0.414 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 36 | 0.111 | 0.250 | 0.000 |
+| True | 22 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **1.000** (min 0.000, max 1.000). Marginal coverage is 0.448.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_test_mimic_nsai_uq.md
++ for sp in test heldout
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --variant nsai_uq
+# UQ coverage report -- `heldout`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 32.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.844 | 0.185 | 0.10 |
+
+Target **violated** on this split.
+
+A frozen threshold is only valid while the test stream is exchangeable with the calibration split. This split is a different rule family, so it is not, and the guarantee does not transfer. That is not a bug in the calibration -- it is the documented limit of split conformal, and the reason the proposal names the adaptive variant.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.844 | 0.185 |
+| **ACI** | **0.906** | **0.207** |
+
+alpha_t ends at 0.0251 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 32 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| nitrofurantoin_renal | 16 | 1.000 | 0.750 | 0.000 |
+| ondansetron_qt | 16 | 0.688 | 0.909 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 16 | 0.812 | 0.615 | 0.000 |
+| UNSAFE | 16 | 0.875 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 16 | 0.688 | 0.545 | 0.000 |
+| True | 16 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.312** (min 0.688, max 1.000). Marginal coverage is 0.844.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_heldout_nsai_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --variant uq
+# UQ coverage report -- `heldout`, variant `uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 32.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 0.062 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 0.062 | 0.000 |
+| **ACI** | **0.938** | **0.467** |
+
+alpha_t ends at 0.0001 (started at 0.1). 
+ACI does not reach the target within this many items: the guarantee is a long-run average and this split is only 32 items long. The direction of travel is the thing to read, not the endpoint.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| nitrofurantoin_renal | 16 | 0.125 | 1.000 | 0.000 |
+| ondansetron_qt | 16 | 0.000 | — | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 16 | 0.125 | 1.000 | 0.000 |
+| UNSAFE | 16 | 0.000 | — | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| False | 32 | 0.062 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.125** (min 0.000, max 0.125). Marginal coverage is 0.062.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_heldout_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _medcalc --variant nsai_uq
+# UQ coverage report -- `heldout_medcalc`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 60.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 1.000 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 1.000 | 0.000 |
+| **ACI** | **0.767** | **0.000** |
+
+alpha_t ends at 0.3950 (started at 0.1). 
+ACI holds the target on this split.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| ondansetron_qt | 60 | 1.000 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 30 | 1.000 | 1.000 | 0.000 |
+| UNSAFE | 30 | 1.000 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| True | 60 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 1.000, max 1.000). Marginal coverage is 1.000.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_heldout_medcalc_nsai_uq.md
++ python src/coverage_report.py --results results/models/mistral-7b-instruct-v0-2 --split heldout --tag _mimic --variant nsai_uq
+# UQ coverage report -- `heldout_mimic`, variant `nsai_uq`
+
+Signal: **`decision_entropy`**. Target error rate on retained items: alpha = 0.1. n = 16.
+
+## 1. The frozen split-conformal threshold, as shipped
+
+| | coverage | error on retained items | target |
+|---|---|---|---|
+| frozen tau (calibration split) | 1.000 | 0.000 | 0.10 |
+
+Target holds on this split.
+
+## 2. Adaptive Conformal Inference on the same items
+
+alpha_t updated after every item with gamma = 0.05; the threshold is the running (1 - alpha_t) quantile of uncertainties seen so far.
+
+| | coverage | error on retained items |
+|---|---|---|
+| frozen tau | 1.000 | 0.000 |
+| **ACI** | **0.938** | **0.000** |
+
+alpha_t ends at 0.1750 (started at 0.1). 
+ACI holds the target on this split.
+
+## 3. Conditional coverage by subgroup
+
+Marginal coverage can hide a subgroup the system has quietly stopped answering. `violation rate` is the share of truly UNSAFE cases in that subgroup that were answered SAFE.
+
+
+**by `family`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| warfarin_inr4 | 16 | 1.000 | 1.000 | 0.000 |
+
+**by `label`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| SAFE | 8 | 1.000 | 1.000 | 0.000 |
+| UNSAFE | 8 | 1.000 | 1.000 | 0.000 |
+
+**by `gate_fired`**
+
+| value | n | coverage | selective accuracy | violation rate |
+|---|---|---|---|---|
+| True | 16 | 1.000 | 1.000 | 0.000 |
+
+Widest coverage gap between subgroups of n>=5: **0.000** (min 1.000, max 1.000). Marginal coverage is 1.000.
+
+
+wrote results/models/mistral-7b-instruct-v0-2/uq_coverage_heldout_mimic_nsai_uq.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J2_coverage.done
++ echo '[JOIN][ok] J2_coverage'
+[JOIN][ok] J2_coverage
++ stage J3_summary python src/make_summary.py --results results/models/mistral-7b-instruct-v0-2 --model_id mistralai/Mistral-7B-Instruct-v0.2
++ local name=J3_summary
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J3_summary.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J3_summary.done ']'
++ banner J3_summary
++ echo
+
++ echo '########## [JOIN] J3_summary ##########'
+########## [JOIN] J3_summary ##########
++ echo
+
++ python src/make_summary.py --results results/models/mistral-7b-instruct-v0-2 --model_id mistralai/Mistral-7B-Instruct-v0.2
+# All experiments, side by side
+
+*Generated by `src/make_summary.py` from the JSON artifacts. Do not edit the numbers by hand -- rerun the script.*
+
+Everything on `mistralai/Mistral-7B-Instruct-v0.2`, bf16, greedy decoding. Ground truth is always programmatic: no LLM-as-judge, no human annotation anywhere.
+
+The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.py` merges into `summary_{split}{tag}.json` rather than overwriting, so the synthetic benchmark (GPU 0) and the real notes (GPU 1) were kept in separate lanes and no summary file had two writers.
+
+## 1. The ablation, each contribution against the baseline
+
+### Causal Consistency and strict accuracy
+
+| Stage | synthetic control test CC | synthetic control held-out CC | real notes test CC | real notes held-out (QT) CC | MIMIC-IV test CC | MIMIC-IV held-out (warfarin) CC |
+|---|---|---|---|---|---|---|
+| (1) Base LLM | 0.141 | 0.000 | 0.011 | 0.033 | 0.000 | 0.000 |
+| (2) + RAG | 0.422 | 0.125 | 0.000 | 0.033 | 0.138 | 0.500 |
+| (3) + Symbolic Gate (NS-AI) | 0.750 | 0.625 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (5) Base + Gate only | 0.578 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
+| (6) Base + UQ only | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | 0.156 | 0.000 | 0.033 | 0.067 | 0.000 | 0.000 |
+| (8) All four | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
+
+| Stage | synthetic control test acc | synthetic control held-out acc | real notes test acc | real notes held-out (QT) acc | MIMIC-IV test acc | MIMIC-IV held-out (warfarin) acc |
+|---|---|---|---|---|---|---|
+| (1) Base LLM | 0.570 | 0.500 | 0.506 | 0.450 | 0.500 | 0.500 |
+| (2) + RAG | 0.703 | 0.562 | 0.500 | 0.500 | 0.552 | 0.750 |
+| (3) + Symbolic Gate (NS-AI) | 0.875 | 0.812 | 0.994 | 1.000 | 0.672 | 1.000 |
+| (4) + UQ Engine | 0.734 | 0.688 | 0.994 | 1.000 | 0.397 | 1.000 |
+| (5) Base + Gate only | 0.789 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
+| (6) Base + UQ only | 0.094 | 0.062 | 0.011 | 0.000 | 0.069 | 0.000 |
+| (7) Base + Constraint Layer only | 0.578 | 0.500 | 0.511 | 0.533 | 0.500 | 0.500 |
+| (8) All four | 0.750 | 0.688 | 0.994 | 1.000 | 0.397 | 1.000 |
+
+Split sizes — synthetic control test: n=128, synthetic control held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60, MIMIC-IV test: n=58, MIMIC-IV held-out (warfarin): n=16.
+
+Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly one contribution to the base model, which is the comparison the supervisor asked for; row 8 is everything at once. Per-table significance tests, bootstrap CIs and the gate-fired/gate-declined breakdown are in `results/table_*.md`.
+
+## 2. Aim 3: the trained Constraint-Aware Layer
+
+| Run | trained on | held-out CC before | after | test CC before | after |
+|---|---|---|---|---|---|
+| qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.033 | 0.044 |
+| qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.200** | 0.033 | 0.000 |
+| renal | 140 pairs (train) | 0.000 | **0.000** | 0.033 | 0.000 |
+| synth | 16 pairs (calib) | 0.312 | **0.375** | 0.234 | 0.469 |
+| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.069 |
+| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.034 |
+
+**L_uncertainty, measured rather than assumed.** Decision entropy on notes whose decisive number has been redacted (maximum is ln 2 = 0.6931 nats):
+
+| split | base model | with constraint layer | n |
+|---|---|---|---|
+| test | 0.6256 | 0.4569 | 180 |
+| held-out | 0.6700 | 0.5533 | 60 |
+
+Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
+
+`L_ontology` required margin, read from the causal knowledge graph rather than held constant (`data/umls/causal_graph.json`): `ondansetron_qt` 1.00. A family the graph licenses no contraindication for gets 0.0 and the term is silent for it; x1.25 marks a MED-RT-attested contraindication, x1.0 one resting on curation alone.
+
+## 3. Aim 1: sparse autoencoder features
+
+**`sae_jumprelu_L20_fis.json`** — jumprelu, 16384 features, reconstruction FVU 0.081, L0 31.8, dead 12621/16384 (77.0%).
+
+| feature | concept | S_semantic | S_causal | FIS |
+|---|---|---|---|---|
+| #1546 | age | 0.470 | not run | 0.235 |
+| #7548 | creatinine | 0.423 | not run | 0.212 |
+| #10318 | age | 0.355 | not run | 0.178 |
+| #5141 | age | 0.282 | not run | 0.141 |
+| #13800 | age | 0.273 | not run | 0.136 |
+| #9285 | drug | 0.267 | not run | 0.133 |
+| #11634 | age | 0.265 | not run | 0.133 |
+| #10165 | creatinine | 0.265 | not run | 0.133 |
+| #105 | creatinine | 0.241 | not run | 0.121 |
+| #9657 | drug | 0.237 | not run | 0.119 |
+
+*S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
+
+**`sae_topk_L20_fis.json`** — topk, 16384 features, reconstruction FVU 0.043, L0 31.9, dead 9081/16384 (55.4%).
+
+| feature | concept | S_semantic | S_causal | FIS |
+|---|---|---|---|---|
+| #9058 | creatinine | 0.590 | 0.0462 | 0.318 |
+| #5330 | drug | 0.569 | 0.0324 | 0.301 |
+| #10756 | drug | 0.562 | 0.0229 | 0.293 |
+| #16231 | age | 0.527 | 0.0384 | 0.283 |
+| #3166 | age | 0.519 | 0.0162 | 0.268 |
+| #7589 | age | 0.518 | 0.0374 | 0.278 |
+| #1435 | qt_interval | 0.514 | 0.0006 | 0.257 |
+| #15618 | creatinine | 0.513 | 0.0301 | 0.272 |
+| #13334 | heart_rate | 0.501 | 0.0217 | 0.261 |
+| #3338 | age | 0.486 | 0.0404 | 0.263 |
+
+*S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
+
+## 4. Aim 4: conformal coverage guarantees
+
+Frozen split-conformal vs Adaptive Conformal Inference, and coverage broken down by subgroup, are in `results/uq_coverage_*.md`. The headline: a frozen threshold has no guarantee on a split that is not exchangeable with the calibration split, which is exactly what the held-out rule family is, and ACI recovers the target by giving up coverage.
+
+## 5. Supporting results
+
+Their reports hold the detail. The three causal rows are computed from the post-fix artifacts (B1/B2/B3, 2026-09-02); the two UQ rows are unaffected by those fixes and carry over unchanged.
+
+| Question | Answer | Where |
+|---|---|---|
+| Does the proposal's Eq. (2) uncertainty work? | **No** — pooled AUROC 0.525 over 6,456 items; restricting the same entropy to the answer tokens gives 0.687 | `results/bigbench_uq.md` |
+| Is counterfactual consistency alone evidence of reasoning? | **No** — discrimination −0.013 [−0.037, +0.013] over 8,000 items | `results/mcqpairs.md` |
+| Is the decisive fact represented internally? | QT yes (pair-CC 0.976), creatinine no (0.042) | `results/aim123_internals.md` |
+| Does it causally drive the answer? | No — patching effects 0.0877 to 1.0147 logits, ~100x too small to flip a decision | `results/aim123_internals.md` |
+| ...and by SAE feature knock-out? | No — -0.0152 to 0.0487 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
+| ...and by feature injection (sufficiency)? | No — 0.1420 to 1.7542 logits | `results/sufficiency_medcalc_{test,heldout}.json` |
+
+See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.
+
+## 6. Threshold provenance — 5 of 10 attested by an FDA label
+
+`hardening.py` said these thresholds were INTERIM and must not be presented as sourced. `src/curate_thresholds.py` checked all ten against `data/openfda_raw.jsonl`. **No row is human-verified**: `curator` reads `auto:` throughout, so this is a machine audit awaiting a curator, not a completed curation.
+
+| family | threshold | source | status |
+|---|---|---|---|
+| `metformin_renal` | 30 | openfda | **attested_exact** |
+| `warfarin_inr` | 4.0 | openfda | **attested_exact** |
+| `acei_pregnancy` | True | openfda | **attested_qualitative** |
+| `betablocker_asthma` | True | openfda | **attested_qualitative** |
+| `statin_macrolide` | True | openfda | **attested_qualitative** |
+| `aspirin_reye` | 16 | UNSOURCED | **construct_mismatch** |
+| `spironolactone_hyperkalaemia` | 5.5 | UNSOURCED | **construct_mismatch** |
+| `nitrofurantoin_renal` | 30 | UNSOURCED | **absent** |
+| `nsaid_renal` | 30 | UNSOURCED | **absent** |
+| `ondansetron_qt` | 500 | UNSOURCED | **absent** |
+
+**`construct_mismatch` is the dangerous category.** A number IS present in the label and encodes something else:
+
+- `aspirin_reye` — the label's "children under 12 years: consult a doctor" is an OTC **dosing** instruction. The rule encodes the Reye's-syndrome contraindication (<16), which this label never mentions.
+- `spironolactone_hyperkalaemia` — the label's "serum potassium ≤5.0 mEq/L" is a heart-failure **initiation** criterion, not the contraindication ceiling (5.5) the rule encodes.
+
+Neither value is written into `constraint_value`; both are left for a human. A number that is present but means something else is more dangerous than no number at all.
+
+**`ondansetron_qt` has no grounding at either end.** Its 500 ms threshold is `absent` from the FDA labels, and the family is also absent from MED-RT, so the causal knowledge graph licenses no contraindication path for it (`results/aim3_constraint_layer.md`, `umls_grounding.py coverage`). This is the family carrying the Aim 3 result — held-out CC 0.000 → 0.767 — so that result rests on curation at both ends and must be reported as such.
+
+Full sentences and sections: `results/threshold_provenance.md`.
+
+## 7. The benchmark arms, and how much of each is invented
+
+| arm | text | numbers | threshold | note |
+|---|---|---|---|---|
+| `data/synthetic_control` | templated vignette | invented | invented | Control arm. Shows what the pipeline does when the causal factor is stated cleanly and the label is guaranteed. |
+| `data/medcalc` | real PMC case-report prose | one arm real, one **edited** | 5 of 10 attested | Real clinical text. Half of every pair has its driving number changed to cross the threshold. |
+
+No arm dominates. `data/mimic` invents no number but its two arms are different **timepoints** in the same patient, so the clinical state genuinely differed; `data/medcalc` holds the timepoint fixed and fabricates a number instead. The paper should report both and say which trade each makes.
+
+*(`data/mimic` not built — run `python src/build_mimic.py`.)*
+
+
+wrote results/models/mistral-7b-instruct-v0-2/SUMMARY.md
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J3_summary.done
++ echo '[JOIN][ok] J3_summary'
+[JOIN][ok] J3_summary
++ stage J4_umls_reports bash -c '
+    set -ex
+    python src/umls_grounding.py coverage --graph data/umls/causal_graph.json \
+        > "$1"/umls_coverage.txt
+    python src/umls_grounding.py audit --graph data/umls/causal_graph.json \
+        > "$1"/umls_audit.txt' _ results/models/mistral-7b-instruct-v0-2
++ local name=J4_umls_reports
++ shift
++ local marker=.pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J4_umls_reports.done
++ '[' -f .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J4_umls_reports.done ']'
++ banner J4_umls_reports
++ echo
+
++ echo '########## [JOIN] J4_umls_reports ##########'
+########## [JOIN] J4_umls_reports ##########
++ echo
+
++ bash -c '
+    set -ex
+    python src/umls_grounding.py coverage --graph data/umls/causal_graph.json \
+        > "$1"/umls_coverage.txt
+    python src/umls_grounding.py audit --graph data/umls/causal_graph.json \
+        > "$1"/umls_audit.txt' _ results/models/mistral-7b-instruct-v0-2
++ python src/umls_grounding.py coverage --graph data/umls/causal_graph.json
++ python src/umls_grounding.py audit --graph data/umls/causal_graph.json
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/J4_umls_reports.done
++ echo '[JOIN][ok] J4_umls_reports'
+[JOIN][ok] J4_umls_reports
++ '[' 0 -eq 0 ']'
++ touch .pipeline_state/scaled_join_mistral-7b-instruct-v0-2/ALL_DONE
++ banner 'JOIN DONE (0 stage(s) failed)'
++ echo
+
++ echo '########## [JOIN] JOIN DONE (0 stage(s) failed) ##########'
+########## [JOIN] JOIN DONE (0 stage(s) failed) ##########
++ echo
+
++ exit 0

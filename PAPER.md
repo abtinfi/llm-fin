@@ -6,7 +6,7 @@
 
 We ask whether a clinical language model's safety decisions rest on identifiable internal representations that can be found, causally tested, and controlled. On BioMistral-7B we train sparse autoencoders on the residual stream, probe every layer, run activation patching and feature knock-out with matched controls, train a constraint-aware residual adapter, and evaluate uncertainty-aware deferral under conformal calibration. We introduce a Token-to-Concept Attribution Layer that completes the bridge from a generated token back to a biomedical concept, and evaluate it for faithfulness.
 
-Three findings are positive and three are negative, and the negative ones are the load-bearing ones. **Sparse features do select clinical concepts** — the best CUI-anchored feature reaches F1 0.634 on `creatinine` (CUI C0201976). **The attribution layer points at the right token**: on the renal family it ranks the causally edited token at the 0.980 percentile against 0.508 for a random attributor, and names the right concept 0.900 of the time against a 0.251 chance baseline. **Symbolic constraints raise consistency without harming language ability** — Causal Consistency 0.000 → 0.767 on a held-out rule family, with WikiText-2 perplexity unchanged.
+Three findings are positive and three are negative, and the negative ones are the load-bearing ones. **Sparse features do select clinical concepts** — the best CUI-anchored feature reaches F1 0.634 on `creatinine` (CUI C0201976). **The attribution layer points at the right token**: on the renal family it ranks the causally edited token at the 0.970 percentile against 0.508 for a random attributor, and names the right concept 0.700 of the time against a 0.251 chance baseline. **Symbolic constraints raise consistency without harming language ability** — Causal Consistency 0.000 → 0.767 on a held-out rule family, with WikiText-2 perplexity unchanged.
 
 Against that: **intervening on those features does not move the decision.** Activation patching yields at most 0.0221 logits over matched controls, feature knock-out and feature injection replicate the null (0.0646 logits), and a decision flip needs 1–5. **The proposal's uncertainty term measures the wrong quantity** — whole-vocabulary entropy reaches AUROC 0.525 [0.511, 0.539] over 6,456 items, while the identical entropy restricted to the decision tokens reaches 0.687 [0.675, 0.700]. And **the symbolic gate's accuracy is bounded not by its precision but by how often it can fire at all**, which falls as the rule needs more variables and collapses when a variable is a clinical judgement rather than a number.
 
@@ -89,10 +89,24 @@ The pipeline runs end to end with **no credentialed data source**. `src/check_da
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `BioMistral/BioMistral-7B` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
-| `BioMistral/BioMistral-7B` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 3.88e-26 |
-| `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 9.31e-09 |
-| `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 0.366 |
-| `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.0312 |
+| `BioMistral/BioMistral-7B` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 1.16e-25 |
+| `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 2.61e-08 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | 448 | 0.520 | 0.895 | +0.375 | 0.026 | 0.861 | +0.835 | 0.268 | 0.005 | 0.915 | 1.97e-32 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | 108 | 0.556 | 1.000 | +0.444 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 1.14e-13 |
+| `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 0.855 |
+| `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.0859 |
+| `llama3-openbiollm-8b` | synthetic control, test | 128 | 0.500 | 0.609 | +0.109 | 0.000 | 0.562 | +0.562 | 1.000 | 0.031 | 0.625 | 0.696 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | 32 | 0.500 | 0.625 | +0.125 | 0.000 | 0.500 | +0.500 | 1.000 | 0.125 | 0.688 | 1 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | 180 | 0.489 | 0.994 | +0.506 | 0.022 | 0.989 | +0.967 | 0.867 | 0.011 | 1.000 | 1.53e-26 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 2.61e-08 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | 58 | 0.500 | 0.379 | -0.121 | 0.000 | 0.379 | +0.379 | 1.000 | 0.034 | 0.397 | 1 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.0859 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | 128 | 0.570 | 0.750 | +0.180 | 0.141 | 0.562 | +0.422 | 0.734 | 0.000 | 0.789 | 0.0384 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | 32 | 0.500 | 0.688 | +0.188 | 0.000 | 0.500 | +0.500 | 1.000 | 0.000 | 0.875 | 1 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.389 | 0.000 | 1.000 | 1.16e-25 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | 60 | 0.450 | 1.000 | +0.550 | 0.033 | 1.000 | +0.967 | 0.233 | 0.000 | 1.000 | 3.49e-09 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 58 | 0.500 | 0.397 | -0.103 | 0.000 | 0.379 | +0.379 | 1.000 | 0.000 | 0.414 | 1 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.0859 |
 
 `viol` is the violation rate: an UNSAFE prescription called SAFE without abstaining. It is the number that matters clinically and it does not always move the same way as accuracy.
 
@@ -104,8 +118,22 @@ The pipeline runs end to end with **no credentialed data source**. `src/check_da
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | 0.520 [0.473, 0.567] | 0.895 [0.866, 0.922] | 0.026 [0.000, 0.061] | 0.861 [0.791, 0.922] |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | 0.556 [0.463, 0.648] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | 0.534 [0.397, 0.655] | 0.379 [0.259, 0.500] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `llama3-openbiollm-8b` | synthetic control, test | 0.500 [0.414, 0.586] | 0.609 [0.523, 0.695] | 0.000 [0.000, 0.000] | 0.562 [0.438, 0.688] |
+| `llama3-openbiollm-8b` | synthetic control, held-out | 0.500 [0.312, 0.656] | 0.625 [0.469, 0.781] | 0.000 [0.000, 0.000] | 0.500 [0.250, 0.750] |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | 0.489 [0.411, 0.561] | 0.994 [0.983, 1.000] | 0.022 [0.000, 0.056] | 0.989 [0.967, 1.000] |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | 0.500 [0.379, 0.638] | 0.379 [0.259, 0.500] | 0.000 [0.000, 0.000] | 0.379 [0.207, 0.552] |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | 0.570 [0.484, 0.656] | 0.750 [0.672, 0.820] | 0.141 [0.062, 0.234] | 0.562 [0.438, 0.688] |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | 0.500 [0.312, 0.656] | 0.688 [0.531, 0.844] | 0.000 [0.000, 0.000] | 0.500 [0.250, 0.750] |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | 0.450 [0.333, 0.583] | 1.000 [1.000, 1.000] | 0.033 [0.000, 0.100] | 1.000 [1.000, 1.000] |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 0.500 [0.379, 0.638] | 0.397 [0.276, 0.517] | 0.000 [0.000, 0.000] | 0.379 [0.207, 0.552] |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
 
 ## 3. Where the difference comes from
 
@@ -129,6 +157,14 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | Constraint layer | +0.383 | +0.767 | 26 | 3 | 1.52e-05 |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 30 | 30 | 1 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | Symbolic gate | +0.422 | +0.843 | 190 | 1 | 1.22e-55 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | UQ engine | -0.520 | -0.026 | 0 | 233 | 1.45e-70 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | Constraint layer | -0.033 | +0.000 | 54 | 69 | 0.207 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | RAG | -0.054 | -0.026 | 57 | 81 | 0.0498 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | Symbolic gate | +0.444 | +1.000 | 48 | 0 | 7.11e-15 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | UQ engine | -0.556 | +0.000 | 0 | 60 | 1.73e-18 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | Constraint layer | +0.333 | +0.767 | 43 | 7 | 2.1e-07 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | RAG | -0.111 | +0.000 | 48 | 60 | 0.29 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
@@ -137,10 +173,71 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | synthetic control, test | Symbolic gate | +0.281 | +0.562 | 36 | 0 | 2.91e-11 |
+| `llama3-openbiollm-8b` | synthetic control, test | UQ engine | -0.445 | +0.000 | 0 | 57 | 1.39e-17 |
+| `llama3-openbiollm-8b` | synthetic control, test | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | synthetic control, test | RAG | -0.039 | +0.016 | 1 | 6 | 0.125 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | Symbolic gate | +0.250 | +0.500 | 8 | 0 | 0.00781 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | UQ engine | -0.438 | +0.000 | 0 | 14 | 0.000122 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | RAG | +0.000 | +0.062 | 1 | 1 | 1 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | Symbolic gate | +0.506 | +0.967 | 91 | 0 | 8.08e-28 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | UQ engine | -0.483 | -0.022 | 0 | 87 | 1.29e-26 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | Constraint layer | -0.017 | -0.011 | 1 | 4 | 0.375 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | RAG | -0.078 | -0.022 | 7 | 21 | 0.0125 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | Symbolic gate | +0.190 | +0.379 | 11 | 0 | 0.000977 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | UQ engine | -0.448 | +0.000 | 0 | 26 | 2.98e-08 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | RAG | -0.069 | +0.000 | 0 | 4 | 0.125 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | Symbolic gate | +0.219 | +0.438 | 28 | 0 | 7.45e-09 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | UQ engine | -0.477 | -0.141 | 0 | 61 | 8.67e-19 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | Constraint layer | +0.008 | +0.016 | 2 | 1 | 1 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | RAG | +0.133 | +0.281 | 47 | 30 | 0.0675 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | Symbolic gate | +0.250 | +0.500 | 8 | 0 | 0.00781 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | UQ engine | -0.438 | +0.000 | 0 | 14 | 0.000122 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | RAG | +0.062 | +0.125 | 16 | 14 | 0.856 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | UQ engine | -0.494 | -0.011 | 0 | 89 | 3.23e-27 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | Constraint layer | +0.006 | +0.022 | 3 | 2 | 1 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | RAG | -0.006 | -0.011 | 34 | 35 | 1 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | Symbolic gate | +0.550 | +0.967 | 33 | 0 | 2.33e-10 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | UQ engine | -0.450 | -0.033 | 0 | 27 | 1.49e-08 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | Constraint layer | +0.083 | +0.033 | 7 | 2 | 0.18 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | RAG | +0.050 | +0.000 | 7 | 4 | 0.549 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | Symbolic gate | +0.190 | +0.379 | 11 | 0 | 0.000977 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | UQ engine | -0.431 | +0.000 | 0 | 25 | 5.96e-08 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | RAG | +0.052 | +0.138 | 28 | 25 | 0.784 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | RAG | +0.250 | +0.500 | 5 | 1 | 0.219 |
 
 ## 4. Is the consistency real? (control pairs)
 
-No arm in this run carries control pairs, so every Causal Consistency number above conflates causal sensitivity with plain prompt sensitivity. `data/medcalc_v2` adds them; run `run_eval.py --data data/medcalc_v2 --tag _medcalc2` to fill this section in.
+A control pair moves the driving value by a comparable amount **without crossing the threshold**, so the label does not change. A model that reacts to any prompt edit flips on these too. Discrimination is the causal flip rate minus the spurious one; on 8,000 MCQ items this model scored −0.013 [−0.037, +0.013] (`results/mcqpairs.md`), which is why the column exists.
+
+| model | benchmark | variant | causal flip | spurious flip | discrimination | n control pairs |
+|---|---|---|---|---|---|---|
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | base | 0.035 | 0.037 | -0.002 | 109 |
+| `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | nsai_uq_cl | 0.952 | 0.000 | +0.952 | 101 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | base | 0.000 | 0.000 | +0.000 | 24 |
+| `BioMistral/BioMistral-7B` | real notes v2, held-out QT | nsai_uq_cl | 1.000 | 0.000 | +1.000 | 24 |
+
+**How to read these two rows differently.**
+
+For the **base model** this is a genuine measurement and the headline result of the control pairs: discrimination near zero means the model flips at the same rate whether or not crossing the threshold changed the truth. On the held-out family it instead flips on *neither* arm — it answers the same thing to everything — so a discrimination of 0.000 there means "never flips", not "flips equally". The causal flip rate beside it is what distinguishes the two cases.
+
+For the **gated system** a discrimination near 1.0 is largely *by construction*: on items where the gate fires it computes the threshold comparison itself, so it cannot spuriously flip any more than a calculator can. The number confirms the gate is wired up correctly; it is not independent evidence that the gate is clinically valuable. The uncircular number for the gate remains its **coverage** — how often it can fire at all — which falls with rule complexity and reaches zero on a rule needing a graded clinical judgement.
 
 ### 5.2 Is the consistency real? Control pairs
 
@@ -149,6 +246,8 @@ Every Causal Consistency number in the literature on flip-only pairs shares a we
 | variant | causal flip rate | spurious flip rate | discrimination | control pairs |
 |---|---|---|---|---|
 | Base LLM | 0.035 | 0.037 | -0.0019 | 109 |
+| + gate + UQ | 0.971 | 0.000 | +0.9706 | 100 |
+| All four | 0.952 | 0.000 | +0.9519 | 101 |
 
 The base model's discrimination is **-0.0019** — it changes its answer at essentially the same rate whether or not crossing the threshold changed the truth. This replicates, on real clinical prose and a binary safety decision, the **−0.013 [−0.037, +0.013]** measured over 8,000 multiple-choice items. Two benchmarks of entirely different shape agree that counterfactual consistency alone is not evidence of clinical reasoning.
 
@@ -188,11 +287,11 @@ The benchmark answers this without annotation: the two arms of a pair differ in 
 
 | split | attributor | edited-token percentile | AOPC comprehensiveness | concept pointing (mean) | chance |
 |---|---|---|---|---|---|
-| test (renal) | `sae_concept` | 0.9800 | 0.0311 | 0.900 | 0.251 |
-| test (renal) | `grad_x_input` | 0.5099 | 0.0311 | — | — |
+| test (renal) | `sae_concept` | 0.9702 | 0.0122 | 0.700 | 0.251 |
+| test (renal) | `grad_x_input` | 0.5102 | 0.0308 | — | — |
 | test (renal) | `occlusion` | 0.5708 | 0.0716 | — | — |
 | test (renal) | `random` | 0.5084 | 0.0049 | — | — |
-| held-out (QT) | `sae_concept` | 0.4457 | 0.0901 | 0.000 | 0.667 |
+| held-out (QT) | `sae_concept` | 0.6562 | 0.1066 | 1.000 | 0.667 |
 | held-out (QT) | `grad_x_input` | 0.5591 | 0.1233 | — | — |
 | held-out (QT) | `occlusion` | 0.1578 | 0.2730 | — | — |
 | held-out (QT) | `random` | 0.4963 | 0.1430 | — | — |
@@ -227,7 +326,7 @@ Conformal coverage is reported with the caveat that makes it meaningful: a froze
 
 ### 5.8 Generalisation across models and layers
 
-*Pending: the multi-model and multi-layer runs are still executing. This section is generated from `results/models/<slug>/` and `results/layers/L<n>/` and will be filled in on the next build.*
+Beyond BioMistral-7B the pipeline was run end to end on: `llama3-openbiollm-8b`, `mistral-7b-instruct-v0-2`. Per-model tables are under `results/models/<slug>/`.
 
 ## 6. Limitations
 

@@ -38,6 +38,22 @@ The benchmark answers this without any annotation. The two arms of a pair differ
 held-out (QT / ondansetron): n=60 items, 30 pairs usable for the edited-token check, occlusion run on 30 items.
 test (renal / metformin): n=180 items, 86 pairs usable for the edited-token check, occlusion run on 30 items.
 
+### Top-100 feature vocabulary
+
+| split | attributor | edited-token percentile | AOPC comprehensiveness (higher better) | AOPC ERASER sufficiency (lower better) |
+|---|---|---|---|---|
+| held-out (QT / ondansetron) | `sae_concept` | 0.6562 | 0.1066 | 0.1028 |
+| held-out (QT / ondansetron) | `grad_x_input` | 0.5591 | 0.1233 | 0.2127 |
+| held-out (QT / ondansetron) | `random` | 0.4963 | 0.1430 | 0.2007 |
+| held-out (QT / ondansetron) | `occlusion` | 0.1578 | 0.2730 | 0.2088 |
+| test (renal / metformin) | `sae_concept` | 0.9702 | 0.0122 | 0.0667 |
+| test (renal / metformin) | `grad_x_input` | 0.5102 | 0.0308 | 0.0198 |
+| test (renal / metformin) | `random` | 0.5084 | 0.0049 | 0.0277 |
+| test (renal / metformin) | `occlusion` | 0.5708 | 0.0716 | 0.0113 |
+
+held-out (QT / ondansetron): n=60 items, 30 pairs usable for the edited-token check, occlusion run on 30 items.
+test (renal / metformin): n=180 items, 86 pairs usable for the edited-token check, occlusion run on 30 items.
+
 `occlusion` deletes one token at a time and measures the drop, so it is the exact answer the cheap attributors are approximating and the upper bound on what any of them can reach. `random` is the floor.
 
 ## 3. Does it point at the right concept?
@@ -50,10 +66,12 @@ Two aggregations are reported because they answer different questions. **sum** a
 |---|---|---|---|---|---|
 | top-25 | held-out (QT / ondansetron) | 0.000 | 0.000 | 0.667 | 60 |
 | top-25 | test (renal / metformin) | 0.033 | 0.900 | 0.251 | 180 |
+| top-100 | held-out (QT / ondansetron) | 0.000 | 1.000 | 0.667 | 60 |
+| top-100 | test (renal / metformin) | 0.572 | 0.700 | 0.251 | 180 |
 
-Features per concept in the top-25 vocabulary (held-out (QT / ondansetron)): `{'creatinine': 2, 'qt_interval': 0, 'egfr': 0, 'heart_rate': 2, 'potassium': 0, 'inr': 0, 'age': 12, 'drug': 5, 'renal_disease': 0, 'pregnancy': 0, 'asthma': 0}`.
+Features per concept in the top-100 vocabulary (held-out (QT / ondansetron)): `{'creatinine': 15, 'qt_interval': 0, 'egfr': 0, 'heart_rate': 7, 'potassium': 1, 'inr': 1, 'age': 37, 'drug': 19, 'renal_disease': 5, 'pregnancy': 0, 'asthma': 1}`.
 
-Concepts the layer cannot express at all — no feature with a positive knock-out excess: **['asthma', 'egfr', 'inr', 'potassium', 'pregnancy', 'qt_interval', 'renal_disease']**.
+Concepts the layer cannot express at all — no feature with a positive knock-out excess: **['egfr', 'pregnancy', 'qt_interval']**.
 
 ## 4. A confound in the weighting, and how it was resolved
 

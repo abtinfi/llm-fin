@@ -178,6 +178,31 @@
       "path": "data/medcalc_v2/rag_corpus.jsonl",
       "present": true,
       "used_by": "medcalc_v2 RAG variants"
+    },
+    {
+      "path": "data/mimic_v2/counterfactual_test.jsonl",
+      "present": true,
+      "used_by": "run_eval.py --data data/mimic_v2 --tag _mimic2"
+    },
+    {
+      "path": "data/mimic_v2/counterfactual_heldout.jsonl",
+      "present": true,
+      "used_by": "mimic_v2 heldout"
+    },
+    {
+      "path": "data/mimic_v2/counterfactual_calib.jsonl",
+      "present": true,
+      "used_by": "mimic_v2 UQ calibration"
+    },
+    {
+      "path": "data/mimic_v2/counterfactual_train.jsonl",
+      "present": true,
+      "used_by": "mimic_v2 CL training"
+    },
+    {
+      "path": "data/mimic_v2/rag_corpus.jsonl",
+      "present": true,
+      "used_by": "mimic_v2 RAG variants"
     }
   ],
   "splits": {
@@ -403,6 +428,56 @@
       "incomplete_pairs": 0,
       "families": [
         "ondansetron_qt"
+      ],
+      "issues": []
+    },
+    "data/mimic_v2/counterfactual_test.jsonl": {
+      "n_items": 116,
+      "n_pairs": 58,
+      "complete_pairs": 29,
+      "control_pairs": 29,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
+      ],
+      "issues": []
+    },
+    "data/mimic_v2/counterfactual_heldout.jsonl": {
+      "n_items": 32,
+      "n_pairs": 16,
+      "complete_pairs": 8,
+      "control_pairs": 8,
+      "incomplete_pairs": 0,
+      "families": [
+        "warfarin_inr4"
+      ],
+      "issues": []
+    },
+    "data/mimic_v2/counterfactual_calib.jsonl": {
+      "n_items": 60,
+      "n_pairs": 30,
+      "complete_pairs": 15,
+      "control_pairs": 15,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
+      ],
+      "issues": []
+    },
+    "data/mimic_v2/counterfactual_train.jsonl": {
+      "n_items": 76,
+      "n_pairs": 38,
+      "complete_pairs": 19,
+      "control_pairs": 19,
+      "incomplete_pairs": 0,
+      "families": [
+        "metformin_egfr30",
+        "metformin_egfr45",
+        "spironolactone_k5_5"
       ],
       "issues": []
     }

@@ -22,6 +22,12 @@ if ! flock -n 8; then
   exit 0
 fi
 
+# PATH. cron does not run a login shell, so miniconda is not on PATH and
+# `python` resolves to nothing -- every stage of the 2026-09-07 night run
+# that cron started failed with "python: command not found" in under a
+# second. Naming the interpreter directory explicitly is the fix; relying on
+# the caller's environment is what broke.
+export PATH="/home/asosoft/abtin/miniconda3/bin:$PATH"
 export PYTHONPATH="$PWD/src"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export CUDA_VISIBLE_DEVICES="${GPU:-0}"

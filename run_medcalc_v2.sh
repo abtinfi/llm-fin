@@ -22,6 +22,12 @@ if ! flock -n 8; then
   echo "$(date -Is) run_medcalc_v2.sh: another instance holds $_lockfile -- exiting" >&2
   exit 0
 fi
+# PATH. cron does not run a login shell, so miniconda is not on PATH and
+# `python` resolves to nothing -- every stage of the 2026-09-07 night run
+# that cron started failed with "python: command not found" in under a
+# second. Naming the interpreter directory explicitly is the fix; relying on
+# the caller's environment is what broke.
+export PATH="/home/asosoft/abtin/miniconda3/bin:$PATH"
 export PYTHONPATH="$PWD/src"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export CUDA_VISIBLE_DEVICES="${GPU:-1}"
@@ -49,6 +55,17 @@ for split in test heldout; do
       --gate medcalc --tag _medcalc2 --variants $V6 --batch_size 4
 done
 
+# The expanded MIMIC arm. Its control pairs are the only ones in the project
+# built from nothing but observed data -- two more real measurements from the
+# same patient, on the same side of the threshold -- so a spurious flip there
+# cannot be blamed on an edited number.
+for split in test heldout; do
+  stage "mimic2_ablation_$split" \
+    python src/run_eval.py --backend hf --model_id "$M" --out "$R" \
+      --seeds 0 --split "$split" --data data/mimic_v2 \
+      --tag _mimic2 --variants $V6 --batch_size 8
+done
+
 # Constraint-layer rows reuse the adapters trained on data/medcalc. The
 # adapter never saw the two new families, so those rows measure transfer to an
 # unseen family rather than fit -- which is the more interesting number and
@@ -70,6 +87,12 @@ stage "table_test" \
 stage "table_heldout" \
   python src/make_table.py --results "$R" --split heldout --tag _medcalc2 \
     --out "$R"/table_medcalc2_heldout.md
+stage "table_mimic2_test" \
+  python src/make_table.py --results "$R" --split test --tag _mimic2 \
+    --out "$R"/table_mimic2_test.md
+stage "table_mimic2_heldout" \
+  python src/make_table.py --results "$R" --split heldout --tag _mimic2 \
+    --out "$R"/table_mimic2_heldout.md
 
 echo "[v2] done, $FAILED stage(s) failed  $(date -Is)"
 [ "$FAILED" -eq 0 ] && touch "$STATE/ALL_DONE"

@@ -1,0 +1,29 @@
+UMLS release 2026AA, built 2026-09-01
+
+rule family                          state  curated finding            MED-RT says                  threshold
+----------------------------------------------------------------------------------------------------------------------
+aspirin_reye                        absent  Reye Syndrome              (nothing; 11 other CIs)      age < 16
+nitrofurantoin_renal                absent  Kidney Failure             (nothing; 8 other CIs)       egfr < 30
+nsaid_renal                         absent  Kidney Failure             (nothing; 6 other CIs)       egfr < 30
+ondansetron_qt                      absent  Long QT Syndrome           (nothing; 1 other CIs)       qtc > 500
+statin_macrolide                    absent  Rhabdomyolysis             (nothing; 4 other CIs)       clarithromycin == True
+acei_pregnancy                       exact  Pregnancy                  Pregnancy                    pregnant == True
+betablocker_asthma                   exact  Asthma                     Asthma                       severe_asthma == True
+metformin_renal                      exact  Kidney Failure             Kidney Failure               egfr < 30
+warfarin_inr                         exact  Hemorrhage                 Hemorrhage                   inr > 4.0
+spironolactone_hyperkalaemia    synonymous  Hyperkalemia (disorder)    Increased circulating potas  potassium > 5.5
+
+ontology-attested: 5/10 (50.0%)
+
+This fraction is the uncircular number for the grounding, and is the one to
+quote. Three things it does NOT say:
+
+  - `exact`/`synonymous` does not mean UMLS supplied the threshold. It never
+    can: there is no CUI for "eGFR below 30". Every number in the `threshold`
+    column is expert-curated and FDA-sourced, before and after this module.
+  - `absent` does not mean the rule is wrong. It means MED-RT asserts nothing
+    about that drug/finding pair, so the rule rests entirely on curation --
+    which is where it rested before, only now it is visible.
+  - A drug-drug interaction (statin_macrolide) cannot be attested by a
+    drug-DISEASE relation at all. That row is a category mismatch, not a
+    coverage failure.

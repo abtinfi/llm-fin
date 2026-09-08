@@ -30,6 +30,12 @@ export CUDA_VISIBLE_DEVICES="${GPU:-1}"
 export PYTHONPATH=/home/asosoft/abtin/paper/csai/src
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/asosoft/abtin/paper/csai
+# PATH. cron does not run a login shell, so miniconda is not on PATH and
+# `python` resolves to nothing -- every stage of the 2026-09-07 night run
+# that cron started failed with "python: command not found" in under a
+# second. Naming the interpreter directory explicitly is the fix; relying on
+# the caller's environment is what broke.
+export PATH="/home/asosoft/abtin/miniconda3/bin:$PATH"
 M="${MODEL_ID:-BioMistral/BioMistral-7B}"
 TAG="${MODEL_TAG:-biomistral-7b}"
 R="${RESULTS_DIR:-results}"

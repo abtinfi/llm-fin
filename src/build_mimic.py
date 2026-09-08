@@ -196,6 +196,49 @@ def pick_pair(events, age, sex, spec, mode="nearest"):
     return unsafe, safe
 
 
+def pick_control_pair(events, age, sex, spec, exclude=()):
+    """
+    Two REAL measurements on the SAME side of the threshold, as far apart as
+    the patient's own record allows.
+
+    This is the control arm, and MIMIC is the only place in the project where
+    it can be built out of nothing but observed data. Every other arm has to
+    edit a number to make a control pair; here the patient genuinely had two
+    different values and neither crossed the threshold, so a model that flips
+    between them is reacting to the prose, not to the clinical rule.
+
+    Returns the widest same-side spread available, because a control pair whose
+    two values are nearly identical tests almost nothing -- the prompt barely
+    changes. `exclude` keeps the timepoints already used by the causal pair out
+    of it, so the two pairs are not the same measurements re-labelled.
+    """
+    thr = spec["threshold"]
+    scored = [(t, v, spec["convert"](v, age, sex)) for t, v in events
+              if t not in exclude]
+    if spec["op"] == "<":
+        safe_side = [e for e in scored if e[2] >= thr]
+        unsafe_side = [e for e in scored if e[2] < thr]
+    else:
+        safe_side = [e for e in scored if e[2] <= thr]
+        unsafe_side = [e for e in scored if e[2] > thr]
+
+    best = None
+    for side, label in ((safe_side, "SAFE"), (unsafe_side, "UNSAFE")):
+        if len(side) < 2:
+            continue
+        lo = min(side, key=lambda e: e[2])
+        hi = max(side, key=lambda e: e[2])
+        spread = abs(hi[2] - lo[2])
+        if spread <= 0:
+            continue
+        if best is None or spread > best[0]:
+            best = (spread, lo, hi, label)
+    if best is None:
+        return None
+    _, a, b, label = best
+    return a, b, label
+
+
 def crosses(op, thr, u, s):
     return (u < thr <= s) if op == "<" else (u > thr >= s)
 
@@ -290,6 +333,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None):
                 "presentation": "implicit" if spec["calculator"] == "ckd_epi"
                                 else "explicit",
                 "edited_arm": False,          # THE POINT: no number invented
+                "is_control": False,
                 "calculator": spec["calculator"],
                 "source_calculator": spec["calculator"],
                 "note_id": f"mimic-{sid}",
@@ -309,6 +353,63 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None):
             })
         straddling.add(sid)
         skipped["kept_pairs"] += 1
+
+        # CONTROL PAIR, from the same patient's other real measurements.
+        ctrl = pick_control_pair(events, age, sex, spec,
+                                 exclude={t_u, t_s})
+        if ctrl is None:
+            skipped["no_same_side_control_pair"] += 1
+            continue
+        (t_a, v_a, _), (t_b, v_b, _), c_label = ctrl
+        q_a = round(spec["convert"](round(v_a, 2), age, sex), 2)
+        q_b = round(spec["convert"](round(v_b, 2), age, sex), 2)
+        # Rounding must not push either arm across; if it does this is not a
+        # control pair any more and is dropped rather than silently relabelled.
+        if crosses(spec["op"], spec["threshold"], q_a, q_b) or \
+                crosses(spec["op"], spec["threshold"], q_b, q_a):
+            skipped["control_rounding_crossed_threshold"] += 1
+            continue
+        c_pair = f"{fam}__mimic-{sid}__ctrl"
+        for arm, v, q, t in (("ctrl_a", v_a, q_a, t_a),
+                             ("ctrl_b", v_b, q_b, t_b)):
+            vig = render(age, sex, v, spec)
+            items.append({
+                "id": f"{c_pair}__{arm}",
+                "pair_id": c_pair,
+                "family": fam,
+                "held_out": spec["held_out"],
+                "arm": arm,
+                "drug": spec["drug"],
+                "factor": spec["lab_name"] if spec["calculator"] != "ckd_epi"
+                          else "eGFR",
+                "factor_value": q,
+                "label": c_label,          # SAME on both arms, by definition
+                "vignette": vig,
+                "presentation": "implicit" if spec["calculator"] == "ckd_epi"
+                                else "explicit",
+                "edited_arm": False,
+                "is_control": True,
+                "calculator": spec["calculator"],
+                "source_calculator": spec["calculator"],
+                "note_id": f"mimic-{sid}",
+                "subject_id": sid,
+                "charttime": t,
+                "facts": {"lab_raw": v, "lab_name": spec["lab_name"],
+                          "lab_unit": spec["render_unit"] or "ratio",
+                          "age": age, "sex": sex.capitalize(), "race": None},
+                "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
+                "provenance": {
+                    "source": "MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                    "table": "hosp/labevents", "itemid": spec["itemid"],
+                    "threshold_source": spec["threshold_source"],
+                    "threshold_status": spec["threshold_status"],
+                    "threshold_evidence": spec["threshold_evidence"],
+                    "both_arms_real": True,
+                    "control_pair": ("two real measurements on the same side "
+                                     "of the threshold; the label does not "
+                                     "change, so a flip here is spurious")},
+            })
+        skipped["kept_control_pairs"] += 1
     return items, straddling, skipped
 
 
@@ -391,7 +492,23 @@ def main():
             a, b = arms
             assert a["facts"]["age"] == b["facts"]["age"], pid
             assert a["facts"]["sex"] == b["facts"]["sex"], pid
-            assert a["label"] != b["label"], pid
+            # A causal pair must FLIP; a control pair must NOT. Asserting both
+            # separately is what makes a mislabelled control pair a build
+            # failure rather than a silently weakened benchmark -- a control
+            # arm that crosses the threshold is a causal arm wearing the wrong
+            # label, and would drag the spurious-flip rate toward the causal
+            # one and make discrimination look better than it is.
+            if a.get("is_control") or b.get("is_control"):
+                assert a.get("is_control") and b.get("is_control"), (
+                    f"{pid}: one arm is a control and the other is not")
+                assert a["label"] == b["label"], (
+                    f"{pid}: control arms carry different labels, so the "
+                    f"value crossed the threshold")
+                assert a["facts"]["lab_raw"] != b["facts"]["lab_raw"], (
+                    f"{pid}: control arms are the same measurement, so the "
+                    f"prompt does not actually differ")
+            else:
+                assert a["label"] != b["label"], pid
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
