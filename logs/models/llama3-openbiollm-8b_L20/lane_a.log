@@ -5,6 +5,8 @@
 + export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + cd /home/asosoft/abtin/paper/csai
++ export PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
++ PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 + M=aaditya/Llama3-OpenBioLLM-8B
 + TAG=llama3-openbiollm-8b
 + R=results/models/llama3-openbiollm-8b
@@ -16,165 +18,43 @@
 + STATE_DIR=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20
 + mkdir -p .pipeline_state/scaled_a_llama3-openbiollm-8b_L20
 + FAILED=0
-+ stage A1_constraint_qt python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --out results/models/llama3-openbiollm-8b/constraint_qt.json
++ stage A1_constraint_qt python src/constraint_layer.py --model_id aaditya/Llama3-OpenBioLLM-8B --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --out results/models/llama3-openbiollm-8b/constraint_qt.json
 + local name=A1_constraint_qt
 + shift
 + local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done
 + '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done ']'
-+ echo '[A][skip] A1_constraint_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done)'
-[A][skip] A1_constraint_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done)
-+ return 0
-+ stage A2_constraint_renal python src/constraint_layer.py --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --out results/models/llama3-openbiollm-8b/constraint_renal.json
-+ local name=A2_constraint_renal
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done ']'
-+ echo '[A][skip] A2_constraint_renal already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done)'
-[A][skip] A2_constraint_renal already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done)
-+ return 0
-+ stage A3_constraint_qt_shuffled python src/constraint_layer.py --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_qt_shuffled.json
-+ local name=A3_constraint_qt_shuffled
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done ']'
-+ echo '[A][skip] A3_constraint_qt_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done)'
-[A][skip] A3_constraint_qt_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A3_constraint_qt_shuffled.done)
-+ return 0
-+ stage A4_constraint_synth python src/constraint_layer.py --layer 30 --data data/synthetic_control --train_on calib --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --out results/models/llama3-openbiollm-8b/constraint_synth.json
-+ local name=A4_constraint_synth
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done ']'
-+ echo '[A][skip] A4_constraint_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done)'
-[A][skip] A4_constraint_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A4_constraint_synth.done)
-+ return 0
-+ stage A5_synthctl_ablation_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
-+ local name=A5_synthctl_ablation_test
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done ']'
-+ echo '[A][skip] A5_synthctl_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done)'
-[A][skip] A5_synthctl_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_test.done)
-+ return 0
-+ stage A5_synthctl_ablation_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants base rag sym uq nsai nsai_uq --batch_size 8
-+ local name=A5_synthctl_ablation_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done ']'
-+ echo '[A][skip] A5_synthctl_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done)'
-[A][skip] A5_synthctl_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A5_synthctl_ablation_heldout.done)
-+ return 0
-+ stage A6_synthctl_cl_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
-+ local name=A6_synthctl_cl_test
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done ']'
-+ echo '[A][skip] A6_synthctl_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done)'
-[A][skip] A6_synthctl_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_test.done)
-+ return 0
-+ stage A6_synthctl_cl_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/synthetic_control --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --adapter_layer 30 --batch_size 8
-+ local name=A6_synthctl_cl_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done ']'
-+ echo '[A][skip] A6_synthctl_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done)'
-[A][skip] A6_synthctl_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A6_synthctl_cl_heldout.done)
-+ return 0
-+ stage A7_perplexity_base python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200
-+ local name=A7_perplexity_base
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done ']'
-+ echo '[A][skip] A7_perplexity_base already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done)'
-[A][skip] A7_perplexity_base already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_base.done)
-+ return 0
-+ stage A7_perplexity_qt python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --layer 30
-+ local name=A7_perplexity_qt
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done ']'
-+ echo '[A][skip] A7_perplexity_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done)'
-[A][skip] A7_perplexity_qt already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_qt.done)
-+ return 0
-+ stage A7_perplexity_synth python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_synth.npz --layer 30
-+ local name=A7_perplexity_synth
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done ']'
-+ echo '[A][skip] A7_perplexity_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done)'
-[A][skip] A7_perplexity_synth already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A7_perplexity_synth.done)
-+ return 0
-+ stage A8_mimic_dataset_present test -s data/mimic/counterfactual_train.jsonl
-+ local name=A8_mimic_dataset_present
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done ']'
-+ echo '[A][skip] A8_mimic_dataset_present already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done)'
-[A][skip] A8_mimic_dataset_present already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A8_mimic_dataset_present.done)
-+ return 0
-+ stage A9_constraint_mimic python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --out results/models/llama3-openbiollm-8b/constraint_mimic.json
-+ local name=A9_constraint_mimic
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done ']'
-+ echo '[A][skip] A9_constraint_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done)'
-[A][skip] A9_constraint_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A9_constraint_mimic.done)
-+ return 0
-+ stage A10_constraint_mimic_shuffled python src/constraint_layer.py --layer 30 --data data/mimic --train_on train --epochs 8 --graph data/umls/causal_graph.json --shuffled_control --out results/models/llama3-openbiollm-8b/constraint_mimic_shuffled.json
-+ local name=A10_constraint_mimic_shuffled
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done ']'
-+ echo '[A][skip] A10_constraint_mimic_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done)'
-[A][skip] A10_constraint_mimic_shuffled already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A10_constraint_mimic_shuffled.done)
-+ return 0
-+ stage A11_mimic_ablation_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
-+ local name=A11_mimic_ablation_test
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done ']'
-+ echo '[A][skip] A11_mimic_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done)'
-[A][skip] A11_mimic_ablation_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_test.done)
-+ return 0
-+ stage A11_mimic_ablation_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants base rag sym uq nsai nsai_uq --batch_size 8
-+ local name=A11_mimic_ablation_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done ']'
-+ echo '[A][skip] A11_mimic_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done)'
-[A][skip] A11_mimic_ablation_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A11_mimic_ablation_heldout.done)
-+ return 0
-+ stage A12_mimic_cl_test python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
-+ local name=A12_mimic_cl_test
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done ']'
-+ echo '[A][skip] A12_mimic_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done)'
-[A][skip] A12_mimic_cl_test already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_test.done)
-+ return 0
-+ stage A12_mimic_cl_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/mimic --tag _mimic --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --adapter_layer 30 --batch_size 8
-+ local name=A12_mimic_cl_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done ']'
-+ echo '[A][skip] A12_mimic_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done)'
-[A][skip] A12_mimic_cl_heldout already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A12_mimic_cl_heldout.done)
-+ return 0
-+ stage A13_perplexity_mimic python src/perplexity.py --model_id aaditya/Llama3-OpenBioLLM-8B --n 200 --adapter results/models/llama3-openbiollm-8b/adapter_mimic.npz --layer 30
-+ local name=A13_perplexity_mimic
-+ shift
-+ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done
-+ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done ']'
-+ echo '[A][skip] A13_perplexity_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done)'
-[A][skip] A13_perplexity_mimic already done (.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A13_perplexity_mimic.done)
-+ return 0
-+ '[' 0 -eq 0 ']'
-+ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/ALL_DONE
-+ banner 'LANE A DONE (0 stage(s) failed)'
++ banner A1_constraint_qt
 + echo
 
-+ echo '########## [A] LANE A DONE (0 stage(s) failed) ##########'
-########## [A] LANE A DONE (0 stage(s) failed) ##########
++ echo '########## [A] A1_constraint_qt ##########'
+########## [A] A1_constraint_qt ##########
 + echo
 
-+ exit 0
++ python src/constraint_layer.py --model_id aaditya/Llama3-OpenBioLLM-8B --layer 30 --data data/medcalc --train_on heldout_first --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --out results/models/llama3-openbiollm-8b/constraint_qt.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 110 items / 55 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['ondansetron_qt']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:03<15:58,  3.31s/it]Loading weights:   1%|▏         | 4/291 [00:03<03:16,  1.46it/s]Loading weights:   2%|▏         | 5/291 [00:03<02:55,  1.63it/s]Loading weights:   3%|▎         | 10/291 [00:04<01:03,  4.42it/s]Loading weights:   4%|▍         | 13/291 [00:04<00:48,  5.78it/s]Loading weights:   5%|▌         | 15/291 [00:04<00:50,  5.43it/s]Loading weights:   7%|▋         | 19/291 [00:04<00:33,  8.21it/s]Loading weights:   8%|▊         | 22/291 [00:05<00:29,  9.22it/s]Loading weights:   8%|▊         | 24/291 [00:05<00:35,  7.44it/s]Loading weights:  10%|▉         | 28/291 [00:05<00:25, 10.27it/s]Loading weights:  11%|█         | 31/291 [00:05<00:23, 11.07it/s]Loading weights:  11%|█▏        | 33/291 [00:06<00:30,  8.39it/s]Loading weights:  13%|█▎        | 37/291 [00:06<00:22, 11.48it/s]Loading weights:  14%|█▎        | 40/291 [00:06<00:21, 11.82it/s]Loading weights:  14%|█▍        | 42/291 [00:07<00:28,  8.73it/s]Loading weights:  16%|█▌        | 46/291 [00:07<00:20, 11.85it/s]Loading weights:  17%|█▋        | 49/291 [00:07<00:20, 12.06it/s]Loading weights:  18%|█▊        | 51/291 [00:08<00:27,  8.89it/s]Loading weights:  19%|█▉        | 55/291 [00:08<00:19, 11.99it/s]Loading weights:  20%|█▉        | 58/291 [00:08<00:19, 12.22it/s]Loading weights:  21%|██        | 60/291 [00:08<00:25,  8.95it/s]Loading weights:  22%|██▏       | 64/291 [00:09<00:19, 11.86it/s]Loading weights:  23%|██▎       | 67/291 [00:09<00:18, 12.32it/s]Loading weights:  24%|██▎       | 69/291 [00:09<00:24,  8.98it/s]Loading weights:  25%|██▌       | 73/291 [00:09<00:18, 12.10it/s]Loading weights:  26%|██▌       | 76/291 [00:10<00:17, 12.17it/s]Loading weights:  27%|██▋       | 78/291 [00:10<00:24,  8.66it/s]Loading weights:  28%|██▊       | 82/291 [00:10<00:17, 11.77it/s]Loading weights:  29%|██▉       | 85/291 [00:10<00:17, 11.89it/s]Loading weights:  30%|██▉       | 87/291 [00:11<00:23,  8.75it/s]Loading weights:  31%|███▏      | 91/291 [00:11<00:16, 11.78it/s]Loading weights:  32%|███▏      | 94/291 [00:11<00:16, 12.02it/s]Loading weights:  33%|███▎      | 96/291 [00:12<00:22,  8.86it/s]Loading weights:  35%|███▌      | 103/291 [00:12<00:14, 12.75it/s]Loading weights:  36%|███▌      | 105/291 [00:13<00:19,  9.56it/s]Loading weights:  37%|███▋      | 109/291 [00:13<00:15, 11.96it/s]Loading weights:  38%|███▊      | 112/291 [00:13<00:14, 12.42it/s]Loading weights:  39%|███▉      | 114/291 [00:13<00:19,  9.22it/s]Loading weights:  41%|████      | 118/291 [00:14<00:14, 11.93it/s]Loading weights:  42%|████▏     | 121/291 [00:14<00:13, 12.33it/s]Loading weights:  42%|████▏     | 123/291 [00:14<00:18,  9.06it/s]Loading weights:  44%|████▎     | 127/291 [00:14<00:13, 11.85it/s]Loading weights:  45%|████▍     | 130/291 [00:15<00:13, 12.33it/s]Loading weights:  45%|████▌     | 132/291 [00:15<00:17,  9.01it/s]Loading weights:  47%|████▋     | 136/291 [00:15<00:12, 12.10it/s]Loading weights:  48%|████▊     | 139/291 [00:15<00:12, 12.07it/s]Loading weights:  48%|████▊     | 141/291 [00:16<00:16,  8.87it/s]Loading weights:  50%|████▉     | 145/291 [00:16<00:12, 11.95it/s]Loading weights:  51%|█████     | 148/291 [00:16<00:11, 11.95it/s]Loading weights:  52%|█████▏    | 150/291 [00:17<00:16,  8.61it/s]Loading weights:  53%|█████▎    | 154/291 [00:17<00:11, 11.63it/s]Loading weights:  54%|█████▍    | 157/291 [00:17<00:11, 11.71it/s]Loading weights:  55%|█████▍    | 159/291 [00:18<00:15,  8.60it/s]Loading weights:  56%|█████▌    | 163/291 [00:18<00:11, 11.40it/s]Loading weights:  57%|█████▋    | 166/291 [00:18<00:10, 11.57it/s]Loading weights:  58%|█████▊    | 168/291 [00:18<00:14,  8.47it/s]Loading weights:  59%|█████▉    | 172/291 [00:19<00:10, 11.42it/s]Loading weights:  60%|██████    | 175/291 [00:19<00:09, 11.81it/s]Loading weights:  61%|██████    | 177/291 [00:19<00:12,  8.77it/s]Loading weights:  62%|██████▏   | 181/291 [00:19<00:09, 11.86it/s]Loading weights:  64%|██████▎   | 185/291 [00:20<00:06, 15.51it/s]Loading weights:  65%|██████▍   | 188/291 [00:20<00:06, 15.19it/s]Loading weights:  65%|██████▌   | 190/291 [00:20<00:06, 15.50it/s]Loading weights:  66%|██████▋   | 193/291 [00:20<00:06, 15.13it/s]Loading weights:  67%|██████▋   | 195/291 [00:21<00:09,  9.74it/s]Loading weights:  68%|██████▊   | 199/291 [00:21<00:07, 12.95it/s]Loading weights:  69%|██████▉   | 202/291 [00:21<00:06, 12.90it/s]Loading weights:  70%|███████   | 204/291 [00:21<00:09,  9.25it/s]Loading weights:  71%|███████▏  | 208/291 [00:21<00:06, 12.45it/s]Loading weights:  73%|███████▎  | 211/291 [00:22<00:06, 12.48it/s]Loading weights:  73%|███████▎  | 213/291 [00:22<00:08,  9.04it/s]Loading weights:  75%|███████▍  | 217/291 [00:22<00:06, 12.20it/s]Loading weights:  76%|███████▌  | 220/291 [00:23<00:05, 12.28it/s]Loading weights:  76%|███████▋  | 222/291 [00:23<00:07,  8.91it/s]Loading weights:  78%|███████▊  | 226/291 [00:23<00:05, 11.97it/s]Loading weights:  79%|███████▊  | 229/291 [00:23<00:05, 12.14it/s]Loading weights:  79%|███████▉  | 231/291 [00:24<00:06,  8.77it/s]Loading weights:  81%|████████  | 235/291 [00:24<00:04, 11.80it/s]Loading weights:  82%|████████▏ | 238/291 [00:24<00:04, 12.04it/s]Loading weights:  82%|████████▏ | 240/291 [00:25<00:05,  8.90it/s]Loading weights:  84%|████████▍ | 244/291 [00:25<00:03, 11.94it/s]Loading weights:  85%|████████▍ | 247/291 [00:25<00:03, 12.05it/s]Loading weights:  86%|████████▌ | 249/291 [00:25<00:04,  8.85it/s]Loading weights:  87%|████████▋ | 253/291 [00:26<00:03, 11.97it/s]Loading weights:  88%|████████▊ | 256/291 [00:26<00:02, 11.91it/s]Loading weights:  89%|████████▊ | 258/291 [00:26<00:03,  8.59it/s]Loading weights:  90%|█████████ | 262/291 [00:27<00:02, 11.57it/s]Loading weights:  91%|█████████ | 265/291 [00:27<00:02, 11.71it/s]Loading weights:  92%|█████████▏| 267/291 [00:27<00:02,  8.53it/s]Loading weights:  93%|█████████▎| 271/291 [00:27<00:01, 11.52it/s]Loading weights:  94%|█████████▍| 274/291 [00:28<00:01, 11.72it/s]Loading weights:  95%|█████████▍| 276/291 [00:28<00:01,  8.57it/s]Loading weights:  96%|█████████▌| 280/291 [00:28<00:00, 11.37it/s]Loading weights:  98%|█████████▊| 284/291 [00:29<00:00, 12.30it/s]Loading weights:  98%|█████████▊| 286/291 [00:29<00:00, 11.31it/s]Loading weights:  99%|█████████▉| 289/291 [00:29<00:00, 13.03it/s]Loading weights: 100%|██████████| 291/291 [00:29<00:00,  9.89it/s]
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+/home/asosoft/abtin/paper/csai/src/constraint_layer.py:402: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  tot["causal"] += float(l_causal)
+
+adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
+
+=== base model, same decision rule ===
+  test    acc=0.500  CC=0.000
+  heldout acc=0.500  CC=0.000
+
+=== decision entropy on REDACTED notes, base model ===
+  test    0.0606 nats over 180 items (ln 2 = 0.6931 is maximal)
+  heldout 0.0208 nats over 60 items
+
+=== L_ontology, required margin per family ===
+    ondansetron_qt                 required margin 1.000  [curated]
+
+=== training on 110 items (real labels) ===
+  epoch 1/8  L_causal=0.7588  L_KL=0.8585  L_ont=0.8934(on 55/55 pairs)  L_unc=0.1062  train-decision-acc=0.591

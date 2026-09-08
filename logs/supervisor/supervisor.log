@@ -344,3 +344,5 @@
 2026-09-08T03:04:27+03:00 === supervisor start (pid 5240) ===
 2026-09-08T03:04:27+03:00 [w1] run  medcalc_v2 on GPU 1
 2026-09-08T03:04:27+03:00 [w0] run  sae_qt_weights on GPU 0
+2026-09-08T03:07:05+03:00 [w1] done medcalc_v2 exit=0
+2026-09-08T03:07:05+03:00 [w1] run  openbiollm on GPU 1

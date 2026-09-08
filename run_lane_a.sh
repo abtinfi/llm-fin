@@ -37,6 +37,12 @@ cd /home/asosoft/abtin/paper/csai
 # second. Naming the interpreter directory explicitly is the fix; relying on
 # the caller's environment is what broke.
 export PATH="/home/asosoft/abtin/miniconda3/bin:$PATH"
+# EVERY stage below must be given --model_id. `constraint_layer.py` defaults
+# to BioMistral, and until 2026-09-08 lane A never passed it, so the Aim 3
+# adapter for EVERY model was trained on BioMistral and then attached to a
+# different model. The hidden-size guard in model.py could not catch it: all
+# three models are 4096-dimensional, so the wrong adapter loads cleanly and
+# produces a plausible number. Grep for `model_id` before adding a stage.
 M="${MODEL_ID:-BioMistral/BioMistral-7B}"
 TAG="${MODEL_TAG:-biomistral-7b}"
 R="${RESULTS_DIR:-results}"
@@ -72,20 +78,20 @@ stage () {
 
 # --- 1. constraint layers (step 2c). Lane B waits on adapter_qt/renal. ------
 stage A1_constraint_qt \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/medcalc --train_on heldout_first \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/medcalc --train_on heldout_first \
     --epochs 8 --graph $G --save_adapter "$R"/adapter_qt.npz \
     --out "$R"/constraint_qt.json
 stage A2_constraint_renal \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/medcalc --train_on train \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/medcalc --train_on train \
     --epochs 8 --graph $G --save_adapter "$R"/adapter_renal.npz \
     --out "$R"/constraint_renal.json
 # Both adapters lane B needs now exist; it can proceed past its wait.
 stage A3_constraint_qt_shuffled \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/medcalc --train_on heldout_first \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/medcalc --train_on heldout_first \
     --epochs 8 --graph $G --shuffled_control \
     --out "$R"/constraint_qt_shuffled.json
 stage A4_constraint_synth \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/synthetic_control --train_on calib \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/synthetic_control --train_on calib \
     --epochs 8 --graph $G --save_adapter "$R"/adapter_synth.npz \
     --out "$R"/constraint_synth.json
 
@@ -126,11 +132,11 @@ stage A7_perplexity_synth \
 stage A8_mimic_dataset_present \
   test -s data/mimic/counterfactual_train.jsonl
 stage A9_constraint_mimic \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/mimic --train_on train \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/mimic --train_on train \
     --epochs 8 --graph $G --save_adapter "$R"/adapter_mimic.npz \
     --out "$R"/constraint_mimic.json
 stage A10_constraint_mimic_shuffled \
-  python src/constraint_layer.py --layer "$ADAPTER_LAYER" --data data/mimic --train_on train \
+  python src/constraint_layer.py --model_id "$M" --layer "$ADAPTER_LAYER" --data data/mimic --train_on train \
     --epochs 8 --graph $G --shuffled_control \
     --out "$R"/constraint_mimic_shuffled.json
 stage A11_mimic_ablation_test \

@@ -89,6 +89,29 @@ def enrich(recs, data_dir, split):
     return recs
 
 
+def discrimination_ci(sc, n_boot=20000, seed=0):
+    """
+    Bootstrap CI on (causal flip rate - spurious flip rate).
+
+    Reported always, never optionally. On the MIMIC arm the point estimate is
+    -0.103, which reads as "it flips MORE when the truth did not change" until
+    you see the interval: [-0.276, +0.069] over 29 control pairs, covering
+    zero. The point estimate alone would have been an overclaim in the
+    direction the authors were hoping for, which is exactly when an interval
+    earns its place.
+    """
+    cf, sf = sc.get("_causal_flip_flags"), sc.get("_spurious_flip_flags")
+    if not cf or not sf:
+        return None
+    rng = np.random.default_rng(seed)
+    a = np.asarray(cf, dtype=float)
+    b = np.asarray(sf, dtype=float)
+    d = (rng.choice(a, (n_boot, len(a)), replace=True).mean(axis=1)
+         - rng.choice(b, (n_boot, len(b)), replace=True).mean(axis=1))
+    lo, hi = np.percentile(d, [2.5, 97.5])
+    return float(lo), float(hi)
+
+
 def fmt(x, nd=3):
     return "—" if x is None else f"{x:.{nd}f}"
 
@@ -273,20 +296,31 @@ def main():
             "column exists.",
             "",
             "| model | benchmark | variant | causal flip | spurious flip | "
-            "discrimination | n control pairs |",
-            "|---|---|---|---|---|---|---|",
+            "discrimination | 95% CI | n control pairs |",
+            "|---|---|---|---|---|---|---|---|",
         ]
         for c in ctrl:
             for tagname, s in (("base", c["base"]),
                                (c["proposed_variant"], c["proposed"])):
+                ci = discrimination_ci(s)
+                ci_s = (f"[{signed(ci[0])}, {signed(ci[1])}]" if ci else "—")
                 L.append(f"| `{c['model']}` | {c['arm']} | {tagname} | "
                          f"{fmt(s['causal_flip_rate'])} | "
                          f"{fmt(s['spurious_flip_rate'])} | "
-                         f"{signed(s['discrimination'])} | "
+                         f"{signed(s['discrimination'])} | {ci_s} | "
                          f"{s['n_control_pairs']} |")
         L += [
             "",
             "**How to read these two rows differently.**",
+            "",
+            "**Read the interval, not the point estimate.** On the "
+            "all-real MIMIC controls the point estimate is -0.103, which "
+            "reads as \"it flips MORE often when the truth did not "
+            "change\" -- and its interval covers zero at 29 control pairs. "
+            "What the three measurements support together is the weaker and "
+            "well-supported claim: discrimination is indistinguishable from "
+            "zero on every benchmark tried, across 8,000 MCQ items, 109 "
+            "edited-control pairs and 29 all-real ones.",
             "",
             "For the **base model** this is a genuine measurement and the "
             "headline result of the control pairs: discrimination near zero "

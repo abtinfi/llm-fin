@@ -355,39 +355,50 @@ def main():
         from make_comparison import enrich
         from make_table import load_preds
         from metrics import score as _score
+        from make_comparison import discrimination_ci
         rows = []
-        for variant, label in (("base", "Base LLM"),
-                               ("nsai_uq", "+ gate + UQ"),
-                               ("nsai_uq_cl", "All four")):
-            try:
-                recs = enrich(load_preds("results", "test", variant, 0,
-                                         "_medcalc2"),
-                              "data/medcalc_v2", "test")
-            except FileNotFoundError:
-                continue
-            sc = _score(recs)
-            if sc["spurious_flip_rate"] is None:
-                continue
-            rows.append((label, sc))
+        for tag, data, arm in (("_medcalc2", "data/medcalc_v2",
+                                "real notes (edited controls)"),
+                               ("_mimic2", "data/mimic_v2",
+                                "MIMIC-IV (all-real controls)")):
+            for variant, label in (("base", "Base LLM"),
+                                   ("nsai_uq", "+ gate + UQ")):
+                try:
+                    recs = enrich(load_preds("results", "test", variant, 0,
+                                             tag), data, "test")
+                except FileNotFoundError:
+                    continue
+                sc = _score(recs)
+                if sc["spurious_flip_rate"] is None:
+                    continue
+                rows.append((f"{arm} — {label}", sc))
         if rows:
-            A("| variant | causal flip rate | spurious flip rate | "
-              "discrimination | control pairs |")
-            A("|---|---|---|---|---|")
+            A("| arm — variant | causal flip | spurious flip | "
+              "discrimination | 95% CI | control pairs |")
+            A("|---|---|---|---|---|---|")
             for label, sc in rows:
+                ci = discrimination_ci(sc)
+                ci_s = (f"[{ci[0]:+.3f}, {ci[1]:+.3f}]" if ci else "—")
                 A(f"| {label} | {f3(sc['causal_flip_rate'])} | "
                   f"{f3(sc['spurious_flip_rate'])} | "
-                  f"{sc['discrimination']:+.4f} | {sc['n_control_pairs']} |")
+                  f"{sc['discrimination']:+.4f} | {ci_s} | "
+                  f"{sc['n_control_pairs']} |")
             A("")
-            b = rows[0][1]
-            A(f"The base model's discrimination is "
-              f"**{b['discrimination']:+.4f}** — it changes its answer at "
-              f"essentially the same rate whether or not crossing the "
-              f"threshold changed the truth. This replicates, on real "
-              f"clinical prose and a binary safety decision, the "
-              f"**−0.013 [−0.037, +0.013]** measured over 8,000 "
-              f"multiple-choice items. Two benchmarks of entirely different "
-              f"shape agree that counterfactual consistency alone is not "
-              f"evidence of clinical reasoning.")
+            A("The MIMIC arm is the strongest form of this test available "
+              "anywhere in the project: its control pairs are two more real "
+              "measurements from the same patient on the same side of the "
+              "threshold, so **neither arm contains an invented number**. "
+              "Every other benchmark has to edit a value to build a control.")
+            A("")
+            A("**Read the interval, not the point estimate.** The MIMIC point "
+              "estimate is −0.103, which reads as *more* flipping when the "
+              "truth did not change — and its interval covers zero at 29 "
+              "control pairs. The claim the three measurements jointly "
+              "support is the weaker, well-founded one: **discrimination is "
+              "indistinguishable from zero on every benchmark tried** — "
+              "8,000 multiple-choice items (−0.013 [−0.037, +0.013]), 109 "
+              "edited-control pairs, and 29 all-real ones. Counterfactual "
+              "consistency alone is not evidence of clinical reasoning.")
             A("")
             A("This is why a spurious-flip rate belongs beside every "
               "consistency number, and why a split without control pairs must "
