@@ -1,0 +1,612 @@
+{
+  "layer": 20,
+  "model_id": "BioMistral/BioMistral-7B",
+  "model_slug": "biomistral-7b",
+  "sae": "results/sae/sae_topk_L20.npz",
+  "fis": "results/sae_heldout/sae_topk_L20_fis.json",
+  "data": "data/medcalc/counterfactual_heldout.jsonl",
+  "concept_source": "umls",
+  "n_items": 60,
+  "n_occlusion_items": 30,
+  "n_weighted_features": 34,
+  "k_grid": [
+    0.01,
+    0.05,
+    0.1,
+    0.2,
+    0.5
+  ],
+  "eraser_comprehensiveness": {
+    "sae_concept": [
+      0.010109144262969494,
+      0.03723087161779404,
+      0.05448244884610176,
+      0.10676185041666031,
+      0.10127650201320648
+    ],
+    "grad_x_input": [
+      0.010611603036522865,
+      0.015849199146032333,
+      0.08362459391355515,
+      0.20900844037532806,
+      0.29743263125419617
+    ],
+    "random": [
+      0.02319199964404106,
+      0.041904449462890625,
+      0.09811326116323471,
+      0.2047974318265915,
+      0.34712889790534973
+    ],
+    "occlusion": [
+      0.09401311725378036,
+      0.20038920640945435,
+      0.25349003076553345,
+      0.37384942173957825,
+      0.44302666187286377
+    ]
+  },
+  "eraser_sufficiency": {
+    "sae_concept": [
+      0.10341057926416397,
+      0.111282579600811,
+      0.061890628188848495,
+      0.15934982895851135,
+      0.30334043502807617
+    ],
+    "grad_x_input": [
+      0.16057854890823364,
+      0.07860542833805084,
+      0.07477506250143051,
+      0.3506668210029602,
+      0.39888933300971985
+    ],
+    "random": [
+      0.10375499725341797,
+      0.12257449328899384,
+      0.12992247939109802,
+      0.3225662112236023,
+      0.32467156648635864
+    ],
+    "occlusion": [
+      0.17870238423347473,
+      0.12621136009693146,
+      0.20787546038627625,
+      0.31760039925575256,
+      0.21350041031837463
+    ]
+  },
+  "aopc_comprehensiveness": {
+    "sae_concept": 0.06197216734290123,
+    "grad_x_input": 0.1233052983880043,
+    "random": 0.1430271863937378,
+    "occlusion": 0.27295368909835815
+  },
+  "aopc_sufficiency": {
+    "sae_concept": 0.14785480499267578,
+    "grad_x_input": 0.21270301938056946,
+    "random": 0.20069794356822968,
+    "occlusion": 0.2087780237197876
+  },
+  "concept_pointing": {
+    "accuracy_sum": 0.0,
+    "accuracy_mean": 1.0,
+    "accuracy_sum_expressible": 0.0,
+    "accuracy_mean_expressible": 1.0,
+    "random_baseline": 0.6666666666666664,
+    "n": 60,
+    "n_expressible": 60,
+    "n_items_whose_decisive_concept_the_layer_cannot_express": 0,
+    "expressible_concepts": [
+      "age",
+      "creatinine",
+      "drug",
+      "heart_rate",
+      "qt_interval"
+    ],
+    "features_per_concept": {
+      "creatinine": 4,
+      "qt_interval": 1,
+      "egfr": 0,
+      "heart_rate": 5,
+      "potassium": 0,
+      "inr": 0,
+      "age": 18,
+      "drug": 6,
+      "renal_disease": 0,
+      "pregnancy": 0,
+      "asthma": 0
+    }
+  },
+  "edited_token_percentile": {
+    "sae_concept": 0.8512212378491449,
+    "grad_x_input": 0.5590839178048479,
+    "random": 0.49626861080349444,
+    "occlusion": 0.1578134613018334
+  },
+  "n_edited_pairs": 30,
+  "skipped": {},
+  "note": "`eraser_sufficiency` is the ERASER rationale metric and is NOT the Aim 2 causal sufficiency in results/sufficiency_medcalc_*.json. Lower is better here; there, larger |excess| would be evidence of a causal role.",
+  "per_item": [
+    {
+      "id": "ondansetron_qt__69__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6076720356941223,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__69__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6513569951057434,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__70__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6654126048088074,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__70__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370353698730469,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__72__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6076715588569641,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__72__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224659085273743,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__74__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.622465193271637,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__74__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370354294776917,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__75__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370364427566528,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__75__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.651357114315033,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__76__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__76__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224671602249146,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__77__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6513558626174927,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__77__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370364427566528,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__78__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5775061845779419,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__78__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5926737785339355,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__79__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224650740623474,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__79__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224638223648071,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__80__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__80__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__81__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370353698730469,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__81__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370352506637573,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__82__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370353102684021,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__82__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370364427566528,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__83__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224683523178101,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__83__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224671006202698,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__84__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5926728248596191,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__84__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5775050520896912,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__87__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370342969894409,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__87__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370342969894409,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__88__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224648952484131,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__88__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.607670247554779,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__89__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224660873413086,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__89__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__90__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__90__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370342969894409,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__91__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224638223648071,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__91__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5926764607429504,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__92__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6513581275939941,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__92__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224659085273743,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__93__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.637036144733429,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__93__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224673390388489,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__94__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.607668936252594,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__94__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.5926753878593445,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__95__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224648356437683,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__95__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370319128036499,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__96__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370342373847961,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__96__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6654115915298462,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__97__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224642395973206,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__97__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6513581871986389,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__98__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.577505350112915,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__98__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.607670247554779,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__99__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370376944541931,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__99__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224673390388489,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__7__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__7__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224650740623474,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__8__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6224663257598877,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__8__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370378732681274,
+      "decision": "SAFE",
+      "n_tokens": 97,
+      "n_candidates": 44
+    },
+    {
+      "id": "ondansetron_qt__9__safe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370344161987305,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    },
+    {
+      "id": "ondansetron_qt__9__unsafe",
+      "family": "ondansetron_qt",
+      "clean_p": 0.6370342969894409,
+      "decision": "SAFE",
+      "n_tokens": 96,
+      "n_candidates": 43
+    }
+  ]
+}

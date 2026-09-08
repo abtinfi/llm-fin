@@ -478,28 +478,36 @@ def main():
       "attributor sit at chance.")
     A("")
     qtw = opt("faithfulness_medcalc_heldout_biomistral-7b_qtweights.json")
-    A("**Where the dictionary lacks the concept, the layer scores at chance.** "
-      "The QT family's decisive concept has no feature with a positive "
-      "knock-out excess in the scored set, so the layer cannot name it.")
+    A("**A near-miss worth reporting, because it nearly became a finding.** "
+      "On the QT family the layer first scored at chance, and the scored "
+      "dictionary contained no `qt_interval` feature with a positive "
+      "knock-out excess. The obvious reading — the model has no QT feature — "
+      "would have been a claim about what the network represents.")
     A("")
-    A("Whether that is a fact about the dictionary or about our own "
-      "measurement had to be checked, because the weights are knock-out "
-      "excesses and they were measured on a split containing only renal "
-      "items — where a QT feature is causally inert by construction and "
-      "scores zero whether or not it exists. Widening the vocabulary from 25 "
-      "to 100 features does not settle it (QT still has two features, both "
-      "with negative excess); re-scoring the same dictionary on the split "
-      "where QT *is* the decisive variable does.")
+    A("It was our measurement. The weights are knock-out excesses, and they "
+      "were taken on a split containing only renal items, where a QT feature "
+      "cannot move the decision and scores zero whether or not it exists. "
+      "Widening the vocabulary from 25 to 100 features did not settle it. "
+      "Re-scoring the same dictionary on the split where QT *is* the decisive "
+      "variable did.")
     if qtw:
         c = qtw["concept_pointing"]
         A("")
-        A(f"With split-matched weights the QT split gives concept-pointing "
-          f"{f3(c['accuracy_mean'])} against a "
-          f"{f3(c['random_baseline'])} baseline, and an edited-token "
+        A(f"With split-matched weights `qt_interval` becomes expressible and "
+          f"the QT family gives concept-pointing "
+          f"**{f3(c['accuracy_mean'])}** against a "
+          f"{f3(c['random_baseline'])} baseline, with an edited-token "
           f"percentile of "
-          f"{f4(qtw['edited_token_percentile'].get('sae_concept'))}. "
-          f"The vocabulary gap is therefore a property of the dictionary, "
-          f"not of how the weights were obtained.")
+          f"**{f4(qtw['edited_token_percentile'].get('sae_concept'))}** "
+          f"against {f4(qtw['edited_token_percentile'].get('random'))} for a "
+          f"random attributor. The dictionary had the feature all along. The "
+          f"section 4.2 bridge works on both families; the earlier reading is "
+          f"withdrawn.")
+        A("")
+        A("The chance baselines differ between the two families and the "
+          "accuracies must be read against their own: QT notes mention few "
+          "of the eleven concepts, so a coin flip scores 0.667 there against "
+          "0.251 on renal.")
     else:
         A("")
         A("*That check is still running. Until it lands, the QT result is "

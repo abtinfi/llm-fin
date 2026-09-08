@@ -260,3 +260,48 @@ top 100 features by S_semantic:
   knock-out #15806: |Δ margin|=0.0344 (random control #6929: 0.0000, excess +0.0344)
   knock-out #4754: |Δ margin|=0.0073 (random control #7959: 0.0000, excess +0.0073)
   knock-out #526: |Δ margin|=0.0000 (random control #11777: 0.0000, excess +0.0000)
+  knock-out #3022: |Δ margin|=0.0000 (random control #14573: 0.0000, excess +0.0000)
+  knock-out #10896: |Δ margin|=0.0177 (random control #1195: 0.0000, excess +0.0177)
+  knock-out #4707: |Δ margin|=0.0000 (random control #15303: 0.0312, excess -0.0312)
+  knock-out #12790: |Δ margin|=0.0250 (random control #8705: 0.0000, excess +0.0250)
+  knock-out #15302: |Δ margin|=0.0000 (random control #5862: 0.0000, excess +0.0000)
+  knock-out #13071: |Δ margin|=0.0000 (random control #11022: 0.0000, excess +0.0000)
+  knock-out #11014: |Δ margin|=0.0281 (random control #9363: 0.0000, excess +0.0281)
+  knock-out #2023: |Δ margin|=0.0292 (random control #4171: 0.0000, excess +0.0292)
+  knock-out #8057: |Δ margin|=0.0219 (random control #5273: 0.0000, excess +0.0219)
+  knock-out #14658: |Δ margin|=0.0281 (random control #11788: 0.0000, excess +0.0281)
+  knock-out #13423: |Δ margin|=0.0021 (random control #9737: 0.0000, excess +0.0021)
+  knock-out #10448: |Δ margin|=0.0000 (random control #8264: 0.0000, excess +0.0000)
+  knock-out #8049: |Δ margin|=0.0031 (random control #5536: 0.0000, excess +0.0031)
+  knock-out #6756: |Δ margin|=0.0000 (random control #12462: 0.0000, excess +0.0000)
+  knock-out #4227: |Δ margin|=0.0000 (random control #6416: 0.0000, excess +0.0000)
+  knock-out #1923: |Δ margin|=0.0000 (random control #5376: 0.0000, excess +0.0000)
+  knock-out #7658: |Δ margin|=0.0250 (random control #14586: 0.0000, excess +0.0250)
+  knock-out #1818: |Δ margin|=0.0000 (random control #4324: 0.0000, excess +0.0000)
+  knock-out #3879: |Δ margin|=0.0000 (random control #3721: 0.0000, excess +0.0000)
+  knock-out #2229: |Δ margin|=0.0000 (random control #11701: 0.0260, excess -0.0260)
+  knock-out #11222: |Δ margin|=0.0031 (random control #10210: 0.0000, excess +0.0031)
+  knock-out #7954: |Δ margin|=0.0000 (random control #795: 0.0000, excess +0.0000)
+  knock-out #4858: |Δ margin|=0.0000 (random control #1376: 0.0000, excess +0.0000)
+  knock-out #2086: |Δ margin|=0.0312 (random control #6179: 0.0000, excess +0.0312)
+  knock-out #3582: |Δ margin|=0.0000 (random control #13642: 0.0000, excess +0.0000)
+
+wrote results/sae_heldout/sae_topk_L20_fis.json
+[qtw] attribution on the held-out split with split-matched weights
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 176.76it/s]Loading weights:  18%|█▊        | 51/291 [00:00<00:01, 235.31it/s]Loading weights:  27%|██▋       | 78/291 [00:00<00:00, 245.80it/s]Loading weights:  36%|███▌      | 105/291 [00:00<00:00, 251.73it/s]Loading weights:  45%|████▌     | 131/291 [00:00<00:00, 251.18it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 250.35it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 254.23it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 256.93it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 258.13it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 259.26it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 257.39it/s]
+[attribution] layer 20, 34 features carry a positive knock-out excess (66 clipped to zero), concept vocabulary 'umls' with 11 concepts
+[attribution] expressible concepts: {'creatinine': 4, 'qt_interval': 1, 'heart_rate': 5, 'age': 18, 'drug': 6}
+[attribution] NOT expressible (no positively weighted feature): ['asthma', 'egfr', 'inr', 'potassium', 'pregnancy', 'renal_disease']
+  20/60 items
+  40/60 items
+  60/60 items
+
+wrote results/faithfulness_medcalc_heldout_biomistral-7b_qtweights.json
+  sae_concept    AOPC comp=0.06197216734290123 suff=0.14785480499267578 edited-token pct=0.8512212378491449
+  grad_x_input   AOPC comp=0.1233052983880043 suff=0.21270301938056946 edited-token pct=0.5590839178048479
+  random         AOPC comp=0.1430271863937378 suff=0.20069794356822968 edited-token pct=0.49626861080349444
+  occlusion      AOPC comp=0.27295368909835815 suff=0.2087780237197876 edited-token pct=0.1578134613018334
+  concept pointing {'accuracy_sum': 0.0, 'accuracy_mean': 1.0, 'accuracy_sum_expressible': 0.0, 'accuracy_mean_expressible': 1.0, 'random_baseline': 0.6666666666666664, 'n': 60, 'n_expressible': 60, 'n_items_whose_decisive_concept_the_layer_cannot_express': 0, 'expressible_concepts': ['age', 'creatinine', 'drug', 'heart_rate', 'qt_interval'], 'features_per_concept': {'creatinine': 4, 'qt_interval': 1, 'egfr': 0, 'heart_rate': 5, 'potassium': 0, 'inr': 0, 'age': 18, 'drug': 6, 'renal_disease': 0, 'pregnancy': 0, 'asthma': 0}}
+[qtw] done 2026-09-08T03:11:10+03:00

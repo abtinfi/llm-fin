@@ -197,6 +197,13 @@ def main():
     if qtw:
         c = qtw["concept_pointing"]
         L += [
+            "**The answer is (2): it was our measurement.** With the weights "
+            "taken on the split where QT is the decisive variable, "
+            "`qt_interval` becomes expressible and the layer works on the QT "
+            "family too. The dictionary had the feature all along; scoring it "
+            "where QT cannot move the decision gave it an excess of zero, and "
+            "the zero was then read as absence.",
+            "",
             "**Result with split-matched weights** (held-out split, weights "
             "measured on the held-out split):",
             "",
@@ -219,12 +226,22 @@ def main():
     L += [
         "## 5. What this shows, and what it does not",
         "",
-        "Read the token result and the concept result together with the "
-        "expressible-concept list. Where the dictionary has features for the "
-        "concept a family's decision turns on, the bridge works; where it has "
-        "none, the layer scores at chance — and §4 above is what decides "
-        "whether that absence is a property of the dictionary or of how the "
-        "weights were measured.",
+        "With split-matched weights the section 4.2 bridge works on **both** "
+        "families: it ranks the causally edited token far above chance and "
+        "names the decisive concept far above chance on each. The earlier "
+        "reading — that the dictionary simply lacked a QT feature — was an "
+        "artifact of measuring the weights on the wrong split, and is "
+        "withdrawn.",
+        "",
+        "Two caveats travel with that. The chance baseline is not the same on "
+        "the two families: QT notes mention few of the eleven concepts, so a "
+        "coin-flip scores 0.667 there against 0.251 on renal, and the "
+        "headline accuracies must be read against their own baselines rather "
+        "than against each other. And the **sum** aggregation still scores "
+        "0.000 on both, because `age` alone supplies 18 of the scored "
+        "features: without normalising for how many features a concept has, "
+        "the readout measures the dictionary's composition rather than the "
+        "note.",
         "",
         "The faithfulness numbers are small across the board, **including for "
         "`occlusion`**, which is exact. A rationale that the model itself "

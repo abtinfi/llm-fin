@@ -379,11 +379,13 @@ Two things follow, and they must be read together.
 
 **The bridge works where the dictionary has the concept.** On the renal family the layer ranks the edited token near the top and names the right concept far above chance, while gradient×input and a random attributor sit at chance.
 
-**Where the dictionary lacks the concept, the layer scores at chance.** The QT family's decisive concept has no feature with a positive knock-out excess in the scored set, so the layer cannot name it.
+**A near-miss worth reporting, because it nearly became a finding.** On the QT family the layer first scored at chance, and the scored dictionary contained no `qt_interval` feature with a positive knock-out excess. The obvious reading — the model has no QT feature — would have been a claim about what the network represents.
 
-Whether that is a fact about the dictionary or about our own measurement had to be checked, because the weights are knock-out excesses and they were measured on a split containing only renal items — where a QT feature is causally inert by construction and scores zero whether or not it exists. Widening the vocabulary from 25 to 100 features does not settle it (QT still has two features, both with negative excess); re-scoring the same dictionary on the split where QT *is* the decisive variable does.
+It was our measurement. The weights are knock-out excesses, and they were taken on a split containing only renal items, where a QT feature cannot move the decision and scores zero whether or not it exists. Widening the vocabulary from 25 to 100 features did not settle it. Re-scoring the same dictionary on the split where QT *is* the decisive variable did.
 
-*That check is still running. Until it lands, the QT result is reported as unresolved rather than as a finding about the dictionary — see `results/attribution.md` §4.*
+With split-matched weights `qt_interval` becomes expressible and the QT family gives concept-pointing **1.000** against a 0.667 baseline, with an edited-token percentile of **0.8512** against 0.4963 for a random attributor. The dictionary had the feature all along. The section 4.2 bridge works on both families; the earlier reading is withdrawn.
+
+The chance baselines differ between the two families and the accuracies must be read against their own: QT notes mention few of the eleven concepts, so a coin flip scores 0.667 there against 0.251 on renal.
 
 **Faithfulness is weak everywhere, including for occlusion**, which is exact. A rationale the model barely reacts to when it is deleted is the token-level form of the same null §5.4 reports. The layer identifies the decisive token; it does not thereby show the decision depends on it.
 

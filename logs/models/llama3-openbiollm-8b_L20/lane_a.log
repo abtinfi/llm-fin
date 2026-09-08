@@ -58,3 +58,45 @@ adapter: layer 30, rank 32, alpha 1.0, 262,176 trainable parameters
 
 === training on 110 items (real labels) ===
   epoch 1/8  L_causal=0.7588  L_KL=0.8585  L_ont=0.8934(on 55/55 pairs)  L_unc=0.1062  train-decision-acc=0.591
+  epoch 2/8  L_causal=0.5777  L_KL=0.6572  L_ont=0.3113(on 55/55 pairs)  L_unc=0.0843  train-decision-acc=0.718
+  epoch 3/8  L_causal=0.6261  L_KL=0.7175  L_ont=0.1936(on 55/55 pairs)  L_unc=0.1445  train-decision-acc=0.691
+  epoch 4/8  L_causal=0.4927  L_KL=0.6927  L_ont=0.1091(on 55/55 pairs)  L_unc=0.1150  train-decision-acc=0.736
+  epoch 5/8  L_causal=0.4333  L_KL=0.7137  L_ont=0.0784(on 55/55 pairs)  L_unc=0.1176  train-decision-acc=0.773
+  epoch 6/8  L_causal=0.3954  L_KL=0.7431  L_ont=0.0664(on 55/55 pairs)  L_unc=0.1616  train-decision-acc=0.845
+  epoch 7/8  L_causal=0.4072  L_KL=0.8038  L_ont=0.0518(on 55/55 pairs)  L_unc=0.2572  train-decision-acc=0.827
+  epoch 8/8  L_causal=0.4136  L_KL=1.0497  L_ont=0.0320(on 55/55 pairs)  L_unc=0.2767  train-decision-acc=0.818
+
+=== with constraint layer ===
+  test    acc=0.494  CC=0.000   (base 0.000, delta +0.000)
+  heldout acc=0.883  CC=0.767   (base 0.000, delta +0.767)
+
+=== decision entropy on REDACTED notes, with constraint layer ===
+  test    0.0606 -> 0.3579 nats
+  heldout 0.0208 -> 0.3766 nats
+
+wrote results/models/llama3-openbiollm-8b/constraint_qt.json
+wrote results/models/llama3-openbiollm-8b/adapter_qt.npz
++ touch .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A1_constraint_qt.done
++ echo '[A][ok] A1_constraint_qt'
+[A][ok] A1_constraint_qt
++ stage A2_constraint_renal python src/constraint_layer.py --model_id aaditya/Llama3-OpenBioLLM-8B --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --out results/models/llama3-openbiollm-8b/constraint_renal.json
++ local name=A2_constraint_renal
++ shift
++ local marker=.pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done
++ '[' -f .pipeline_state/scaled_a_llama3-openbiollm-8b_L20/A2_constraint_renal.done ']'
++ banner A2_constraint_renal
++ echo
+
++ echo '########## [A] A2_constraint_renal ##########'
+########## [A] A2_constraint_renal ##########
++ echo
+
++ python src/constraint_layer.py --model_id aaditya/Llama3-OpenBioLLM-8B --layer 30 --data data/medcalc --train_on train --epochs 8 --graph data/umls/causal_graph.json --save_adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --out results/models/llama3-openbiollm-8b/constraint_renal.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+train 280 items / 140 pairs
+test  180 items / 90 pairs (same family as train)
+held  60 items / 30 pairs (['ondansetron_qt'])
+train families: ['metformin_renal']
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.25it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 43.14it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.75it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.46it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 107.21it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 120.11it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.76it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.62it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.83it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.92it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 130.13it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.51it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.49it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 132.09it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.89it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.52it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.83it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.40it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.86it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 133.06it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.43it/s]
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.

@@ -120,20 +120,24 @@ respecification can be shown rather than asserted.
 Keep the sentence; add the constraint the implementation exposed:
 
 > The layer can only name a concept for which the sparse dictionary contains
-> a feature. Concept coverage is therefore a property of the dictionary and
-> must be reported alongside any attribution result.
+> a feature whose causal weight was estimated on data where that concept can
+> actually move the decision. Concept coverage is therefore a joint property
+> of the dictionary **and of the split the weights were measured on**, and
+> both must be reported alongside any attribution result.
 
 **Why.** See `results/attribution.md`. On the renal family the layer ranks the
 causally edited token at the **98th percentile** and names the right concept
 **90%** of the time against a 25% chance baseline. On the QT family it scores
-at chance, because the scored dictionary contained **no** `qt_interval`
-feature whose knock-out beat its matched random control.
+at chance **until the attribution weights were measured on the right split**.
 
-Whether that is a vocabulary gap or an artifact of our own measurement is a
-separate question, and the implementation settles it separately rather than
-assuming: the weights are knock-out excesses measured on a split of renal
-items only, where a QT feature is causally inert by construction and scores
-zero whether or not it exists. See `results/attribution.md` §4.
+That distinction is the reason for the added sentence. The weights are
+knock-out excesses, and taking them on a split of renal items only gives any
+QT feature an excess of zero — QT cannot move a decision that does not depend
+on it — which then reads as "the dictionary has no QT feature". Re-scored on
+the split where QT *is* decisive, `qt_interval` becomes expressible and the
+QT family reaches concept-pointing **1.000 against a 0.667 baseline** with an
+edited-token percentile of **0.851 against 0.496**. The layer works on both
+families. See `results/attribution.md` §4.
 
 Note also a terminology collision the proposal creates for itself: §4.2's
 faithfulness **sufficiency** (an ERASER rationale metric, lower is better) and

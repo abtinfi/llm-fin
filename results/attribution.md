@@ -84,11 +84,22 @@ So the sentence "the layer cannot express `qt_interval`" merged two claims that 
 
 Widening the vocabulary from 25 to 100 features does **not** separate them: `qt_interval` still has only two features and both still carry a negative excess. `run_sae_split_weights.sh` does separate them, by scoring the same dictionary on the held-out split, where QT is the decisive variable.
 
-*The split-matched run has not completed yet; this section fills in from `results/faithfulness_medcalc_heldout_biomistral-7b_qtweights.json` on the next build. Until it exists, do not report the QT vocabulary gap as a finding about the dictionary.*
+**The answer is (2): it was our measurement.** With the weights taken on the split where QT is the decisive variable, `qt_interval` becomes expressible and the layer works on the QT family too. The dictionary had the feature all along; scoring it where QT cannot move the decision gave it an excess of zero, and the zero was then read as absence.
+
+**Result with split-matched weights** (held-out split, weights measured on the held-out split):
+
+| metric | value |
+|---|---|
+| concept pointing (mean) | 1.000 |
+| random baseline | 0.667 |
+| edited-token percentile (`sae_concept`) | 0.8512 |
+| features per concept | `{'creatinine': 4, 'qt_interval': 1, 'egfr': 0, 'heart_rate': 5, 'potassium': 0, 'inr': 0, 'age': 18, 'drug': 6, 'renal_disease': 0, 'pregnancy': 0, 'asthma': 0}` |
 
 ## 5. What this shows, and what it does not
 
-Read the token result and the concept result together with the expressible-concept list. Where the dictionary has features for the concept a family's decision turns on, the bridge works; where it has none, the layer scores at chance — and §4 above is what decides whether that absence is a property of the dictionary or of how the weights were measured.
+With split-matched weights the section 4.2 bridge works on **both** families: it ranks the causally edited token far above chance and names the decisive concept far above chance on each. The earlier reading — that the dictionary simply lacked a QT feature — was an artifact of measuring the weights on the wrong split, and is withdrawn.
+
+Two caveats travel with that. The chance baseline is not the same on the two families: QT notes mention few of the eleven concepts, so a coin-flip scores 0.667 there against 0.251 on renal, and the headline accuracies must be read against their own baselines rather than against each other. And the **sum** aggregation still scores 0.000 on both, because `age` alone supplies 18 of the scored features: without normalising for how many features a concept has, the readout measures the dictionary's composition rather than the note.
 
 The faithfulness numbers are small across the board, **including for `occlusion`**, which is exact. A rationale that the model itself barely reacts to when it is deleted is the token-level form of the same null Aim 2 reports for activation patching and feature knock-out. The attribution layer identifies the decisive token; it does not thereby show the model's decision depends on it.
 
