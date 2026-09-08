@@ -109,3 +109,7 @@
 2026-09-08T03:45:01+03:00 a supervisor holds the lock; nothing to do
 2026-09-08T04:00:01+03:00 a supervisor holds the lock; nothing to do
 2026-09-08T04:15:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-08T04:18:12+03:00 clearing stale claims: medcalc_v2 mistral_instruct openbiollm sae_qt_weights seed_sweep 
+2026-09-08T04:18:12+03:00 all work complete -- not relaunching
+2026-09-08T04:18:45+03:00 promoted csai_supervisor.sh.next (previous kept as .prev)
+2026-09-08T04:18:45+03:00 all work complete -- not relaunching

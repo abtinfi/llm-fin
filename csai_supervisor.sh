@@ -121,10 +121,17 @@ log "[reports] regenerating"
 {
   python src/make_summary.py --results results
   python src/make_attribution_report.py
+  # Both trees: results/models/<slug> for other MODELS, results/layers/L<n>
+  # for the SAE-layer sweep. The layer trees were being left out, so the
+  # comparison silently reported fewer arms than had actually been run.
   MODELS=""
   for d in results/models/*/; do
     [ -f "$d/summary_test_medcalc.json" ] && \
       MODELS="$MODELS $(basename "$d")=$d"
+  done
+  for d in results/layers/*/; do
+    [ -f "$d/summary_test_medcalc.json" ] && \
+      MODELS="$MODELS layer-$(basename "$d")=$d"
   done
   # shellcheck disable=SC2086
   python src/make_comparison.py --results results --models $MODELS

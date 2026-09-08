@@ -35,6 +35,27 @@ if [ -n "$(ls -A .pipeline_state/claims 2>/dev/null)" ]; then
   mkdir -p .pipeline_state/claims
 fi
 
+# HOT-SWAP -- and this must come BEFORE the completion check below.
+# Promoting after it meant a staged version could never be applied once
+# the queue was finished: the check returns first, so `.next` sat there
+# forever. A promoted version may itself ADD jobs, which is precisely
+# when the queue looks complete and is not.
+# The supervisor writes its own job queue from a heredoc, so adding
+# a job means editing csai_supervisor.sh -- and editing a shell script while it
+# runs kills it (bash reads by byte offset). The fix is to stage the new
+# version as csai_supervisor.sh.next and promote it here, at the one moment
+# when no supervisor is running.
+if [ -f csai_supervisor.sh.next ]; then
+  if bash -n csai_supervisor.sh.next 2>/dev/null; then
+    cp csai_supervisor.sh csai_supervisor.sh.prev
+    mv csai_supervisor.sh.next csai_supervisor.sh
+    chmod +x csai_supervisor.sh
+    log "promoted csai_supervisor.sh.next (previous kept as .prev)"
+  else
+    log "REFUSING to promote csai_supervisor.sh.next -- it does not parse"
+  fi
+fi
+
 # PREMATURE COMPLETION. Only honour the done-marker if every job's own marker
 # is really present; otherwise a mis-declared completion would silently retire
 # the watchdog and the remaining work would never run.
@@ -51,22 +72,6 @@ if [ -e .pipeline_state/SUPERVISOR_ALL_DONE ]; then
   else
     log "all work complete -- not relaunching"
     exit 0
-  fi
-fi
-
-# HOT-SWAP. The supervisor writes its own job queue from a heredoc, so adding
-# a job means editing csai_supervisor.sh -- and editing a shell script while it
-# runs kills it (bash reads by byte offset). The fix is to stage the new
-# version as csai_supervisor.sh.next and promote it here, at the one moment
-# when no supervisor is running.
-if [ -f csai_supervisor.sh.next ]; then
-  if bash -n csai_supervisor.sh.next 2>/dev/null; then
-    cp csai_supervisor.sh csai_supervisor.sh.prev
-    mv csai_supervisor.sh.next csai_supervisor.sh
-    chmod +x csai_supervisor.sh
-    log "promoted csai_supervisor.sh.next (previous kept as .prev)"
-  else
-    log "REFUSING to promote csai_supervisor.sh.next -- it does not parse"
   fi
 fi
 
