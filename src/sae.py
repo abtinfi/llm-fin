@@ -522,7 +522,12 @@ def cmd_score(args):
               f"{concepts[which[f]] if which[f] >= 0 else '-'}  "
               f"fires on {int(Z_active[f])}/{X.shape[0]} tokens")
 
-    report = {"sae": str(args.sae), "kind": str(sae_z["kind"]),
+    # Provenance: an artifact that does not name the model it was produced
+    # with cannot be audited. Its absence is how an adapter trained on the
+    # wrong model went unnoticed until 2026-09-08 -- every model here is
+    # 4096-dimensional, so a mismatch loads cleanly and looks plausible.
+    report = {"model_id": args.model_id,
+              "sae": str(args.sae), "kind": str(sae_z["kind"]),
               "fvu": float(sae_z["fvu"]), "l0": float(sae_z["l0"]),
               "dead": int(sae_z["dead"]), "d_hidden": int(sae_z["d_hidden"]),
               "concepts": concepts,

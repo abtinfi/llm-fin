@@ -1,0 +1,40 @@
+{
+  "layer": 30,
+  "rank": 32,
+  "alpha": 1.0,
+  "epochs": 8,
+  "lr": 0.0003,
+  "lam_kl": 0.01,
+  "lam_ont": 0.1,
+  "lam_unc": 0.1,
+  "ont_margin": 1.0,
+  "ontology_graph": "data/umls/causal_graph.json",
+  "ontology_required_margin": {
+    "metformin_renal": 1.25
+  },
+  "train_on": "train",
+  "data": "data/medcalc",
+  "n_train_pairs": 140,
+  "redacted_entropy": {
+    "n_test": 180,
+    "n_heldout": 60,
+    "ln2": 0.6931471805599453,
+    "test_base": 0.06062173483531094,
+    "test_adapted": 0.6841324898931715,
+    "heldout_base": 0.020816003686438003,
+    "heldout_adapted": 0.6865038394927978
+  },
+  "shuffled_control": false,
+  "base": {
+    "test_acc": 0.5,
+    "test_cc": 0.0,
+    "heldout_acc": 0.5,
+    "heldout_cc": 0.0
+  },
+  "adapted": {
+    "test_acc": 0.5,
+    "test_cc": 0.011111111111111112,
+    "heldout_acc": 0.5,
+    "heldout_cc": 0.0
+  }
+}

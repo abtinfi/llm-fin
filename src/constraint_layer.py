@@ -584,7 +584,14 @@ def main():
     print(f"  test    {u_te_base:.4f} -> {u_te_ad:.4f} nats")
     print(f"  heldout {u_ho_base:.4f} -> {u_ho_ad:.4f} nats")
 
-    rep = {"layer": args.layer, "rank": args.rank, "alpha": args.alpha,
+    # RECORD THE MODEL. Its absence is why a real defect stayed invisible:
+    # lane A never passed --model_id, so every model's adapter was trained on
+    # the BioMistral default and attached to something else, and nothing in
+    # the artifact said otherwise. All three models are 4096-dimensional, so
+    # the wrong adapter loads cleanly. An artifact that does not name the
+    # model it was produced with cannot be audited.
+    rep = {"model_id": args.model_id,
+           "layer": args.layer, "rank": args.rank, "alpha": args.alpha,
            "epochs": args.epochs, "lr": args.lr, "lam_kl": args.lam_kl,
            "lam_ont": lam_ont, "lam_unc": args.lam_unc,
            "ont_margin": args.ont_margin,

@@ -282,7 +282,8 @@ def analyse(args):
               "path to the answer.")
     if args.out:
         Path(args.out).write_text(json.dumps(
-            {"data": args.data, "pairs_used": used, "clean_gap": gap,
+            {"model_id": args.model_id,
+             "data": args.data, "pairs_used": used, "clean_gap": gap,
              "identity_max_err": max(identity_err), "rows": rows}, indent=2))
         print(f"wrote {args.out}")
 
@@ -442,7 +443,8 @@ def sufficiency(args):
 
     if args.out:
         Path(args.out).write_text(json.dumps(
-            {"mode": "sufficiency", "data": args.data, "pairs_used": used,
+            {"model_id": args.model_id,
+             "mode": "sufficiency", "data": args.data, "pairs_used": used,
              "alphas": alphas, "layers": layers,
              "alpha0_max_err": float(z),
              "monotone_layers": mono, "rows": rows}, indent=2))

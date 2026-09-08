@@ -5,6 +5,8 @@
 + export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + cd /home/asosoft/abtin/paper/csai
++ export PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
++ PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 + M=aaditya/Llama3-OpenBioLLM-8B
 + TAG=llama3-openbiollm-8b
 + R=results/models/llama3-openbiollm-8b
@@ -20,318 +22,57 @@
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_test.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_test.done ']'
-+ banner B1_medcalc_ablation_test
-+ echo
-
-+ echo '########## [B] B1_medcalc_ablation_test ##########'
-########## [B] B1_medcalc_ablation_test ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:34,  3.08it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 40.90it/s]Loading weights:  10%|▉         | 28/291 [00:00<00:03, 70.39it/s]Loading weights:  14%|█▍        | 41/291 [00:00<00:02, 85.92it/s]Loading weights:  19%|█▉        | 55/291 [00:00<00:02, 101.52it/s]Loading weights:  23%|██▎       | 68/291 [00:00<00:02, 107.11it/s]Loading weights:  28%|██▊       | 82/291 [00:00<00:01, 116.46it/s]Loading weights:  33%|███▎      | 95/291 [00:01<00:01, 118.75it/s]Loading weights:  38%|███▊      | 112/291 [00:01<00:01, 127.89it/s]Loading weights:  43%|████▎     | 126/291 [00:01<00:01, 128.03it/s]Loading weights:  48%|████▊     | 140/291 [00:01<00:01, 127.93it/s]Loading weights:  54%|█████▍    | 157/291 [00:01<00:01, 133.91it/s]Loading weights:  59%|█████▉    | 171/291 [00:01<00:00, 132.27it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 131.12it/s]Loading weights:  69%|██████▉   | 202/291 [00:01<00:00, 136.10it/s]Loading weights:  74%|███████▍  | 216/291 [00:01<00:00, 133.87it/s]Loading weights:  79%|███████▉  | 230/291 [00:02<00:00, 132.28it/s]Loading weights:  85%|████████▍ | 247/291 [00:02<00:00, 136.99it/s]Loading weights:  90%|████████▉ | 261/291 [00:02<00:00, 134.51it/s]Loading weights:  95%|█████████▍| 275/291 [00:02<00:00, 132.73it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 116.89it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.489 cc=0.022 viol=0.867 cov=1.000
-[seed 0] rag       acc=0.411 cc=0.000 viol=0.822 cov=1.000
-[seed 0] sym       acc=0.994 cc=0.989 viol=0.011 cov=1.000
-[seed 0] uq        acc=0.006 cc=0.000 viol=0.011 cov=0.011
-[seed 0] nsai      acc=0.994 cc=0.989 viol=0.011 cov=1.000
-[seed 0] nsai_uq   acc=0.994 cc=0.989 viol=0.011 cov=1.000
-
-wrote results/models/llama3-openbiollm-8b/summary_test_medcalc.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_test.done
-+ echo '[B][ok] B1_medcalc_ablation_test'
-[B][ok] B1_medcalc_ablation_test
++ echo '[B][skip] B1_medcalc_ablation_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_test.done)'
+[B][skip] B1_medcalc_ablation_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_test.done)
++ return 0
 + stage B1_medcalc_ablation_heldout python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
 + local name=B1_medcalc_ablation_heldout
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_heldout.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_heldout.done ']'
-+ banner B1_medcalc_ablation_heldout
-+ echo
-
-+ echo '########## [B] B1_medcalc_ablation_heldout ##########'
-########## [B] B1_medcalc_ablation_heldout ##########
-+ echo
-
-+ python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants base rag sym uq nsai nsai_uq --batch_size 4
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.23it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.94it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.45it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.12it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.75it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.68it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.20it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.02it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.26it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.41it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.79it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.16it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.19it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.80it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.68it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.26it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.53it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.03it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.42it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.63it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.04it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[seed 0] base      acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] rag       acc=0.500 cc=0.000 viol=1.000 cov=1.000
-[seed 0] sym       acc=1.000 cc=1.000 viol=0.000 cov=1.000
-[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
-[seed 0] nsai      acc=1.000 cc=1.000 viol=0.000 cov=1.000
-[seed 0] nsai_uq   acc=1.000 cc=1.000 viol=0.000 cov=1.000
-
-wrote results/models/llama3-openbiollm-8b/summary_heldout_medcalc.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_heldout.done
-+ echo '[B][ok] B1_medcalc_ablation_heldout'
-[B][ok] B1_medcalc_ablation_heldout
++ echo '[B][skip] B1_medcalc_ablation_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_heldout.done)'
+[B][skip] B1_medcalc_ablation_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B1_medcalc_ablation_heldout.done)
++ return 0
 + stage B2_sae_collect python src/sae.py collect --data data/medcalc --split train --layer 20 --model_id aaditya/Llama3-OpenBioLLM-8B --other_mult 1000 --max_tokens 300000 --out results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz
 + local name=B2_sae_collect
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B2_sae_collect.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B2_sae_collect.done ']'
-+ banner B2_sae_collect
-+ echo
-
-+ echo '########## [B] B2_sae_collect ##########'
-########## [B] B2_sae_collect ##########
-+ echo
-
-+ python src/sae.py collect --data data/medcalc --split train --layer 20 --model_id aaditya/Llama3-OpenBioLLM-8B --other_mult 1000 --max_tokens 300000 --out results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-  concept vocabulary: umls (11 concepts)
-    creatinine     C0201976   umls_atoms= 16 curated=  3  +numeric_tail
-    qt_interval    C0429028   umls_atoms= 13 curated=  4  +numeric_tail
-    egfr           C3811844   umls_atoms=  2 curated=  3  +numeric_tail
-    heart_rate     C0018810   umls_atoms= 18 curated=  3  +numeric_tail
-    potassium      C0302353   umls_atoms= 19 curated=  2  +numeric_tail
-    inr            C0525032   umls_atoms= 26 curated=  1  +numeric_tail
-    age                       umls_atoms=  0 curated=  0
-    drug           C0025598   umls_atoms=192 curated=  0
-    renal_disease  C0035078   umls_atoms= 97 curated=  7
-    pregnancy      C0032961   umls_atoms= 17 curated=  4
-    asthma         C0004096   umls_atoms= 27 curated=  7
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.25it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 43.09it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.63it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.31it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.85it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.63it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.24it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.14it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.30it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.47it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.78it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.17it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.21it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.77it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.54it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.13it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.44it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.03it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.45it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.65it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.10it/s]
-  50/280 items, 33438 tokens
-  100/280 items, 70006 tokens
-  150/280 items, 104244 tokens
-  200/280 items, 134800 tokens
-  250/280 items, 168138 tokens
-wrote results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz: X(189152, 4096) labels(189152, 11)
-  concept token counts: creatinine=2974, qt_interval=26, egfr=0, heart_rate=472, potassium=168, inr=52, age=866, drug=1130, renal_disease=610, pregnancy=16, asthma=78
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B2_sae_collect.done
-+ echo '[B][ok] B2_sae_collect'
-[B][ok] B2_sae_collect
++ echo '[B][skip] B2_sae_collect already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B2_sae_collect.done)'
+[B][skip] B2_sae_collect already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B2_sae_collect.done)
++ return 0
 + stage B3_sae_train_topk python src/sae.py train --acts results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz --kind topk --expansion 4 --k 32 --epochs 30 --batch 2048 --out results/models/llama3-openbiollm-8b/sae/sae_topk_L20.npz
 + local name=B3_sae_train_topk
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B3_sae_train_topk.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B3_sae_train_topk.done ']'
-+ banner B3_sae_train_topk
-+ echo
-
-+ echo '########## [B] B3_sae_train_topk ##########'
-########## [B] B3_sae_train_topk ##########
-+ echo
-
-+ python src/sae.py train --acts results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz --kind topk --expansion 4 --k 32 --epochs 30 --batch 2048 --out results/models/llama3-openbiollm-8b/sae/sae_topk_L20.npz
-input scale 5.5595 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
-189152 tokens x 4096 dims -> 16384 features (topk, k=32)
-train 180960 / val 8192 tokens
-  epoch 1/30  train_mse=0.78838  val_FVU=0.0952  val_L0=32.0  dead=7057
-  epoch 2/30  train_mse=0.23708  val_FVU=0.0764  val_L0=31.9  dead=6988
-  epoch 3/30  train_mse=0.20257  val_FVU=0.0697  val_L0=31.8  dead=6929
-  epoch 4/30  train_mse=0.18496  val_FVU=0.0664  val_L0=31.9  dead=6912
-  epoch 5/30  train_mse=0.17700  val_FVU=0.0677  val_L0=31.9  dead=6911
-  epoch 6/30  train_mse=0.17339  val_FVU=0.0632  val_L0=31.9  dead=6930
-  epoch 7/30  train_mse=0.19171  val_FVU=0.0909  val_L0=32.0  dead=6956
-  epoch 8/30  train_mse=0.22481  val_FVU=0.0711  val_L0=32.0  dead=7009
-  epoch 9/30  train_mse=0.18323  val_FVU=0.0660  val_L0=32.0  dead=7000
-  epoch 10/30  train_mse=0.17959  val_FVU=0.0681  val_L0=32.0  dead=7058
-  epoch 11/30  train_mse=0.17568  val_FVU=0.0656  val_L0=32.0  dead=7098
-  epoch 12/30  train_mse=0.17362  val_FVU=0.0672  val_L0=32.0  dead=7133
-  epoch 13/30  train_mse=0.17324  val_FVU=0.0652  val_L0=32.0  dead=7155
-  epoch 14/30  train_mse=0.17185  val_FVU=0.0664  val_L0=32.0  dead=7188
-  epoch 15/30  train_mse=0.16937  val_FVU=0.0649  val_L0=31.9  dead=7223
-  epoch 16/30  train_mse=0.16946  val_FVU=0.0643  val_L0=31.9  dead=7251
-  epoch 17/30  train_mse=0.16783  val_FVU=0.0649  val_L0=31.9  dead=7278
-  epoch 18/30  train_mse=0.16737  val_FVU=0.0637  val_L0=31.9  dead=7309
-  epoch 19/30  train_mse=0.16674  val_FVU=0.0637  val_L0=31.9  dead=7346
-  epoch 20/30  train_mse=0.16697  val_FVU=0.0646  val_L0=31.9  dead=7350
-  epoch 21/30  train_mse=0.16695  val_FVU=0.0638  val_L0=31.9  dead=7411
-  epoch 22/30  train_mse=0.16502  val_FVU=0.0633  val_L0=31.8  dead=7437
-  epoch 23/30  train_mse=0.16512  val_FVU=0.0627  val_L0=31.8  dead=7456
-  epoch 24/30  train_mse=0.16470  val_FVU=0.0618  val_L0=31.8  dead=7491
-  epoch 25/30  train_mse=0.16403  val_FVU=0.0622  val_L0=31.8  dead=7467
-  epoch 26/30  train_mse=0.16411  val_FVU=0.0634  val_L0=31.8  dead=7488
-  epoch 27/30  train_mse=0.16368  val_FVU=0.0642  val_L0=31.8  dead=7505
-  epoch 28/30  train_mse=0.16306  val_FVU=0.0625  val_L0=31.7  dead=7542
-  epoch 29/30  train_mse=0.16220  val_FVU=0.0614  val_L0=31.7  dead=7559
-  epoch 30/30  train_mse=0.16156  val_FVU=0.0616  val_L0=31.7  dead=7574
-wrote results/models/llama3-openbiollm-8b/sae/sae_topk_L20.npz
-  final val FVU=0.0616  L0=31.7  dead features=7574/16384 (46.2%)
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B3_sae_train_topk.done
-+ echo '[B][ok] B3_sae_train_topk'
-[B][ok] B3_sae_train_topk
++ echo '[B][skip] B3_sae_train_topk already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B3_sae_train_topk.done)'
+[B][skip] B3_sae_train_topk already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B3_sae_train_topk.done)
++ return 0
 + stage B4_sae_train_jumprelu python src/sae.py train --acts results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz --kind jumprelu --expansion 4 --epochs 30 --batch 2048 --out results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20.npz
 + local name=B4_sae_train_jumprelu
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B4_sae_train_jumprelu.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B4_sae_train_jumprelu.done ']'
-+ banner B4_sae_train_jumprelu
-+ echo
-
-+ echo '########## [B] B4_sae_train_jumprelu ##########'
-########## [B] B4_sae_train_jumprelu ##########
-+ echo
-
-+ python src/sae.py train --acts results/models/llama3-openbiollm-8b/sae/acts_medcalc_train_L20.npz --kind jumprelu --expansion 4 --epochs 30 --batch 2048 --out results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20.npz
-input scale 5.5595 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
-189152 tokens x 4096 dims -> 16384 features (jumprelu, k=32)
-train 180960 / val 8192 tokens
-  epoch 1/30  train_mse=2.53283  val_FVU=0.2678  val_L0=6.1  dead=11631
-  epoch 2/30  train_mse=0.80799  val_FVU=0.2355  val_L0=9.1  dead=12067
-  epoch 3/30  train_mse=0.75571  val_FVU=0.2253  val_L0=10.2  dead=12318
-  epoch 4/30  train_mse=0.72947  val_FVU=0.2141  val_L0=12.2  dead=12441
-  epoch 5/30  train_mse=0.70364  val_FVU=0.2079  val_L0=13.4  dead=12487
-  epoch 6/30  train_mse=0.68537  val_FVU=0.2028  val_L0=14.1  dead=12591
-  epoch 7/30  train_mse=0.66774  val_FVU=0.1951  val_L0=15.1  dead=12648
-  epoch 8/30  train_mse=0.64663  val_FVU=0.1881  val_L0=16.1  dead=12704
-  epoch 9/30  train_mse=0.62574  val_FVU=0.1802  val_L0=17.3  dead=12717
-  epoch 10/30  train_mse=0.60710  val_FVU=0.1742  val_L0=18.1  dead=12751
-  epoch 11/30  train_mse=0.59147  val_FVU=0.1689  val_L0=18.7  dead=12787
-  epoch 12/30  train_mse=0.57697  val_FVU=0.1640  val_L0=19.7  dead=12800
-  epoch 13/30  train_mse=0.56382  val_FVU=0.1587  val_L0=20.7  dead=12793
-  epoch 14/30  train_mse=0.54911  val_FVU=0.1534  val_L0=21.3  dead=12867
-  epoch 15/30  train_mse=0.53481  val_FVU=0.1488  val_L0=21.7  dead=12909
-  epoch 16/30  train_mse=0.52269  val_FVU=0.1448  val_L0=22.2  dead=12913
-  epoch 17/30  train_mse=0.51150  val_FVU=0.1408  val_L0=22.7  dead=12953
-  epoch 18/30  train_mse=0.50067  val_FVU=0.1375  val_L0=22.9  dead=12980
-  epoch 19/30  train_mse=0.49150  val_FVU=0.1343  val_L0=23.3  dead=12992
-  epoch 20/30  train_mse=0.48325  val_FVU=0.1317  val_L0=23.8  dead=13037
-  epoch 21/30  train_mse=0.47626  val_FVU=0.1296  val_L0=24.2  dead=13063
-  epoch 22/30  train_mse=0.46983  val_FVU=0.1274  val_L0=24.8  dead=13041
-  epoch 23/30  train_mse=0.46339  val_FVU=0.1252  val_L0=24.9  dead=13058
-  epoch 24/30  train_mse=0.45700  val_FVU=0.1230  val_L0=25.1  dead=13039
-  epoch 25/30  train_mse=0.45134  val_FVU=0.1212  val_L0=25.4  dead=12998
-  epoch 26/30  train_mse=0.44621  val_FVU=0.1196  val_L0=25.6  dead=12958
-  epoch 27/30  train_mse=0.44169  val_FVU=0.1183  val_L0=25.7  dead=12964
-  epoch 28/30  train_mse=0.43744  val_FVU=0.1167  val_L0=26.1  dead=12915
-  epoch 29/30  train_mse=0.43313  val_FVU=0.1153  val_L0=26.0  dead=12911
-  epoch 30/30  train_mse=0.42904  val_FVU=0.1138  val_L0=26.2  dead=12923
-wrote results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20.npz
-  final val FVU=0.1138  L0=26.2  dead features=12923/16384 (78.9%)
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B4_sae_train_jumprelu.done
-+ echo '[B][ok] B4_sae_train_jumprelu'
-[B][ok] B4_sae_train_jumprelu
++ echo '[B][skip] B4_sae_train_jumprelu already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B4_sae_train_jumprelu.done)'
+[B][skip] B4_sae_train_jumprelu already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B4_sae_train_jumprelu.done)
++ return 0
 + stage B5_sae_score_topk python src/sae.py score --sae results/models/llama3-openbiollm-8b/sae/sae_topk_L20.npz --model_id aaditya/Llama3-OpenBioLLM-8B --top 25 --causal_items -1 --causal_features 0 --causal_split test
 + local name=B5_sae_score_topk
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B5_sae_score_topk.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B5_sae_score_topk.done ']'
-+ banner B5_sae_score_topk
-+ echo
-
-+ echo '########## [B] B5_sae_score_topk ##########'
-########## [B] B5_sae_score_topk ##########
-+ echo
-
-+ python src/sae.py score --sae results/models/llama3-openbiollm-8b/sae/sae_topk_L20.npz --model_id aaditya/Llama3-OpenBioLLM-8B --top 25 --causal_items -1 --causal_features 0 --causal_split test
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-
-top 25 features by S_semantic:
-  #   107  S_sem=0.790  concept=age  fires on 658/189152 tokens
-  #  1394  S_sem=0.727  concept=age  fires on 1160/189152 tokens
-  #  6618  S_sem=0.708  concept=creatinine  fires on 4123/189152 tokens
-  #  4672  S_sem=0.684  concept=age  fires on 1443/189152 tokens
-  #  3832  S_sem=0.673  concept=drug  fires on 629/189152 tokens
-  # 14632  S_sem=0.631  concept=age  fires on 458/189152 tokens
-  # 15084  S_sem=0.628  concept=age  fires on 855/189152 tokens
-  #  3837  S_sem=0.602  concept=age  fires on 948/189152 tokens
-  #   758  S_sem=0.594  concept=age  fires on 406/189152 tokens
-  #  1125  S_sem=0.545  concept=pregnancy  fires on 6/189152 tokens
-  # 11738  S_sem=0.532  concept=age  fires on 1271/189152 tokens
-  #  9368  S_sem=0.530  concept=heart_rate  fires on 404/189152 tokens
-  # 11480  S_sem=0.515  concept=age  fires on 1557/189152 tokens
-  # 12429  S_sem=0.508  concept=creatinine  fires on 3748/189152 tokens
-  #  3237  S_sem=0.482  concept=age  fires on 280/189152 tokens
-  #  7582  S_sem=0.474  concept=age  fires on 838/189152 tokens
-  # 14538  S_sem=0.441  concept=age  fires on 340/189152 tokens
-  #   279  S_sem=0.441  concept=asthma  fires on 40/189152 tokens
-  #  5957  S_sem=0.438  concept=creatinine  fires on 2253/189152 tokens
-  #  6359  S_sem=0.430  concept=age  fires on 2989/189152 tokens
-  # 14587  S_sem=0.429  concept=heart_rate  fires on 329/189152 tokens
-  #  4377  S_sem=0.424  concept=age  fires on 248/189152 tokens
-  # 12657  S_sem=0.417  concept=age  fires on 238/189152 tokens
-  # 11934  S_sem=0.414  concept=age  fires on 256/189152 tokens
-  #   792  S_sem=0.399  concept=drug  fires on 294/189152 tokens
-  knock-out on 180 items of split `test`
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:43,  6.68it/s]Loading weights:   1%|          | 2/291 [00:00<00:45,  6.36it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 45.41it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 81.88it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 89.44it/s]Loading weights:  20%|█▉        | 58/291 [00:00<00:02, 110.82it/s]Loading weights:  24%|██▍       | 70/291 [00:00<00:01, 112.09it/s]Loading weights:  29%|██▉       | 85/291 [00:00<00:01, 123.31it/s]Loading weights:  34%|███▎      | 98/291 [00:01<00:01, 123.27it/s]Loading weights:  39%|███▉      | 113/291 [00:01<00:01, 125.49it/s]Loading weights:  44%|████▍     | 128/291 [00:01<00:01, 132.53it/s]Loading weights:  49%|████▉     | 142/291 [00:01<00:01, 126.32it/s]Loading weights:  54%|█████▍    | 158/291 [00:01<00:01, 129.77it/s]Loading weights:  60%|██████    | 175/291 [00:01<00:00, 134.33it/s]Loading weights:  65%|██████▍   | 189/291 [00:01<00:00, 132.39it/s]Loading weights:  70%|██████▉   | 203/291 [00:01<00:00, 130.84it/s]Loading weights:  76%|███████▌  | 220/291 [00:01<00:00, 135.23it/s]Loading weights:  80%|████████  | 234/291 [00:02<00:00, 132.93it/s]Loading weights:  85%|████████▌ | 248/291 [00:02<00:00, 131.06it/s]Loading weights:  91%|█████████ | 265/291 [00:02<00:00, 135.26it/s]Loading weights:  96%|█████████▌| 279/291 [00:02<00:00, 131.69it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 117.24it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
-  knock-out #107: |Δ margin|=0.0371 (random control #13936: 0.0043, excess +0.0328)
-  knock-out #1394: |Δ margin|=0.0395 (random control #10435: 0.0382, excess +0.0013)
-  knock-out #6618: |Δ margin|=0.0384 (random control #8374: 0.0000, excess +0.0384)
-  knock-out #4672: |Δ margin|=0.0428 (random control #4420: 0.0022, excess +0.0406)
-  knock-out #3832: |Δ margin|=0.0424 (random control #5043: 0.0031, excess +0.0393)
-  knock-out #14632: |Δ margin|=0.0425 (random control #671: 0.0000, excess +0.0425)
-  knock-out #15084: |Δ margin|=0.0367 (random control #1232: 0.0017, excess +0.0350)
-  knock-out #3837: |Δ margin|=0.0364 (random control #270: 0.0021, excess +0.0343)
-  knock-out #758: |Δ margin|=0.0359 (random control #2871: 0.0000, excess +0.0359)
-  knock-out #1125: |Δ margin|=0.0010 (random control #13324: 0.0074, excess -0.0064)
-  knock-out #11738: |Δ margin|=0.0389 (random control #10640: 0.0000, excess +0.0389)
-  knock-out #9368: |Δ margin|=0.0169 (random control #14954: 0.0000, excess +0.0169)
-  knock-out #11480: |Δ margin|=0.0352 (random control #8251: 0.0101, excess +0.0251)
-  knock-out #12429: |Δ margin|=0.0414 (random control #9939: 0.0000, excess +0.0414)
-  knock-out #3237: |Δ margin|=0.0408 (random control #15904: 0.0000, excess +0.0408)
-  knock-out #7582: |Δ margin|=0.0228 (random control #11952: 0.0318, excess -0.0090)
-  knock-out #14538: |Δ margin|=0.0397 (random control #10359: 0.0000, excess +0.0397)
-  knock-out #279: |Δ margin|=0.0007 (random control #8906: 0.0071, excess -0.0064)
-  knock-out #5957: |Δ margin|=0.0393 (random control #9173: 0.0278, excess +0.0115)
-  knock-out #6359: |Δ margin|=0.0394 (random control #15320: 0.0103, excess +0.0291)
-  knock-out #14587: |Δ margin|=0.0198 (random control #4544: 0.0000, excess +0.0198)
-  knock-out #4377: |Δ margin|=0.0298 (random control #13366: 0.0003, excess +0.0294)
-  knock-out #12657: |Δ margin|=0.0381 (random control #10991: 0.0009, excess +0.0372)
-  knock-out #11934: |Δ margin|=0.0332 (random control #44: 0.0052, excess +0.0280)
-  knock-out #792: |Δ margin|=0.0408 (random control #6457: 0.0014, excess +0.0394)
-
-wrote results/models/llama3-openbiollm-8b/sae/sae_topk_L20_fis.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B5_sae_score_topk.done
-+ echo '[B][ok] B5_sae_score_topk'
-[B][ok] B5_sae_score_topk
++ echo '[B][skip] B5_sae_score_topk already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B5_sae_score_topk.done)'
+[B][skip] B5_sae_score_topk already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B5_sae_score_topk.done)
++ return 0
 + stage B6_sae_score_jumprelu python src/sae.py score --sae results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20.npz --model_id aaditya/Llama3-OpenBioLLM-8B --top 25 --causal_items 0
 + local name=B6_sae_score_jumprelu
 + shift
 + local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B6_sae_score_jumprelu.done
 + '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B6_sae_score_jumprelu.done ']'
-+ banner B6_sae_score_jumprelu
-+ echo
-
-+ echo '########## [B] B6_sae_score_jumprelu ##########'
-########## [B] B6_sae_score_jumprelu ##########
-+ echo
-
-+ python src/sae.py score --sae results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20.npz --model_id aaditya/Llama3-OpenBioLLM-8B --top 25 --causal_items 0
-
-top 25 features by S_semantic:
-  # 16045  S_sem=0.502  concept=creatinine  fires on 7614/189152 tokens
-  #  8095  S_sem=0.475  concept=age  fires on 2083/189152 tokens
-  # 15129  S_sem=0.334  concept=age  fires on 2760/189152 tokens
-  # 15274  S_sem=0.247  concept=drug  fires on 3161/189152 tokens
-  # 15305  S_sem=0.211  concept=creatinine  fires on 4164/189152 tokens
-  # 10170  S_sem=0.202  concept=creatinine  fires on 14536/189152 tokens
-  # 11702  S_sem=0.200  concept=pregnancy  fires on 4/189152 tokens
-  #  7270  S_sem=0.200  concept=pregnancy  fires on 4/189152 tokens
-  #  3195  S_sem=0.200  concept=drug  fires on 2526/189152 tokens
-  # 13406  S_sem=0.189  concept=age  fires on 2872/189152 tokens
-  # 10573  S_sem=0.179  concept=asthma  fires on 101/189152 tokens
-  #  8093  S_sem=0.177  concept=creatinine  fires on 4120/189152 tokens
-  #  7251  S_sem=0.163  concept=creatinine  fires on 6747/189152 tokens
-  #  1163  S_sem=0.154  concept=pregnancy  fires on 10/189152 tokens
-  #    74  S_sem=0.152  concept=heart_rate  fires on 5011/189152 tokens
-  #  9708  S_sem=0.149  concept=drug  fires on 5370/189152 tokens
-  #  4531  S_sem=0.148  concept=creatinine  fires on 2790/189152 tokens
-  #   724  S_sem=0.148  concept=creatinine  fires on 6735/189152 tokens
-  #  1474  S_sem=0.147  concept=creatinine  fires on 5929/189152 tokens
-  #  3484  S_sem=0.133  concept=pregnancy  fires on 14/189152 tokens
-  #  9292  S_sem=0.132  concept=creatinine  fires on 4334/189152 tokens
-  # 11536  S_sem=0.129  concept=qt_interval  fires on 5/189152 tokens
-  #  7022  S_sem=0.128  concept=creatinine  fires on 3280/189152 tokens
-  # 11575  S_sem=0.125  concept=creatinine  fires on 8977/189152 tokens
-  # 14758  S_sem=0.125  concept=age  fires on 2309/189152 tokens
-
-wrote results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20_fis.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B6_sae_score_jumprelu.done
-+ echo '[B][ok] B6_sae_score_jumprelu'
-[B][ok] B6_sae_score_jumprelu
++ echo '[B][skip] B6_sae_score_jumprelu already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B6_sae_score_jumprelu.done)'
+[B][skip] B6_sae_score_jumprelu already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B6_sae_score_jumprelu.done)
++ return 0
 + wait_for results/models/llama3-openbiollm-8b/adapter_qt.npz adapter_qt
 + local waited=0
 + '[' '!' -s results/models/llama3-openbiollm-8b/adapter_qt.npz ']'
@@ -355,12 +96,12 @@ wrote results/models/llama3-openbiollm-8b/sae/sae_jumprelu_L20_fis.json
 + echo
 
 + python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split heldout --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_qt.npz --adapter_layer 30 --batch_size 4
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:42,  6.75it/s]Loading weights:   1%|          | 2/291 [00:00<00:44,  6.43it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 45.87it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 82.77it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 90.48it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 109.57it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 121.76it/s]Loading weights:  31%|███       | 89/291 [00:00<00:01, 122.69it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 125.45it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 132.25it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 131.10it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 130.30it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.58it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.45it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.92it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.60it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.22it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.51it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.11it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.55it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.74it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.06it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:43,  6.73it/s]Loading weights:   1%|          | 2/291 [00:00<00:45,  6.42it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 45.81it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 82.69it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 90.40it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 109.51it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 121.74it/s]Loading weights:  31%|███       | 89/291 [00:00<00:01, 122.70it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 125.37it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 132.14it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 131.04it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 130.29it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.48it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.34it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.71it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.44it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 133.94it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.12it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 136.63it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.14it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.33it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 118.87it/s]
 [transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
 [model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.500 cc=0.000 viol=1.000 cov=1.000
+[seed 0] cl        acc=0.717 cc=0.467 viol=0.033 cov=1.000
 [model] constraint layer attached at layer 30, alpha=1.0, rank=32
 [seed 0] nsai_uq_cl acc=1.000 cc=1.000 viol=0.000 cov=1.000
 
@@ -383,311 +124,5 @@ wrote results/models/llama3-openbiollm-8b/summary_heldout_medcalc.json
 + python src/run_eval.py --backend hf --model_id aaditya/Llama3-OpenBioLLM-8B --out results/models/llama3-openbiollm-8b --seeds 0 --split test --data data/medcalc --gate medcalc --tag _medcalc --variants cl nsai_uq_cl --adapter results/models/llama3-openbiollm-8b/adapter_renal.npz --adapter_layer 30 --batch_size 4
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.24it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.95it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.52it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.20it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.84it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.67it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.33it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.24it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.46it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.53it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.93it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.30it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.24it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.79it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.64it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.27it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.55it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.14it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.59it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.73it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.12it/s]
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.23it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.89it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.42it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.04it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.70it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.54it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.18it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 123.95it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 130.82it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.15it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.47it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 134.85it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 132.96it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.63it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.47it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 133.97it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.25it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 136.77it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.32it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.36it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 118.86it/s]
 [transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] cl        acc=0.472 cc=0.011 viol=0.867 cov=1.000
-[model] constraint layer attached at layer 30, alpha=1.0, rank=32
-[seed 0] nsai_uq_cl acc=0.994 cc=0.989 viol=0.011 cov=1.000
-
-wrote results/models/llama3-openbiollm-8b/summary_test_medcalc.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B7_medcalc_cl_test.done
-+ echo '[B][ok] B7_medcalc_cl_test'
-[B][ok] B7_medcalc_cl_test
-+ stage B8_sufficiency_test python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_test.json
-+ local name=B8_sufficiency_test
-+ shift
-+ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done
-+ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done ']'
-+ banner B8_sufficiency_test
-+ echo
-
-+ echo '########## [B] B8_sufficiency_test ##########'
-########## [B] B8_sufficiency_test ##########
-+ echo
-
-+ python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_test.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-90 complete pairs in data/medcalc/counterfactual_test.jsonl
-SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
-
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.24it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.99it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.50it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.12it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.81it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.70it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.34it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.14it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.34it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.44it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.80it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.25it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.24it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.85it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.61it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.19it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.46it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.04it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.43it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.59it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.07it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-  10/90 pairs
-  20/90 pairs
-  30/90 pairs
-  40/90 pairs
-  50/90 pairs
-  60/90 pairs
-  70/90 pairs
-  80/90 pairs
-
-usable pairs: 89
-  skipped 1: different token length
-alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
-
- layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
-     0    0.50       0.0056     0.0223    -0.0114    -0.0167
-     0    1.00      -0.0132     0.0111    -0.0022    -0.0243
-     0    2.00       0.0132     0.0131     0.0170     0.0002
-     0    4.00       0.0374     0.0283     0.0357     0.0091
-     4    0.50       0.0023     0.0097    -0.0065    -0.0073
-     4    1.00      -0.0070     0.0025    -0.0160    -0.0095
-     4    2.00      -0.0077    -0.0083     0.0000     0.0006
-     4    4.00       0.0061    -0.0029    -0.0013     0.0090
-     8    0.50      -0.0033     0.0050    -0.0082    -0.0083
-     8    1.00      -0.0082     0.0004    -0.0037    -0.0086
-     8    2.00      -0.0074     0.0127    -0.0098    -0.0200
-     8    4.00       0.0189     0.0041     0.0008     0.0148
-    12    0.50      -0.0149    -0.0029    -0.0024    -0.0119
-    12    1.00       0.0034     0.0064    -0.0123    -0.0030
-    12    2.00      -0.0140    -0.0077    -0.0245    -0.0063
-    12    4.00      -0.0394    -0.0329    -0.0565    -0.0065
-    16    0.50       0.0017    -0.0011    -0.0003     0.0028
-    16    1.00      -0.0072    -0.0026     0.0055    -0.0046
-    16    2.00       0.0028    -0.0076     0.0056     0.0104
-    16    4.00       0.0316     0.0145     0.0409     0.0171
-    20    0.50      -0.0147    -0.0036    -0.0143    -0.0111
-    20    1.00      -0.0078    -0.0014    -0.0094    -0.0065
-    20    2.00      -0.0054    -0.0088    -0.0023     0.0034
-    20    4.00      -0.0037     0.0028    -0.0096    -0.0065
-    24    0.50      -0.0053    -0.0034    -0.0138    -0.0018
-    24    1.00      -0.0057    -0.0038    -0.0077    -0.0019
-    24    2.00      -0.0165    -0.0057    -0.0115    -0.0109
-    24    4.00      -0.0622    -0.0084    -0.0689    -0.0539
-    28    0.50      -0.0046    -0.0057    -0.0022     0.0011
-    28    1.00      -0.0094    -0.0052    -0.0039    -0.0042
-    28    2.00      -0.0082    -0.0020    -0.0083    -0.0061
-    28    4.00      -0.0380    -0.0140    -0.0544    -0.0239
-
-largest excess over the matched random control: -0.0539 logits at layer 24, alpha=4.0
-monotone dose-response in 2/8 layers tested
-wrote results/models/llama3-openbiollm-8b/sufficiency_medcalc_test.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done
-+ echo '[B][ok] B8_sufficiency_test'
-[B][ok] B8_sufficiency_test
-+ stage B8_sufficiency_heldout python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_heldout.json
-+ local name=B8_sufficiency_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done
-+ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done ']'
-+ banner B8_sufficiency_heldout
-+ echo
-
-+ echo '########## [B] B8_sufficiency_heldout ##########'
-########## [B] B8_sufficiency_heldout ##########
-+ echo
-
-+ python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_heldout.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-30 complete pairs in data/medcalc/counterfactual_heldout.jsonl
-SUFFICIENCY (injection): h += alpha * (h_unsafe - h_safe) at the edited positions
-
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.24it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.98it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.52it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.17it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.85it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.66it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.17it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 123.93it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.13it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.16it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.57it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 134.91it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 132.96it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.64it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.43it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.05it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.34it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.01it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.49it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.68it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 118.99it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-  10/30 pairs
-  20/30 pairs
-  30/30 pairs
-
-usable pairs: 30
-alpha=0 control, max |error|: 0.00e+00 (injection hook is correctly placed)
-
- layer   alpha  ACE(inject)  rand ctrl  shuf ctrl     excess
-     0    0.50      -0.0063    -0.0021    -0.0194    -0.0042
-     0    1.00      -0.0104    -0.0146    -0.0539     0.0042
-     0    2.00      -0.0250    -0.0688    -0.0539     0.0438
-     0    4.00      -0.0792    -0.0396    -0.0496    -0.0396
-     4    0.50      -0.0125    -0.0125    -0.0194     0.0000
-     4    1.00      -0.0229    -0.0417    -0.0517     0.0187
-     4    2.00      -0.1062    -0.0813    -0.1099    -0.0250
-     4    4.00      -0.1354    -0.0417    -0.1552    -0.0938
-     8    0.50       0.0083     0.0083    -0.0259     0.0000
-     8    1.00      -0.0417     0.0083    -0.0582    -0.0500
-     8    2.00      -0.0688    -0.0104    -0.0733    -0.0583
-     8    4.00      -0.1458    -0.0042    -0.1573    -0.1417
-    12    0.50       0.0042     0.0063    -0.0172    -0.0021
-    12    1.00      -0.0417     0.0042    -0.0453    -0.0458
-    12    2.00      -0.0625    -0.0063    -0.0884    -0.0563
-    12    4.00      -0.1688    -0.0646    -0.1767    -0.1042
-    16    0.50       0.0063     0.0042    -0.0302     0.0021
-    16    1.00      -0.0521     0.0208    -0.0647    -0.0729
-    16    2.00      -0.0792     0.0042    -0.1078    -0.0833
-    16    4.00      -0.1625     0.0021    -0.1616    -0.1646
-    20    0.50      -0.0208     0.0208    -0.0409    -0.0417
-    20    1.00      -0.0833     0.0292    -0.0991    -0.1125
-    20    2.00      -0.1333    -0.0042    -0.1272    -0.1292
-    20    4.00      -0.3375    -0.0104    -0.3276    -0.3271
-    24    0.50      -0.0125     0.0042    -0.0409    -0.0167
-    24    1.00      -0.0250     0.0063    -0.0474    -0.0312
-    24    2.00      -0.2521     0.0063    -0.2543    -0.2583
-    24    4.00      -0.9187     0.0292    -0.8017    -0.9479
-    28    0.50       0.0063    -0.0063     0.0108     0.0125
-    28    1.00       0.0125    -0.0083     0.0108     0.0208
-    28    2.00       0.0104     0.0083     0.0065     0.0021
-    28    4.00      -0.0229     0.0125    -0.0474    -0.0354
-
-largest excess over the matched random control: -0.9479 logits at layer 24, alpha=4.0
-monotone dose-response in 7/8 layers tested
-wrote results/models/llama3-openbiollm-8b/sufficiency_medcalc_heldout.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done
-+ echo '[B][ok] B8_sufficiency_heldout'
-[B][ok] B8_sufficiency_heldout
-+ stage B9_necessity_test python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_test.json
-+ local name=B9_necessity_test
-+ shift
-+ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done
-+ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done ']'
-+ banner B9_necessity_test
-+ echo
-
-+ echo '########## [B] B9_necessity_test ##########'
-########## [B] B9_necessity_test ##########
-+ echo
-
-+ python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_test.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-90 complete pairs in data/medcalc/counterfactual_test.jsonl
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.24it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 43.02it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.55it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.25it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.84it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.68it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.28it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.14it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.34it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.45it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.87it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.25it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.27it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.85it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.62it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.20it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.47it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 137.07it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.47it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.70it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.12it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-  10/90 pairs
-  20/90 pairs
-  30/90 pairs
-  40/90 pairs
-  50/90 pairs
-  60/90 pairs
-  70/90 pairs
-  80/90 pairs
-
-usable pairs: 89
-  skipped 1: different token length
-identity control, max |error|: 0.00e+00 (hook is correctly placed)
-
-clean margin gap between arms (unsafe - safe): -0.0112 logits
-  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
-
- layer   ACE (logits)    control     excess
-     0         0.0099    -0.0015     0.0114
-     1         0.0008     0.0046    -0.0038
-     2         0.0040    -0.0023     0.0064
-     3         0.0004     0.0070    -0.0067
-     4        -0.0030     0.0040    -0.0069
-     5        -0.0005     0.0015    -0.0020
-     6         0.0055    -0.0081     0.0136
-     7        -0.0120    -0.0011    -0.0109
-     8        -0.0103    -0.0024    -0.0079
-     9        -0.0093    -0.0056    -0.0038
-    10         0.0073    -0.0093     0.0165
-    11        -0.0006     0.0031    -0.0038
-    12        -0.0072    -0.0020    -0.0052
-    13        -0.0049    -0.0024    -0.0025
-    14        -0.0090    -0.0056    -0.0034
-    15        -0.0025     0.0048    -0.0073
-    16         0.0009    -0.0118     0.0127
-    17        -0.0067    -0.0084     0.0017
-    18        -0.0091     0.0027    -0.0119
-    19        -0.0073    -0.0100     0.0027
-    20        -0.0053    -0.0011    -0.0041
-    21        -0.0028    -0.0102     0.0075
-    22        -0.0055    -0.0049    -0.0006
-    23        -0.0055    -0.0030    -0.0025
-    24        -0.0080    -0.0111     0.0030
-    25        -0.0106    -0.0084    -0.0022
-    26        -0.0103    -0.0056    -0.0047
-    27        -0.0046    -0.0038    -0.0008
-    28        -0.0079    -0.0041    -0.0038
-    29        -0.0031    -0.0049     0.0018
-    30        -0.0053    -0.0010    -0.0043
-    31         0.0000     0.0000     0.0000
-
-largest effect over control at layer 10: +0.0165 logits
-  -> the edited value has essentially no causal effect on the decision at ANY layer.
-     The quantity is not on a causal path to the answer.
-wrote results/models/llama3-openbiollm-8b/patching_medcalc_test.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done
-+ echo '[B][ok] B9_necessity_test'
-[B][ok] B9_necessity_test
-+ stage B9_necessity_heldout python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_heldout.json
-+ local name=B9_necessity_heldout
-+ shift
-+ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done
-+ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done ']'
-+ banner B9_necessity_heldout
-+ echo
-
-+ echo '########## [B] B9_necessity_heldout ##########'
-########## [B] B9_necessity_heldout ##########
-+ echo
-
-+ python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_heldout.json
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-85 complete pairs in data/medcalc/counterfactual_heldout_all.jsonl
-Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.24it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.98it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.56it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.18it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.82it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.70it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.30it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 124.16it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 131.40it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.47it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.84it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 135.22it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 133.19it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.81it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.57it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 134.15it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.44it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 136.92it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.34it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.46it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 119.05it/s]
-[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
-  10/85 pairs
-  20/85 pairs
-  30/85 pairs
-  40/85 pairs
-  50/85 pairs
-  60/85 pairs
-  70/85 pairs
-  80/85 pairs
-
-usable pairs: 85
-identity control, max |error|: 0.00e+00 (hook is correctly placed)
-
-clean margin gap between arms (unsafe - safe): -0.0360 logits
-  |gap| < 0.5: the model's two arms are output-equivalent, so a normalised effect would divide by noise. Raw logits only.
-
- layer   ACE (logits)    control     excess
-     0        -0.0221     0.0022    -0.0243
-     1        -0.0243     0.0044    -0.0287
-     2        -0.0346    -0.0037    -0.0309
-     3        -0.0228     0.0015    -0.0243
-     4        -0.0368    -0.0044    -0.0324
-     5        -0.0338     0.0000    -0.0338
-     6        -0.0382    -0.0037    -0.0346
-     7        -0.0375     0.0000    -0.0375
-     8        -0.0397    -0.0007    -0.0390
-     9        -0.0353     0.0015    -0.0368
-    10        -0.0338     0.0007    -0.0346
-    11        -0.0360    -0.0007    -0.0353
-    12        -0.0419     0.0015    -0.0434
-    13        -0.0382    -0.0029    -0.0353
-    14        -0.0368    -0.0022    -0.0346
-    15        -0.0426     0.0029    -0.0456
-    16        -0.0316    -0.0007    -0.0309
-    17        -0.0360     0.0015    -0.0375
-    18        -0.0250    -0.0022    -0.0228
-    19        -0.0434    -0.0007    -0.0426
-    20        -0.0500     0.0000    -0.0500
-    21        -0.0449    -0.0066    -0.0382
-    22        -0.0478     0.0007    -0.0485
-    23        -0.0140     0.0015    -0.0154
-    24        -0.0191    -0.0044    -0.0147
-    25        -0.0257    -0.0044    -0.0213
-    26        -0.0015    -0.0037     0.0022
-    27         0.0162    -0.0037     0.0199
-    28         0.0118    -0.0029     0.0147
-    29         0.0162    -0.0044     0.0206
-    30         0.0044    -0.0022     0.0066
-    31         0.0000    -0.0029     0.0029
-
-largest effect over control at layer 20: -0.0500 logits
-wrote results/models/llama3-openbiollm-8b/patching_medcalc_heldout.json
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done
-+ echo '[B][ok] B9_necessity_heldout'
-[B][ok] B9_necessity_heldout
-+ '[' 0 -eq 0 ']'
-+ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/ALL_DONE
-+ banner 'LANE B DONE (0 stage(s) failed)'
-+ echo
-
-+ echo '########## [B] LANE B DONE (0 stage(s) failed) ##########'
-########## [B] LANE B DONE (0 stage(s) failed) ##########
-+ echo
-
-+ exit 0

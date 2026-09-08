@@ -104,3 +104,5 @@
 2026-09-08T03:04:27+03:00 clearing stale claims: medcalc_v2 sae_qt_weights seed_sweep 
 2026-09-08T03:04:27+03:00 SUPERVISOR_ALL_DONE present but 3 job marker(s) missing -- removing it and restarting
 2026-09-08T03:04:27+03:00 started tmux session csai_sup
+2026-09-08T03:15:01+03:00 a supervisor holds the lock; nothing to do
+2026-09-08T03:30:01+03:00 a supervisor holds the lock; nothing to do

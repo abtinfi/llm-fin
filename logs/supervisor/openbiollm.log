@@ -297,3 +297,4 @@ CROSS-SPLIT LEAKAGE (shared pair_id between splits)
 PASS — pipeline data is ready and credential-free
 ========================================================================
 wrote results/models/llama3-openbiollm-8b/data_provenance.json
+lane A exit=0  2026-09-08T03:33:47+03:00

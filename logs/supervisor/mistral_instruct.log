@@ -296,3 +296,4 @@ CROSS-SPLIT LEAKAGE (shared pair_id between splits)
 PASS — pipeline data is ready and credential-free
 ========================================================================
 wrote results/models/mistral-7b-instruct-v0-2/data_provenance.json
+lane A exit=0  2026-09-08T03:32:57+03:00

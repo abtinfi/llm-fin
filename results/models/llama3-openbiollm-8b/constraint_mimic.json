@@ -1,0 +1,42 @@
+{
+  "layer": 30,
+  "rank": 32,
+  "alpha": 1.0,
+  "epochs": 8,
+  "lr": 0.0003,
+  "lam_kl": 0.01,
+  "lam_ont": 0.1,
+  "lam_unc": 0.1,
+  "ont_margin": 1.0,
+  "ontology_graph": "data/umls/causal_graph.json",
+  "ontology_required_margin": {
+    "metformin_egfr30": 0.0,
+    "metformin_egfr45": 0.0,
+    "spironolactone_k5_5": 0.0
+  },
+  "train_on": "train",
+  "data": "data/mimic",
+  "n_train_pairs": 19,
+  "redacted_entropy": {
+    "n_test": 0,
+    "n_heldout": 0,
+    "ln2": 0.6931471805599453,
+    "test_base": NaN,
+    "test_adapted": NaN,
+    "heldout_base": NaN,
+    "heldout_adapted": NaN
+  },
+  "shuffled_control": false,
+  "base": {
+    "test_acc": 0.5,
+    "test_cc": 0.0,
+    "heldout_acc": 0.5,
+    "heldout_cc": 0.0
+  },
+  "adapted": {
+    "test_acc": 0.5517241379310345,
+    "test_cc": 0.1724137931034483,
+    "heldout_acc": 0.5,
+    "heldout_cc": 0.0
+  }
+}
