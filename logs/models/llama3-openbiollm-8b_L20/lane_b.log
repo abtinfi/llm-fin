@@ -126,3 +126,54 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
 Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:29,  3.23it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:06, 42.89it/s]Loading weights:  11%|█         | 31/291 [00:00<00:03, 78.42it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:02, 87.04it/s]Loading weights:  20%|██        | 59/291 [00:00<00:02, 106.70it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 119.54it/s]Loading weights:  31%|███       | 90/291 [00:00<00:01, 122.18it/s]Loading weights:  36%|███▌      | 104/291 [00:01<00:01, 123.95it/s]Loading weights:  42%|████▏     | 121/291 [00:01<00:01, 130.82it/s]Loading weights:  46%|████▋     | 135/291 [00:01<00:01, 130.15it/s]Loading weights:  51%|█████     | 149/291 [00:01<00:01, 129.47it/s]Loading weights:  57%|█████▋    | 166/291 [00:01<00:00, 134.85it/s]Loading weights:  62%|██████▏   | 180/291 [00:01<00:00, 132.96it/s]Loading weights:  67%|██████▋   | 194/291 [00:01<00:00, 131.63it/s]Loading weights:  73%|███████▎  | 211/291 [00:01<00:00, 136.47it/s]Loading weights:  77%|███████▋  | 225/291 [00:01<00:00, 133.97it/s]Loading weights:  82%|████████▏ | 239/291 [00:02<00:00, 132.25it/s]Loading weights:  88%|████████▊ | 256/291 [00:02<00:00, 136.77it/s]Loading weights:  93%|█████████▎| 270/291 [00:02<00:00, 134.32it/s]Loading weights:  98%|█████████▊| 284/291 [00:02<00:00, 132.36it/s]Loading weights: 100%|██████████| 291/291 [00:02<00:00, 118.86it/s]
 [transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.461 cc=0.000 viol=0.922 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.994 cc=0.989 viol=0.011 cov=1.000
+
+wrote results/models/llama3-openbiollm-8b/summary_test_medcalc.json
++ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B7_medcalc_cl_test.done
++ echo '[B][ok] B7_medcalc_cl_test'
+[B][ok] B7_medcalc_cl_test
++ stage B8_sufficiency_test python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_test.json
++ local name=B8_sufficiency_test
++ shift
++ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done
++ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done ']'
++ echo '[B][skip] B8_sufficiency_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done)'
+[B][skip] B8_sufficiency_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_test.done)
++ return 0
++ stage B8_sufficiency_heldout python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --alphas 0.5,1,2,4 --out results/models/llama3-openbiollm-8b/sufficiency_medcalc_heldout.json
++ local name=B8_sufficiency_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done
++ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done ']'
++ echo '[B][skip] B8_sufficiency_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done)'
+[B][skip] B8_sufficiency_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B8_sufficiency_heldout.done)
++ return 0
++ stage B9_necessity_test python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_test.json
++ local name=B9_necessity_test
++ shift
++ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done
++ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done ']'
++ echo '[B][skip] B9_necessity_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done)'
+[B][skip] B9_necessity_test already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_test.done)
++ return 0
++ stage B9_necessity_heldout python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id aaditya/Llama3-OpenBioLLM-8B --limit 0 --out results/models/llama3-openbiollm-8b/patching_medcalc_heldout.json
++ local name=B9_necessity_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done
++ '[' -f .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done ']'
++ echo '[B][skip] B9_necessity_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done)'
+[B][skip] B9_necessity_heldout already done (.pipeline_state/scaled_b_llama3-openbiollm-8b_L20/B9_necessity_heldout.done)
++ return 0
++ '[' 0 -eq 0 ']'
++ touch .pipeline_state/scaled_b_llama3-openbiollm-8b_L20/ALL_DONE
++ banner 'LANE B DONE (0 stage(s) failed)'
++ echo
+
++ echo '########## [B] LANE B DONE (0 stage(s) failed) ##########'
+########## [B] LANE B DONE (0 stage(s) failed) ##########
++ echo
+
++ exit 0

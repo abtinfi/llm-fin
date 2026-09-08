@@ -3,6 +3,8 @@
 + export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 + cd /home/asosoft/abtin/paper/csai
++ export PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
++ PATH=/home/asosoft/abtin/miniconda3/bin:/home/asosoft/abtin/miniconda3/bin:/home/asosoft/.local/bin:/usr/local/bin:/usr/bin:/bin:/home/asosoft/abtin/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 + TAG=llama3-openbiollm-8b
 + R=results/models/llama3-openbiollm-8b
 + STATE_DIR=.pipeline_state/scaled_join_llama3-openbiollm-8b
@@ -35,8 +37,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.609 | +0.109 | 0.562 | +0.562 | 0.031 | 0.625 | 0.562 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.781 | +0.281 | 0.562 | +0.562 | 0.438 | 1.000 | 0.562 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.055 | -0.445 | 0.000 | +0.000 | 0.047 | 0.078 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
-| (8) All four contributions | YES | YES | YES | YES | YES | 0.609 | +0.109 | 0.562 | +0.562 | 0.031 | 0.625 | 0.562 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.594 | +0.094 | 0.188 | +0.188 | 0.188 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.578 | +0.078 | 0.562 | +0.562 | 0.000 | 0.594 | 0.562 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -48,8 +50,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.609 | [0.523, 0.695] | 0.562 | [0.438, 0.688] |
 | (5) Base + Symbolic Gate only | 0.781 | [0.711, 0.852] | 0.562 | [0.438, 0.688] |
 | (6) Base + UQ only | 0.055 | [0.016, 0.102] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.414, 0.586] | 0.000 | [0.000, 0.000] |
-| (8) All four contributions | 0.609 | [0.523, 0.695] | 0.562 | [0.438, 0.688] |
+| (7) Base + Constraint Layer only | 0.594 | [0.508, 0.680] | 0.188 | [0.094, 0.297] |
+| (8) All four contributions | 0.578 | [0.492, 0.664] | 0.562 | [0.438, 0.688] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
@@ -57,13 +59,13 @@ This is the supervisor's question: what does adding this contribution to the bas
 
 | Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
 |---|---|---|---|---|
-| base→rag | 1 | 6 | 0.125 | 0.3478 |
+| base→rag | 1 | 6 | 0.125 | 0.375 |
 | base→nsai | 36 | 5 | 7.842e-07 | 3.921e-06 |
 | base→nsai_uq | 36 | 22 | 0.08695 | 0.3478 |
 | base→sym | 36 | 0 | 2.91e-11 | 1.746e-10 |
 | base→uq | 0 | 57 | 1.388e-17 | 9.714e-17 |
-| base→cl | 0 | 0 | 1 | 1 |
-| base→nsai_uq_cl | 36 | 22 | 0.08695 | 0.3478 |
+| base→cl | 52 | 40 | 0.2513 | 0.5026 |
+| base→nsai_uq_cl | 38 | 28 | 0.2678 | 0.5026 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
@@ -86,7 +88,7 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 | (5) Base + Symbolic Gate only | gate fired | 72 | 1.000 | 0.500 |
 | (5) Base + Symbolic Gate only | gate declined | 56 | 0.500 | 0.500 |
 | (8) All four contributions | gate fired | 72 | 1.000 | 0.500 |
-| (8) All four contributions | gate declined | 56 | 0.107 | 0.500 |
+| (8) All four contributions | gate declined | 56 | 0.036 | 0.500 |
 
 ### Notes
 
@@ -128,8 +130,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.594 | +0.094 | 0.500 | +0.500 | 0.125 | 0.656 | 0.500 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.250 | 0.500 | +0.500 | 0.500 | 1.000 | 0.500 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.062 | -0.438 | 0.000 | +0.000 | 0.125 | 0.125 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
-| (8) All four contributions | YES | YES | YES | YES | YES | 0.625 | +0.125 | 0.500 | +0.500 | 0.125 | 0.688 | 0.500 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.562 | +0.062 | 0.125 | +0.125 | 0.062 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.500 | +0.000 | 0.500 | +0.500 | 0.000 | 0.500 | 0.500 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -141,8 +143,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.594 | [0.406, 0.750] | 0.500 | [0.250, 0.750] |
 | (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
 | (6) Base + UQ only | 0.062 | [0.000, 0.156] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.312, 0.656] | 0.000 | [0.000, 0.000] |
-| (8) All four contributions | 0.625 | [0.469, 0.781] | 0.500 | [0.250, 0.750] |
+| (7) Base + Constraint Layer only | 0.562 | [0.375, 0.719] | 0.125 | [0.000, 0.312] |
+| (8) All four contributions | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
@@ -155,8 +157,8 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 8 | 5 | 0.5811 | 1 |
 | base→sym | 8 | 0 | 0.007812 | 0.04688 |
 | base→uq | 0 | 14 | 0.0001221 | 0.0008545 |
-| base→cl | 0 | 0 | 1 | 1 |
-| base→nsai_uq_cl | 8 | 4 | 0.3877 | 1 |
+| base→cl | 15 | 13 | 0.8506 | 1 |
+| base→nsai_uq_cl | 8 | 8 | 1 | 1 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
@@ -179,7 +181,7 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 | (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.500 |
 | (5) Base + Symbolic Gate only | gate declined | 16 | 0.500 | 0.500 |
 | (8) All four contributions | gate fired | 16 | 1.000 | 0.500 |
-| (8) All four contributions | gate declined | 16 | 0.250 | 0.500 |
+| (8) All four contributions | gate declined | 16 | 0.000 | 0.500 |
 
 ### Notes
 
@@ -222,7 +224,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.006 | -0.483 | 0.000 | -0.022 | 0.011 | 0.011 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.472 | -0.017 | 0.011 | -0.011 | 0.867 | 1.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.461 | -0.028 | 0.000 | -0.022 | 0.922 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 
 ### 95% bootstrap CI over items (seed 0)
@@ -235,7 +237,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 | (5) Base + Symbolic Gate only | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 | (6) Base + UQ only | 0.006 | [0.000, 0.017] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.472 | [0.394, 0.544] | 0.011 | [0.000, 0.033] |
+| (7) Base + Constraint Layer only | 0.461 | [0.389, 0.533] | 0.000 | [0.000, 0.000] |
 | (8) All four contributions | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
@@ -249,7 +251,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 91 | 0 | 8.078e-28 | 5.655e-27 |
 | base→sym | 91 | 0 | 8.078e-28 | 5.655e-27 |
 | base→uq | 0 | 87 | 1.292e-26 | 3.877e-26 |
-| base→cl | 1 | 4 | 0.375 | 0.375 |
+| base→cl | 9 | 14 | 0.4049 | 0.4049 |
 | base→nsai_uq_cl | 91 | 0 | 8.078e-28 | 5.655e-27 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
@@ -315,7 +317,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.500 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.717 | +0.217 | 0.467 | +0.467 | 0.033 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 
 ### 95% bootstrap CI over items (seed 0)
@@ -328,7 +330,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.367, 0.617] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.717 | [0.600, 0.833] | 0.467 | [0.300, 0.633] |
 | (8) All four contributions | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
@@ -342,7 +344,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 30 | 0 | 1.863e-09 | 1.304e-08 |
 | base→sym | 30 | 0 | 1.863e-09 | 1.304e-08 |
 | base→uq | 0 | 30 | 1.863e-09 | 1.304e-08 |
-| base→cl | 0 | 0 | 1 | 1 |
+| base→cl | 29 | 16 | 0.07245 | 0.1449 |
 | base→nsai_uq_cl | 30 | 0 | 1.863e-09 | 1.304e-08 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
@@ -409,7 +411,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.379 | -0.121 | 0.379 | +0.379 | 0.034 | 0.397 | 0.379 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.690 | +0.190 | 0.379 | +0.379 | 0.621 | 1.000 | 0.379 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.052 | -0.448 | 0.000 | +0.000 | 0.069 | 0.086 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.069 | +0.069 | 0.483 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 0.379 | -0.121 | 0.379 | +0.379 | 0.034 | 0.397 | 0.379 |
 
 ### 95% bootstrap CI over items (seed 0)
@@ -422,7 +424,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.379 | [0.259, 0.500] | 0.379 | [0.207, 0.552] |
 | (5) Base + Symbolic Gate only | 0.690 | [0.569, 0.810] | 0.379 | [0.207, 0.552] |
 | (6) Base + UQ only | 0.052 | [0.000, 0.121] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.379, 0.638] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.500 | [0.379, 0.621] | 0.069 | [0.000, 0.172] |
 | (8) All four contributions | 0.379 | [0.259, 0.500] | 0.379 | [0.207, 0.552] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
@@ -436,7 +438,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 11 | 18 | 0.2649 | 0.7948 |
 | base→sym | 11 | 0 | 0.0009766 | 0.005859 |
 | base→uq | 0 | 26 | 2.98e-08 | 2.086e-07 |
-| base→cl | 0 | 0 | 1 | 1 |
+| base→cl | 15 | 15 | 1 | 1 |
 | base→nsai_uq_cl | 11 | 18 | 0.2649 | 0.7948 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
@@ -502,7 +504,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.500 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.500 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
 
 ### 95% bootstrap CI over items (seed 0)
@@ -529,7 +531,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 8 | 0 | 0.007812 | 0.05469 |
 | base→sym | 8 | 0 | 0.007812 | 0.05469 |
 | base→uq | 0 | 8 | 0.007812 | 0.05469 |
-| base→cl | 0 | 0 | 1 | 1 |
+| base→cl | 8 | 8 | 1 | 1 |
 | base→nsai_uq_cl | 8 | 0 | 0.007812 | 0.05469 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
@@ -1084,7 +1086,7 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (6) Base + UQ only | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | 0.000 | 0.000 | 0.011 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | 0.188 | 0.125 | 0.000 | 0.467 | 0.069 | 0.000 |
 | (8) All four | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 
 | Stage | synthetic control test acc | synthetic control held-out acc | real notes test acc | real notes held-out (QT) acc | MIMIC-IV test acc | MIMIC-IV held-out (warfarin) acc |
@@ -1095,8 +1097,8 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (4) + UQ Engine | 0.609 | 0.594 | 0.994 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.781 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
 | (6) Base + UQ only | 0.055 | 0.062 | 0.006 | 0.000 | 0.052 | 0.000 |
-| (7) Base + Constraint Layer only | 0.500 | 0.500 | 0.472 | 0.500 | 0.500 | 0.500 |
-| (8) All four | 0.609 | 0.625 | 0.994 | 1.000 | 0.379 | 1.000 |
+| (7) Base + Constraint Layer only | 0.594 | 0.562 | 0.461 | 0.717 | 0.500 | 0.500 |
+| (8) All four | 0.578 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
 
 Split sizes — synthetic control test: n=128, synthetic control held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60, MIMIC-IV test: n=58, MIMIC-IV held-out (warfarin): n=16.
 
@@ -1106,19 +1108,19 @@ Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly one contribu
 
 | Run | trained on | held-out CC before | after | test CC before | after |
 |---|---|---|---|---|---|
-| qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.033 | 0.044 |
-| qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.200** | 0.033 | 0.000 |
-| renal | 140 pairs (train) | 0.000 | **0.000** | 0.033 | 0.011 |
-| synth | 16 pairs (calib) | 0.312 | **0.375** | 0.234 | 0.469 |
-| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.069 |
-| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.034 |
+| qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.000 | 0.000 |
+| qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.067** | 0.000 | 0.000 |
+| renal | 140 pairs (train) | 0.000 | **0.000** | 0.000 | 0.011 |
+| synth | 16 pairs (calib) | 0.000 | **0.000** | 0.000 | 0.125 |
+| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.000 | 0.172 |
+| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.000 | 0.000 |
 
 **L_uncertainty, measured rather than assumed.** Decision entropy on notes whose decisive number has been redacted (maximum is ln 2 = 0.6931 nats):
 
 | split | base model | with constraint layer | n |
 |---|---|---|---|
-| test | 0.6256 | 0.4569 | 180 |
-| held-out | 0.6700 | 0.5533 | 60 |
+| test | 0.0606 | 0.3579 | 180 |
+| held-out | 0.0208 | 0.3766 | 60 |
 
 Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 

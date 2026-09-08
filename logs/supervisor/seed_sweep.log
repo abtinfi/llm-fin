@@ -180,3 +180,31 @@ run_seed_sweep.sh: line 46: python: command not found
 [seed] stability report
 run_seed_sweep.sh: line 67: python: command not found
 [seed] done, 3 failure(s)  2026-09-08T03:03:21+03:00
+[seed] training seed 1  2026-09-08T03:38:49+03:00
+input scale 5.6159 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+225248 tokens x 4096 dims -> 16384 features (topk, k=32)
+train 217056 / val 8192 tokens
+  epoch 1/30  train_mse=0.86427  val_FVU=0.1048  val_L0=32.0  dead=6602
+  epoch 2/30  train_mse=0.22535  val_FVU=0.0865  val_L0=31.9  dead=6462
+  epoch 3/30  train_mse=0.19808  val_FVU=0.0807  val_L0=31.8  dead=6352
+  epoch 4/30  train_mse=0.18225  val_FVU=0.0770  val_L0=31.8  dead=6358
+  epoch 5/30  train_mse=0.17457  val_FVU=0.0755  val_L0=31.8  dead=6415
+  epoch 6/30  train_mse=0.16949  val_FVU=0.0727  val_L0=31.9  dead=6443
+  epoch 7/30  train_mse=0.16600  val_FVU=0.0718  val_L0=31.9  dead=6454
+  epoch 8/30  train_mse=0.16801  val_FVU=0.0740  val_L0=31.9  dead=6516
+  epoch 9/30  train_mse=0.16809  val_FVU=0.0709  val_L0=31.9  dead=6509
+  epoch 10/30  train_mse=0.16475  val_FVU=0.0714  val_L0=32.0  dead=6572
+  epoch 11/30  train_mse=0.16738  val_FVU=0.0703  val_L0=32.0  dead=6582
+  epoch 12/30  train_mse=0.15965  val_FVU=0.0708  val_L0=32.0  dead=6610
+  epoch 13/30  train_mse=0.16276  val_FVU=0.0742  val_L0=32.0  dead=6646
+  epoch 14/30  train_mse=0.16238  val_FVU=0.0728  val_L0=31.9  dead=6702
+  epoch 15/30  train_mse=0.16313  val_FVU=0.0699  val_L0=31.9  dead=6686
+  epoch 16/30  train_mse=0.15777  val_FVU=0.0689  val_L0=32.0  dead=6703
+  epoch 17/30  train_mse=0.15681  val_FVU=0.0686  val_L0=31.9  dead=6791
+  epoch 18/30  train_mse=0.15629  val_FVU=0.0687  val_L0=31.9  dead=6767
+  epoch 19/30  train_mse=0.15752  val_FVU=0.0697  val_L0=31.9  dead=6801
+  epoch 20/30  train_mse=0.15744  val_FVU=0.0700  val_L0=31.9  dead=6780
+  epoch 21/30  train_mse=0.15794  val_FVU=0.0683  val_L0=31.9  dead=6793
+  epoch 22/30  train_mse=0.15525  val_FVU=0.0685  val_L0=31.9  dead=6801
+  epoch 23/30  train_mse=0.15651  val_FVU=0.0682  val_L0=31.8  dead=6807
+  epoch 24/30  train_mse=0.15487  val_FVU=0.0681  val_L0=31.8  dead=6827

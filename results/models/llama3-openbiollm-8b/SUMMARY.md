@@ -18,7 +18,7 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (6) Base + UQ only | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | 0.000 | 0.000 | 0.011 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | 0.188 | 0.125 | 0.000 | 0.467 | 0.069 | 0.000 |
 | (8) All four | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 
 | Stage | synthetic control test acc | synthetic control held-out acc | real notes test acc | real notes held-out (QT) acc | MIMIC-IV test acc | MIMIC-IV held-out (warfarin) acc |
@@ -29,8 +29,8 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (4) + UQ Engine | 0.609 | 0.594 | 0.994 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.781 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
 | (6) Base + UQ only | 0.055 | 0.062 | 0.006 | 0.000 | 0.052 | 0.000 |
-| (7) Base + Constraint Layer only | 0.500 | 0.500 | 0.472 | 0.500 | 0.500 | 0.500 |
-| (8) All four | 0.609 | 0.625 | 0.994 | 1.000 | 0.379 | 1.000 |
+| (7) Base + Constraint Layer only | 0.594 | 0.562 | 0.461 | 0.717 | 0.500 | 0.500 |
+| (8) All four | 0.578 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
 
 Split sizes — synthetic control test: n=128, synthetic control held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60, MIMIC-IV test: n=58, MIMIC-IV held-out (warfarin): n=16.
 
@@ -40,19 +40,19 @@ Rows 1-4 are the proposal's cumulative ladder; rows 5-7 add exactly one contribu
 
 | Run | trained on | held-out CC before | after | test CC before | after |
 |---|---|---|---|---|---|
-| qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.033 | 0.044 |
-| qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.200** | 0.033 | 0.000 |
-| renal | 140 pairs (train) | 0.000 | **0.000** | 0.033 | 0.011 |
-| synth | 16 pairs (calib) | 0.312 | **0.375** | 0.234 | 0.469 |
-| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.069 |
-| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.103 | 0.034 |
+| qt | 55 pairs (heldout_first) | 0.000 | **0.767** | 0.000 | 0.000 |
+| qt_shuffled | 55 pairs (heldout_first) | 0.000 | **0.067** | 0.000 | 0.000 |
+| renal | 140 pairs (train) | 0.000 | **0.000** | 0.000 | 0.011 |
+| synth | 16 pairs (calib) | 0.000 | **0.000** | 0.000 | 0.125 |
+| mimic | 19 pairs (train) | 0.000 | **0.000** | 0.000 | 0.172 |
+| mimic_shuffled | 19 pairs (train) | 0.000 | **0.000** | 0.000 | 0.000 |
 
 **L_uncertainty, measured rather than assumed.** Decision entropy on notes whose decisive number has been redacted (maximum is ln 2 = 0.6931 nats):
 
 | split | base model | with constraint layer | n |
 |---|---|---|---|
-| test | 0.6256 | 0.4569 | 180 |
-| held-out | 0.6700 | 0.5533 | 60 |
+| test | 0.0606 | 0.3579 | 180 |
+| held-out | 0.0208 | 0.3766 | 60 |
 
 Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 

@@ -12,7 +12,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.006 | -0.483 | 0.000 | -0.022 | 0.011 | 0.011 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.472 | -0.017 | 0.011 | -0.011 | 0.867 | 1.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.461 | -0.028 | 0.000 | -0.022 | 0.922 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 0.994 | +0.506 | 0.989 | +0.967 | 0.011 | 1.000 | 0.989 |
 
 ### 95% bootstrap CI over items (seed 0)
@@ -25,7 +25,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 | (5) Base + Symbolic Gate only | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 | (6) Base + UQ only | 0.006 | [0.000, 0.017] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.472 | [0.394, 0.544] | 0.011 | [0.000, 0.033] |
+| (7) Base + Constraint Layer only | 0.461 | [0.389, 0.533] | 0.000 | [0.000, 0.000] |
 | (8) All four contributions | 0.994 | [0.983, 1.000] | 0.989 | [0.967, 1.000] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
@@ -39,7 +39,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 91 | 0 | 8.078e-28 | 5.655e-27 |
 | base→sym | 91 | 0 | 8.078e-28 | 5.655e-27 |
 | base→uq | 0 | 87 | 1.292e-26 | 3.877e-26 |
-| base→cl | 1 | 4 | 0.375 | 0.375 |
+| base→cl | 9 | 14 | 0.4049 | 0.4049 |
 | base→nsai_uq_cl | 91 | 0 | 8.078e-28 | 5.655e-27 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)

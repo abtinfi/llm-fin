@@ -124,3 +124,54 @@ wrote results/models/mistral-7b-instruct-v0-2/summary_heldout_medcalc.json
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
 Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 208.29it/s]Loading weights:  17%|█▋        | 49/291 [00:00<00:01, 241.20it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:00, 251.40it/s]Loading weights:  35%|███▌      | 103/291 [00:00<00:00, 256.38it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 257.87it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 258.64it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 254.73it/s]Loading weights:  73%|███████▎  | 211/291 [00:00<00:00, 255.34it/s]Loading weights:  82%|████████▏ | 238/291 [00:00<00:00, 257.37it/s]Loading weights:  91%|█████████ | 265/291 [00:01<00:00, 258.58it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 256.73it/s]
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] cl        acc=0.494 cc=0.033 viol=0.233 cov=1.000
+[model] constraint layer attached at layer 30, alpha=1.0, rank=32
+[seed 0] nsai_uq_cl acc=0.994 cc=0.989 viol=0.000 cov=1.000
+
+wrote results/models/mistral-7b-instruct-v0-2/summary_test_medcalc.json
++ touch .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B7_medcalc_cl_test.done
++ echo '[B][ok] B7_medcalc_cl_test'
+[B][ok] B7_medcalc_cl_test
++ stage B8_sufficiency_test python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_test.jsonl --model_id mistralai/Mistral-7B-Instruct-v0.2 --limit 0 --alphas 0.5,1,2,4 --out results/models/mistral-7b-instruct-v0-2/sufficiency_medcalc_test.json
++ local name=B8_sufficiency_test
++ shift
++ local marker=.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_test.done
++ '[' -f .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_test.done ']'
++ echo '[B][skip] B8_sufficiency_test already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_test.done)'
+[B][skip] B8_sufficiency_test already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_test.done)
++ return 0
++ stage B8_sufficiency_heldout python src/patching.py --mode sufficiency --data data/medcalc/counterfactual_heldout.jsonl --model_id mistralai/Mistral-7B-Instruct-v0.2 --limit 0 --alphas 0.5,1,2,4 --out results/models/mistral-7b-instruct-v0-2/sufficiency_medcalc_heldout.json
++ local name=B8_sufficiency_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_heldout.done
++ '[' -f .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_heldout.done ']'
++ echo '[B][skip] B8_sufficiency_heldout already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_heldout.done)'
+[B][skip] B8_sufficiency_heldout already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B8_sufficiency_heldout.done)
++ return 0
++ stage B9_necessity_test python src/patching.py --data data/medcalc/counterfactual_test.jsonl --model_id mistralai/Mistral-7B-Instruct-v0.2 --limit 0 --out results/models/mistral-7b-instruct-v0-2/patching_medcalc_test.json
++ local name=B9_necessity_test
++ shift
++ local marker=.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_test.done
++ '[' -f .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_test.done ']'
++ echo '[B][skip] B9_necessity_test already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_test.done)'
+[B][skip] B9_necessity_test already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_test.done)
++ return 0
++ stage B9_necessity_heldout python src/patching.py --data data/medcalc/counterfactual_heldout_all.jsonl --model_id mistralai/Mistral-7B-Instruct-v0.2 --limit 0 --out results/models/mistral-7b-instruct-v0-2/patching_medcalc_heldout.json
++ local name=B9_necessity_heldout
++ shift
++ local marker=.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_heldout.done
++ '[' -f .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_heldout.done ']'
++ echo '[B][skip] B9_necessity_heldout already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_heldout.done)'
+[B][skip] B9_necessity_heldout already done (.pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/B9_necessity_heldout.done)
++ return 0
++ '[' 0 -eq 0 ']'
++ touch .pipeline_state/scaled_b_mistral-7b-instruct-v0-2_L20/ALL_DONE
++ banner 'LANE B DONE (0 stage(s) failed)'
++ echo
+
++ echo '########## [B] LANE B DONE (0 stage(s) failed) ##########'
+########## [B] LANE B DONE (0 stage(s) failed) ##########
++ echo
+
++ exit 0

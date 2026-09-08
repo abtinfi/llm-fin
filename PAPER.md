@@ -407,7 +407,44 @@ Conformal coverage is reported with the caveat that makes it meaningful: a froze
 
 ### 5.8 Generalisation across models and layers
 
-Beyond BioMistral-7B the pipeline was run end to end on: `llama3-openbiollm-8b`, `mistral-7b-instruct-v0-2`. Per-model tables are under `results/models/<slug>/`.
+Section 4.3 names "Llama-3-Med and Mistral variants". The whole pipeline — ablation, SAE, patching, constraint layer, conformal UQ — was run end to end on each, from the same data with the same seeds.
+
+**The headline result holds on every model.** Base accuracy sits at chance on real clinical notes and the full system reaches ~0.99, with p < 1e-24 on every one:
+
+| model | acc base → proposed | CC base → proposed |
+|---|---|---|
+| `BioMistral-7B` | 0.506 → 0.994 | 0.011 → 0.989 |
+| `llama3-openbiollm-8b` | 0.489 → 0.994 | 0.022 → 0.989 |
+| `mistral-7b-instruct-v0-2` | 0.506 → 0.994 | 0.011 → 0.989 |
+
+**Aim 3 transfers, and how far depends on the model.** The constraint layer is trained on one rule family and scored on a held-out one it never saw:
+
+| model | held-out CC, base → +constraint layer |
+|---|---|
+| `BioMistral-7B` | 0.000 → **0.767** |
+| `llama3-openbiollm-8b` | 0.000 → **0.467** |
+| `mistral-7b-instruct-v0-2` | 0.033 → **0.267** |
+
+The two biomedically pretrained models gain most and the general-purpose instruct model least, which is the ordering one would predict but is worth having measured rather than assumed. The mechanism is not model-specific: a rank-32 residual adapter trained on one family moves a held-out family on all three.
+
+**A defect worth recording, because it invalidated a first attempt.** The lane script never passed `--model_id` to the constraint-layer trainer, which defaults to BioMistral, so every model's adapter was trained on BioMistral and then attached to a different model. All three are 4096-dimensional, so the wrong adapter loads cleanly and yields a plausible number; the hidden-size guard could not catch it. The tell was two models reporting identical numbers to sixteen decimal places. The artifacts were discarded and both models re-run, and every artifact now records the model that produced it.
+
+**Layer sweep.** The SAE was additionally collected, trained and scored at layers 16 and 24 as well as 20:
+
+| layer | FVU | L0 | dead features | concepts with a positively-weighted feature |
+|---|---|---|---|---|
+| 20 | 0.051 | 31.731 | 6,851 / 16,384 | 4 |
+| 16 | 0.026 | 31.687 | 6,186 / 16,384 | 7 |
+| 24 | 0.097 | 31.568 | 6,173 / 16,384 | 6 |
+
+Layer 16 expresses: `age`, `creatinine`, `drug`, `inr`, `pregnancy`, `qt_interval`, `renal_disease`.
+Layer 24 expresses: `age`, `asthma`, `creatinine`, `drug`, `heart_rate`, `inr`.
+
+**Layer 20 was chosen once, from the probe curve, and never re-examined. It is the worst of the three.** It reconstructs least well (FVU 0.051 against 0.026 at layer 16) and expresses the fewest concepts — four, against seven at layer 16, which includes `qt_interval`, `inr`, `pregnancy` and `renal_disease`. Layer 16 finds a causally-weighted QT feature even with the weights measured on the renal split, which is the condition under which layer 20 finds none at all.
+
+Every section 4.2 number in this paper is therefore a *lower bound* on what the method can do: the attribution layer can only name concepts the dictionary has features for, and the dictionary it was given comes from the least expressive of the three layers measured. Re-running the attribution at layer 16 is the obvious next step and is not done here.
+
+This sweeps the layer the **dictionary** is fitted on. The intervention layer was held at 30 throughout, so these rows are not a sweep of where the constraint adapter is inserted and must not be read as one.
 
 ## 6. Limitations
 

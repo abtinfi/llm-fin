@@ -12,8 +12,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.594 | +0.094 | 0.500 | +0.500 | 0.125 | 0.656 | 0.500 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.250 | 0.500 | +0.500 | 0.500 | 1.000 | 0.500 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.062 | -0.438 | 0.000 | +0.000 | 0.125 | 0.125 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
-| (8) All four contributions | YES | YES | YES | YES | YES | 0.625 | +0.125 | 0.500 | +0.500 | 0.125 | 0.688 | 0.500 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.562 | +0.062 | 0.125 | +0.125 | 0.062 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.500 | +0.000 | 0.500 | +0.500 | 0.000 | 0.500 | 0.500 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -25,8 +25,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.594 | [0.406, 0.750] | 0.500 | [0.250, 0.750] |
 | (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
 | (6) Base + UQ only | 0.062 | [0.000, 0.156] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.312, 0.656] | 0.000 | [0.000, 0.000] |
-| (8) All four contributions | 0.625 | [0.469, 0.781] | 0.500 | [0.250, 0.750] |
+| (7) Base + Constraint Layer only | 0.562 | [0.375, 0.719] | 0.125 | [0.000, 0.312] |
+| (8) All four contributions | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
@@ -39,8 +39,8 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 8 | 5 | 0.5811 | 1 |
 | base→sym | 8 | 0 | 0.007812 | 0.04688 |
 | base→uq | 0 | 14 | 0.0001221 | 0.0008545 |
-| base→cl | 0 | 0 | 1 | 1 |
-| base→nsai_uq_cl | 8 | 4 | 0.3877 | 1 |
+| base→cl | 15 | 13 | 0.8506 | 1 |
+| base→nsai_uq_cl | 8 | 8 | 1 | 1 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
@@ -63,7 +63,7 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 | (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.500 |
 | (5) Base + Symbolic Gate only | gate declined | 16 | 0.500 | 0.500 |
 | (8) All four contributions | gate fired | 16 | 1.000 | 0.500 |
-| (8) All four contributions | gate declined | 16 | 0.250 | 0.500 |
+| (8) All four contributions | gate declined | 16 | 0.000 | 0.500 |
 
 ### Notes
 

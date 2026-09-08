@@ -348,3 +348,7 @@
 2026-09-08T03:07:05+03:00 [w1] run  openbiollm on GPU 1
 2026-09-08T03:11:10+03:00 [w0] done sae_qt_weights exit=0
 2026-09-08T03:11:10+03:00 [w0] run  mistral_instruct on GPU 0
+2026-09-08T03:38:49+03:00 [w0] done mistral_instruct exit=0
+2026-09-08T03:38:49+03:00 [w0] run  seed_sweep on GPU 0
+2026-09-08T03:39:36+03:00 [w1] done openbiollm exit=0
+2026-09-08T03:39:36+03:00 [w1] queue empty

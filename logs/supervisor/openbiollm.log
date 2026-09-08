@@ -298,3 +298,6 @@ PASS — pipeline data is ready and credential-free
 ========================================================================
 wrote results/models/llama3-openbiollm-8b/data_provenance.json
 lane A exit=0  2026-09-08T03:33:47+03:00
+lane B exit=0  2026-09-08T03:39:32+03:00
+join   exit=0  2026-09-08T03:39:36+03:00
+=== llama3-openbiollm-8b COMPLETE ===

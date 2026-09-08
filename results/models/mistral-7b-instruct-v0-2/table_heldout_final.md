@@ -12,8 +12,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.688 | +0.188 | 0.500 | +0.500 | 0.000 | 0.844 | 0.500 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.250 | 0.500 | +0.500 | 0.500 | 1.000 | 0.500 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.062 | -0.438 | 0.000 | +0.000 | 0.000 | 0.062 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.500 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
-| (8) All four contributions | YES | YES | YES | YES | YES | 0.688 | +0.188 | 0.500 | +0.500 | 0.000 | 0.875 | 0.500 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.688 | +0.188 | 0.375 | +0.375 | 0.312 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.688 | +0.188 | 0.500 | +0.500 | 0.000 | 0.844 | 0.500 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -25,7 +25,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.688 | [0.531, 0.844] | 0.500 | [0.250, 0.750] |
 | (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
 | (6) Base + UQ only | 0.062 | [0.000, 0.156] | 0.000 | [0.000, 0.000] |
-| (7) Base + Constraint Layer only | 0.500 | [0.312, 0.656] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.688 | [0.531, 0.844] | 0.375 | [0.125, 0.625] |
 | (8) All four contributions | 0.688 | [0.531, 0.844] | 0.500 | [0.250, 0.750] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
@@ -34,13 +34,13 @@ This is the supervisor's question: what does adding this contribution to the bas
 
 | Variant vs base | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) | p (Holm) |
 |---|---|---|---|---|
-| base→rag | 16 | 14 | 0.8555 | 1 |
+| base→rag | 16 | 14 | 0.8555 | 0.8588 |
 | base→nsai | 16 | 6 | 0.05248 | 0.2624 |
-| base→nsai_uq | 14 | 8 | 0.2863 | 1 |
+| base→nsai_uq | 14 | 8 | 0.2863 | 0.8588 |
 | base→sym | 8 | 0 | 0.007812 | 0.04688 |
 | base→uq | 0 | 14 | 0.0001221 | 0.0008545 |
-| base→cl | 0 | 0 | 1 | 1 |
-| base→nsai_uq_cl | 14 | 8 | 0.2863 | 1 |
+| base→cl | 11 | 5 | 0.2101 | 0.8405 |
+| base→nsai_uq_cl | 14 | 8 | 0.2863 | 0.8588 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
