@@ -94,33 +94,33 @@ The pipeline runs end to end with **no credentialed data source**. `src/check_da
 | `BioMistral/BioMistral-7B` | real notes v2 (+2 families, +controls), test | 448 | 0.520 | 0.895 | +0.375 | 0.026 | 0.861 | +0.835 | 0.268 | 0.005 | 0.915 | 3.35e-32 |
 | `BioMistral/BioMistral-7B` | real notes v2, held-out QT | 108 | 0.556 | 1.000 | +0.444 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 1.99e-13 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 1 |
-| `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.156 |
+| `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.148 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV v2 (+real control pairs), test | 116 | 0.621 | 0.414 | -0.207 | 0.069 | 0.379 | +0.310 | 0.867 | 0.000 | 0.414 | 0.0561 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV v2, held-out warfarin | 32 | 0.312 | 1.000 | +0.688 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 1.05e-05 |
-| `llama3-openbiollm-8b` | synthetic control, test | 128 | 0.500 | 0.609 | +0.109 | 0.000 | 0.562 | +0.562 | 1.000 | 0.031 | 0.625 | 1 |
-| `llama3-openbiollm-8b` | synthetic control, held-out | 32 | 0.500 | 0.594 | +0.094 | 0.000 | 0.500 | +0.500 | 1.000 | 0.125 | 0.656 | 1 |
+| `llama3-openbiollm-8b` | synthetic control, test | 128 | 0.500 | 0.578 | +0.078 | 0.000 | 0.562 | +0.562 | 1.000 | 0.000 | 0.594 | 1 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | 32 | 0.500 | 0.500 | +0.000 | 0.000 | 0.500 | +0.500 | 1.000 | 0.000 | 0.500 | 1 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), test | 180 | 0.489 | 0.994 | +0.506 | 0.022 | 0.989 | +0.967 | 0.867 | 0.011 | 1.000 | 2.67e-26 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, test | 58 | 0.500 | 0.379 | -0.121 | 0.000 | 0.379 | +0.379 | 1.000 | 0.034 | 0.397 | 1 |
-| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.156 |
-| `mistral-7b-instruct-v0-2` | synthetic control, test | 128 | 0.570 | 0.734 | +0.164 | 0.141 | 0.562 | +0.422 | 0.734 | 0.000 | 0.766 | 0.156 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.148 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | 128 | 0.570 | 0.750 | +0.180 | 0.141 | 0.594 | +0.453 | 0.734 | 0.000 | 0.773 | 0.103 |
 | `mistral-7b-instruct-v0-2` | synthetic control, held-out | 32 | 0.500 | 0.688 | +0.188 | 0.000 | 0.500 | +0.500 | 1.000 | 0.000 | 0.844 | 1 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.389 | 0.000 | 1.000 | 2.07e-25 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | 60 | 0.450 | 1.000 | +0.550 | 0.033 | 1.000 | +0.967 | 0.233 | 0.000 | 1.000 | 6.29e-09 |
-| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 58 | 0.500 | 0.397 | -0.103 | 0.000 | 0.379 | +0.379 | 1.000 | 0.000 | 0.448 | 1 |
-| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.156 |
-| `L16` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
-| `L16` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
-| `L16` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 2.07e-25 |
-| `L16` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
-| `L16` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 1 |
-| `L16` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.156 |
-| `L24` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
-| `L24` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
-| `L24` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 2.07e-25 |
-| `L24` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
-| `L24` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 1 |
-| `L24` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.156 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 58 | 0.500 | 0.414 | -0.086 | 0.000 | 0.379 | +0.379 | 1.000 | 0.000 | 0.466 | 1 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 0.148 |
+| `layer-L16` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
+| `layer-L16` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
+| `layer-L16` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 2.07e-25 |
+| `layer-L16` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
+| `layer-L16` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 1 |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.148 |
+| `layer-L24` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
+| `layer-L24` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
+| `layer-L24` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 2.07e-25 |
+| `layer-L24` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
+| `layer-L24` | MIMIC-IV real values, test | 58 | 0.534 | 0.379 | -0.155 | 0.069 | 0.379 | +0.310 | 0.862 | 0.000 | 0.379 | 1 |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | 16 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 0.000 | 0.000 | 1.000 | 0.148 |
 
 `viol` is the violation rate: an UNSAFE prescription called SAFE without abstaining. It is the number that matters clinically and it does not always move the same way as accuracy.
 
@@ -138,30 +138,30 @@ The pipeline runs end to end with **no credentialed data source**. `src/check_da
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
 | `BioMistral/BioMistral-7B` | MIMIC-IV v2 (+real control pairs), test | 0.621 [0.534, 0.707] | 0.414 [0.328, 0.509] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
 | `BioMistral/BioMistral-7B` | MIMIC-IV v2, held-out warfarin | 0.312 [0.156, 0.469] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `llama3-openbiollm-8b` | synthetic control, test | 0.500 [0.414, 0.586] | 0.609 [0.523, 0.695] | 0.000 [0.000, 0.000] | 0.562 [0.438, 0.688] |
-| `llama3-openbiollm-8b` | synthetic control, held-out | 0.500 [0.312, 0.656] | 0.594 [0.406, 0.750] | 0.000 [0.000, 0.000] | 0.500 [0.250, 0.750] |
+| `llama3-openbiollm-8b` | synthetic control, test | 0.500 [0.414, 0.586] | 0.578 [0.492, 0.664] | 0.000 [0.000, 0.000] | 0.562 [0.438, 0.688] |
+| `llama3-openbiollm-8b` | synthetic control, held-out | 0.500 [0.312, 0.656] | 0.500 [0.312, 0.657] | 0.000 [0.000, 0.000] | 0.500 [0.250, 0.750] |
 | `llama3-openbiollm-8b` | real notes (MedCalc), test | 0.489 [0.411, 0.561] | 0.994 [0.983, 1.000] | 0.022 [0.000, 0.056] | 0.989 [0.967, 1.000] |
 | `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, test | 0.500 [0.379, 0.638] | 0.379 [0.259, 0.500] | 0.000 [0.000, 0.000] | 0.379 [0.207, 0.552] |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `mistral-7b-instruct-v0-2` | synthetic control, test | 0.570 [0.484, 0.656] | 0.734 [0.656, 0.805] | 0.141 [0.062, 0.234] | 0.562 [0.438, 0.688] |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | 0.570 [0.484, 0.656] | 0.750 [0.672, 0.820] | 0.141 [0.062, 0.234] | 0.594 [0.469, 0.719] |
 | `mistral-7b-instruct-v0-2` | synthetic control, held-out | 0.500 [0.312, 0.656] | 0.688 [0.531, 0.844] | 0.000 [0.000, 0.000] | 0.500 [0.250, 0.750] |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | 0.450 [0.333, 0.583] | 1.000 [1.000, 1.000] | 0.033 [0.000, 0.100] | 1.000 [1.000, 1.000] |
-| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 0.500 [0.379, 0.638] | 0.397 [0.276, 0.517] | 0.000 [0.000, 0.000] | 0.379 [0.207, 0.552] |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | 0.500 [0.379, 0.638] | 0.414 [0.293, 0.534] | 0.000 [0.000, 0.000] | 0.379 [0.207, 0.552] |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `L16` | synthetic control, test | 0.602 [0.516, 0.688] | 0.578 [0.492, 0.664] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
-| `L16` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
-| `L16` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
-| `L16` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `L16` | MIMIC-IV real values, test | 0.534 [0.397, 0.655] | 0.379 [0.259, 0.500] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
-| `L16` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `L24` | synthetic control, test | 0.602 [0.516, 0.688] | 0.578 [0.492, 0.664] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
-| `L24` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
-| `L24` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
-| `L24` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
-| `L24` | MIMIC-IV real values, test | 0.534 [0.397, 0.655] | 0.379 [0.259, 0.500] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
-| `L24` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `layer-L16` | synthetic control, test | 0.602 [0.516, 0.688] | 0.578 [0.492, 0.664] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
+| `layer-L16` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
+| `layer-L16` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
+| `layer-L16` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `layer-L16` | MIMIC-IV real values, test | 0.534 [0.397, 0.655] | 0.379 [0.259, 0.500] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `layer-L24` | synthetic control, test | 0.602 [0.516, 0.688] | 0.578 [0.492, 0.664] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
+| `layer-L24` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
+| `layer-L24` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
+| `layer-L24` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
+| `layer-L24` | MIMIC-IV real values, test | 0.534 [0.397, 0.655] | 0.379 [0.259, 0.500] | 0.069 [0.000, 0.172] | 0.379 [0.207, 0.552] |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | 0.500 [0.250, 0.750] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
 
 ## 3. Where the difference comes from
 
@@ -209,88 +209,100 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 | `BioMistral/BioMistral-7B` | MIMIC-IV v2, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
 | `llama3-openbiollm-8b` | synthetic control, test | Symbolic gate | +0.281 | +0.562 | 36 | 0 | 2.91e-11 |
 | `llama3-openbiollm-8b` | synthetic control, test | UQ engine | -0.445 | +0.000 | 0 | 57 | 1.39e-17 |
+| `llama3-openbiollm-8b` | synthetic control, test | Constraint layer | +0.094 | +0.188 | 52 | 40 | 0.251 |
 | `llama3-openbiollm-8b` | synthetic control, test | RAG | -0.039 | +0.016 | 1 | 6 | 0.125 |
 | `llama3-openbiollm-8b` | synthetic control, held-out | Symbolic gate | +0.250 | +0.500 | 8 | 0 | 0.00781 |
 | `llama3-openbiollm-8b` | synthetic control, held-out | UQ engine | -0.438 | +0.000 | 0 | 14 | 0.000122 |
+| `llama3-openbiollm-8b` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 15 | 13 | 0.851 |
 | `llama3-openbiollm-8b` | synthetic control, held-out | RAG | +0.000 | +0.062 | 1 | 1 | 1 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), test | Symbolic gate | +0.506 | +0.967 | 91 | 0 | 8.08e-28 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), test | UQ engine | -0.483 | -0.022 | 0 | 87 | 1.29e-26 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), test | Constraint layer | -0.028 | -0.022 | 9 | 14 | 0.405 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), test | RAG | -0.078 | -0.022 | 7 | 21 | 0.0125 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
+| `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | Constraint layer | +0.217 | +0.467 | 29 | 16 | 0.0725 |
 | `llama3-openbiollm-8b` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, test | Symbolic gate | +0.190 | +0.379 | 11 | 0 | 0.000977 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, test | UQ engine | -0.448 | +0.000 | 0 | 26 | 2.98e-08 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.069 | 15 | 15 | 1 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, test | RAG | -0.069 | +0.000 | 0 | 4 | 0.125 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 8 | 8 | 1 |
 | `llama3-openbiollm-8b` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
 | `mistral-7b-instruct-v0-2` | synthetic control, test | Symbolic gate | +0.219 | +0.438 | 28 | 0 | 7.45e-09 |
 | `mistral-7b-instruct-v0-2` | synthetic control, test | UQ engine | -0.477 | -0.141 | 0 | 61 | 8.67e-19 |
+| `mistral-7b-instruct-v0-2` | synthetic control, test | Constraint layer | +0.164 | +0.344 | 43 | 22 | 0.0125 |
 | `mistral-7b-instruct-v0-2` | synthetic control, test | RAG | +0.133 | +0.281 | 47 | 30 | 0.0675 |
 | `mistral-7b-instruct-v0-2` | synthetic control, held-out | Symbolic gate | +0.250 | +0.500 | 8 | 0 | 0.00781 |
 | `mistral-7b-instruct-v0-2` | synthetic control, held-out | UQ engine | -0.438 | +0.000 | 0 | 14 | 0.000122 |
+| `mistral-7b-instruct-v0-2` | synthetic control, held-out | Constraint layer | +0.188 | +0.375 | 11 | 5 | 0.21 |
 | `mistral-7b-instruct-v0-2` | synthetic control, held-out | RAG | +0.062 | +0.125 | 16 | 14 | 0.856 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | UQ engine | -0.494 | -0.011 | 0 | 89 | 3.23e-27 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | Constraint layer | -0.011 | +0.022 | 23 | 25 | 0.885 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), test | RAG | -0.006 | -0.011 | 34 | 35 | 1 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | Symbolic gate | +0.550 | +0.967 | 33 | 0 | 2.33e-10 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | UQ engine | -0.450 | -0.033 | 0 | 27 | 1.49e-08 |
+| `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | Constraint layer | +0.183 | +0.233 | 20 | 9 | 0.0614 |
 | `mistral-7b-instruct-v0-2` | real notes (MedCalc), held-out QT | RAG | +0.050 | +0.000 | 7 | 4 | 0.549 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | Symbolic gate | +0.190 | +0.379 | 11 | 0 | 0.000977 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | UQ engine | -0.431 | +0.000 | 0 | 25 | 5.96e-08 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | Constraint layer | +0.103 | +0.207 | 24 | 18 | 0.441 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, test | RAG | +0.052 | +0.138 | 28 | 25 | 0.784 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 8 | 8 | 1 |
 | `mistral-7b-instruct-v0-2` | MIMIC-IV real values, held-out warfarin | RAG | +0.250 | +0.500 | 5 | 1 | 0.219 |
-| `L16` | synthetic control, test | Symbolic gate | +0.203 | +0.391 | 26 | 0 | 2.98e-08 |
-| `L16` | synthetic control, test | UQ engine | -0.391 | -0.203 | 0 | 50 | 1.78e-15 |
-| `L16` | synthetic control, test | Constraint layer | +0.125 | +0.234 | 33 | 17 | 0.0328 |
-| `L16` | synthetic control, test | RAG | +0.047 | +0.094 | 18 | 12 | 0.362 |
-| `L16` | synthetic control, held-out | Symbolic gate | +0.156 | +0.312 | 5 | 0 | 0.0625 |
-| `L16` | synthetic control, held-out | UQ engine | -0.500 | -0.250 | 0 | 16 | 3.05e-05 |
-| `L16` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 7 | 5 | 0.774 |
-| `L16` | synthetic control, held-out | RAG | -0.094 | -0.250 | 1 | 4 | 0.375 |
-| `L16` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
-| `L16` | real notes (MedCalc), test | UQ engine | -0.506 | -0.011 | 0 | 91 | 8.08e-28 |
-| `L16` | real notes (MedCalc), test | Constraint layer | -0.006 | +0.011 | 22 | 23 | 1 |
-| `L16` | real notes (MedCalc), test | RAG | -0.011 | -0.011 | 28 | 30 | 0.896 |
-| `L16` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
-| `L16` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
-| `L16` | real notes (MedCalc), held-out QT | Constraint layer | +0.383 | +0.767 | 26 | 3 | 1.52e-05 |
-| `L16` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 30 | 30 | 1 |
-| `L16` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
-| `L16` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
-| `L16` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
-| `L16` | MIMIC-IV real values, test | RAG | -0.034 | -0.069 | 25 | 27 | 0.89 |
-| `L16` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
-| `L16` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
-| `L16` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
-| `L16` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
-| `L24` | synthetic control, test | Symbolic gate | +0.203 | +0.391 | 26 | 0 | 2.98e-08 |
-| `L24` | synthetic control, test | UQ engine | -0.391 | -0.203 | 0 | 50 | 1.78e-15 |
-| `L24` | synthetic control, test | Constraint layer | +0.125 | +0.234 | 33 | 17 | 0.0328 |
-| `L24` | synthetic control, test | RAG | +0.047 | +0.094 | 18 | 12 | 0.362 |
-| `L24` | synthetic control, held-out | Symbolic gate | +0.156 | +0.312 | 5 | 0 | 0.0625 |
-| `L24` | synthetic control, held-out | UQ engine | -0.500 | -0.250 | 0 | 16 | 3.05e-05 |
-| `L24` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 7 | 5 | 0.774 |
-| `L24` | synthetic control, held-out | RAG | -0.094 | -0.250 | 1 | 4 | 0.375 |
-| `L24` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
-| `L24` | real notes (MedCalc), test | UQ engine | -0.506 | -0.011 | 0 | 91 | 8.08e-28 |
-| `L24` | real notes (MedCalc), test | Constraint layer | -0.022 | +0.000 | 19 | 23 | 0.644 |
-| `L24` | real notes (MedCalc), test | RAG | -0.011 | -0.011 | 28 | 30 | 0.896 |
-| `L24` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
-| `L24` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
-| `L24` | real notes (MedCalc), held-out QT | Constraint layer | +0.383 | +0.767 | 26 | 3 | 1.52e-05 |
-| `L24` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 30 | 30 | 1 |
-| `L24` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
-| `L24` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
-| `L24` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
-| `L24` | MIMIC-IV real values, test | RAG | -0.034 | -0.069 | 25 | 27 | 0.89 |
-| `L24` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
-| `L24` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
-| `L24` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
-| `L24` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
+| `layer-L16` | synthetic control, test | Symbolic gate | +0.203 | +0.391 | 26 | 0 | 2.98e-08 |
+| `layer-L16` | synthetic control, test | UQ engine | -0.391 | -0.203 | 0 | 50 | 1.78e-15 |
+| `layer-L16` | synthetic control, test | Constraint layer | +0.125 | +0.234 | 33 | 17 | 0.0328 |
+| `layer-L16` | synthetic control, test | RAG | +0.047 | +0.094 | 18 | 12 | 0.362 |
+| `layer-L16` | synthetic control, held-out | Symbolic gate | +0.156 | +0.312 | 5 | 0 | 0.0625 |
+| `layer-L16` | synthetic control, held-out | UQ engine | -0.500 | -0.250 | 0 | 16 | 3.05e-05 |
+| `layer-L16` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 7 | 5 | 0.774 |
+| `layer-L16` | synthetic control, held-out | RAG | -0.094 | -0.250 | 1 | 4 | 0.375 |
+| `layer-L16` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
+| `layer-L16` | real notes (MedCalc), test | UQ engine | -0.506 | -0.011 | 0 | 91 | 8.08e-28 |
+| `layer-L16` | real notes (MedCalc), test | Constraint layer | -0.006 | +0.011 | 22 | 23 | 1 |
+| `layer-L16` | real notes (MedCalc), test | RAG | -0.011 | -0.011 | 28 | 30 | 0.896 |
+| `layer-L16` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
+| `layer-L16` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
+| `layer-L16` | real notes (MedCalc), held-out QT | Constraint layer | +0.383 | +0.767 | 26 | 3 | 1.52e-05 |
+| `layer-L16` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 30 | 30 | 1 |
+| `layer-L16` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
+| `layer-L16` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
+| `layer-L16` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
+| `layer-L16` | MIMIC-IV real values, test | RAG | -0.034 | -0.069 | 25 | 27 | 0.89 |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `layer-L16` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
+| `layer-L24` | synthetic control, test | Symbolic gate | +0.203 | +0.391 | 26 | 0 | 2.98e-08 |
+| `layer-L24` | synthetic control, test | UQ engine | -0.391 | -0.203 | 0 | 50 | 1.78e-15 |
+| `layer-L24` | synthetic control, test | Constraint layer | +0.125 | +0.234 | 33 | 17 | 0.0328 |
+| `layer-L24` | synthetic control, test | RAG | +0.047 | +0.094 | 18 | 12 | 0.362 |
+| `layer-L24` | synthetic control, held-out | Symbolic gate | +0.156 | +0.312 | 5 | 0 | 0.0625 |
+| `layer-L24` | synthetic control, held-out | UQ engine | -0.500 | -0.250 | 0 | 16 | 3.05e-05 |
+| `layer-L24` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 7 | 5 | 0.774 |
+| `layer-L24` | synthetic control, held-out | RAG | -0.094 | -0.250 | 1 | 4 | 0.375 |
+| `layer-L24` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
+| `layer-L24` | real notes (MedCalc), test | UQ engine | -0.506 | -0.011 | 0 | 91 | 8.08e-28 |
+| `layer-L24` | real notes (MedCalc), test | Constraint layer | -0.022 | +0.000 | 19 | 23 | 0.644 |
+| `layer-L24` | real notes (MedCalc), test | RAG | -0.011 | -0.011 | 28 | 30 | 0.896 |
+| `layer-L24` | real notes (MedCalc), held-out QT | Symbolic gate | +0.500 | +1.000 | 30 | 0 | 1.86e-09 |
+| `layer-L24` | real notes (MedCalc), held-out QT | UQ engine | -0.500 | +0.000 | 0 | 30 | 1.86e-09 |
+| `layer-L24` | real notes (MedCalc), held-out QT | Constraint layer | +0.383 | +0.767 | 26 | 3 | 1.52e-05 |
+| `layer-L24` | real notes (MedCalc), held-out QT | RAG | +0.000 | +0.000 | 30 | 30 | 1 |
+| `layer-L24` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
+| `layer-L24` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
+| `layer-L24` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
+| `layer-L24` | MIMIC-IV real values, test | RAG | -0.034 | -0.069 | 25 | 27 | 0.89 |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | UQ engine | -0.500 | +0.000 | 0 | 8 | 0.00781 |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | Constraint layer | +0.000 | +0.000 | 0 | 0 | 1 |
+| `layer-L24` | MIMIC-IV real values, held-out warfarin | RAG | +0.000 | +0.000 | 0 | 0 | 1 |
 
 ## 4. Is the consistency real? (control pairs)
 
@@ -445,6 +457,18 @@ Layer 24 expresses: `age`, `asthma`, `creatinine`, `drug`, `heart_rate`, `inr`.
 Every section 4.2 number in this paper is therefore a *lower bound* on what the method can do: the attribution layer can only name concepts the dictionary has features for, and the dictionary it was given comes from the least expressive of the three layers measured. Re-running the attribution at layer 16 is the obvious next step and is not done here.
 
 This sweeps the layer the **dictionary** is fitted on. The intervention layer was held at 30 throughout, so these rows are not a sweep of where the constraint adapter is inserted and must not be read as one.
+
+**Seed stability.** Decoding is greedy, so a decode seed changes nothing; the variance that exists in Aim 1 comes from the dictionary — its initialisation, the train/val split, the batch order, the token subsample and the random control feature. Three dictionaries were trained from the same activations with different seeds. Feature indices are meaningless across runs, so the comparison is between the subspaces and the concept selections:
+
+| A | B | mean max &#124;cos&#124; | concept Jaccard | concepts only in B |
+|---|---|---|---|---|
+| `seed0` | `seed1` | 0.561 | 1.000 | — |
+| `seed0` | `seed2` | 0.534 | 0.750 | `inr`, `pregnancy` |
+| `seed1` | `seed2` | 0.547 | 0.750 | `inr`, `pregnancy` |
+
+The two halves disagree, and the disagreement is the result. **Which concepts the dictionary selects is fairly stable** — Jaccard 0.75 to 1.00. **Which directions it finds is not** — a decoder row's best match in another seed's dictionary is only around 0.55 cosine. Different seeds arrive at different bases that nonetheless pick out much the same concepts.
+
+That is the right way round for the claims here, which are all at concept level, and it is a warning for anything said about an individual feature: `#14294` is a fact about one training run, not about the model. One seed also surfaces `inr` and `pregnancy` that the other two miss, so concept coverage — the thing the section 4.2 layer is bounded by — varies with the seed as well as with the layer.
 
 ## 6. Limitations
 

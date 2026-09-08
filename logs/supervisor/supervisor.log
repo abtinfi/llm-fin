@@ -352,3 +352,8 @@
 2026-09-08T03:38:49+03:00 [w0] run  seed_sweep on GPU 0
 2026-09-08T03:39:36+03:00 [w1] done openbiollm exit=0
 2026-09-08T03:39:36+03:00 [w1] queue empty
+2026-09-08T04:15:18+03:00 [w0] done seed_sweep exit=0
+2026-09-08T04:15:18+03:00 [w0] queue empty
+2026-09-08T04:15:18+03:00 [reports] regenerating
+2026-09-08T04:15:22+03:00 [reports] exit=0
+2026-09-08T04:15:22+03:00 === supervisor finished ===

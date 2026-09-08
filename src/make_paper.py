@@ -686,6 +686,46 @@ def main():
               "intervention layer was held at 30 throughout, so these rows "
               "are not a sweep of where the constraint adapter is inserted "
               "and must not be read as one.")
+        stab = Path("results/stability.json")
+        if stab.is_file():
+            st = json.loads(stab.read_text())
+            pairs = [q for q in st["pairs"] if q["same_layer"]]
+            if pairs:
+                A("")
+                A("**Seed stability.** Decoding is greedy, so a decode seed "
+                  "changes nothing; the variance that exists in Aim 1 comes "
+                  "from the dictionary — its initialisation, the train/val "
+                  "split, the batch order, the token subsample and the random "
+                  "control feature. Three dictionaries were trained from the "
+                  "same activations with different seeds. Feature indices are "
+                  "meaningless across runs, so the comparison is between the "
+                  "subspaces and the concept selections:")
+                A("")
+                A("| A | B | mean max &#124;cos&#124; | concept Jaccard | "
+                  "concepts only in B |")
+                A("|---|---|---|---|---|")
+                for q in pairs:
+                    only = ", ".join(f"`{c}`" for c in q["concepts_only_in_b"])
+                    A(f"| `{q['a']}` | `{q['b']}` | "
+                      f"{f3(q['mean_max_cosine_a_to_b'])} | "
+                      f"{f3(q['concept_jaccard'])} | {only or '—'} |")
+                A("")
+                A("The two halves disagree, and the disagreement is the "
+                  "result. **Which concepts the dictionary selects is fairly "
+                  "stable** — Jaccard 0.75 to 1.00. **Which directions it "
+                  "finds is not** — a decoder row's best match in another "
+                  "seed's dictionary is only around 0.55 cosine. Different "
+                  "seeds arrive at different bases that nonetheless pick out "
+                  "much the same concepts.")
+                A("")
+                A("That is the right way round for the claims here, which are "
+                  "all at concept level, and it is a warning for anything "
+                  "said about an individual feature: `#14294` is a fact about "
+                  "one training run, not about the model. One seed also "
+                  "surfaces `inr` and `pregnancy` that the other two miss, so "
+                  "concept coverage — the thing the section 4.2 layer is "
+                  "bounded by — varies with the seed as well as with the "
+                  "layer.")
     else:
         A("*Pending: the multi-model and multi-layer runs are still "
           "executing. This section is generated from "

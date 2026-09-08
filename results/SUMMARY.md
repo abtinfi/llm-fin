@@ -94,6 +94,40 @@ Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 
 *S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
 
+**`sae_topk_L20_s1_fis.json`** — topk, 16384 features, reconstruction FVU 0.068, L0 31.7, dead 6876/16384 (42.0%).
+
+| feature | concept | S_semantic | S_causal | FIS |
+|---|---|---|---|---|
+| #8290 | qt_interval | 0.679 | 0.0000 | 0.340 |
+| #13809 | creatinine | 0.618 | 0.0186 | 0.318 |
+| #4739 | drug | 0.577 | 0.0199 | 0.299 |
+| #5065 | asthma | 0.562 | 0.0025 | 0.282 |
+| #2951 | drug | 0.503 | 0.0184 | 0.260 |
+| #14209 | age | 0.499 | 0.0215 | 0.260 |
+| #9914 | age | 0.497 | 0.0162 | 0.257 |
+| #11898 | age | 0.494 | 0.0179 | 0.256 |
+| #13648 | age | 0.489 | 0.0167 | 0.253 |
+| #8020 | creatinine | 0.484 | 0.0177 | 0.251 |
+
+*S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
+
+**`sae_topk_L20_s2_fis.json`** — topk, 16384 features, reconstruction FVU 0.061, L0 31.8, dead 6990/16384 (42.7%).
+
+| feature | concept | S_semantic | S_causal | FIS |
+|---|---|---|---|---|
+| #2159 | qt_interval | 0.588 | 0.0000 | 0.294 |
+| #31 | creatinine | 0.587 | 0.0219 | 0.305 |
+| #11868 | heart_rate | 0.548 | 0.0099 | 0.279 |
+| #5353 | age | 0.536 | 0.0211 | 0.279 |
+| #10961 | drug | 0.532 | 0.0177 | 0.275 |
+| #8607 | heart_rate | 0.524 | 0.0096 | 0.267 |
+| #14333 | qt_interval | 0.522 | 0.0000 | 0.261 |
+| #275 | drug | 0.516 | 0.0456 | 0.281 |
+| #1897 | inr | 0.478 | 0.0046 | 0.241 |
+| #798 | age | 0.468 | 0.0219 | 0.245 |
+
+*S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
+
 ## 4. Aim 4: conformal coverage guarantees
 
 Frozen split-conformal vs Adaptive Conformal Inference, and coverage broken down by subgroup, are in `results/uq_coverage_*.md`. The headline: a frozen threshold has no guarantee on a split that is not exchangeable with the calibration split, which is exactly what the held-out rule family is, and ACI recovers the target by giving up coverage.

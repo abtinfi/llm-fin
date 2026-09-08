@@ -184,8 +184,15 @@ Ordered by how much of the proposal's claim each one blocks.
       Built and run 2026-09-02: `patching.py --mode sufficiency`, dose sweep
       with an alpha=0 control. Largest excess 0.0134 / 0.0833 logits — it
       replicates the knock-out null rather than overturning it.
-- [ ] **Token-to-Concept Attribution Layer** (§4.2), and its faithfulness
-      evaluation via **sufficiency and comprehensiveness**. No code exists
+- [x] ~~**Token-to-Concept Attribution Layer** (§4.2), and its faithfulness
+      evaluation via **sufficiency and comprehensiveness**.~~ Built
+      2026-09-06/08: `src/attribution.py`, `results/attribution.md`. Ranks
+      the causally edited token at the 0.98 percentile (renal) and 0.85
+      (QT) against ~0.50 for random, and names the decisive concept at
+      0.90 vs 0.25 chance (renal) and 1.00 vs 0.67 (QT). ERASER
+      faithfulness is weak for EVERY attributor including exact occlusion,
+      which is the Aim 2 null at token level. Superseded text follows:
+      No code existed
       (`grep -rl "comprehensiveness\|attribution" src/` → nothing). The full
       conceptual bridge in §4.2 (Token → Activation → SAE feature → Probe →
       Concept → Causal-graph node → Explanation) is implemented up to "Probe"
@@ -206,8 +213,16 @@ Ordered by how much of the proposal's claim each one blocks.
 
 **Blocks generalisation of results already obtained**
 
-- [ ] **Feature stability across layers, prompts and model seeds** (§4.4).
-      One layer, one model, one seed today.
+- [x] ~~**Feature stability across layers, prompts and model seeds**
+      (§4.4).~~ Done 2026-09-08. Three seeds at layer 20 and three
+      layers (16/20/24), compared by subspace and by concept selection
+      rather than by feature index, which is meaningless across runs
+      (`src/stability.py`, `results/stability.md`). **Concept sets are
+      fairly stable** (Jaccard 0.75-1.00 across seeds); **directions
+      are not** (mean max cosine ~0.55). And the layer sweep says the
+      chosen layer 20 is the WORST of the three -- FVU 0.051 against
+      0.026 at layer 16, and four expressible concepts against seven.
+      Three models now, not one. Prompts are still unswept.
 - [ ] **MIMIC-IV** (§4.6). Start with the open-access Demo v2.2 — no
       credentialing, and structured `labevents` sidesteps the
       which-value-is-current problem below.
@@ -220,13 +235,25 @@ Ordered by how much of the proposal's claim each one blocks.
       real structured labs can, and only for the structured-input half.
 - [ ] **More than two real rule families.** `data/medcalc` has metformin/eGFR
       and ondansetron/QTc; MedCalc-Bench has 55 calculators.
-- [ ] **A second model.** §4.3 names Llama-3-Med and Mistral variants; every
-      number in this repo is BioMistral-7B. The Aim 2 null in particular is
+- [x] ~~**A second model.** §4.3 names Llama-3-Med and Mistral variants.~~
+      Done 2026-09-08: `Llama3-OpenBioLLM-8B` and
+      `Mistral-7B-Instruct-v0.2`, full pipeline each. Aim 3 transfers to
+      all three (held-out CC 0.767 / 0.467 / 0.267); the Aim 2 null
+      replicates. A first attempt was INVALID -- lane A never passed
+      `--model_id` to `constraint_layer.py`, so every adapter was trained
+      on the BioMistral default and attached to another model; all three
+      are 4096-dim so it loaded cleanly. Artifacts discarded and re-run. The Aim 2 null in particular is
       currently a statement about one model.
 
 **Methodological gaps that weaken numbers already reported**
 
-- [ ] **Control (non-flipping) pairs in the counterfactual benchmarks.** On
+- [x] ~~**Control (non-flipping) pairs in the counterfactual benchmarks.**~~
+      Done 2026-09-07/08 in `data/medcalc_v2` (edited controls) and
+      `data/mimic_v2` (controls made of two more REAL measurements, no
+      invented number anywhere). `metrics.score()` reports
+      `spurious_flip_rate` and `discrimination`, always with a bootstrap
+      CI. Discrimination is indistinguishable from zero on every benchmark
+      tried. Superseded text follows: On
       8,000 MCQ items the model's discrimination is **−0.013**
       [−0.037, +0.013] — it flips at the same rate whether or not the truth
       changed. Until `data/` and `data/medcalc` carry wrong-vs-wrong control

@@ -208,3 +208,170 @@ train 217056 / val 8192 tokens
   epoch 22/30  train_mse=0.15525  val_FVU=0.0685  val_L0=31.9  dead=6801
   epoch 23/30  train_mse=0.15651  val_FVU=0.0682  val_L0=31.8  dead=6807
   epoch 24/30  train_mse=0.15487  val_FVU=0.0681  val_L0=31.8  dead=6827
+  epoch 25/30  train_mse=0.15442  val_FVU=0.0678  val_L0=31.8  dead=6844
+  epoch 26/30  train_mse=0.15427  val_FVU=0.0680  val_L0=31.8  dead=6855
+  epoch 27/30  train_mse=0.15406  val_FVU=0.0676  val_L0=31.8  dead=6849
+  epoch 28/30  train_mse=0.15390  val_FVU=0.0677  val_L0=31.8  dead=6868
+  epoch 29/30  train_mse=0.15372  val_FVU=0.0675  val_L0=31.7  dead=6870
+  epoch 30/30  train_mse=0.15356  val_FVU=0.0679  val_L0=31.7  dead=6876
+wrote results/sae/sae_topk_L20_s1.npz
+  final val FVU=0.0679  L0=31.7  dead features=6876/16384 (42.0%)
+[seed] scoring seed 1  2026-09-08T03:41:46+03:00
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  #  8290  S_sem=0.679  concept=qt_interval  fires on 68/225248 tokens
+  # 13809  S_sem=0.618  concept=creatinine  fires on 3478/225248 tokens
+  #  4739  S_sem=0.577  concept=drug  fires on 730/225248 tokens
+  #  5065  S_sem=0.562  concept=asthma  fires on 72/225248 tokens
+  #  2951  S_sem=0.503  concept=drug  fires on 810/225248 tokens
+  # 14209  S_sem=0.499  concept=age  fires on 622/225248 tokens
+  #  9914  S_sem=0.497  concept=age  fires on 808/225248 tokens
+  # 11898  S_sem=0.494  concept=age  fires on 3990/225248 tokens
+  # 13648  S_sem=0.489  concept=age  fires on 1994/225248 tokens
+  #  8020  S_sem=0.484  concept=creatinine  fires on 2044/225248 tokens
+  # 13576  S_sem=0.474  concept=drug  fires on 756/225248 tokens
+  #  9915  S_sem=0.468  concept=age  fires on 3141/225248 tokens
+  #  7967  S_sem=0.427  concept=age  fires on 1717/225248 tokens
+  # 10680  S_sem=0.404  concept=heart_rate  fires on 1853/225248 tokens
+  #  3079  S_sem=0.401  concept=age  fires on 650/225248 tokens
+  #  7777  S_sem=0.391  concept=drug  fires on 294/225248 tokens
+  # 12955  S_sem=0.389  concept=age  fires on 700/225248 tokens
+  #  3501  S_sem=0.386  concept=heart_rate  fires on 1443/225248 tokens
+  #  4146  S_sem=0.383  concept=creatinine  fires on 13745/225248 tokens
+  #  3594  S_sem=0.378  concept=drug  fires on 296/225248 tokens
+  #  8438  S_sem=0.368  concept=drug  fires on 307/225248 tokens
+  #  2175  S_sem=0.362  concept=heart_rate  fires on 928/225248 tokens
+  #  4175  S_sem=0.354  concept=drug  fires on 247/225248 tokens
+  # 15091  S_sem=0.352  concept=creatinine  fires on 1336/225248 tokens
+  #  8053  S_sem=0.348  concept=drug  fires on 377/225248 tokens
+  knock-out on 180 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:02, 128.70it/s]Loading weights:  12%|█▏        | 36/291 [00:00<00:01, 185.34it/s]Loading weights:  20%|█▉        | 58/291 [00:00<00:01, 173.95it/s]Loading weights:  26%|██▌       | 76/291 [00:00<00:01, 173.62it/s]Loading weights:  34%|███▍      | 100/291 [00:00<00:00, 194.97it/s]Loading weights:  45%|████▍     | 130/291 [00:00<00:00, 222.08it/s]Loading weights:  54%|█████▍    | 157/291 [00:00<00:00, 228.64it/s]Loading weights:  64%|██████▎   | 185/291 [00:00<00:00, 232.39it/s]Loading weights:  76%|███████▌  | 220/291 [00:01<00:00, 243.49it/s]Loading weights:  84%|████████▍ | 245/291 [00:01<00:00, 244.47it/s]Loading weights:  93%|█████████▎| 270/291 [00:01<00:00, 219.92it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 215.58it/s]
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  knock-out #8290: |Δ margin|=0.0007 (random control #7752: 0.0170, excess -0.0163)
+  knock-out #13809: |Δ margin|=0.0189 (random control #8385: 0.0003, excess +0.0186)
+  knock-out #4739: |Δ margin|=0.0199 (random control #12372: 0.0000, excess +0.0199)
+  knock-out #5065: |Δ margin|=0.0025 (random control #15572: 0.0000, excess +0.0025)
+  knock-out #2951: |Δ margin|=0.0187 (random control #571: 0.0003, excess +0.0184)
+  knock-out #14209: |Δ margin|=0.0215 (random control #2361: 0.0000, excess +0.0215)
+  knock-out #9914: |Δ margin|=0.0199 (random control #13483: 0.0037, excess +0.0162)
+  knock-out #11898: |Δ margin|=0.0225 (random control #15542: 0.0046, excess +0.0179)
+  knock-out #13648: |Δ margin|=0.0222 (random control #4083: 0.0055, excess +0.0167)
+  knock-out #8020: |Δ margin|=0.0193 (random control #5109: 0.0016, excess +0.0177)
+  knock-out #13576: |Δ margin|=0.0176 (random control #14238: 0.0181, excess -0.0005)
+  knock-out #9915: |Δ margin|=0.0256 (random control #6935: 0.0000, excess +0.0256)
+  knock-out #7967: |Δ margin|=0.0188 (random control #4475: 0.0000, excess +0.0188)
+  knock-out #10680: |Δ margin|=0.0149 (random control #13561: 0.0010, excess +0.0139)
+  knock-out #3079: |Δ margin|=0.0196 (random control #4210: 0.0216, excess -0.0020)
+  knock-out #7777: |Δ margin|=0.0232 (random control #6704: 0.0000, excess +0.0232)
+  knock-out #12955: |Δ margin|=0.0154 (random control #10548: 0.0101, excess +0.0053)
+  knock-out #3501: |Δ margin|=0.0136 (random control #9004: 0.0032, excess +0.0104)
+  knock-out #4146: |Δ margin|=0.0224 (random control #1404: 0.0000, excess +0.0224)
+  knock-out #3594: |Δ margin|=0.0354 (random control #451: 0.0009, excess +0.0344)
+  knock-out #8438: |Δ margin|=0.0193 (random control #14181: 0.0000, excess +0.0193)
+  knock-out #2175: |Δ margin|=0.0106 (random control #12345: 0.0000, excess +0.0106)
+  knock-out #4175: |Δ margin|=0.0283 (random control #13727: 0.0269, excess +0.0015)
+  knock-out #15091: |Δ margin|=0.0175 (random control #8816: 0.0000, excess +0.0175)
+  knock-out #8053: |Δ margin|=0.0299 (random control #13394: 0.0000, excess +0.0299)
+
+wrote results/sae/sae_topk_L20_s1_fis.json
+[seed] training seed 2  2026-09-08T03:57:03+03:00
+input scale 5.6159 -> mean ||x|| = 64.00 (sqrt(d) = 64.0)
+225248 tokens x 4096 dims -> 16384 features (topk, k=32)
+train 217056 / val 8192 tokens
+  epoch 1/30  train_mse=0.81964  val_FVU=0.0950  val_L0=32.0  dead=6602
+  epoch 2/30  train_mse=0.22667  val_FVU=0.0781  val_L0=31.9  dead=6506
+  epoch 3/30  train_mse=0.19726  val_FVU=0.0726  val_L0=31.8  dead=6476
+  epoch 4/30  train_mse=0.18203  val_FVU=0.0717  val_L0=31.8  dead=6471
+  epoch 5/30  train_mse=0.18089  val_FVU=0.0685  val_L0=31.8  dead=6465
+  epoch 6/30  train_mse=0.17065  val_FVU=0.0664  val_L0=31.8  dead=6536
+  epoch 7/30  train_mse=0.16941  val_FVU=0.0656  val_L0=31.9  dead=6557
+  epoch 8/30  train_mse=0.16639  val_FVU=0.0653  val_L0=31.9  dead=6580
+  epoch 9/30  train_mse=0.16619  val_FVU=0.0655  val_L0=31.9  dead=6595
+  epoch 10/30  train_mse=0.16311  val_FVU=0.0642  val_L0=31.9  dead=6654
+  epoch 11/30  train_mse=0.16074  val_FVU=0.0637  val_L0=31.9  dead=6647
+  epoch 12/30  train_mse=0.15984  val_FVU=0.0634  val_L0=31.9  dead=6693
+  epoch 13/30  train_mse=0.15898  val_FVU=0.0631  val_L0=32.0  dead=6715
+  epoch 14/30  train_mse=0.16681  val_FVU=0.0664  val_L0=32.0  dead=6716
+  epoch 15/30  train_mse=0.16006  val_FVU=0.0630  val_L0=32.0  dead=6742
+  epoch 16/30  train_mse=0.15801  val_FVU=0.0626  val_L0=32.0  dead=6767
+  epoch 17/30  train_mse=0.15678  val_FVU=0.0625  val_L0=32.0  dead=6759
+  epoch 18/30  train_mse=0.15639  val_FVU=0.0623  val_L0=31.9  dead=6824
+  epoch 19/30  train_mse=0.15585  val_FVU=0.0622  val_L0=31.9  dead=6831
+  epoch 20/30  train_mse=0.15564  val_FVU=0.0623  val_L0=31.9  dead=6876
+  epoch 21/30  train_mse=0.15869  val_FVU=0.0630  val_L0=31.9  dead=6890
+  epoch 22/30  train_mse=0.15674  val_FVU=0.0639  val_L0=31.9  dead=6900
+  epoch 23/30  train_mse=0.15648  val_FVU=0.0623  val_L0=31.9  dead=6890
+  epoch 24/30  train_mse=0.15608  val_FVU=0.0623  val_L0=31.9  dead=6928
+  epoch 25/30  train_mse=0.15469  val_FVU=0.0617  val_L0=31.8  dead=6928
+  epoch 26/30  train_mse=0.15470  val_FVU=0.0620  val_L0=31.8  dead=6938
+  epoch 27/30  train_mse=0.16734  val_FVU=0.0633  val_L0=31.8  dead=6989
+  epoch 28/30  train_mse=0.15560  val_FVU=0.0616  val_L0=31.8  dead=6966
+  epoch 29/30  train_mse=0.15444  val_FVU=0.0617  val_L0=31.8  dead=6967
+  epoch 30/30  train_mse=0.15399  val_FVU=0.0615  val_L0=31.8  dead=6990
+wrote results/sae/sae_topk_L20_s2.npz
+  final val FVU=0.0615  L0=31.8  dead features=6990/16384 (42.7%)
+[seed] scoring seed 2  2026-09-08T03:59:58+03:00
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  #  2159  S_sem=0.588  concept=qt_interval  fires on 30/225248 tokens
+  #    31  S_sem=0.587  concept=creatinine  fires on 4183/225248 tokens
+  # 11868  S_sem=0.548  concept=heart_rate  fires on 602/225248 tokens
+  #  5353  S_sem=0.536  concept=age  fires on 1914/225248 tokens
+  # 10961  S_sem=0.532  concept=drug  fires on 606/225248 tokens
+  #  8607  S_sem=0.524  concept=heart_rate  fires on 536/225248 tokens
+  # 14333  S_sem=0.522  concept=qt_interval  fires on 54/225248 tokens
+  #   275  S_sem=0.516  concept=drug  fires on 1009/225248 tokens
+  #  1897  S_sem=0.478  concept=inr  fires on 130/225248 tokens
+  #   798  S_sem=0.468  concept=age  fires on 1892/225248 tokens
+  # 13426  S_sem=0.457  concept=age  fires on 929/225248 tokens
+  #   172  S_sem=0.455  concept=pregnancy  fires on 24/225248 tokens
+  #  7595  S_sem=0.454  concept=age  fires on 830/225248 tokens
+  #  9954  S_sem=0.450  concept=age  fires on 506/225248 tokens
+  #   839  S_sem=0.447  concept=asthma  fires on 64/225248 tokens
+  # 15177  S_sem=0.445  concept=creatinine  fires on 11479/225248 tokens
+  #  8319  S_sem=0.432  concept=age  fires on 656/225248 tokens
+  #  5651  S_sem=0.427  concept=age  fires on 901/225248 tokens
+  #  8847  S_sem=0.416  concept=age  fires on 893/225248 tokens
+  #  8856  S_sem=0.399  concept=drug  fires on 288/225248 tokens
+  #   910  S_sem=0.390  concept=drug  fires on 290/225248 tokens
+  #   282  S_sem=0.378  concept=drug  fires on 292/225248 tokens
+  #   379  S_sem=0.370  concept=asthma  fires on 78/225248 tokens
+  #  4728  S_sem=0.365  concept=creatinine  fires on 6413/225248 tokens
+  #  5001  S_sem=0.360  concept=drug  fires on 408/225248 tokens
+  knock-out on 180 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   5%|▌         | 16/291 [00:00<00:01, 152.52it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 184.45it/s]Loading weights:  22%|██▏       | 65/291 [00:00<00:01, 211.07it/s]Loading weights:  30%|██▉       | 87/291 [00:00<00:01, 187.99it/s]Loading weights:  37%|███▋      | 107/291 [00:00<00:00, 187.68it/s]Loading weights:  48%|████▊     | 139/291 [00:00<00:00, 208.83it/s]Loading weights:  57%|█████▋    | 166/291 [00:00<00:00, 223.67it/s]Loading weights:  65%|██████▍   | 189/291 [00:00<00:00, 224.95it/s]Loading weights:  73%|███████▎  | 212/291 [00:01<00:00, 207.18it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 217.02it/s]Loading weights:  89%|████████▉ | 260/291 [00:01<00:00, 204.94it/s]Loading weights:  97%|█████████▋| 283/291 [00:01<00:00, 194.39it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 207.31it/s]
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  knock-out #2159: |Δ margin|=0.0003 (random control #13722: 0.0208, excess -0.0204)
+  knock-out #31: |Δ margin|=0.0228 (random control #4286: 0.0009, excess +0.0219)
+  knock-out #11868: |Δ margin|=0.0099 (random control #1790: 0.0000, excess +0.0099)
+  knock-out #5353: |Δ margin|=0.0215 (random control #4890: 0.0003, excess +0.0211)
+  knock-out #10961: |Δ margin|=0.0177 (random control #6779: 0.0000, excess +0.0177)
+  knock-out #8607: |Δ margin|=0.0096 (random control #13340: 0.0000, excess +0.0096)
+  knock-out #14333: |Δ margin|=0.0007 (random control #7393: 0.0320, excess -0.0313)
+  knock-out #275: |Δ margin|=0.0456 (random control #1505: 0.0000, excess +0.0456)
+  knock-out #1897: |Δ margin|=0.0046 (random control #5486: 0.0000, excess +0.0046)
+  knock-out #798: |Δ margin|=0.0221 (random control #9832: 0.0002, excess +0.0219)
+  knock-out #13426: |Δ margin|=0.0197 (random control #13323: 0.0000, excess +0.0197)
+  knock-out #172: |Δ margin|=0.0010 (random control #11936: 0.0007, excess +0.0003)
+  knock-out #7595: |Δ margin|=0.0212 (random control #16266: 0.0167, excess +0.0044)
+  knock-out #9954: |Δ margin|=0.0186 (random control #3078: 0.0083, excess +0.0103)
+  knock-out #839: |Δ margin|=0.0007 (random control #14421: 0.0121, excess -0.0114)
+  knock-out #15177: |Δ margin|=0.0217 (random control #903: 0.0191, excess +0.0026)
+  knock-out #8319: |Δ margin|=0.0221 (random control #9145: 0.0000, excess +0.0221)
+  knock-out #5651: |Δ margin|=0.0180 (random control #4505: 0.0006, excess +0.0174)
+  knock-out #8847: |Δ margin|=0.0199 (random control #3298: 0.0000, excess +0.0199)
+  knock-out #8856: |Δ margin|=0.0224 (random control #10771: 0.0000, excess +0.0224)
+  knock-out #910: |Δ margin|=0.0212 (random control #5008: 0.0000, excess +0.0212)
+  knock-out #282: |Δ margin|=0.0629 (random control #9212: 0.0117, excess +0.0512)
+  knock-out #379: |Δ margin|=0.0023 (random control #4262: 0.0000, excess +0.0023)
+  knock-out #4728: |Δ margin|=0.0219 (random control #2458: 0.0000, excess +0.0219)
+  knock-out #5001: |Δ margin|=0.0493 (random control #12274: 0.0000, excess +0.0493)
+
+wrote results/sae/sae_topk_L20_s2_fis.json
+[seed] stability report
+wrote results/stability.md and results/stability.json
+[seed] done, 0 failure(s)  2026-09-08T04:15:18+03:00

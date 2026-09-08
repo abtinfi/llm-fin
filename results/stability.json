@@ -1,0 +1,102 @@
+{
+  "top": 25,
+  "runs": {
+    "seed0": {
+      "npz": "results/sae/sae_topk_L20.npz",
+      "fis": "results/sae/sae_topk_L20_fis.json",
+      "layer": 20,
+      "seed": null,
+      "counts": {
+        "age": 12,
+        "creatinine": 2,
+        "qt_interval": 2,
+        "drug": 5,
+        "heart_rate": 2,
+        "asthma": 2
+      },
+      "fvu": 0.051496490836143494,
+      "l0": 31.7310791015625,
+      "dead": 6851,
+      "d_hidden": 16384
+    },
+    "seed1": {
+      "npz": "results/sae/sae_topk_L20_s1.npz",
+      "fis": "results/sae/sae_topk_L20_s1_fis.json",
+      "layer": 20,
+      "seed": null,
+      "counts": {
+        "qt_interval": 1,
+        "creatinine": 4,
+        "drug": 8,
+        "asthma": 1,
+        "age": 8,
+        "heart_rate": 3
+      },
+      "fvu": 0.06785207986831665,
+      "l0": 31.7493896484375,
+      "dead": 6876,
+      "d_hidden": 16384
+    },
+    "seed2": {
+      "npz": "results/sae/sae_topk_L20_s2.npz",
+      "fis": "results/sae/sae_topk_L20_s2_fis.json",
+      "layer": 20,
+      "seed": null,
+      "counts": {
+        "qt_interval": 2,
+        "creatinine": 3,
+        "heart_rate": 2,
+        "age": 8,
+        "drug": 6,
+        "inr": 1,
+        "pregnancy": 1,
+        "asthma": 2
+      },
+      "fvu": 0.06148633733391762,
+      "l0": 31.7525634765625,
+      "dead": 6990,
+      "d_hidden": 16384
+    }
+  },
+  "pairs": [
+    {
+      "a": "seed0",
+      "b": "seed1",
+      "same_layer": true,
+      "mean_max_cosine_a_to_b": 0.560758650302887,
+      "mean_max_cosine_b_to_a": 0.5424128174781799,
+      "median_max_cosine_a_to_b": 0.567292332649231,
+      "concept_jaccard": 1.0,
+      "concepts_only_in_a": [],
+      "concepts_only_in_b": []
+    },
+    {
+      "a": "seed0",
+      "b": "seed2",
+      "same_layer": true,
+      "mean_max_cosine_a_to_b": 0.5341722369194031,
+      "mean_max_cosine_b_to_a": 0.5444759130477905,
+      "median_max_cosine_a_to_b": 0.486362099647522,
+      "concept_jaccard": 0.75,
+      "concepts_only_in_a": [],
+      "concepts_only_in_b": [
+        "inr",
+        "pregnancy"
+      ]
+    },
+    {
+      "a": "seed1",
+      "b": "seed2",
+      "same_layer": true,
+      "mean_max_cosine_a_to_b": 0.5474947094917297,
+      "mean_max_cosine_b_to_a": 0.5357116460800171,
+      "median_max_cosine_a_to_b": 0.5793270468711853,
+      "concept_jaccard": 0.75,
+      "concepts_only_in_a": [],
+      "concepts_only_in_b": [
+        "inr",
+        "pregnancy"
+      ]
+    }
+  ]
+}
