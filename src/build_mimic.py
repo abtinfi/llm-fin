@@ -371,8 +371,14 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
             skipped["no_straddling_pair"] += 1
             continue
         (t_u, v_u, q_u), (t_s, v_s, q_s) = chosen
-        q_u_r = spec["convert"](round(v_u, 2), age, sex)
-        q_s_r = spec["convert"](round(v_s, 2), age, sex)
+        # Round to the precision the value is PRINTED at, not to 2 decimals:
+        # potassium and INR are printed with 1, so an INR stored as 4.04 was
+        # labelled UNSAFE (> 4.0) while the prompt showed "4.0". The v3.1
+        # build shipped one such warfarin pair (src/audit_mimic_labels.py);
+        # the Demo, whose lab values carry one decimal natively, had none.
+        pp = spec["render_precision"]
+        q_u_r = spec["convert"](round(v_u, pp), age, sex)
+        q_s_r = spec["convert"](round(v_s, pp), age, sex)
         q_u_r, q_s_r = round(q_u_r, 2), round(q_s_r, 2)
         if not crosses(spec["op"], spec["threshold"], q_u_r, q_s_r):
             skipped["rounding_crossed_threshold"] += 1
@@ -430,8 +436,9 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
             skipped["no_same_side_control_pair"] += 1
             continue
         (t_a, v_a, _), (t_b, v_b, _), c_label = ctrl
-        q_a = round(spec["convert"](round(v_a, 2), age, sex), 2)
-        q_b = round(spec["convert"](round(v_b, 2), age, sex), 2)
+        pp = spec["render_precision"]      # printed precision, as above
+        q_a = round(spec["convert"](round(v_a, pp), age, sex), 2)
+        q_b = round(spec["convert"](round(v_b, pp), age, sex), 2)
         # Rounding must not push either arm across; if it does this is not a
         # control pair any more and is dropped rather than silently relabelled.
         if crosses(spec["op"], spec["threshold"], q_a, q_b) or \

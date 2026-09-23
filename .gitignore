@@ -91,6 +91,7 @@ results/mimic_v3/**
 !results/mimic_v3/**/constraint_*.json
 !results/mimic_v3/**/uq_coverage_*.md
 !results/mimic_v3/COMPARISON_*.md
+!results/mimic_v3/AUDIT_*.md
 # The note arm's predictions also carry real discharge-summary prose.
 results/mimic_v3_note/**
 !results/mimic_v3_note/

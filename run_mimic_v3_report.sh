@@ -46,6 +46,15 @@ for arm in v3 note; do
     echo "[v3report] comparison $arm FAILED"; FAILED=$((FAILED + 1))
   fi
 done
+# The audited view: per-family rows, the always-SAFE baseline, a view without
+# the egfr30/45 contradictory prompts, prompt-clustered intervals, and the
+# constraint layer on pairs its adapter never saw. The summary JSONs alone
+# overstate precision and pool two contradictory families; see its docstring.
+if python "$WT/src/report_mimic3.py"; then
+  echo "[v3report] audited report ok"
+else
+  echo "[v3report] audited report FAILED"; FAILED=$((FAILED + 1))
+fi
 echo "[v3report] done, $FAILED failed  $(date -Is)"
 [ "$FAILED" -eq 0 ] && touch "$STATE/ALL_DONE"
 exit "$FAILED"
