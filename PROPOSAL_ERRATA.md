@@ -214,6 +214,31 @@ pipeline runs end to end with no credentialed source at all, and
 `src/check_data.py --strict` is wired in as stage 0 and fails the run if that
 ever stops being true.
 
+**Superseded in part, 2026-09-23: the full credentialed MIMIC-IV is now in.**
+Replace the paragraph above with:
+
+> MIMIC-IV **v3.1** (credentialed) supplies the structured-labs arm at full
+> scale: 364,627 patients scanned, 64,601 contributing, 184,677 counterfactual
+> pairs (94,797 causal, 89,880 control) across the same four rule families,
+> both sides of every pair a real measured value, splits globally
+> patient-disjoint. The open-access Demo v2.2 arm (71 / 142 pairs) is kept
+> unchanged beside it. A second v3.1 arm places each pair inside a real
+> excerpt of the patient's own discharge summary (MIMIC-IV-Note v2.2, note
+> within 30 days of the measurement), the same excerpt in both arms, so the
+> pair still differs in one number. Two things remain true: the two arms of a
+> pair are different **timepoints** in the same patient, and this is a
+> counterfactual benchmark built from retrospective data, not a
+> *retrospective evaluation* in the cohort-study sense.
+
+**Why.** The Demo's 100 patients were enough to show the construction works
+and too few to say anything with a usable interval; the v3.1 arm fixes the
+interval, not the design. It does not touch the gate's circularity (the gate
+still checks the threshold the labels were built from), and
+metformin_egfr30 / metformin_egfr45 still share their creatinine
+measurements, so they are still not independent evidence -- at any cohort
+size. The v3.1 arm is optional: `check_data.py` marks it `optional-arm`, and
+every Aim 1-4 stage still runs without it.
+
 ---
 
 ## Numbers that changed after the audit, and where they live
