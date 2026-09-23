@@ -40,6 +40,13 @@ export PYTHONPATH="$CSAI/src"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export CUDA_VISIBLE_DEVICES="${GPU:-0}"
 
+# EARLY_STOP=1 (set per model in the supervisor queue; Mistral-Instruct only)
+# stops generation once the answer is fixed. See src/run_eval_earlystop.py for
+# why the prediction and every reported signal are unchanged by it. Training
+# (constraint_layer.py) reads logits directly and never generates.
+RUN_EVAL=src/run_eval.py
+[ "${EARLY_STOP:-0}" = 1 ] && RUN_EVAL="$WT/src/run_eval_earlystop.py"
+
 [ -s "$DCL/counterfactual_train.jsonl" ] || { echo "no $DCL -- run src/build_mimic_cl_subset.py"; exit 1; }
 
 V3_DONE="$CSAI/.pipeline_state/mimic_v3_$TAG/ALL_DONE"
@@ -87,7 +94,7 @@ if [ -s "$AD" ]; then
   for split in test heldout; do
     for v in cl nsai_uq_cl; do
       stage "eval_${split}_${v}" \
-        python src/run_eval.py --backend hf --model_id "$M" --out "$R" \
+        python "$RUN_EVAL" --backend hf --model_id "$M" --out "$R" \
           --seeds 0 --split "$split" --data "$D" --gate rules --tag _mimic3 \
           --variants "$v" --adapter "$AD" --adapter_layer "$AL" --batch_size 8
     done

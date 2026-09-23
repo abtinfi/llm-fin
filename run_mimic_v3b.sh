@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Evaluate the MIMIC-IV v3.1 NOTE arm (data/mimic_v3_note), tagged _mimic3note.
+# Evaluate the full MIMIC-IV v3.1 cohort (data/mimic_v3), tagged _mimic3.
 #
-# A separate file from run_mimic_v3.sh on purpose: that script was already
-# executing when this arm was added, and bash reads a running script by byte
-# offset, so editing it in place kills it (RESTART_RESILIENCE.md, section 3).
-# The two differ only in data, tag and output directories.
+# run_mimic_v3.sh plus an EARLY_STOP switch, and nothing else. It is a copy
+# rather than an edit because run_mimic_v3.sh was executing for two models
+# when the switch was needed, and bash reads a running script by byte offset.
+# Same state directory, same markers, same outputs -- a model run through this
+# file is indistinguishable in the queue from one run through the original.
 #
 # One invocation = one model. csai_supervisor.sh queues it once per model with
 # MODEL_ID / MODEL_TAG set, so its two GPU workers run two models at once.
@@ -41,13 +42,13 @@ TAG="${MODEL_TAG:-biomistral-7b}"
 AL="${ADAPTER_LAYER:-30}"
 # DATA_DIR / BACKEND / STATE_SUFFIX exist only so the plumbing can be proven
 # end to end with --backend mock on a small slice before a GPU is touched.
-D="${DATA_DIR:-$WT/data/mimic_v3_note}"
+D="${DATA_DIR:-$CSAI/data/mimic_v3}"
 BACKEND="${BACKEND:-hf}"
-R="$WT/results/mimic_v3_note${STATE_SUFFIX:-}/$TAG"
-STATE="$CSAI/.pipeline_state/mimic_v3_note_$TAG${STATE_SUFFIX:-}"
-LOGS="$WT/logs/mimic_v3_note${STATE_SUFFIX:-}/$TAG"
+R="$WT/results/mimic_v3${STATE_SUFFIX:-}/$TAG"
+STATE="$CSAI/.pipeline_state/mimic_v3_$TAG${STATE_SUFFIX:-}"
+LOGS="$WT/logs/mimic_v3${STATE_SUFFIX:-}/$TAG"
 
-_lockfile="$CSAI/.pipeline_state/locks/mimic_v3_note_$TAG.lock"
+_lockfile="$CSAI/.pipeline_state/locks/mimic_v3_$TAG.lock"
 mkdir -p "$(dirname "$_lockfile")" "$STATE" "$R" "$LOGS"
 exec 8>"$_lockfile"
 if ! flock -n 8; then
@@ -70,19 +71,19 @@ RUN_EVAL=src/run_eval.py
 FAILED=0
 stage () {
   local name="$1"; shift
-  [ -f "$STATE/$name.done" ] && { echo "[v3note:$TAG][skip] $name"; return 0; }
-  echo "[v3note:$TAG][run ] $name  $(date -Is)"
+  [ -f "$STATE/$name.done" ] && { echo "[v3:$TAG][skip] $name"; return 0; }
+  echo "[v3:$TAG][run ] $name  $(date -Is)"
   local t0; t0=$(date +%s)
   if "$@" > "$LOGS/$name.log" 2>&1; then
     touch "$STATE/$name.done"
-    echo "[v3note:$TAG][ok  ] $name  $(( $(date +%s) - t0 ))s"
+    echo "[v3:$TAG][ok  ] $name  $(( $(date +%s) - t0 ))s"
   else
-    echo "[v3note:$TAG][FAILED] $name -- see $LOGS/$name.log"
+    echo "[v3:$TAG][FAILED] $name -- see $LOGS/$name.log"
     FAILED=$((FAILED+1))
   fi
 }
 
-[ -s "$D/counterfactual_test.jsonl" ] || { echo "no $D -- build it with src/build_mimic_note.py"; exit 1; }
+[ -s "$D/counterfactual_test.jsonl" ] || { echo "no $D -- build it with src/build_mimic.py --source v3.1"; exit 1; }
 grep -q '"credentialed": true' "$D/build_meta.json" \
   || { echo "$D/build_meta.json is not labelled credentialed -- refusing (see build_mimic.DATA_SOURCES)"; exit 1; }
 
@@ -93,24 +94,24 @@ for split in test heldout; do
   for v in base sym nsai rag uq nsai_uq; do
     stage "eval_${split}_${v}" \
       python "$RUN_EVAL" --backend "$BACKEND" --model_id "$M" --out "$R" \
-        --seeds 0 --split "$split" --data "$D" --gate rules --tag _mimic3note \
+        --seeds 0 --split "$split" --data "$D" --gate rules --tag _mimic3 \
         --variants "$v" --batch_size 8
   done
 done
 
 stage "table_test" \
-  python src/make_table.py --results "$R" --split test --tag _mimic3note \
-    --out "$R/table_mimic3note_test.md"
+  python src/make_table.py --results "$R" --split test --tag _mimic3 \
+    --out "$R/table_mimic3_test.md"
 stage "table_heldout" \
-  python src/make_table.py --results "$R" --split heldout --tag _mimic3note \
-    --out "$R/table_mimic3note_heldout.md"
+  python src/make_table.py --results "$R" --split heldout --tag _mimic3 \
+    --out "$R/table_mimic3_heldout.md"
 stage "coverage_test" \
-  python src/coverage_report.py --results "$R" --split test --tag _mimic3note \
+  python src/coverage_report.py --results "$R" --split test --tag _mimic3 \
     --variant nsai_uq
 stage "coverage_heldout" \
-  python src/coverage_report.py --results "$R" --split heldout --tag _mimic3note \
+  python src/coverage_report.py --results "$R" --split heldout --tag _mimic3 \
     --variant nsai_uq
 
-echo "[v3note:$TAG] done, $FAILED stage(s) failed  $(date -Is)"
+echo "[v3:$TAG] done, $FAILED stage(s) failed  $(date -Is)"
 [ "$FAILED" -eq 0 ] && touch "$STATE/ALL_DONE"
 exit "$FAILED"
