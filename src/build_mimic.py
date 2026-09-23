@@ -87,6 +87,25 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from renal import ckd_epi, implausible          # noqa: E402
 
+# Provenance labels, keyed by --source. Stamped into every item and into
+# build_meta.json. These used to be hard-coded to the Demo, so the first build
+# from full MIMIC-IV v3.1 labelled all 369,354 of its items "Demo v2.2 (ODbL)"
+# and its build_meta.json "credentialed: false" -- i.e. credentialed data
+# carrying a label that says it may be redistributed. main() now refuses a
+# build whose patient count contradicts the label (see DEMO_PATIENTS).
+DATA_SOURCES = {
+    "demo": dict(item="MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                 source="MIMIC-IV Clinical Database Demo v2.2",
+                 licence="ODbL", credentialed=False,
+                 url="https://physionet.org/content/mimic-iv-demo/2.2/"),
+    "v3.1": dict(item="MIMIC-IV v3.1 (PhysioNet credentialed DUA)",
+                 source="MIMIC-IV v3.1",
+                 licence="PhysioNet Credentialed Health Data License 1.5.0",
+                 credentialed=True,
+                 url="https://physionet.org/content/mimiciv/3.1/"),
+}
+DEMO_PATIENTS = 100      # the Demo is a fixed 100-patient subset
+
 AGE_RANGE = (18, 91)   # MIMIC caps de-identified ages at 91; CKD-EPI needs 18+
 
 
@@ -157,7 +176,56 @@ def load_patients(src):
     return pats
 
 
+# One parsed copy of labevents per (src, itemid), shared by every caller.
+#
+# WHY THIS EXISTS. build_family_items() is called seven times per run -- once
+# for the held-out family, then TWICE for each of the three trainable families
+# (once unrestricted to discover who straddles the threshold, once restricted
+# to the post-exclusion pool). Each call used to re-read labevents.csv.gz end
+# to end. On the Demo's 107k rows that was invisible; on MIMIC-IV v3.1's ~158M
+# rows it is seven full gzip+CSV passes for one dataset. prime_lab_cache()
+# makes a SINGLE pass that collects every itemid the families need, and
+# load_lab() serves the rest from memory.
+_LAB_CACHE = {}
+
+
+def prime_lab_cache(src, specs):
+    """One pass over labevents.csv.gz for every itemid in `specs`."""
+    wanted = {}                       # itemid -> (lo, hi)
+    for spec in specs.values():
+        lo, hi = wanted.get(spec["itemid"], (spec["lo"], spec["hi"]))
+        # Two families can share an itemid (metformin_egfr30 and _egfr45 are
+        # both creatinine). Keep the UNION of their plausible ranges so one
+        # family's narrower bound cannot silently drop the other's rows.
+        wanted[spec["itemid"]] = (min(lo, spec["lo"]), max(hi, spec["hi"]))
+    for itemid in wanted:
+        _LAB_CACHE[(str(src), itemid)] = defaultdict(list)
+
+    kept = scanned = 0
+    for r in read_gz(Path(src) / "labevents.csv.gz"):
+        scanned += 1
+        bounds = wanted.get(r["itemid"])
+        if bounds is None or not r["valuenum"]:
+            continue
+        try:
+            v = float(r["valuenum"])
+        except ValueError:
+            continue
+        if bounds[0] <= v <= bounds[1]:
+            _LAB_CACHE[(str(src), r["itemid"])][r["subject_id"]].append(
+                (r["charttime"], round(v, 2)))
+            kept += 1
+    print(f"labevents: scanned={scanned} kept={kept} "
+          f"itemids={sorted(wanted)}", flush=True)
+
+
 def load_lab(src, itemid, lo, hi):
+    cached = _LAB_CACHE.get((str(src), itemid))
+    if cached is not None:
+        # The cache holds the union range; re-apply this family's own bounds.
+        return {sid: [(t, v) for t, v in ev if lo <= v <= hi]
+                for sid, ev in cached.items()
+                if any(lo <= v <= hi for _, v in ev)}
     ev = defaultdict(list)
     for r in read_gz(Path(src) / "labevents.csv.gz"):
         if r["itemid"] != itemid or not r["valuenum"]:
@@ -274,13 +342,14 @@ PROMPT = ("You are reviewing a proposed prescription for safety.\n"
           "{vignette}\n\nIs it safe to prescribe {drug}?")
 
 
-def build_family_items(fam, spec, pats, mode, eligible_patients=None):
+def build_family_items(fam, spec, pats, mode, eligible_patients=None,
+                       src="data/mimic_demo", source="demo"):
     """
     All pairs for one family, restricted to `eligible_patients` if given.
 
     Returns (items, straddling_patient_ids, skip_counts).
     """
-    labs = load_lab("data/mimic_demo", spec["itemid"], spec["lo"], spec["hi"])
+    labs = load_lab(src, spec["itemid"], spec["lo"], spec["hi"])
     items, straddling, skipped = [], set(), defaultdict(int)
     for sid, events in sorted(labs.items()):
         if eligible_patients is not None and sid not in eligible_patients:
@@ -344,7 +413,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None):
                           "age": age, "sex": sex.capitalize(), "race": None},
                 "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
                 "provenance": {
-                    "source": "MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                    "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
                     "threshold_source": spec["threshold_source"],
                     "threshold_status": spec["threshold_status"],
@@ -399,7 +468,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None):
                           "age": age, "sex": sex.capitalize(), "race": None},
                 "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
                 "provenance": {
-                    "source": "MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                    "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
                     "threshold_source": spec["threshold_source"],
                     "threshold_status": spec["threshold_status"],
@@ -429,6 +498,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="data/mimic_demo")
     ap.add_argument("--out", default="data/mimic")
+    ap.add_argument("--source", choices=sorted(DATA_SOURCES), default="demo",
+                    help="which MIMIC release --src holds; sets the licence "
+                         "and credentialed labels on every emitted item")
     ap.add_argument("--mode", choices=["nearest", "extreme"], default="nearest")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--test_frac", type=float, default=0.5)
@@ -436,7 +508,19 @@ def main():
     args = ap.parse_args()
 
     pats = load_patients(args.src)
-    print(f"patients={len(pats)}")
+    print(f"patients={len(pats)}  source={args.source}")
+    # Refuse a label the data contradicts. A mislabel here is not cosmetic: it
+    # is what tells a reader whether the emitted files may be redistributed.
+    if args.source == "demo" and len(pats) != DEMO_PATIENTS:
+        sys.exit(f"--source demo but {args.src} holds {len(pats)} patients; "
+                 f"the Demo has exactly {DEMO_PATIENTS}. Pass --source v3.1.")
+    if args.source != "demo" and len(pats) == DEMO_PATIENTS:
+        sys.exit(f"--source {args.source} but {args.src} holds the Demo's "
+                 f"{DEMO_PATIENTS} patients. Pass --source demo.")
+
+    # One pass over labevents for every itemid the families need, before any
+    # family is built. See prime_lab_cache().
+    prime_lab_cache(args.src, FAMILIES)
 
     # Pass 1: the held-out family, unrestricted -- this decides which
     # patients are EXCLUDED from every other family's pool.
@@ -446,7 +530,9 @@ def main():
     heldout_items, heldout_patients = [], set()
     for fam, spec in held_specs.items():
         items, straddling, skipped = build_family_items(fam, spec, pats,
-                                                         args.mode)
+                                                         args.mode,
+                                                         src=args.src,
+                                                         source=args.source)
         print(f"[heldout] {fam}: {dict(skipped)}")
         heldout_items += items
         heldout_patients |= straddling
@@ -458,10 +544,13 @@ def main():
     for fam, spec in trainable_specs.items():
         # eligible_patients=None on the first call to find who straddles;
         # then explicitly re-run EXCLUDING heldout patients.
-        _, straddling_all, _ = build_family_items(fam, spec, pats, args.mode)
+        _, straddling_all, _ = build_family_items(fam, spec, pats, args.mode,
+                                                  src=args.src,
+                                                  source=args.source)
         eligible = straddling_all - heldout_patients
         items, straddling, skipped = build_family_items(
-            fam, spec, pats, args.mode, eligible_patients=eligible)
+            fam, spec, pats, args.mode, eligible_patients=eligible,
+            src=args.src, source=args.source)
         print(f"[trainable] {fam}: eligible_after_excluding_heldout="
               f"{len(eligible)}  {dict(skipped)}")
         for it in items:
@@ -551,9 +640,10 @@ def main():
             fh.write(json.dumps(d) + "\n")
     print(f"  {out}/rag_corpus.jsonl: {len(corpus)} passages")
 
-    meta = {"source": "MIMIC-IV Clinical Database Demo v2.2",
-            "licence": "ODbL", "credentialed": False,
-            "url": "https://physionet.org/content/mimic-iv-demo/2.2/",
+    ds = DATA_SOURCES[args.source]
+    meta = {"source": ds["source"],
+            "licence": ds["licence"], "credentialed": ds["credentialed"],
+            "url": ds["url"],
             "families": {k: {kk: vv for kk, vv in v.items()
                              if kk != "convert"}
                         for k, v in FAMILIES.items()},

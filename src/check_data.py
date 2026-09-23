@@ -11,15 +11,23 @@ answer is no, but which nothing in the repository could previously demonstrate.
 
 It is worth being exact, because the distinction matters for the write-up:
 
-  * **No code loads MIMIC-IV.** `grep -rniE "mimic|physionet|labevents" src/`
-    returns two docstring asides and nothing else. There is no loader, no data
-    path, no download step, and no token check anywhere in the tree. The
-    evaluation pipeline has never depended on PhysioNet.
-  * **MIMIC-IV is therefore an unimplemented proposal element, not a blocked
-    dependency.** `IMPLEMENTATION_STATUS.md` lists it correctly as NOT
-    IMPLEMENTED. Nothing regresses if it never arrives; what is lost is the
-    §4.6 retrospective-evaluation claim, which no substitute dataset can
-    supply on its own.
+  * **No credentialed source is REQUIRED to run.** Every Aim 1-4 stage runs
+    to completion on open-access data alone. That is the claim this module
+    exists to check, and it has never stopped being true.
+  * **MIMIC-IV is loaded, in two arms, and neither one gates anything.**
+    `src/build_mimic.py` has loaded the open-access Demo v2.2 (ODbL, no
+    credentialing) since 2026-09-02 into `data/mimic` / `data/mimic_v2`, both
+    tracked. Since 2026-09-20 it also builds from the full CREDENTIALED
+    MIMIC-IV v3.1. The v3.1 arm is marked `optional-arm` below: present and
+    credentialed, but nothing depends on it, and it and every file derived
+    from it are git-ignored because the DUA does not permit redistribution.
+    (This paragraph previously claimed no code loads MIMIC-IV at all. That
+    was written before build_mimic.py existed and was stale from the day the
+    Demo arm landed.)
+  * **The §4.6 retrospective-evaluation claim is still not fully bought.**
+    v3.1 supplies the real structured labs; a retrospective *design* -- a
+    cohort followed forward from a prescribing decision -- is a different
+    study from the counterfactual pairs this repository scores.
   * **The "real clinical text" arm already exists and is open access.**
     `data/medcalc` is 680 items built by `src/build_medcalc.py` from
     MedCalc-Bench PMC case-report notes. That is real clinical prose from
@@ -35,8 +43,9 @@ presented as an EHR surrogate would be the single most misleading artifact the
 repository could contain.
 
 What it does instead is verify, on every run, that every dataset the pipeline
-actually reads is present, well formed, and obtainable without credentials --
-turning "no PhysioNet needed" from a claim into a check.
+actually reads is present and well formed, and that the ones it REQUIRES are
+obtainable without credentials -- turning "no PhysioNet needed to run" from a
+claim into a check.
 
   python src/check_data.py                 # human-readable report
   python src/check_data.py --strict        # non-zero exit if anything is off
@@ -108,6 +117,29 @@ SOURCES = {
         credentialed=False,
         note="ODbL. Downloaded 2026-09-02. Git-ignored: it is not ours to "
              "vendor and src/build_mimic.py re-fetches it."),
+    "data/mimic_iv_3.1": dict(
+        what="MIMIC-IV v3.1 hosp tables (6 of 22)",
+        origin="physionet.org/content/mimiciv/3.1/ -- CREDENTIALED download",
+        credentialed="optional-arm",
+        note="PhysioNet credentialed DUA, NOT the Demo's ODbL. Downloaded "
+             "2026-09-20. Git-ignored, and so is everything derived from it: "
+             "unlike data/mimic and data/mimic_v2, which are tracked because "
+             "the Demo is ODbL, a derived pair here still carries a real "
+             "patient's age, sex and lab value and may not be "
+             "redistributed. The pipeline does not need it -- see the "
+             "optional-arm note in the RESULT line above."),
+    "data/mimic_iv_note_2.2": dict(
+        what="MIMIC-IV-Note v2.2 discharge summaries",
+        origin="physionet.org/content/mimic-iv-note/2.2/ -- CREDENTIALED",
+        credentialed="optional-arm",
+        note="Same DUA and the same git-ignore rule. This is the one source "
+             "that can close the limitation recorded against data/mimic: the "
+             "Demo carries no free text, so its note is RENDERED from "
+             "structured fields. With real discharge prose the note is no "
+             "longer generated -- at the cost of the minimal-pair property, "
+             "since a real note contains many other numbers. Built as a "
+             "SEPARATE arm rather than a replacement, so both trades are "
+             "reported."),
     "data/external": dict(
         what="MedCalc-Bench source CSVs (train + test)",
         origin="Third-party, redistributed by the MedCalc-Bench authors",
@@ -318,7 +350,8 @@ def main():
             meta = {**meta, "what": meta["_what_tmpl"].format(n=n)}
         cred = meta["credentialed"]
         tag = {True: "CREDENTIALED", False: "open access",
-               "rebuild-only": "open to run / key to rebuild"}[cred]
+               "rebuild-only": "open to run / key to rebuild",
+               "optional-arm": "CREDENTIALED, optional arm"}[cred]
         print(f"\n  {name}   [{tag}]{'' if present else '   *** ABSENT ***'}")
         print(f"    what   : {meta['what']}")
         print(f"    origin : {meta['origin']}")
@@ -330,8 +363,16 @@ def main():
     print("\n" + "-" * 72)
     if not report["credentialed_sources_required_to_run"]:
         print("RESULT: no credentialed data source is required to run the")
-        print("        pipeline. PhysioNet / MIMIC-IV is NOT a dependency —")
-        print("        no loader, data path or token check exists in src/.")
+        print("        pipeline. Every Aim 1-4 stage runs to completion on")
+        print("        open-access data alone.")
+        opt = [n for n, m in report["sources"].items()
+               if m["credentialed"] == "optional-arm"]
+        if opt:
+            print("        A credentialed OPTIONAL arm is configured: "
+                  f"{opt}.")
+            print("        It adds an evaluation arm; it gates nothing. Its")
+            print("        files and everything derived from them are")
+            print("        git-ignored under the PhysioNet DUA.")
     else:
         print("RESULT: *** a credentialed source is required: "
               f"{report['credentialed_sources_required_to_run']} ***")
