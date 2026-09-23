@@ -77,6 +77,24 @@ data/mimic_v3_note/*
 !data/mimic_v3_note/build_meta.json
 data/mimic_v3_cl/*
 !data/mimic_v3_cl/build_meta.json
+# The corrected v3.1 arm (question_version v2, printed-precision guard) and
+# its derived arms. Same DUA, same rule.
+data/mimic_v3b/*
+!data/mimic_v3b/build_meta.json
+data/mimic_v3b_note/*
+!data/mimic_v3b_note/build_meta.json
+data/mimic_v3b_cl/*
+!data/mimic_v3b_cl/build_meta.json
+data/mimic_v3b_swap/*
+results/mimic_v3b/**
+!results/mimic_v3b/
+!results/mimic_v3b/**/
+!results/mimic_v3b/**/summary_*.json
+!results/mimic_v3b/**/table_*.md
+!results/mimic_v3b/**/constraint_*.json
+!results/mimic_v3b/**/uq_coverage_*.md
+!results/mimic_v3b/*.md
+logs/mimic_v3b/
 
 # --- added 2026-09-23: v3.1 evaluation outputs ------------------------------
 # Every preds_*.jsonl row carries the rendered vignette (a real patient's age,

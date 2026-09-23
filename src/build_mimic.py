@@ -311,7 +311,7 @@ def crosses(op, thr, u, s):
     return (u < thr <= s) if op == "<" else (u > thr >= s)
 
 
-def render(age, sex, value, spec):
+def render(age, sex, value, spec, fam=None):
     """
     Phrasing matters, not just content: src/components.py's SymbolicGate
     extracts facts with LITERAL regexes -- "potassium is X", "INR is X" (see
@@ -333,13 +333,47 @@ def render(age, sex, value, spec):
                 f"{spec['drug'].capitalize()} is being considered.")
     lab_txt = (f"a serum {spec['lab_name']} of "
               f"{value:.{spec['render_precision']}f} {spec['render_unit']}")
-    return (f"A {age}-year-old {who} has {lab_txt}. "
-            f"{spec['drug'].capitalize()} is being considered.")
+    action = f"{spec['drug'].capitalize()} is being considered."
+    if QUESTION_VERSION == "v2" and fam in V2_WORDING:
+        action = V2_WORDING[fam][0]
+    return f"A {age}-year-old {who} has {lab_txt}. {action}"
 
 
 PROMPT = ("You are reviewing a proposed prescription for safety.\n"
           "Answer with exactly one word on the first line: SAFE or UNSAFE.\n\n"
           "{vignette}\n\nIs it safe to prescribe {drug}?")
+
+# --question_version v2: a DIFFERENT clinical question for each metformin
+# family, taken from the FDA label itself.
+#
+# WHY. Under v1 metformin_egfr30 and metformin_egfr45 render the identical
+# prompt ("... serum creatinine of X mg/dL. Metformin is being considered.")
+# and apply thresholds 30 and 45. For eGFR in [30, 45) one prompt is SAFE in
+# one family and UNSAFE in the other: on v3.1, 21% of test items sat on such a
+# prompt and any model had to be wrong on one copy (src/audit_mimic_dupes.py).
+# The two thresholds are in fact answers to two different questions on the
+# label: eGFR < 30 is a CONTRAINDICATION (stop / do not continue), eGFR < 45
+# is "not recommended to INITIATE". v2 asks exactly those, so each prompt has
+# one correct answer and each label says what the label says.
+#
+# v1 stays the default so data/mimic and data/mimic_v2 rebuild byte for byte.
+# Kept out of FAMILIES on purpose: FAMILIES is written into build_meta.json.
+V2_WORDING = {
+    "metformin_egfr30": (
+        "The patient already takes metformin; continuing it is being considered.",
+        "Is it safe to continue metformin?"),
+    "metformin_egfr45": (
+        "The patient does not take metformin yet; starting it is being considered.",
+        "Is it safe to start metformin?"),
+}
+QUESTION_VERSION = "v1"        # set from --question_version in main()
+
+
+def make_prompt(fam, vig, spec):
+    if QUESTION_VERSION == "v2" and fam in V2_WORDING:
+        return (PROMPT.rsplit("\n\n", 1)[0].format(vignette=vig)
+                + "\n\n" + V2_WORDING[fam][1])
+    return PROMPT.format(vignette=vig, drug=spec["drug"])
 
 
 def build_family_items(fam, spec, pats, mode, eligible_patients=None,
@@ -392,7 +426,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
         for arm, v, q, t, label in (
                 ("unsafe", v_u, q_u_r, t_u, "UNSAFE"),
                 ("safe",   v_s, q_s_r, t_s, "SAFE")):
-            vig = render(age, sex, v, spec)
+            vig = render(age, sex, v, spec, fam)
             items.append({
                 "id": f"{pair_id}__{arm}",
                 "pair_id": pair_id,
@@ -417,7 +451,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
                 "facts": {"lab_raw": v, "lab_name": spec["lab_name"],
                           "lab_unit": spec["render_unit"] or "ratio",
                           "age": age, "sex": sex.capitalize(), "race": None},
-                "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
+                "prompt": make_prompt(fam, vig, spec),
                 "provenance": {
                     "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
@@ -448,7 +482,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
         c_pair = f"{fam}__mimic-{sid}__ctrl"
         for arm, v, q, t in (("ctrl_a", v_a, q_a, t_a),
                              ("ctrl_b", v_b, q_b, t_b)):
-            vig = render(age, sex, v, spec)
+            vig = render(age, sex, v, spec, fam)
             items.append({
                 "id": f"{c_pair}__{arm}",
                 "pair_id": c_pair,
@@ -473,7 +507,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
                 "facts": {"lab_raw": v, "lab_name": spec["lab_name"],
                           "lab_unit": spec["render_unit"] or "ratio",
                           "age": age, "sex": sex.capitalize(), "race": None},
-                "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
+                "prompt": make_prompt(fam, vig, spec),
                 "provenance": {
                     "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
@@ -508,6 +542,9 @@ def main():
     ap.add_argument("--source", choices=sorted(DATA_SOURCES), default="demo",
                     help="which MIMIC release --src holds; sets the licence "
                          "and credentialed labels on every emitted item")
+    ap.add_argument("--question_version", choices=["v1", "v2"], default="v1",
+                    help="v2 asks the metformin families different questions "
+                         "(continue vs start); see V2_WORDING")
     ap.add_argument("--mode", choices=["nearest", "extreme"], default="nearest")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--test_frac", type=float, default=0.5)
@@ -515,7 +552,10 @@ def main():
     args = ap.parse_args()
 
     pats = load_patients(args.src)
-    print(f"patients={len(pats)}  source={args.source}")
+    global QUESTION_VERSION
+    QUESTION_VERSION = args.question_version
+    print(f"patients={len(pats)}  source={args.source}  "
+          f"question_version={args.question_version}")
     # Refuse a label the data contradicts. A mislabel here is not cosmetic: it
     # is what tells a reader whether the emitted files may be redistributed.
     if args.source == "demo" and len(pats) != DEMO_PATIENTS:
@@ -655,6 +695,11 @@ def main():
                              if kk != "convert"}
                         for k, v in FAMILIES.items()},
             "pair_selection": args.mode, "seed": args.seed,
+            # Written only for v2, so a v1 build_meta.json is unchanged.
+            **({"question_version": "v2",
+                "v2_wording": {k: {"action": a, "question": q}
+                               for k, (a, q) in V2_WORDING.items()}}
+               if args.question_version == "v2" else {}),
             "both_arms_real": True,
             "caveat": "The two arms are different TIMEPOINTS in the same "
                       "real patient, so the clinical state genuinely "

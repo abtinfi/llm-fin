@@ -26,9 +26,15 @@ three are properties of the benchmark that a table must carry:
    prompt with them. cl / nsai_uq_cl are therefore also reported on the pairs
    neither of whose prompts the adapter saw (heldout has no overlap at all).
 
-4. BATCH EFFECTS. Identical prompts do not always get identical answers: fp16
-   with left padding makes a near-tie depend on the rest of the batch. The
-   count is reported per row; it is part of what spurious_flip_rate measures.
+4. BATCH EFFECTS. Under stock batching identical prompts did not always get
+   identical answers (bfloat16 with left padding made near-ties depend on the
+   batch). The v3b arm runs through run_eval_v3, which removes this by
+   construction; the per-row count stays in the table as a check and should
+   read 0.
+
+Items 2 and the rounding defect are fixed in data/mimic_v3b itself
+(--question_version v2, printed-precision guard), so its conflict-free view
+should equal "all". The views stay so a regression would show.
 
 Also reported: the always-SAFE baseline (the label is SAFE on ~68% of test
 items, so accuracy must be read against it), and a row count of items whose
@@ -42,6 +48,7 @@ PRINTS AND WRITES AGGREGATES ONLY.
 
 import collections
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -54,12 +61,16 @@ from audit_mimic_labels import label_from_prompt  # noqa: E402
 CSAI = Path("/home/asosoft/abtin/paper/csai")
 MODELS = ["biomistral-7b", "llama3-openbiollm-8b", "mistral-7b-instruct-v0-2"]
 VARIANTS = ["base", "sym", "rag", "uq", "nsai", "nsai_uq", "cl", "nsai_uq_cl"]
+# The corrected arm (question_version v2, printed-precision guard, run
+# through run_eval_v3). Both arms write into results/mimic_v3b/<model>/,
+# told apart by tag.
+RES = Path(os.environ.get("V3B_RESULTS", HERE / "results/mimic_v3b"))  # env: tests only
 ARMS = {
-    "v3": (CSAI / "data/mimic_v3", HERE / "results/mimic_v3", "_mimic3"),
-    "note": (HERE / "data/mimic_v3_note", HERE / "results/mimic_v3_note",
-             "_mimic3note"),
+    "v3b": (HERE / "data/mimic_v3b", RES, "_mimic3b"),
+    "note": (HERE / "data/mimic_v3b_note", RES, "_mimic3bnote"),
 }
-CL_TRAIN = HERE / "data/mimic_v3_cl/counterfactual_train.jsonl"
+SWAP_TAG = "_mimic3bswap"
+CL_TRAIN = HERE / "data/mimic_v3b_cl/counterfactual_train.jsonl"
 N_BOOT = 2000
 
 
@@ -151,7 +162,20 @@ def main():
                     f"items on a prompt carrying both labels; "
                     f"{len(bad_label):,} items whose label disagrees with their "
                     f"printed value (excluded from every row below).", ""]
+            # One representative pair per distinct (prompt, prompt) tuple: the
+            # effective sample, with every duplicate counted once.
+            first_pair, rep = {}, set()
+            by_pair = collections.defaultdict(list)
+            for r in items.values():
+                by_pair[r["pair_id"]].append(r)
+            for pid in sorted(by_pair):
+                key = tuple(sorted(a["prompt"] for a in by_pair[pid]))
+                if key not in first_pair:
+                    first_pair[key] = pid
+                    rep.add(pid)
             views = [("all", lambda r: r["id"] not in bad_label),
+                     ("distinct pairs", lambda r: r["pair_id"] in rep
+                      and r["id"] not in bad_label),
                      ("conflict-free", lambda r: r["id"] not in bad_label
                       and r["prompt"] not in conflict)]
             views += [(f, (lambda f: lambda r: r["family"] == f
@@ -171,7 +195,7 @@ def main():
                         byp[items[p["id"]]["prompt"]].add(p["pred"])
                     incons = sum(len(s) > 1 for s in byp.values())
                     vv = list(views)
-                    if v in ("cl", "nsai_uq_cl") and cl_prompts and arm == "v3":
+                    if v in ("cl", "nsai_uq_cl") and cl_prompts and arm == "v3b":
                         pair_seen = collections.defaultdict(bool)
                         for r in items.values():
                             pair_seen[r["pair_id"]] |= r["prompt"] in cl_prompts
@@ -190,7 +214,34 @@ def main():
                             f"{fmt(m['sf'])} | {fmt(m['cov'])} | "
                             f"{incons if name == 'all' else ''} |")
             out.append("")
-    dst = HERE / "results/mimic_v3/AUDIT_MIMIC3.md"
+    # Option order: base with "SAFE or UNSAFE" vs "UNSAFE or SAFE", same items.
+    data, root, tag = ARMS["v3b"]
+    out += ["## Option-order diagnostic (v3b test, base)", "",
+            "A model reading the case gives the same answer whichever option "
+            "is listed first. `changed` is the share of items whose answer "
+            "flips when only the order of the two options in the instruction "
+            "line is swapped.", "",
+            "| model | n | SAFE share, SAFE-first | SAFE share, UNSAFE-first "
+            "| answer changed | acc SAFE-first | acc UNSAFE-first |",
+            "|---|---|---|---|---|---|---|"]
+    for model in MODELS:
+        a_p = root / model / f"preds_test_base_seed0{tag}.jsonl"
+        b_p = root / model / f"preds_test_base_seed0{SWAP_TAG}.jsonl"
+        if not (a_p.exists() and b_p.exists()):
+            continue
+        a = {r["id"]: r for r in map(json.loads, open(a_p))}
+        b = {r["id"]: r for r in map(json.loads, open(b_p))}
+        ids = sorted(set(a) & set(b))
+        n = len(ids)
+        out.append(
+            f"| {model} | {n:,} | "
+            f"{sum(a[i]['pred'] == 'SAFE' for i in ids) / n:.3f} | "
+            f"{sum(b[i]['pred'] == 'SAFE' for i in ids) / n:.3f} | "
+            f"{sum(a[i]['pred'] != b[i]['pred'] for i in ids) / n:.3f} | "
+            f"{sum(a[i]['pred'] == a[i]['label'] for i in ids) / n:.3f} | "
+            f"{sum(b[i]['pred'] == b[i]['label'] for i in ids) / n:.3f} |")
+    out.append("")
+    dst = RES / "AUDIT_MIMIC3B.md"
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text("\n".join(out) + "\n")
     print(f"wrote {dst}")

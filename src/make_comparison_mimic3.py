@@ -32,13 +32,15 @@ import make_comparison as mc                    # noqa: E402  (main checkout's)
 
 assert Path(mc.__file__).resolve().parent == CSAI / "src", mc.__file__
 
+R3B = HERE / "results" / "mimic_v3b"
 ARM_SPECS = {
-    # arm -> (tag, data dir, results root, output name, human names)
-    "v3": ("_mimic3", CSAI / "data" / "mimic_v3", R3, "COMPARISON_MIMIC3.md",
+    # arm -> (tag, data dir, results root, output name, human names). The
+    # corrected v3b arm; both arms share results/mimic_v3b/<model>/.
+    "v3": ("_mimic3b", HERE / "data" / "mimic_v3b", R3B, "COMPARISON_MIMIC3B.md",
            ("MIMIC-IV v3.1 (full cohort, +real control pairs), test",
             "MIMIC-IV v3.1, held-out warfarin")),
-    "note": ("_mimic3note", HERE / "data" / "mimic_v3_note",
-             HERE / "results" / "mimic_v3_note", "COMPARISON_MIMIC3NOTE.md",
+    "note": ("_mimic3bnote", HERE / "data" / "mimic_v3b_note", R3B,
+             "COMPARISON_MIMIC3BNOTE.md",
              ("MIMIC-IV v3.1 + real discharge-note excerpt, test",
               "MIMIC-IV v3.1 + real discharge-note excerpt, held-out warfarin")),
 }
