@@ -16,7 +16,8 @@ The v3 results live under the mimic-v3 worktree (results/mimic_v3/<model>/)
 because their per-patient predictions are credentialed; see run_mimic_v3.sh.
 Only the aggregate markdown this writes is tracked.
 
-  python src/make_comparison_mimic3.py
+  python src/make_comparison_mimic3.py          # the v3.1 arm
+  python src/make_comparison_mimic3.py note     # the real-note arm
 """
 
 import sys
@@ -31,23 +32,32 @@ import make_comparison as mc                    # noqa: E402  (main checkout's)
 
 assert Path(mc.__file__).resolve().parent == CSAI / "src", mc.__file__
 
-mc.TAG_DATA["_mimic3"] = str(CSAI / "data" / "mimic_v3")
-mc.ARMS[:] = [
-    ("_mimic3", "test",    "MIMIC-IV v3.1 (full cohort, +real control pairs), test"),
-    ("_mimic3", "heldout", "MIMIC-IV v3.1, held-out warfarin"),
-]
+ARM_SPECS = {
+    # arm -> (tag, data dir, results root, output name, human names)
+    "v3": ("_mimic3", CSAI / "data" / "mimic_v3", R3, "COMPARISON_MIMIC3.md",
+           ("MIMIC-IV v3.1 (full cohort, +real control pairs), test",
+            "MIMIC-IV v3.1, held-out warfarin")),
+    "note": ("_mimic3note", HERE / "data" / "mimic_v3_note",
+             HERE / "results" / "mimic_v3_note", "COMPARISON_MIMIC3NOTE.md",
+             ("MIMIC-IV v3.1 + real discharge-note excerpt, test",
+              "MIMIC-IV v3.1 + real discharge-note excerpt, held-out warfarin")),
+}
 
 MODELS = [("biomistral-7b", "BioMistral/BioMistral-7B"),
           ("llama3-openbiollm-8b", None),
           ("mistral-7b-instruct-v0-2", None)]
 
 if __name__ == "__main__":
+    arm = sys.argv[1] if len(sys.argv) > 1 else "v3"
+    tag, data, root, out_name, (n_test, n_ho) = ARM_SPECS[arm]
+    mc.TAG_DATA[tag] = str(data)
+    mc.ARMS[:] = [(tag, "test", n_test), (tag, "heldout", n_ho)]
     base_slug, base_id = MODELS[0]
-    extra = [f"{slug}={R3 / slug}" for slug, _ in MODELS[1:]
-             if (R3 / slug).is_dir()]
+    extra = [f"{slug}={root / slug}" for slug, _ in MODELS[1:]
+             if (root / slug).is_dir()]
     sys.argv = [sys.argv[0],
-                "--results", str(R3 / base_slug),
+                "--results", str(root / base_slug),
                 "--base_model", base_id,
-                "--out", str(R3 / "COMPARISON_MIMIC3.md"),
+                "--out", str(root / out_name),
                 "--models", *extra]
     mc.main()
