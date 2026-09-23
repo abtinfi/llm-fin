@@ -35,6 +35,32 @@ for arm in v3 note; do
   python "$WT/src/make_comparison_mimic3.py" "$arm" || FAILED=$((FAILED + 1))
 done
 python "$WT/src/report_mimic3.py" || FAILED=$((FAILED + 1))
+
+# The audits, re-run on the finished outputs so the results are checked even
+# if no interactive session survives to do it (the 03:01 reboot ends it).
+# Counts and rates only; aggregate, so the file is tracked.
+A="$WT/results/mimic_v3b/AUDIT_CHECKS.md"
+{
+  echo "# Automated audit of the v3b outputs ($(date -Is))"
+  echo; echo '```'
+  python "$WT/src/audit_mimic_labels.py" "$WT/data/mimic_v3b" "$WT/data/mimic_v3b_note"
+  python "$WT/src/audit_mimic_dupes.py" "$WT/data/mimic_v3b"
+  for tag in biomistral-7b llama3-openbiollm-8b mistral-7b-instruct-v0-2; do
+    for split in test heldout; do
+      python "$WT/src/audit_mimic_preds.py" "$WT/data/mimic_v3b" \
+        "$WT/results/mimic_v3b/$tag" _mimic3b "$split"
+      python "$WT/src/audit_mimic_preds.py" "$WT/data/mimic_v3b_note" \
+        "$WT/results/mimic_v3b/$tag" _mimic3bnote "$split"
+    done
+  done
+  echo '```'
+} > "$A" 2>&1 || FAILED=$((FAILED + 1))
+# The checks that must hold on a correct v3b run; any hit is a FAILED job.
+if grep -qE "MISMATCH|WRONG LABELS|carrying BOTH labels: [1-9]|with DIFFERENT preds: [1-9]|'missing': [1-9]|'extra': [1-9]|'duplicate_ids': [1-9]|'label_mismatch': [1-9]" "$A"; then
+  echo "[v3b report] AUDIT FOUND A PROBLEM -- see $A"; FAILED=$((FAILED + 1))
+else
+  echo "[v3b report] audit clean"
+fi
 echo "[v3b report] done, $FAILED failed  $(date -Is)"
 [ "$FAILED" -eq 0 ] && touch "$STATE/ALL_DONE"
 exit "$FAILED"
