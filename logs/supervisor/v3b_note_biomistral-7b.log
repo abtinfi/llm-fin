@@ -1,0 +1,36 @@
+[v3b:note:biomistral-7b][run ] determinism  2026-09-24T09:14:22+03:00
+[v3b:note:biomistral-7b][ok  ] determinism  251s
+[v3b:note:biomistral-7b][run ] eval_test_base  2026-09-24T09:18:33+03:00
+[v3b:note:biomistral-7b][ok  ] eval_test_base  372s
+[v3b:note:biomistral-7b][run ] eval_test_sym  2026-09-24T09:24:45+03:00
+[v3b:note:biomistral-7b][ok  ] eval_test_sym  373s
+[v3b:note:biomistral-7b][run ] eval_test_nsai  2026-09-24T09:30:58+03:00
+[v3b:note:biomistral-7b][ok  ] eval_test_nsai  1279s
+[v3b:note:biomistral-7b][run ] eval_test_rag  2026-09-24T09:52:17+03:00
+[v3b:note:biomistral-7b][ok  ] eval_test_rag  1278s
+[v3b:note:biomistral-7b][run ] eval_test_uq  2026-09-24T10:13:35+03:00
+[v3b:note:biomistral-7b][ok  ] eval_test_uq  500s
+[v3b:note:biomistral-7b][run ] eval_test_nsai_uq  2026-09-24T10:21:55+03:00
+Terminated
+[v3b:note:biomistral-7b][FAILED] eval_test_nsai_uq -- see /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/logs/mimic_v3b/biomistral-7b/note_eval_test_nsai_uq.log
+[v3b:note:biomistral-7b][run ] eval_heldout_base  2026-09-24T10:23:50+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_base  230s
+[v3b:note:biomistral-7b][run ] eval_heldout_sym  2026-09-24T10:27:40+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_sym  231s
+[v3b:note:biomistral-7b][run ] eval_heldout_nsai  2026-09-24T10:31:31+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_nsai  607s
+[v3b:note:biomistral-7b][run ] eval_heldout_rag  2026-09-24T10:41:38+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_rag  606s
+[v3b:note:biomistral-7b][run ] eval_heldout_uq  2026-09-24T10:51:44+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_uq  359s
+[v3b:note:biomistral-7b][run ] eval_heldout_nsai_uq  2026-09-24T10:57:43+03:00
+[v3b:note:biomistral-7b][ok  ] eval_heldout_nsai_uq  1079s
+[v3b:note:biomistral-7b][run ] table_test  2026-09-24T11:15:42+03:00
+[v3b:note:biomistral-7b][ok  ] table_test  2s
+[v3b:note:biomistral-7b][run ] coverage_test  2026-09-24T11:15:44+03:00
+[v3b:note:biomistral-7b][FAILED] coverage_test -- see /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/logs/mimic_v3b/biomistral-7b/note_coverage_test.log
+[v3b:note:biomistral-7b][run ] table_heldout  2026-09-24T11:15:44+03:00
+[v3b:note:biomistral-7b][ok  ] table_heldout  1s
+[v3b:note:biomistral-7b][run ] coverage_heldout  2026-09-24T11:15:45+03:00
+[v3b:note:biomistral-7b][ok  ] coverage_heldout  1s
+[v3b:note:biomistral-7b] done, 2 stage(s) failed  2026-09-24T11:15:46+03:00

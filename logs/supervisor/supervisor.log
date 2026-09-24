@@ -357,3 +357,9 @@
 2026-09-08T04:15:18+03:00 [reports] regenerating
 2026-09-08T04:15:22+03:00 [reports] exit=0
 2026-09-08T04:15:22+03:00 === supervisor finished ===
+2026-09-24T09:14:22+03:00 [w1] done v3b_main_mistral-7b-instruct-v0-2 exit=0
+2026-09-24T09:14:22+03:00 [w1] run  v3b_note_biomistral-7b on GPU 1
+2026-09-24T09:48:07+03:00 [w0] done v3b_main_llama3-openbiollm-8b exit=0
+2026-09-24T09:48:07+03:00 [w0] run  v3b_note_llama3-openbiollm-8b on GPU 0
+2026-09-24T11:15:46+03:00 [w1] done v3b_note_biomistral-7b exit=2
+2026-09-24T11:15:46+03:00 [w1] run  v3b_note_mistral-7b-instruct-v0-2 on GPU 1

@@ -17,7 +17,7 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (3) + Symbolic Gate (NS-AI) | 0.672 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (4) + UQ Engine | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.609 | 0.562 | 0.989 | 1.000 | 0.379 | 1.000 |
-| (6) Base + UQ only | 0.016 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+| (6) Base + UQ only | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
 | (7) Base + Constraint Layer only | 0.453 | 0.375 | 0.022 | 0.767 | 0.069 | 0.000 |
 | (8) All four | 0.562 | 0.500 | 0.989 | 1.000 | 0.379 | 1.000 |
 
@@ -26,11 +26,11 @@ The 2026-09-01 pass ran across both GPUs, partitioned by output file: `run_eval.
 | (1) Base LLM | 0.602 | 0.594 | 0.506 | 0.500 | 0.534 | 0.500 |
 | (2) + RAG | 0.648 | 0.500 | 0.494 | 0.500 | 0.500 | 0.500 |
 | (3) + Symbolic Gate (NS-AI) | 0.836 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
-| (4) + UQ Engine | 0.633 | 0.688 | 0.994 | 1.000 | 0.379 | 1.000 |
+| (4) + UQ Engine | 0.562 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
 | (5) Base + Gate only | 0.805 | 0.750 | 0.994 | 1.000 | 0.690 | 1.000 |
-| (6) Base + UQ only | 0.211 | 0.094 | 0.000 | 0.000 | 0.034 | 0.000 |
+| (6) Base + UQ only | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
 | (7) Base + Constraint Layer only | 0.727 | 0.656 | 0.506 | 0.883 | 0.534 | 0.500 |
-| (8) All four | 0.578 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
+| (8) All four | 0.562 | 0.500 | 0.994 | 1.000 | 0.379 | 1.000 |
 
 Split sizes — synthetic control test: n=128, synthetic control held-out: n=32, real notes test: n=180, real notes held-out (QT): n=60, MIMIC-IV test: n=58, MIMIC-IV held-out (warfarin): n=16.
 
@@ -81,15 +81,15 @@ Objective weights actually used: lam_kl=0.01, lam_ont=0.1, lam_unc=0.1.
 
 | feature | concept | S_semantic | S_causal | FIS |
 |---|---|---|---|---|
-| #13369 | age | 0.693 | 0.0206 | 0.357 |
-| #13297 | age | 0.637 | 0.0100 | 0.324 |
-| #14628 | creatinine | 0.634 | 0.0198 | 0.327 |
-| #4693 | age | 0.602 | 0.0168 | 0.309 |
+| #13369 | age | 0.693 | 0.0054 | 0.349 |
+| #13297 | age | 0.637 | 0.0054 | 0.321 |
+| #14628 | creatinine | 0.634 | 0.0012 | 0.318 |
+| #4693 | age | 0.602 | 0.0028 | 0.302 |
 | #1894 | qt_interval | 0.557 | 0.0000 | 0.279 |
-| #10721 | drug | 0.544 | 0.0573 | 0.301 |
-| #7589 | age | 0.514 | 0.0139 | 0.264 |
-| #7787 | age | 0.479 | 0.0047 | 0.242 |
-| #9404 | heart_rate | 0.470 | 0.0101 | 0.240 |
+| #10721 | drug | 0.544 | 0.0418 | 0.293 |
+| #7589 | age | 0.514 | 0.0000 | 0.257 |
+| #7787 | age | 0.479 | 0.0057 | 0.243 |
+| #9404 | heart_rate | 0.470 | 0.0000 | 0.235 |
 | #13261 | qt_interval | 0.444 | 0.0000 | 0.222 |
 
 *S_human is NOT measured: this pipeline has no expert annotators. Its weight is forced to zero and the FIS reported here is therefore a two-term score. The proposal's 30%-expert-validation fallback criterion cannot be evaluated without them.*
@@ -142,7 +142,7 @@ Their reports hold the detail. The three causal rows are computed from the post-
 | Is counterfactual consistency alone evidence of reasoning? | **No** — discrimination −0.013 [−0.037, +0.013] over 8,000 items | `results/mcqpairs.md` |
 | Is the decisive fact represented internally? | QT yes (pair-CC 0.976), creatinine no (0.042) | `results/aim123_internals.md` |
 | Does it causally drive the answer? | No — patching effects 0.0064 to 0.0221 logits, ~100x too small to flip a decision | `results/aim123_internals.md` |
-| ...and by SAE feature knock-out? | No — -0.0163 to 0.0573 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
+| ...and by SAE feature knock-out? | No — -0.0087 to 0.0418 logits against matched controls, replicating the patching null | `results/aim1_sae.md` |
 | ...and by feature injection (sufficiency)? | No — 0.0101 to 0.0646 logits | `results/sufficiency_medcalc_{test,heldout}.json` |
 
 See `results/FIXES.md` for the nine defects found in an audit of this repository, what each would have done to a reported number, and the before/after comparison showing no conclusion reversed.

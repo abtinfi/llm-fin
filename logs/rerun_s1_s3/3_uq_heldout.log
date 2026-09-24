@@ -1,0 +1,9 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   7%|▋         | 20/291 [00:00<00:01, 198.89it/s]Loading weights:  14%|█▍        | 42/291 [00:00<00:01, 193.73it/s]Loading weights:  24%|██▍       | 71/291 [00:00<00:00, 230.34it/s]Loading weights:  33%|███▎      | 96/291 [00:00<00:00, 229.93it/s]Loading weights:  42%|████▏     | 123/291 [00:00<00:00, 240.17it/s]Loading weights:  51%|█████     | 148/291 [00:00<00:00, 241.70it/s]Loading weights:  60%|██████    | 175/291 [00:00<00:00, 238.81it/s]Loading weights:  69%|██████▉   | 202/291 [00:00<00:00, 240.74it/s]Loading weights:  79%|███████▊  | 229/291 [00:00<00:00, 236.47it/s]Loading weights:  88%|████████▊ | 257/291 [00:01<00:00, 245.22it/s]Loading weights:  97%|█████████▋| 282/291 [00:01<00:00, 225.65it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 237.39it/s]
+  [uq] NO CERTIFIABLE THRESHOLD: calibration pool is 32 items, but certifying alpha=0.1 at confidence 0.90 needs at least 22 retained items even with zero errors. tau=-inf, so this variant abstains on everything. This is a calibration-set SIZE limit, not a model result -- enlarge the calibration split to fix it.
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+  [nsai_uq] NO CERTIFIABLE THRESHOLD: calibration pool is 14 items, but certifying alpha=0.1 at confidence 0.90 needs at least 22 retained items even with zero errors. tau=-inf, so this variant abstains on everything. This is a calibration-set SIZE limit, not a model result -- enlarge the calibration split to fix it.
+[seed 0] nsai_uq   acc=0.500 cc=0.500 viol=0.000 cov=0.500
+
+wrote results/summary_heldout.json

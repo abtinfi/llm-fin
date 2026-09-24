@@ -52,6 +52,8 @@ FREE_MIB="${FREE_MIB:-18000}"
 # One line per job: <marker>|<name>|<env assignments>|<command>
 QUEUE=".pipeline_state/queue.txt"
 cat > "$QUEUE" <<'EOQ'
+.pipeline_state/rerun_uq_arms/ALL_DONE|rerun_uq_arms||bash rerun_uq_arms.sh
+.pipeline_state/rerun_s1_s3/ALL_DONE|rerun_s1_s3||bash rerun_s1_s3.sh
 .pipeline_state/sae_wide_L20/attr.done|sae_wide||bash run_sae_wide.sh
 .pipeline_state/MODEL_COMPLETE_llama3-openbiollm-8b_L20|openbiollm|MODEL_ID=aaditya/Llama3-OpenBioLLM-8B MODEL_TAG=llama3-openbiollm-8b RESULTS_DIR=results/models/llama3-openbiollm-8b|bash run_model.sh
 .pipeline_state/medcalc_v2/ALL_DONE|medcalc_v2||bash run_medcalc_v2.sh
@@ -60,6 +62,16 @@ cat > "$QUEUE" <<'EOQ'
 .pipeline_state/MODEL_COMPLETE_biomistral-7b-L24_L24|layer24|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b-L24 RESULTS_DIR=results/layers/L24 LAYER=24|bash run_model.sh
 .pipeline_state/sae_split_weights_L20/attr.done|sae_qt_weights||bash run_sae_split_weights.sh
 .pipeline_state/seed_sweep_L20/ALL_DONE|seed_sweep||bash run_seed_sweep.sh
+.pipeline_state/v3b_main_biomistral-7b/ALL_DONE|v3b_main_biomistral-7b|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b ARM=main|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_main_llama3-openbiollm-8b/ALL_DONE|v3b_main_llama3-openbiollm-8b|MODEL_ID=aaditya/Llama3-OpenBioLLM-8B MODEL_TAG=llama3-openbiollm-8b ARM=main|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_main_mistral-7b-instruct-v0-2/ALL_DONE|v3b_main_mistral-7b-instruct-v0-2|MODEL_ID=mistralai/Mistral-7B-Instruct-v0.2 MODEL_TAG=mistral-7b-instruct-v0-2 ARM=main EARLY_STOP=1|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_note_biomistral-7b/ALL_DONE|v3b_note_biomistral-7b|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b ARM=note|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_note_llama3-openbiollm-8b/ALL_DONE|v3b_note_llama3-openbiollm-8b|MODEL_ID=aaditya/Llama3-OpenBioLLM-8B MODEL_TAG=llama3-openbiollm-8b ARM=note|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_note_mistral-7b-instruct-v0-2/ALL_DONE|v3b_note_mistral-7b-instruct-v0-2|MODEL_ID=mistralai/Mistral-7B-Instruct-v0.2 MODEL_TAG=mistral-7b-instruct-v0-2 ARM=note EARLY_STOP=1|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b.sh
+.pipeline_state/v3b_cl_biomistral-7b/ALL_DONE|v3b_cl_biomistral-7b|MODEL_ID=BioMistral/BioMistral-7B MODEL_TAG=biomistral-7b|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b_cl.sh
+.pipeline_state/v3b_cl_llama3-openbiollm-8b/ALL_DONE|v3b_cl_llama3-openbiollm-8b|MODEL_ID=aaditya/Llama3-OpenBioLLM-8B MODEL_TAG=llama3-openbiollm-8b|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b_cl.sh
+.pipeline_state/v3b_cl_mistral-7b-instruct-v0-2/ALL_DONE|v3b_cl_mistral-7b-instruct-v0-2|MODEL_ID=mistralai/Mistral-7B-Instruct-v0.2 MODEL_TAG=mistral-7b-instruct-v0-2 EARLY_STOP=1|bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b_cl.sh
+.pipeline_state/v3b_report/ALL_DONE|v3b_report||bash /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/run_v3b_report.sh
 EOQ
 
 CLAIMS=".pipeline_state/claims"

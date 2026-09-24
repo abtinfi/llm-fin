@@ -1,0 +1,12 @@
+[uqarms] legacy artifacts snapshotted to results/pre_s1s3_20260908
+[uqarms] 1_medcalc_uq start 2026-09-08T16:15:14+03:00
+[uqarms] 1_medcalc_uq done 2026-09-08T16:19:24+03:00
+[uqarms] 2_medcalc_uqcl start 2026-09-08T16:19:24+03:00
+[uqarms] 2_medcalc_uqcl done 2026-09-08T16:21:53+03:00
+[uqarms] 3_mimic_uq start 2026-09-08T16:21:53+03:00
+[uqarms] 3_mimic_uq done 2026-09-08T16:22:20+03:00
+[uqarms] 4_mimic_uqcl start 2026-09-08T16:22:20+03:00
+[uqarms] 4_mimic_uqcl done 2026-09-08T16:22:47+03:00
+[uqarms] 5_tables start 2026-09-08T16:22:47+03:00
+[uqarms] 5_tables done 2026-09-08T16:22:47+03:00
+[uqarms] ALL DONE 2026-09-08T16:22:47+03:00

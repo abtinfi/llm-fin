@@ -1,0 +1,5 @@
+[v3:llama3-openbiollm-8b][run ] eval_test_base  2026-09-23T18:00:01+03:00
+[v3:llama3-openbiollm-8b][ok  ] eval_test_base  6324s
+[v3:llama3-openbiollm-8b][run ] eval_test_sym  2026-09-23T19:45:25+03:00
+[v3:llama3-openbiollm-8b][ok  ] eval_test_sym  6533s
+[v3:llama3-openbiollm-8b][run ] eval_test_nsai  2026-09-23T21:34:18+03:00

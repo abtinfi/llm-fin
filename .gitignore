@@ -60,3 +60,16 @@ results/human_eval/packets/
 
 # Supervisor scratch: claims, locks and the generated queue are runtime state.
 .pipeline_state/
+
+# --- added 2026-09-20: credentialed PhysioNet data ------------------------
+# MIMIC-IV v3.1 and MIMIC-IV-Note v2.2 are under the PhysioNet credentialed
+# DUA, not ODbL like the Demo. Neither the raw files NOR anything derived from
+# them that carries patient values (age, sex, lab results, note text) may be
+# redistributed -- so unlike data/mimic and data/mimic_v2, which ARE tracked
+# because the Demo is ODbL, every one of these paths stays out of the repo.
+# Only the aggregate build_meta.json (counts and thresholds, no patient data)
+# is tracked, via the negation below.
+data/mimic_iv_3.1/
+data/mimic_iv_note_2.2/
+data/mimic_v3/*
+!data/mimic_v3/build_meta.json

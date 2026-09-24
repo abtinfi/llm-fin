@@ -1,0 +1,9 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:02, 117.67it/s]Loading weights:  12%|█▏        | 35/291 [00:00<00:01, 171.05it/s]Loading weights:  22%|██▏       | 63/291 [00:00<00:01, 218.16it/s]Loading weights:  30%|██▉       | 87/291 [00:00<00:00, 225.92it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:00, 231.86it/s]Loading weights:  47%|████▋     | 138/291 [00:00<00:00, 229.92it/s]Loading weights:  56%|█████▌    | 162/291 [00:00<00:00, 226.62it/s]Loading weights:  66%|██████▋   | 193/291 [00:00<00:00, 237.42it/s]Loading weights:  76%|███████▌  | 221/291 [00:00<00:00, 246.41it/s]Loading weights:  85%|████████▍ | 247/291 [00:01<00:00, 234.10it/s]Loading weights:  95%|█████████▍| 276/291 [00:01<00:00, 245.07it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 234.75it/s]
+  [uq] NO CERTIFIABLE THRESHOLD (MODEL RESULT): pool is 30 items, above the 22-item floor, so the size is sufficient and the threshold still fails. The model's errors reach into the low-uncertainty end, so no cut-off attains alpha=0.1 at confidence 0.90. tau=-inf. This IS a finding about the uncertainty signal -- report it as one. Try a larger --alpha to see what it can certify.
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+  [nsai_uq] NO CERTIFIABLE THRESHOLD (calibration set TOO SMALL): pool is 16 items, but certifying alpha=0.1 at confidence 0.90 needs at least 22 retained items even with ZERO errors. tau=-inf, so this variant abstains on everything. This is a sample-size limit, not a model result -- enlarge the calibration split to fix it.
+[seed 0] nsai_uq   acc=0.379 cc=0.379 viol=0.000 cov=0.379
+
+wrote results/summary_test_mimic.json

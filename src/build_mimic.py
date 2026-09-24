@@ -157,7 +157,56 @@ def load_patients(src):
     return pats
 
 
+# One parsed copy of labevents per (src, itemid), shared by every caller.
+#
+# WHY THIS EXISTS. build_family_items() is called seven times per run -- once
+# for the held-out family, then TWICE for each of the three trainable families
+# (once unrestricted to discover who straddles the threshold, once restricted
+# to the post-exclusion pool). Each call used to re-read labevents.csv.gz end
+# to end. On the Demo's 107k rows that was invisible; on MIMIC-IV v3.1's ~158M
+# rows it is seven full gzip+CSV passes for one dataset. prime_lab_cache()
+# makes a SINGLE pass that collects every itemid the families need, and
+# load_lab() serves the rest from memory.
+_LAB_CACHE = {}
+
+
+def prime_lab_cache(src, specs):
+    """One pass over labevents.csv.gz for every itemid in `specs`."""
+    wanted = {}                       # itemid -> (lo, hi)
+    for spec in specs.values():
+        lo, hi = wanted.get(spec["itemid"], (spec["lo"], spec["hi"]))
+        # Two families can share an itemid (metformin_egfr30 and _egfr45 are
+        # both creatinine). Keep the UNION of their plausible ranges so one
+        # family's narrower bound cannot silently drop the other's rows.
+        wanted[spec["itemid"]] = (min(lo, spec["lo"]), max(hi, spec["hi"]))
+    for itemid in wanted:
+        _LAB_CACHE[(str(src), itemid)] = defaultdict(list)
+
+    kept = scanned = 0
+    for r in read_gz(Path(src) / "labevents.csv.gz"):
+        scanned += 1
+        bounds = wanted.get(r["itemid"])
+        if bounds is None or not r["valuenum"]:
+            continue
+        try:
+            v = float(r["valuenum"])
+        except ValueError:
+            continue
+        if bounds[0] <= v <= bounds[1]:
+            _LAB_CACHE[(str(src), r["itemid"])][r["subject_id"]].append(
+                (r["charttime"], round(v, 2)))
+            kept += 1
+    print(f"labevents: scanned={scanned} kept={kept} "
+          f"itemids={sorted(wanted)}", flush=True)
+
+
 def load_lab(src, itemid, lo, hi):
+    cached = _LAB_CACHE.get((str(src), itemid))
+    if cached is not None:
+        # The cache holds the union range; re-apply this family's own bounds.
+        return {sid: [(t, v) for t, v in ev if lo <= v <= hi]
+                for sid, ev in cached.items()
+                if any(lo <= v <= hi for _, v in ev)}
     ev = defaultdict(list)
     for r in read_gz(Path(src) / "labevents.csv.gz"):
         if r["itemid"] != itemid or not r["valuenum"]:
@@ -274,13 +323,14 @@ PROMPT = ("You are reviewing a proposed prescription for safety.\n"
           "{vignette}\n\nIs it safe to prescribe {drug}?")
 
 
-def build_family_items(fam, spec, pats, mode, eligible_patients=None):
+def build_family_items(fam, spec, pats, mode, eligible_patients=None,
+                       src="data/mimic_demo"):
     """
     All pairs for one family, restricted to `eligible_patients` if given.
 
     Returns (items, straddling_patient_ids, skip_counts).
     """
-    labs = load_lab("data/mimic_demo", spec["itemid"], spec["lo"], spec["hi"])
+    labs = load_lab(src, spec["itemid"], spec["lo"], spec["hi"])
     items, straddling, skipped = [], set(), defaultdict(int)
     for sid, events in sorted(labs.items()):
         if eligible_patients is not None and sid not in eligible_patients:
@@ -438,6 +488,10 @@ def main():
     pats = load_patients(args.src)
     print(f"patients={len(pats)}")
 
+    # One pass over labevents for every itemid the families need, before any
+    # family is built. See prime_lab_cache().
+    prime_lab_cache(args.src, FAMILIES)
+
     # Pass 1: the held-out family, unrestricted -- this decides which
     # patients are EXCLUDED from every other family's pool.
     held_specs = {k: v for k, v in FAMILIES.items() if v["held_out"]}
@@ -446,7 +500,8 @@ def main():
     heldout_items, heldout_patients = [], set()
     for fam, spec in held_specs.items():
         items, straddling, skipped = build_family_items(fam, spec, pats,
-                                                         args.mode)
+                                                         args.mode,
+                                                         src=args.src)
         print(f"[heldout] {fam}: {dict(skipped)}")
         heldout_items += items
         heldout_patients |= straddling
@@ -458,10 +513,12 @@ def main():
     for fam, spec in trainable_specs.items():
         # eligible_patients=None on the first call to find who straddles;
         # then explicitly re-run EXCLUDING heldout patients.
-        _, straddling_all, _ = build_family_items(fam, spec, pats, args.mode)
+        _, straddling_all, _ = build_family_items(fam, spec, pats, args.mode,
+                                                  src=args.src)
         eligible = straddling_all - heldout_patients
         items, straddling, skipped = build_family_items(
-            fam, spec, pats, args.mode, eligible_patients=eligible)
+            fam, spec, pats, args.mode, eligible_patients=eligible,
+            src=args.src)
         print(f"[trainable] {fam}: eligible_after_excluding_heldout="
               f"{len(eligible)}  {dict(skipped)}")
         for it in items:

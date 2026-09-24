@@ -1,0 +1,61 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 25 features by S_semantic:
+  # 13369  S_sem=0.693  concept=age  fires on 1102/225248 tokens
+  # 13297  S_sem=0.637  concept=age  fires on 978/225248 tokens
+  # 14628  S_sem=0.634  concept=creatinine  fires on 4020/225248 tokens
+  #  4693  S_sem=0.602  concept=age  fires on 2570/225248 tokens
+  #  1894  S_sem=0.557  concept=qt_interval  fires on 84/225248 tokens
+  # 10721  S_sem=0.544  concept=drug  fires on 919/225248 tokens
+  #  7589  S_sem=0.514  concept=age  fires on 2031/225248 tokens
+  #  7787  S_sem=0.479  concept=age  fires on 607/225248 tokens
+  #  9404  S_sem=0.470  concept=heart_rate  fires on 623/225248 tokens
+  # 13261  S_sem=0.444  concept=qt_interval  fires on 43/225248 tokens
+  # 14577  S_sem=0.442  concept=asthma  fires on 48/225248 tokens
+  #  4149  S_sem=0.415  concept=age  fires on 548/225248 tokens
+  # 11828  S_sem=0.400  concept=age  fires on 3730/225248 tokens
+  #  7082  S_sem=0.396  concept=age  fires on 626/225248 tokens
+  # 14315  S_sem=0.394  concept=drug  fires on 296/225248 tokens
+  # 10221  S_sem=0.385  concept=age  fires on 464/225248 tokens
+  # 16268  S_sem=0.384  concept=drug  fires on 270/225248 tokens
+  # 11780  S_sem=0.356  concept=asthma  fires on 220/225248 tokens
+  # 16259  S_sem=0.356  concept=age  fires on 407/225248 tokens
+  # 11512  S_sem=0.356  concept=age  fires on 3905/225248 tokens
+  #  6467  S_sem=0.355  concept=heart_rate  fires on 326/225248 tokens
+  # 14803  S_sem=0.353  concept=age  fires on 513/225248 tokens
+  # 15148  S_sem=0.353  concept=drug  fires on 301/225248 tokens
+  # 15184  S_sem=0.344  concept=creatinine  fires on 1864/225248 tokens
+  # 15987  S_sem=0.343  concept=drug  fires on 494/225248 tokens
+  knock-out on 180 items of split `test`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 12/291 [00:00<00:02, 109.86it/s]Loading weights:   9%|▉         | 26/291 [00:00<00:02, 125.61it/s]Loading weights:  21%|██        | 60/291 [00:00<00:01, 210.68it/s]Loading weights:  30%|██▉       | 87/291 [00:00<00:00, 230.86it/s]Loading weights:  38%|███▊      | 112/291 [00:00<00:00, 235.56it/s]Loading weights:  47%|████▋     | 136/291 [00:00<00:00, 215.01it/s]Loading weights:  54%|█████▍    | 158/291 [00:00<00:00, 205.73it/s]Loading weights:  63%|██████▎   | 184/291 [00:00<00:00, 211.15it/s]Loading weights:  73%|███████▎  | 212/291 [00:00<00:00, 228.80it/s]Loading weights:  81%|████████  | 236/291 [00:01<00:00, 225.26it/s]Loading weights:  89%|████████▉ | 259/291 [00:01<00:00, 212.26it/s]Loading weights:  97%|█████████▋| 283/291 [00:01<00:00, 213.89it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 216.01it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  controls: 5 per feature, matched on firing rate (nearest 50 live features in log space); 4916/16384 dead features excluded
+  knock-out #13369: |Δ margin|=0.0206 (control mean 0.0151 ± 0.0065 over 5, worst log-ratio 0.02, excess +0.0054)
+  knock-out #13297: |Δ margin|=0.0207 (control mean 0.0153 ± 0.0048 over 5, worst log-ratio 0.02, excess +0.0054)
+  knock-out #14628: |Δ margin|=0.0198 (control mean 0.0187 ± 0.0073 over 5, worst log-ratio 0.04, excess +0.0012)
+  knock-out #4693: |Δ margin|=0.0240 (control mean 0.0212 ± 0.0125 over 5, worst log-ratio 0.03, excess +0.0028)
+  knock-out #1894: |Δ margin|=0.0010 (control mean 0.0028 ± 0.0020 over 5, worst log-ratio 0.01, excess -0.0017)
+  knock-out #10721: |Δ margin|=0.0575 (control mean 0.0156 ± 0.0033 over 5, worst log-ratio 0.01, excess +0.0418)
+  knock-out #7589: |Δ margin|=0.0190 (control mean 0.0214 ± 0.0015 over 5, worst log-ratio 0.02, excess -0.0024)
+  knock-out #7787: |Δ margin|=0.0199 (control mean 0.0142 ± 0.0039 over 5, worst log-ratio 0.01, excess +0.0057)
+  knock-out #9404: |Δ margin|=0.0116 (control mean 0.0120 ± 0.0073 over 5, worst log-ratio 0.01, excess -0.0004)
+  knock-out #13261: |Δ margin|=0.0003 (control mean 0.0017 ± 0.0013 over 5, worst log-ratio 0.02, excess -0.0014)
+  knock-out #14577: |Δ margin|=0.0010 (control mean 0.0009 ± 0.0008 over 5, worst log-ratio 0.00, excess +0.0002)
+  knock-out #4149: |Δ margin|=0.0211 (control mean 0.0130 ± 0.0053 over 5, worst log-ratio 0.01, excess +0.0082)
+  knock-out #11828: |Δ margin|=0.0205 (control mean 0.0209 ± 0.0037 over 5, worst log-ratio 0.03, excess -0.0004)
+  knock-out #7082: |Δ margin|=0.0214 (control mean 0.0161 ± 0.0068 over 5, worst log-ratio 0.01, excess +0.0053)
+  knock-out #14315: |Δ margin|=0.0212 (control mean 0.0130 ± 0.0079 over 5, worst log-ratio 0.01, excess +0.0081)
+  knock-out #10221: |Δ margin|=0.0204 (control mean 0.0061 ± 0.0062 over 5, worst log-ratio 0.02, excess +0.0143)
+  knock-out #16268: |Δ margin|=0.0229 (control mean 0.0120 ± 0.0060 over 5, worst log-ratio 0.01, excess +0.0109)
+  knock-out #11780: |Δ margin|=0.0064 (control mean 0.0031 ± 0.0027 over 5, worst log-ratio 0.02, excess +0.0033)
+  knock-out #16259: |Δ margin|=0.0231 (control mean 0.0103 ± 0.0084 over 5, worst log-ratio 0.01, excess +0.0128)
+  knock-out #11512: |Δ margin|=0.0216 (control mean 0.0196 ± 0.0014 over 5, worst log-ratio 0.04, excess +0.0021)
+  knock-out #6467: |Δ margin|=0.0093 (control mean 0.0142 ± 0.0044 over 5, worst log-ratio 0.01, excess -0.0049)
+  knock-out #14803: |Δ margin|=0.0213 (control mean 0.0127 ± 0.0044 over 5, worst log-ratio 0.02, excess +0.0086)
+  knock-out #15148: |Δ margin|=0.0156 (control mean 0.0133 ± 0.0144 over 5, worst log-ratio 0.01, excess +0.0023)
+  knock-out #15184: |Δ margin|=0.0136 (control mean 0.0222 ± 0.0055 over 5, worst log-ratio 0.03, excess -0.0087)
+  knock-out #15987: |Δ margin|=0.0480 (control mean 0.0082 ± 0.0069 over 5, worst log-ratio 0.01, excess +0.0398)
+
+wrote results/sae/sae_topk_L20_fis.json

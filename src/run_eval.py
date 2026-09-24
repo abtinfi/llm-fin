@@ -19,7 +19,7 @@ import json
 from pathlib import Path
 
 from components import SymbolicGate, TfidfRetriever, build_rag_prompt
-from metrics import calibrate_threshold, score
+from metrics import (calibrate_threshold, calibration_diagnostics, score)
 from model import load_model, parse_answer
 from rules import RULE_FAMILIES
 
@@ -167,7 +167,8 @@ def apply_gate(gate, records, preds):
 
 def run_variant(variant, lm, calib, test, retriever, gate, alpha,
                 batch_size, uq_signal="entropy", adapter=None,
-                adapter_layer=None, adapter_alpha=1.0):
+                adapter_layer=None, adapter_alpha=1.0,
+                calib_delta=0.10, calib_rule="conformal"):
     spec = VARIANT_SPEC[variant]
     use_rag, use_gate, use_uq, use_cl = (spec["rag"], spec["gate"],
                                          spec["uq"], spec["cl"])
@@ -205,21 +206,54 @@ def run_variant(variant, lm, calib, test, retriever, gate, alpha,
         if finite:
             pool = finite
         tau = calibrate_threshold([e for e, _ in pool],
-                                  [c for _, c in pool], alpha=alpha)
-        # Record what the threshold achieved ON THE CALIBRATION SPLIT. When no
-        # threshold reaches the target error rate, calibrate_threshold falls
-        # back to the most conservative one and the engine abstains on almost
-        # everything -- which is the correct behaviour for a model that is at
-        # chance, but from the table alone it is indistinguishable from a bug.
-        # These two numbers make the difference visible.
-        kept = [(u, c) for u, c in pool if u <= tau]
+                                  [c for _, c in pool], alpha=alpha,
+                                  delta=calib_delta, rule=calib_rule)
+        # Record what the threshold achieved ON THE CALIBRATION SPLIT, plus
+        # the sample-size facts that make a degenerate tau readable. A
+        # zero-coverage row is now self-explaining: `calib_certifiable` false
+        # with `calib_n` below `calib_min_prefix_needed` means the pool is too
+        # small to certify alpha at this confidence, for ANY model -- not that
+        # the model is at chance and not that the stage is broken.
+        diag = calibration_diagnostics([e for e, _ in pool],
+                                       [c for _, c in pool], alpha=alpha,
+                                       delta=calib_delta, rule=calib_rule)
         calib_diag = {
-            "calib_n": len(pool),
-            "calib_coverage_at_tau": len(kept) / len(pool) if pool else 0.0,
-            "calib_error_at_tau": (1 - sum(c for _, c in kept) / len(kept))
-            if kept else float("nan"),
+            "calib_n": diag["n"],
+            "calib_coverage_at_tau": diag["coverage"],
+            "calib_error_at_tau": diag["selective_error"],
             "calib_target_alpha": alpha,
+            "calib_delta": calib_delta,
+            "calib_rule": calib_rule,
+            "calib_certifiable": diag["certifiable"],
+            "calib_cp_upper_at_tau": diag["cp_upper_at_tau"],
+            "calib_min_prefix_needed": diag["min_prefix_needed"],
         }
+        if not diag["certifiable"]:
+            # TWO DIFFERENT CAUSES, and conflating them misreports the result.
+            # Below the floor the pool is too small to certify alpha for ANY
+            # model, however accurate -- a sample-size fact. At or above it,
+            # the pool is big enough and the threshold still fails, which is a
+            # statement about this model's uncertainty signal: its errors
+            # reach into the low-uncertainty end, so no cut-off is clean.
+            if diag["n"] < diag["min_prefix_needed"]:
+                print(f"  [{variant}] NO CERTIFIABLE THRESHOLD (calibration "
+                      f"set TOO SMALL): pool is {diag['n']} items, but "
+                      f"certifying alpha={alpha} at confidence "
+                      f"{1-calib_delta:.2f} needs at least "
+                      f"{diag['min_prefix_needed']} retained items even with "
+                      f"ZERO errors. tau=-inf, so this variant abstains on "
+                      f"everything. This is a sample-size limit, not a model "
+                      f"result -- enlarge the calibration split to fix it.")
+            else:
+                print(f"  [{variant}] NO CERTIFIABLE THRESHOLD (MODEL RESULT): "
+                      f"pool is {diag['n']} items, above the "
+                      f"{diag['min_prefix_needed']}-item floor, so the size is "
+                      f"sufficient and the threshold still fails. The model's "
+                      f"errors reach into the low-uncertainty end, so no "
+                      f"cut-off attains alpha={alpha} at confidence "
+                      f"{1-calib_delta:.2f}. tau=-inf. This IS a finding "
+                      f"about the uncertainty signal -- report it as one. Try "
+                      f"a larger --alpha to see what it can certify.")
 
     gens, rag_meta = generate_for_split(lm, test, use_rag, retriever, batch_size)
     preds = [parse_answer(g.text) for g in gens]
@@ -248,6 +282,7 @@ def run_variant(variant, lm, calib, test, retriever, gate, alpha,
             "uq_signal": uq_signal, "uq_uncertainty": (
                 None if unc == float("inf") else unc),
             "logit_margin": g.logit_margin, "answer_logprob": g.answer_logprob,
+            "margin_fallback": getattr(g, "margin_fallback", False),
             "gate_fired": gf, "retrieved": rm, "raw": g.text,
         })
     lm.detach_adapter()
@@ -261,7 +296,25 @@ def main():
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--dtype", default="bfloat16")
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
-    ap.add_argument("--alpha", type=float, default=0.10)
+    ap.add_argument("--alpha", type=float, default=0.10,
+                    help="target SELECTIVE ERROR rate: the error rate "
+                         "among items the UQ engine answers. Not an "
+                         "abstention budget.")
+    ap.add_argument("--calib_delta", type=float, default=0.10,
+                    help="confidence level for the exact "
+                         "Clopper-Pearson bound on selective error: the "
+                         "threshold holds with probability 1-delta. "
+                         "Smaller is stricter and certifies fewer "
+                         "thresholds; at alpha=0.10 the minimum "
+                         "certifiable calibration pool is 22 items at "
+                         "delta=0.10, 29 at delta=0.05, 16 at 0.20.")
+    ap.add_argument("--calib_rule", default="conformal",
+                    choices=["conformal", "legacy"],
+                    help="`conformal` (default since 2026-09-08) is the "
+                         "finite-sample-corrected threshold. `legacy` is "
+                         "the uncorrected empirical optimum that produced "
+                         "every UQ number reported before that date, kept "
+                         "so they stay reproducible.")
     ap.add_argument("--topk", type=int, default=3)
     ap.add_argument("--batch_size", type=int, default=8)
     ap.add_argument("--data", default="data/synthetic_control",
@@ -336,7 +389,9 @@ def main():
                                     uq_signal=args.uq_signal,
                                     adapter=args.adapter,
                                     adapter_layer=args.adapter_layer,
-                                    adapter_alpha=args.adapter_alpha)
+                                    adapter_alpha=args.adapter_alpha,
+                                    calib_delta=args.calib_delta,
+                                    calib_rule=args.calib_rule)
             s = score(recs)
             s.update({**calib_diag,
                       "variant": variant, "seed": seed, "tau": tau,
@@ -345,6 +400,7 @@ def main():
                       "adapter": args.adapter if VARIANT_SPEC[variant]["cl"]
                       else None,
                       "uq_signal": args.uq_signal, "gate": args.gate,
+                      "calib_rule": args.calib_rule,
                       "data": str(data),
                       "split": args.split, "backend": args.backend,
                       "model": args.model_id if args.backend == "hf" else "mock"})

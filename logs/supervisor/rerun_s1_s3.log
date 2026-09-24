@@ -1,0 +1,13 @@
+[s1s3] snapshotting pre-change artifacts to results/pre_s1s3_20260908
+[s1s3] 1_fis_topk_matched  start 2026-09-08T14:48:23+03:00
+[s1s3] 1_fis_topk_matched  done  2026-09-08T15:33:00+03:00
+[s1s3] 2_uq_test  start 2026-09-08T15:33:00+03:00
+[s1s3] 2_uq_test  done  2026-09-08T15:33:50+03:00
+[s1s3] 3_uq_heldout  start 2026-09-08T15:33:50+03:00
+[s1s3] 3_uq_heldout  done  2026-09-08T15:34:19+03:00
+[s1s3] 4_uqcl_test  start 2026-09-08T15:34:19+03:00
+[s1s3] 4_uqcl_test  done  2026-09-08T15:34:55+03:00
+[s1s3] 5_uqcl_heldout  start 2026-09-08T15:34:55+03:00
+[s1s3] 5_uqcl_heldout  done  2026-09-08T15:35:16+03:00
+[s1s3] ALL DONE 2026-09-08T15:35:16+03:00
+[s1s3] pre-change artifacts preserved in results/pre_s1s3_20260908

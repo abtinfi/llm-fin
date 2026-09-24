@@ -67,7 +67,7 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 
 ### Why a UQ row can read 0.000 coverage
 
-Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 50 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 4.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 50 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 0.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
 
 
 ### Notes

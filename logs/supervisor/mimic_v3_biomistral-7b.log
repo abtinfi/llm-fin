@@ -1,0 +1,5 @@
+[v3:biomistral-7b][run ] eval_test_base  2026-09-23T18:00:01+03:00
+[v3:biomistral-7b][ok  ] eval_test_base  3197s
+[v3:biomistral-7b][run ] eval_test_sym  2026-09-23T18:53:18+03:00
+[v3:biomistral-7b][ok  ] eval_test_sym  3168s
+[v3:biomistral-7b][run ] eval_test_nsai  2026-09-23T19:46:06+03:00

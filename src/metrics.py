@@ -12,28 +12,152 @@ from collections import defaultdict
 from typing import Dict, List, Optional
 
 import numpy as np
+from scipy.stats import beta
 
 
 # --------------------------- UQ calibration --------------------------------
 
-def calibrate_threshold(entropies: List[float], correct: List[bool],
-                        alpha: float = 0.10) -> float:
+def clopper_pearson_upper(k: int, n: int, delta: float = 0.10) -> float:
     """
-    Split-conformal style selection: smallest entropy threshold tau such that
-    the error rate among retained (entropy <= tau) calibration cases is <= alpha.
-    Falls back to the most conservative threshold if no tau satisfies it.
+    Exact one-sided upper confidence limit on a binomial rate.
+
+    `k` failures out of `n` trials: returns U such that the true rate is <= U
+    with probability at least 1 - delta. Exact (Clopper-Pearson), so it is
+    valid at every n rather than asymptotically -- which is the whole point
+    here, since the calibration pools in this pipeline are 12-124 items.
+    """
+    if n <= 0:
+        return 1.0
+    if k >= n:
+        return 1.0
+    return float(beta.ppf(1.0 - delta, k + 1, n - k))
+
+
+def min_certifiable_n(alpha: float = 0.10, delta: float = 0.10,
+                      limit: int = 100000) -> int:
+    """
+    Fewest retained items that could ever certify `alpha`, i.e. the smallest n
+    with clopper_pearson_upper(0, n, delta) <= alpha.
+
+    With a PERFECT prefix -- zero errors -- a threshold still cannot be
+    certified below this n. At alpha=0.10, delta=0.10 it is 22. Reported
+    alongside a degenerate tau so "abstains on everything" is legible as a
+    sample-size fact rather than a bug.
+    """
+    for n in range(1, limit + 1):
+        if clopper_pearson_upper(0, n, delta) <= alpha:
+            return n
+    return limit + 1
+
+
+def calibrate_threshold(entropies: List[float], correct: List[bool],
+                        alpha: float = 0.10, delta: float = 0.10,
+                        rule: str = "conformal") -> float:
+    """
+    Abstention threshold tau: retain an item iff its uncertainty is <= tau.
+
+    WHAT IS GUARANTEED (rule="conformal", the default since 2026-09-08)
+    -------------------------------------------------------------------
+    The LARGEST tau whose SELECTIVE ERROR RATE -- the error rate among the
+    calibration items it retains -- is at most `alpha` with confidence
+    1 - `delta`, certified by an exact Clopper-Pearson upper bound.
+
+    This is a bound on error among ANSWERED items. It is deliberately NOT the
+    conformal COVERAGE guarantee: the textbook `ceil((n+1)(1-alpha))/n`
+    quantile of the calibration scores would make `alpha` an abstention budget
+    (answer 90% of items however wrong they are), which is a different
+    quantity from the one `alpha` denotes everywhere else in this pipeline --
+    `adaptive_conformal` below, and `calib_target_alpha` in run_eval, both
+    read it as a target ERROR rate. Changing the meaning of alpha in one place
+    only would make the two paths silently incomparable.
+
+    RETURNS -inf WHEN NOTHING CAN BE CERTIFIED. That means "abstain on
+    everything", the only conservative answer available. It is a real outcome
+    rather than a failure: at alpha=0.10, delta=0.10 no threshold is
+    certifiable until 22 consecutive correct items are retained, so a
+    14-item calibration pool ALWAYS returns -inf however accurate the model
+    is. `min_certifiable_n()` gives that floor and run_eval reports it, so a
+    zero-coverage row explains itself. The fix for such a row is a bigger
+    calibration split, not a looser threshold.
+
+    WHY NOT THE PREVIOUS RULE (rule="legacy" reproduces it exactly).
+    It selected the raw empirical optimum -- the largest tau whose calibration
+    error POINT ESTIMATE was <= alpha -- with no finite-sample correction, so
+    it overfitted the calibration split and undercovered on test. It is
+    visible in the artifacts it produced: `summary_test.json` records the
+    `uq` row calibrating to error 0.25 against a target of 0.10, and
+    `summary_test_medcalc.json` records 0.50. Its no-solution fallback was
+    also inverted -- it returned the SMALLEST observed uncertainty, which
+    still answers the single item known to be wrong, where the docstring
+    claimed the most conservative threshold.
+
+    Ties are handled on distinct values, not on prefix positions: retention is
+    `u <= tau`, so every item sharing the winning value is counted as retained
+    before the bound is computed. Scoring a prefix instead would certify a set
+    smaller than the one actually retained at test time.
     """
     ent = np.asarray(entropies, dtype=float)
     ok = np.asarray(correct, dtype=bool)
-    order = np.argsort(ent)
+    if ent.size == 0:
+        # 0.0 is a RETAINING threshold for a non-negative signal; -inf is the
+        # empty-input answer that abstains.
+        return -float("inf")
+
+    order = np.argsort(ent, kind="stable")
     ent, ok = ent[order], ok[order]
 
-    best = ent[0] if len(ent) else 0.0
-    for i in range(1, len(ent) + 1):
-        err = 1.0 - ok[:i].mean()
-        if err <= alpha:
-            best = ent[i - 1]
-    return float(best)
+    if rule == "legacy":
+        best = ent[0]
+        for i in range(1, len(ent) + 1):
+            err = 1.0 - ok[:i].mean()
+            if err <= alpha:
+                best = ent[i - 1]
+        return float(best)
+    if rule != "conformal":
+        raise ValueError(f"unknown calibration rule {rule!r}")
+
+    cum_err = np.cumsum(~ok)
+    uniq, counts = np.unique(ent, return_counts=True)
+    last = np.cumsum(counts) - 1          # last index of each distinct value
+
+    best = -float("inf")
+    for v, j in zip(uniq, last):
+        n_ret = int(j) + 1
+        k_err = int(cum_err[j])
+        if clopper_pearson_upper(k_err, n_ret, delta) <= alpha:
+            best = float(v)
+    return best
+
+
+def calibration_diagnostics(entropies: List[float], correct: List[bool],
+                            alpha: float = 0.10, delta: float = 0.10,
+                            rule: str = "conformal") -> Dict:
+    """
+    What the chosen tau actually achieved on the calibration split, plus the
+    sample-size facts needed to read a degenerate one.
+
+    `certifiable` False with `n` below `min_prefix_needed` means the pool is
+    too small to certify `alpha` at this confidence -- no threshold exists,
+    independent of the model.
+    """
+    ent = np.asarray(entropies, dtype=float)
+    ok = np.asarray(correct, dtype=bool)
+    tau = calibrate_threshold(ent, ok, alpha=alpha, delta=delta, rule=rule)
+    keep = ent <= tau
+    n_ret = int(keep.sum())
+    k_err = int((~ok[keep]).sum())
+    return {
+        "n": int(ent.size),
+        "tau": tau,
+        "retained": n_ret,
+        "errors": k_err,
+        "coverage": (n_ret / ent.size) if ent.size else 0.0,
+        "selective_error": (k_err / n_ret) if n_ret else float("nan"),
+        "cp_upper_at_tau": clopper_pearson_upper(k_err, n_ret, delta),
+        "certifiable": bool(np.isfinite(tau)),
+        "min_prefix_needed": min_certifiable_n(alpha, delta),
+        "alpha": alpha, "delta": delta, "rule": rule,
+    }
 
 
 # ------------------------------ scoring ------------------------------------

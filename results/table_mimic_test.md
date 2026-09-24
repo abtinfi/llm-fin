@@ -11,7 +11,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.690 | +0.155 | 0.379 | +0.310 | 0.000 | 1.000 | 0.379 |
 | (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.379 | -0.155 | 0.379 | +0.310 | 0.000 | 0.379 | 0.379 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.690 | +0.155 | 0.379 | +0.310 | 0.621 | 1.000 | 0.379 |
-| (6) Base + UQ only | YES | - | - | YES | - | 0.034 | -0.500 | 0.000 | -0.069 | 0.034 | 0.052 | 0.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.534 | 0.000 | -0.069 | 0.000 | 0.000 | 0.000 |
 | (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.534 | +0.000 | 0.069 | +0.000 | 0.552 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 0.379 | -0.155 | 0.379 | +0.310 | 0.000 | 0.379 | 0.379 |
 
@@ -24,7 +24,7 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (3) + Symbolic Gate (NS-AI) | 0.690 | [0.569, 0.810] | 0.379 | [0.207, 0.552] |
 | (4) + UQ Engine (NS-AI+UQ) | 0.379 | [0.259, 0.500] | 0.379 | [0.207, 0.552] |
 | (5) Base + Symbolic Gate only | 0.690 | [0.569, 0.810] | 0.379 | [0.207, 0.552] |
-| (6) Base + UQ only | 0.034 | [0.000, 0.086] | 0.000 | [0.000, 0.000] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
 | (7) Base + Constraint Layer only | 0.534 | [0.397, 0.655] | 0.069 | [0.000, 0.172] |
 | (8) All four contributions | 0.379 | [0.259, 0.500] | 0.379 | [0.207, 0.552] |
 
@@ -38,7 +38,7 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai | 27 | 18 | 0.2327 | 0.6981 |
 | base→nsai_uq | 9 | 18 | 0.1221 | 0.6104 |
 | base→sym | 9 | 0 | 0.003906 | 0.02344 |
-| base→uq | 0 | 29 | 3.725e-09 | 2.608e-08 |
+| base→uq | 0 | 31 | 9.313e-10 | 6.519e-09 |
 | base→cl | 9 | 9 | 1 | 1 |
 | base→nsai_uq_cl | 9 | 18 | 0.1221 | 0.6104 |
 
@@ -64,6 +64,11 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 | (5) Base + Symbolic Gate only | gate declined | 36 | 0.500 | 0.500 |
 | (8) All four contributions | gate fired | 22 | 1.000 | 0.591 |
 | (8) All four contributions | gate declined | 36 | 0.000 | 0.500 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 30 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 0.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
 
 ### Notes
 

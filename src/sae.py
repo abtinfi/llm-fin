@@ -554,7 +554,8 @@ def cmd_score(args):
 
     # ---- S_causal: knock the feature out of the forward pass -------------
     if args.causal_items:
-        report["causal"] = causal_knockout(args, sae, top, report, scale)
+        report["causal"] = causal_knockout(args, sae, top, report, scale,
+                                           n_active=n_active)
 
     # ---- FIS -------------------------------------------------------------
     a, b = args.alpha_sem, args.beta_causal
@@ -575,7 +576,49 @@ def cmd_score(args):
     print(f"\nwrote {out}")
 
 
-def causal_knockout(args, sae, feats, report, scale=1.0):
+def matched_control_features(target, n_active, n_controls=5, pool_k=50,
+                             rng=None):
+    """
+    Control features for a knock-out, MATCHED on firing rate.
+
+    Returns `n_controls` feature indices drawn from the `pool_k` features whose
+    firing rate is closest to `target`'s in LOG space, excluding dead features
+    and `target` itself.
+
+    WHY MATCHING IS NOT OPTIONAL (defect S1, fixed 2026-09-08). This used to be
+    `rng.integers(0, n_feat)` -- uniform over the whole dictionary -- while the
+    docstring claimed a control "of similar firing rate". 42% of the topk
+    dictionary and 67% of the jumprelu one are DEAD, so a uniform draw usually
+    knocked out a feature that never fires, measured exactly zero, and left
+    `excess = eff - ctrl` equal to the raw effect. It is visible in the
+    artifacts that rule produced: 6 of the 12 top features sampled from
+    `results/sae/sae_topk_L20_fis.json` have a control effect of exactly
+    0.0000. Every S_causal, and so every FIS, was inflated by an uncontrolled
+    amount, always in the direction of the claim.
+
+    Log space rather than linear: firing rates span orders of magnitude, so a
+    linear band is dominated by the high-frequency tail and matches nothing at
+    the sparse end. Nearest-K rather than a multiplicative band because the
+    band can be empty for an extreme-frequency feature, and an empty band needs
+    a widening fallback whose behaviour is then unstated. Nearest-K is never
+    empty as long as any live feature exists, and the realised match quality is
+    reported per feature so a poor match is visible rather than silent.
+    """
+    n_active = np.asarray(n_active)
+    rng = rng if rng is not None else np.random.default_rng(0)
+    live = np.flatnonzero(n_active > 0)
+    live = live[live != int(target)]
+    if live.size == 0:
+        return np.array([], dtype=int)
+    # +1 keeps log finite and monotone; rates are counts, so this is exact.
+    d = np.abs(np.log(n_active[live] + 1.0)
+               - np.log(n_active[int(target)] + 1.0))
+    pool = live[np.argsort(d, kind="stable")[:min(pool_k, live.size)]]
+    k = min(n_controls, pool.size)
+    return rng.choice(pool, size=k, replace=False)
+
+
+def causal_knockout(args, sae, feats, report, scale=1.0, n_active=None):
     """
     S_causal: does removing this feature from the residual stream change the
     model's decision?
@@ -671,27 +714,83 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
                        max(lg[i].item() for i in unsafe_ids))
         return np.array(out)
 
-    state["feature"] = None
-    clean = margins()
-
     rng = np.random.default_rng(getattr(args, "seed", 0))
     n_feat = W_dec.shape[0]
+    mode = getattr(args, "control_mode", "matched")
+    n_ctrl = getattr(args, "n_controls", 5)
+    if mode == "matched" and n_active is None:
+        raise SystemExit(
+            "control_mode='matched' needs per-feature firing rates; "
+            "cmd_score must pass n_active into causal_knockout()")
+    if mode == "matched":
+        n_active = np.asarray(n_active)
+        print(f"  controls: {n_ctrl} per feature, matched on firing rate "
+              f"(nearest 50 live features in log space); "
+              f"{int((n_active == 0).sum())}/{n_feat} dead features excluded")
+    else:
+        print(f"  controls: 1 per feature, drawn UNIFORMLY over all "
+              f"{n_feat} features (legacy pre-2026-09-08 behaviour; "
+              f"dead features are NOT excluded and the excess is inflated)")
+
     results = {}
-    for f in (feats if not args.causal_features
-             else feats[:args.causal_features]):
-        state["feature"] = int(f)
-        eff = float(np.abs(margins() - clean).mean())
-        ctrl_f = int(rng.integers(0, n_feat))
-        state["feature"] = ctrl_f
-        ctrl = float(np.abs(margins() - clean).mean())
-        results[int(f)] = {"mean_abs_delta_logit": eff,
-                           "control_feature": ctrl_f,
-                           "control_mean_abs_delta_logit": ctrl,
-                           "excess": eff - ctrl}
-        print(f"  knock-out #{f}: |Δ margin|={eff:.4f} "
-              f"(random control #{ctrl_f}: {ctrl:.4f}, excess {eff-ctrl:+.4f})",
-              flush=True)
-    handle.remove()
+    # try/finally so an OOM inside margins() cannot leave the knock-out hook
+    # attached to a live model (patching.py and steering.py already do this).
+    try:
+        state["feature"] = None
+        clean = margins()
+
+        for f in (feats if not args.causal_features
+                 else feats[:args.causal_features]):
+            state["feature"] = int(f)
+            eff = float(np.abs(margins() - clean).mean())
+
+            if mode == "matched":
+                ctrl_fs = matched_control_features(
+                    int(f), n_active, n_controls=n_ctrl, rng=rng)
+            else:
+                ctrl_fs = np.array([int(rng.integers(0, n_feat))])
+
+            ctrl_effects = []
+            for cf in ctrl_fs:
+                state["feature"] = int(cf)
+                ctrl_effects.append(
+                    float(np.abs(margins() - clean).mean()))
+            ctrl = float(np.mean(ctrl_effects)) if ctrl_effects else 0.0
+
+            rec = {"mean_abs_delta_logit": eff,
+                   "control_mean_abs_delta_logit": ctrl,
+                   "excess": eff - ctrl,
+                   "control_mode": mode,
+                   "control_features": [int(c) for c in ctrl_fs],
+                   "control_effects": ctrl_effects,
+                   "control_sd": (float(np.std(ctrl_effects, ddof=1))
+                                  if len(ctrl_effects) > 1 else None),
+                   # legacy key: the single control, or the first of the set
+                   "control_feature": (int(ctrl_fs[0]) if len(ctrl_fs)
+                                       else None)}
+            if mode == "matched":
+                rec["n_active"] = int(n_active[int(f)])
+                rec["control_n_active"] = [int(n_active[c]) for c in ctrl_fs]
+                # worst log-ratio in the drawn set: 0 is a perfect match, and
+                # a large value means the dictionary had no comparable feature.
+                rec["control_match_log_ratio"] = (
+                    float(np.max(np.abs(
+                        np.log(n_active[ctrl_fs] + 1.0)
+                        - np.log(n_active[int(f)] + 1.0))))
+                    if len(ctrl_fs) else None)
+            results[int(f)] = rec
+
+            sd = rec["control_sd"]
+            print(f"  knock-out #{f}: |Δ margin|={eff:.4f} "
+                  f"(control mean {ctrl:.4f}"
+                  + (f" ± {sd:.4f}" if sd is not None else "")
+                  + f" over {len(ctrl_fs)}"
+                  + (f", worst log-ratio "
+                     f"{rec['control_match_log_ratio']:.2f}"
+                     if mode == "matched" and ctrl_fs.size else "")
+                  + f", excess {eff-ctrl:+.4f})", flush=True)
+    finally:
+        handle.remove()
 
     # normalise into [0, 1] for the FIS: 1 logit of excess effect is a lot
     for feat in report["features"]:
@@ -700,6 +799,19 @@ def causal_knockout(args, sae, feats, report, scale=1.0):
             feat["s_causal"] = float(np.clip(r["excess"], 0.0, 1.0))
             feat["causal_detail"] = r
     return {"n_items": len(records), "clean_margin_mean": float(clean.mean()),
+            "split": split,
+            "control_mode": mode,
+            "n_controls": (int(n_ctrl) if mode == "matched" else 1),
+            "control_note": (
+                "Controls are live features matched on firing rate (nearest "
+                "50 in log space), averaged over n_controls draws. Dead "
+                "features are excluded."
+                if mode == "matched" else
+                "LEGACY control: ONE feature drawn uniformly over the whole "
+                "dictionary, dead features included. ~42% of this dictionary "
+                "never fires, so the control frequently measures exactly zero "
+                "and `excess` is inflated toward the claim. Reproduces "
+                "pre-2026-09-08 FIS numbers; do not report as a control."),
             "per_feature": {str(k): v for k, v in results.items()}}
 
 
@@ -756,6 +868,19 @@ def main():
     s.add_argument("--causal_features", type=int, default=0,
                    help="how many of the --top features to run knock-out on; "
                         "0 (default) means ALL of them")
+    s.add_argument("--control_mode", default="matched",
+                   choices=["matched", "uniform"],
+                   help="how the knock-out negative control is drawn. "
+                        "`matched` (default since 2026-09-08) samples live "
+                        "features of similar firing rate. `uniform` is the "
+                        "legacy single uniform draw over ALL features, "
+                        "including dead ones, which produced every FIS number "
+                        "reported before that date -- kept so they stay "
+                        "reproducible, not because it is correct.")
+    s.add_argument("--n_controls", type=int, default=5,
+                   help="matched controls averaged per feature. 1 gives the "
+                        "control a variance comparable to the signal, which "
+                        "is why the single draw was replaced.")
     s.add_argument("--causal_split", default=None,
                    help="split to run the knock-out on; defaults to the split "
                         "the activations came from")

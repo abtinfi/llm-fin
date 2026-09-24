@@ -27,6 +27,38 @@ ANSWER_VARIANTS = {
     "UNSAFE": ["UNSAFE", " UNSAFE", "\nUNSAFE"],
 }
 
+# FALLBACK ONLY (model.HFModel.generate). Read when a generation names an
+# answer but contains none of the ANSWER_VARIANTS ids, which the 2026-09-24
+# audit found in exactly one model: Llama3-OpenBioLLM-8B writes UNSAFE as the
+# non-canonical pieces `UNS`+`AFE` (its tokenizer encodes `UN`+`SAFE`), and in
+# prose answers "it is safe". Without a fallback such a row has no margin, so
+# UQ reads it as infinitely uncertain. Both classes get the same case and
+# spacing variants, so neither side of the margin is favoured by the widening.
+# It never changes a row the canonical ids already resolve.
+FALLBACK_VARIANTS = {
+    "SAFE":   ANSWER_VARIANTS["SAFE"] + ["safe", " safe", "Safe", " Safe"],
+    "UNSAFE": ANSWER_VARIANTS["UNSAFE"] + ["unsafe", " unsafe", "Unsafe",
+                                          " Unsafe", "not safe", " not safe",
+                                          "Not safe", " Not safe",
+                                          "contraindicated",
+                                          " contraindicated"],
+}
+
+
+def fallback_answer_ids(tokenizer) -> Dict[str, Set[int]]:
+    """First content token of every FALLBACK_VARIANTS spelling, ids claimed
+    by both classes dropped (same rule as answer_token_ids)."""
+    ids = {"SAFE": set(), "UNSAFE": set()}
+    for label, texts in FALLBACK_VARIANTS.items():
+        for t in texts:
+            for tok in tokenizer.encode(t, add_special_tokens=False):
+                if not tokenizer.decode([tok]).strip():
+                    continue
+                ids[label].add(tok)
+                break
+    both = ids["SAFE"] & ids["UNSAFE"]
+    return {k: v - both for k, v in ids.items()}
+
 
 def wrap_prompt(tokenizer, prompt: str) -> str:
     """

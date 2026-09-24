@@ -9,9 +9,9 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (1) Base LLM | YES | - | - | - | - | 0.594 | +0.000 | 0.250 | +0.000 | 0.062 | 1.000 | 0.000 |
 | (2) + RAG | YES | YES | - | - | - | 0.500 | -0.094 | 0.000 | -0.250 | 0.000 | 1.000 | 0.000 |
 | (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.750 | +0.156 | 0.500 | +0.250 | 0.000 | 1.000 | 0.500 |
-| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.688 | +0.094 | 0.500 | +0.250 | 0.000 | 0.750 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.500 | -0.094 | 0.500 | +0.250 | 0.000 | 0.500 | 0.500 |
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.750 | +0.156 | 0.562 | +0.312 | 0.062 | 1.000 | 0.500 |
-| (6) Base + UQ only | YES | - | - | YES | - | 0.094 | -0.500 | 0.000 | -0.250 | 0.000 | 0.188 | 0.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.594 | 0.000 | -0.250 | 0.000 | 0.000 | 0.000 |
 | (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.656 | +0.062 | 0.375 | +0.125 | 0.375 | 1.000 | 0.000 |
 | (8) All four contributions | YES | YES | YES | YES | YES | 0.500 | -0.094 | 0.500 | +0.250 | 0.000 | 0.500 | 0.500 |
 
@@ -22,9 +22,9 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (1) Base LLM | 0.594 | [0.438, 0.750] | 0.250 | [0.062, 0.500] |
 | (2) + RAG | 0.500 | [0.344, 0.688] | 0.000 | [0.000, 0.000] |
 | (3) + Symbolic Gate (NS-AI) | 0.750 | [0.594, 0.875] | 0.500 | [0.250, 0.750] |
-| (4) + UQ Engine (NS-AI+UQ) | 0.688 | [0.531, 0.844] | 0.500 | [0.250, 0.750] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
 | (5) Base + Symbolic Gate only | 0.750 | [0.594, 0.875] | 0.562 | [0.312, 0.812] |
-| (6) Base + UQ only | 0.094 | [0.000, 0.219] | 0.000 | [0.000, 0.000] |
+| (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
 | (7) Base + Constraint Layer only | 0.656 | [0.500, 0.812] | 0.375 | [0.125, 0.625] |
 | (8) All four contributions | 0.500 | [0.312, 0.657] | 0.500 | [0.250, 0.750] |
 
@@ -36,9 +36,9 @@ This is the supervisor's question: what does adding this contribution to the bas
 |---|---|---|---|---|
 | base→rag | 1 | 4 | 0.375 | 1 |
 | base→nsai | 6 | 1 | 0.125 | 0.625 |
-| base→nsai_uq | 6 | 3 | 0.5078 | 1 |
+| base→nsai_uq | 5 | 8 | 0.5811 | 1 |
 | base→sym | 5 | 0 | 0.0625 | 0.375 |
-| base→uq | 0 | 16 | 3.052e-05 | 0.0002136 |
+| base→uq | 0 | 19 | 3.815e-06 | 2.67e-05 |
 | base→cl | 7 | 5 | 0.7744 | 1 |
 | base→nsai_uq_cl | 5 | 8 | 0.5811 | 1 |
 
@@ -46,9 +46,9 @@ This is the supervisor's question: what does adding this contribution to the bas
 
 | Comparison | B01 | B10 | p (exact) | p (Holm) |
 |---|---|---|---|---|
-| base→rag | 1 | 4 | 0.375 | 0.75 |
+| base→rag | 1 | 4 | 0.375 | 0.375 |
 | rag→nsai | 8 | 0 | 0.007812 | 0.02344 |
-| nsai→nsai_uq | 0 | 2 | 0.5 | 0.75 |
+| nsai→nsai_uq | 0 | 8 | 0.007812 | 0.02344 |
 
 ### Where the gate's contribution comes from (seed 0)
 
@@ -59,11 +59,16 @@ The gate's accuracy on items it fires on is partly circular: it applies the same
 | (3) + Symbolic Gate (NS-AI) | gate fired | 16 | 1.000 | 0.688 |
 | (3) + Symbolic Gate (NS-AI) | gate declined | 16 | 0.500 | 0.500 |
 | (4) + UQ Engine (NS-AI+UQ) | gate fired | 16 | 1.000 | 0.688 |
-| (4) + UQ Engine (NS-AI+UQ) | gate declined | 16 | 0.375 | 0.500 |
+| (4) + UQ Engine (NS-AI+UQ) | gate declined | 16 | 0.000 | 0.500 |
 | (5) Base + Symbolic Gate only | gate fired | 16 | 1.000 | 0.688 |
 | (5) Base + Symbolic Gate only | gate declined | 16 | 0.500 | 0.500 |
 | (8) All four contributions | gate fired | 16 | 1.000 | 0.688 |
 | (8) All four contributions | gate declined | 16 | 0.000 | 0.500 |
+
+### Why a UQ row can read 0.000 coverage
+
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 32 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 0.0% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+
 
 ### Notes
 

@@ -1,0 +1,10 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:02, 127.56it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 193.76it/s]Loading weights:  23%|██▎       | 67/291 [00:00<00:01, 223.22it/s]Loading weights:  32%|███▏      | 94/291 [00:00<00:00, 224.92it/s]Loading weights:  42%|████▏     | 123/291 [00:00<00:00, 245.09it/s]Loading weights:  51%|█████     | 149/291 [00:00<00:00, 244.67it/s]Loading weights:  60%|█████▉    | 174/291 [00:00<00:00, 235.35it/s]Loading weights:  69%|██████▉   | 202/291 [00:00<00:00, 232.47it/s]Loading weights:  79%|███████▊  | 229/291 [00:00<00:00, 240.82it/s]Loading weights:  88%|████████▊ | 256/291 [00:01<00:00, 248.20it/s]Loading weights:  97%|█████████▋| 281/291 [00:01<00:00, 245.27it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 236.39it/s]
+[transformers] Error during conversion: ReadTimeout('The read operation timed out')
+  [uq] NO CERTIFIABLE THRESHOLD: calibration pool is 32 items, but certifying alpha=0.1 at confidence 0.90 needs at least 22 retained items even with zero errors. tau=-inf, so this variant abstains on everything. This is a calibration-set SIZE limit, not a model result -- enlarge the calibration split to fix it.
+[seed 0] uq        acc=0.000 cc=0.000 viol=0.000 cov=0.000
+  [nsai_uq] NO CERTIFIABLE THRESHOLD: calibration pool is 14 items, but certifying alpha=0.1 at confidence 0.90 needs at least 22 retained items even with zero errors. tau=-inf, so this variant abstains on everything. This is a calibration-set SIZE limit, not a model result -- enlarge the calibration split to fix it.
+[seed 0] nsai_uq   acc=0.562 cc=0.562 viol=0.000 cov=0.562
+
+wrote results/summary_test.json

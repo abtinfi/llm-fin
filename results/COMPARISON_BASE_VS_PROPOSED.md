@@ -10,7 +10,7 @@ Row (1) is the base LLM alone. The proposed system is row (8), all four contribu
 
 | model | benchmark | n | acc base | acc proposed | Δ acc | CC base | CC proposed | Δ CC | viol base | viol proposed | coverage proposed | p (Holm) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `BioMistral/BioMistral-7B` | synthetic control, test | 128 | 0.602 | 0.578 | -0.023 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.578 | 1 |
+| `BioMistral/BioMistral-7B` | synthetic control, test | 128 | 0.602 | 0.562 | -0.039 | 0.219 | 0.562 | +0.344 | 0.125 | 0.000 | 0.562 | 1 |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | 32 | 0.594 | 0.500 | -0.094 | 0.250 | 0.500 | +0.250 | 0.062 | 0.000 | 0.500 | 1 |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), test | 180 | 0.506 | 0.994 | +0.489 | 0.011 | 0.989 | +0.978 | 0.322 | 0.000 | 1.000 | 2.07e-25 |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | 60 | 0.500 | 1.000 | +0.500 | 0.000 | 1.000 | +1.000 | 1.000 | 0.000 | 1.000 | 4.84e-08 |
@@ -51,7 +51,7 @@ Row (1) is the base LLM alone. The proposed system is row (8), all four contribu
 
 | model | benchmark | accuracy base | accuracy proposed | CC base | CC proposed |
 |---|---|---|---|---|---|
-| `BioMistral/BioMistral-7B` | synthetic control, test | 0.602 [0.516, 0.688] | 0.578 [0.492, 0.664] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
+| `BioMistral/BioMistral-7B` | synthetic control, test | 0.602 [0.516, 0.688] | 0.562 [0.477, 0.648] | 0.219 [0.125, 0.328] | 0.562 [0.438, 0.688] |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | 0.594 [0.438, 0.750] | 0.500 [0.312, 0.657] | 0.250 [0.062, 0.500] | 0.500 [0.250, 0.750] |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), test | 0.506 [0.433, 0.578] | 0.994 [0.983, 1.000] | 0.011 [0.000, 0.033] | 0.989 [0.967, 1.000] |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), held-out QT | 0.500 [0.367, 0.617] | 1.000 [1.000, 1.000] | 0.000 [0.000, 0.000] | 1.000 [1.000, 1.000] |
@@ -93,11 +93,11 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 | model | benchmark | contribution | Δ acc | Δ CC | B01 (base wrong→right) | B10 (base right→wrong) | p (exact) |
 |---|---|---|---|---|---|---|---|
 | `BioMistral/BioMistral-7B` | synthetic control, test | Symbolic gate | +0.203 | +0.391 | 26 | 0 | 2.98e-08 |
-| `BioMistral/BioMistral-7B` | synthetic control, test | UQ engine | -0.391 | -0.203 | 0 | 50 | 1.78e-15 |
+| `BioMistral/BioMistral-7B` | synthetic control, test | UQ engine | -0.602 | -0.219 | 0 | 77 | 1.32e-23 |
 | `BioMistral/BioMistral-7B` | synthetic control, test | Constraint layer | +0.125 | +0.234 | 33 | 17 | 0.0328 |
 | `BioMistral/BioMistral-7B` | synthetic control, test | RAG | +0.047 | +0.094 | 18 | 12 | 0.362 |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | Symbolic gate | +0.156 | +0.312 | 5 | 0 | 0.0625 |
-| `BioMistral/BioMistral-7B` | synthetic control, held-out | UQ engine | -0.500 | -0.250 | 0 | 16 | 3.05e-05 |
+| `BioMistral/BioMistral-7B` | synthetic control, held-out | UQ engine | -0.594 | -0.250 | 0 | 19 | 3.81e-06 |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | Constraint layer | +0.062 | +0.125 | 7 | 5 | 0.774 |
 | `BioMistral/BioMistral-7B` | synthetic control, held-out | RAG | -0.094 | -0.250 | 1 | 4 | 0.375 |
 | `BioMistral/BioMistral-7B` | real notes (MedCalc), test | Symbolic gate | +0.489 | +0.978 | 88 | 0 | 6.46e-27 |
@@ -117,7 +117,7 @@ Each row adds exactly ONE contribution to the base model, so the delta is attrib
 | `BioMistral/BioMistral-7B` | real notes v2, held-out QT | Constraint layer | +0.333 | +0.767 | 43 | 7 | 2.1e-07 |
 | `BioMistral/BioMistral-7B` | real notes v2, held-out QT | RAG | -0.111 | +0.000 | 48 | 60 | 0.29 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | Symbolic gate | +0.155 | +0.310 | 9 | 0 | 0.00391 |
-| `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | UQ engine | -0.500 | -0.069 | 0 | 29 | 3.73e-09 |
+| `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | UQ engine | -0.534 | -0.069 | 0 | 31 | 9.31e-10 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | Constraint layer | +0.000 | +0.000 | 9 | 9 | 1 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, test | RAG | -0.034 | -0.069 | 25 | 27 | 0.89 |
 | `BioMistral/BioMistral-7B` | MIMIC-IV real values, held-out warfarin | Symbolic gate | +0.500 | +1.000 | 8 | 0 | 0.00781 |

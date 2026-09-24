@@ -27,7 +27,7 @@ from typing import List, Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lm_common import (answer_token_ids, decoder_layers,
-                       hidden_size, wrap_prompt)
+                       fallback_answer_ids, hidden_size, wrap_prompt)
 
 
 @dataclass
@@ -38,6 +38,7 @@ class Generation:
     n_tokens: int
     logit_margin: Optional[float] = None
     answer_logprob: Optional[float] = None
+    margin_fallback: bool = False   # margin read by the fallback, see generate
 
 
 class MockLM:
@@ -105,6 +106,7 @@ class HFModel:
         )
         self.model.eval()
         self.answer_token_ids = self._answer_token_ids()
+        self.fallback_ids = fallback_answer_ids(self.tokenizer)
         self._adapter_handle = None
 
     def _answer_token_ids(self):
@@ -179,6 +181,19 @@ class HFModel:
             ents.append(h)
         return torch.stack(ents, dim=1)           # [batch, steps]
 
+    def _answer_step(self, ids, text):
+        """Index of the generated token whose decoded text first reaches the
+        start of the answer word parse_answer reads (ANSWER_RE's first match).
+        Prefixes are decoded exactly as the full text was."""
+        m = ANSWER_RE.search(text)
+        if not m:
+            return None
+        for s in range(len(ids)):
+            pre = self.tokenizer.decode(ids[:s + 1], skip_special_tokens=True)
+            if len(pre) > m.start():
+                return s
+        return None
+
     def generate(self, prompts: List[str], max_new_tokens: int = 64,
                  batch_size: int = 8) -> List[Generation]:
         torch = self.torch
@@ -224,9 +239,33 @@ class HFModel:
                         answer_lp = logprobs_s[tok].item()
                         break
 
+                # FALLBACK, only when the canonical search found nothing but
+                # the text does name an answer (2026-09-24 audit: OpenBioLLM's
+                # `UNS`+`AFE`, and prose such as "it is safe"). The decision
+                # step is the token where the parsed answer word begins; the
+                # margin is read there over the case/spacing variants of BOTH
+                # classes, with that generated token added to its own class.
+                # Rows the canonical ids resolve are never touched.
+                fallback = False
+                if margin is None and parse_answer(text) is not None:
+                    s = self._answer_step(gen_ids[b], text)
+                    if s is not None:
+                        tok = int(gen_ids[b, s].item())
+                        ans = parse_answer(text)
+                        side = {k: set(v) for k, v in self.fallback_ids.items()}
+                        side[ans].add(tok)
+                        side["UNSAFE" if ans == "SAFE" else "SAFE"].discard(tok)
+                        logits_s = out.scores[s][b].float()
+                        logprobs_s = torch.log_softmax(logits_s, dim=-1)
+                        margin = (max(logits_s[i].item() for i in side["SAFE"])
+                                  - max(logits_s[i].item() for i in side["UNSAFE"]))
+                        answer_lp = logprobs_s[tok].item()
+                        fallback = True
+
                 results.append(Generation(
                     text=text.strip(), entropy=e, max_entropy=emax, n_tokens=n,
-                    logit_margin=margin, answer_logprob=answer_lp))
+                    logit_margin=margin, answer_logprob=answer_lp,
+                    margin_fallback=fallback))
         return results
 
 
