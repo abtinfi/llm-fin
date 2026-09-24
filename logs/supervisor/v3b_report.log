@@ -1,0 +1,6 @@
+[v3b report] waiting: 1 of 9 not done  2026-09-24T18:24:44+03:00
+wrote /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/results/mimic_v3b/COMPARISON_MIMIC3B.md  (6 arm(s) across 3 model root(s))
+wrote /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/results/mimic_v3b/COMPARISON_MIMIC3BNOTE.md  (6 arm(s) across 3 model root(s))
+wrote /home/asosoft/abtin/paper/csai/.claude/worktrees/mimic-v3/results/mimic_v3b/AUDIT_MIMIC3B.md
+[v3b report] audit clean
+[v3b report] done, 0 failed  2026-09-24T18:59:53+03:00

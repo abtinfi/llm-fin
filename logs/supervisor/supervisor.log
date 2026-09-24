@@ -363,3 +363,22 @@
 2026-09-24T09:48:07+03:00 [w0] run  v3b_note_llama3-openbiollm-8b on GPU 0
 2026-09-24T11:15:46+03:00 [w1] done v3b_note_biomistral-7b exit=2
 2026-09-24T11:15:46+03:00 [w1] run  v3b_note_mistral-7b-instruct-v0-2 on GPU 1
+2026-09-24T13:11:23+03:00 [w1] done v3b_note_mistral-7b-instruct-v0-2 exit=0
+2026-09-24T13:11:23+03:00 [w1] run  v3b_cl_biomistral-7b on GPU 1
+2026-09-24T13:18:55+03:00 [w0] done v3b_note_llama3-openbiollm-8b exit=0
+2026-09-24T13:18:55+03:00 [w0] run  v3b_cl_llama3-openbiollm-8b on GPU 0
+2026-09-24T16:23:54+03:00 [w1] done v3b_cl_biomistral-7b exit=0
+2026-09-24T16:23:54+03:00 [w1] run  v3b_cl_mistral-7b-instruct-v0-2 on GPU 1
+2026-09-24T17:35:40+03:00 [w0] done v3b_cl_llama3-openbiollm-8b exit=0
+2026-09-24T17:35:41+03:00 [w0] waiting for GPU 0 (v3b_report)
+2026-09-24T17:37:48+03:00 [w1] done v3b_cl_mistral-7b-instruct-v0-2 exit=0
+2026-09-24T17:37:48+03:00 [w1] queue empty
+2026-09-24T17:50:41+03:00 [w0] waiting for GPU 0 (v3b_report)
+2026-09-24T18:05:43+03:00 [w0] waiting for GPU 0 (v3b_report)
+2026-09-24T18:20:44+03:00 [w0] waiting for GPU 0 (v3b_report)
+2026-09-24T18:24:44+03:00 [w0] run  v3b_report on GPU 0
+2026-09-24T18:59:53+03:00 [w0] done v3b_report exit=0
+2026-09-24T18:59:53+03:00 [w0] queue empty
+2026-09-24T18:59:53+03:00 [reports] regenerating
+2026-09-24T18:59:58+03:00 [reports] exit=0
+2026-09-24T18:59:58+03:00 === supervisor finished ===

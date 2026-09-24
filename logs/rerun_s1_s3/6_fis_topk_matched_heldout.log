@@ -1,0 +1,210 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+top 100 features by S_semantic:
+  # 13369  S_sem=0.693  concept=age  fires on 1102/225248 tokens
+  # 13297  S_sem=0.637  concept=age  fires on 978/225248 tokens
+  # 14628  S_sem=0.634  concept=creatinine  fires on 4020/225248 tokens
+  #  4693  S_sem=0.602  concept=age  fires on 2570/225248 tokens
+  #  1894  S_sem=0.557  concept=qt_interval  fires on 84/225248 tokens
+  # 10721  S_sem=0.544  concept=drug  fires on 919/225248 tokens
+  #  7589  S_sem=0.514  concept=age  fires on 2031/225248 tokens
+  #  7787  S_sem=0.479  concept=age  fires on 607/225248 tokens
+  #  9404  S_sem=0.470  concept=heart_rate  fires on 623/225248 tokens
+  # 13261  S_sem=0.444  concept=qt_interval  fires on 43/225248 tokens
+  # 14577  S_sem=0.442  concept=asthma  fires on 48/225248 tokens
+  #  4149  S_sem=0.415  concept=age  fires on 548/225248 tokens
+  # 11828  S_sem=0.400  concept=age  fires on 3730/225248 tokens
+  #  7082  S_sem=0.396  concept=age  fires on 626/225248 tokens
+  # 14315  S_sem=0.394  concept=drug  fires on 296/225248 tokens
+  # 10221  S_sem=0.385  concept=age  fires on 464/225248 tokens
+  # 16268  S_sem=0.384  concept=drug  fires on 270/225248 tokens
+  # 11780  S_sem=0.356  concept=asthma  fires on 220/225248 tokens
+  # 16259  S_sem=0.356  concept=age  fires on 407/225248 tokens
+  # 11512  S_sem=0.356  concept=age  fires on 3905/225248 tokens
+  #  6467  S_sem=0.355  concept=heart_rate  fires on 326/225248 tokens
+  # 14803  S_sem=0.353  concept=age  fires on 513/225248 tokens
+  # 15148  S_sem=0.353  concept=drug  fires on 301/225248 tokens
+  # 15184  S_sem=0.344  concept=creatinine  fires on 1864/225248 tokens
+  # 15987  S_sem=0.343  concept=drug  fires on 494/225248 tokens
+  # 12137  S_sem=0.343  concept=age  fires on 1011/225248 tokens
+  #  6999  S_sem=0.343  concept=drug  fires on 238/225248 tokens
+  #  9828  S_sem=0.330  concept=heart_rate  fires on 542/225248 tokens
+  # 10027  S_sem=0.329  concept=drug  fires on 232/225248 tokens
+  # 13471  S_sem=0.326  concept=drug  fires on 241/225248 tokens
+  #  1814  S_sem=0.325  concept=drug  fires on 385/225248 tokens
+  #  4999  S_sem=0.324  concept=drug  fires on 588/225248 tokens
+  #  7423  S_sem=0.322  concept=drug  fires on 237/225248 tokens
+  #  5438  S_sem=0.320  concept=heart_rate  fires on 2690/225248 tokens
+  # 12245  S_sem=0.318  concept=drug  fires on 228/225248 tokens
+  #  2077  S_sem=0.317  concept=potassium  fires on 264/225248 tokens
+  #  7872  S_sem=0.305  concept=drug  fires on 308/225248 tokens
+  #  2823  S_sem=0.304  concept=asthma  fires on 52/225248 tokens
+  #  2120  S_sem=0.301  concept=creatinine  fires on 2163/225248 tokens
+  #    69  S_sem=0.299  concept=potassium  fires on 133/225248 tokens
+  #  2328  S_sem=0.299  concept=age  fires on 2430/225248 tokens
+  # 13476  S_sem=0.290  concept=drug  fires on 718/225248 tokens
+  #  1656  S_sem=0.290  concept=drug  fires on 320/225248 tokens
+  #  2454  S_sem=0.289  concept=age  fires on 341/225248 tokens
+  #  5754  S_sem=0.288  concept=age  fires on 428/225248 tokens
+  #   355  S_sem=0.285  concept=heart_rate  fires on 933/225248 tokens
+  # 12037  S_sem=0.283  concept=heart_rate  fires on 703/225248 tokens
+  #  1671  S_sem=0.282  concept=creatinine  fires on 21160/225248 tokens
+  # 15032  S_sem=0.280  concept=renal_disease  fires on 511/225248 tokens
+  #  5110  S_sem=0.279  concept=age  fires on 352/225248 tokens
+  #  9976  S_sem=0.279  concept=age  fires on 296/225248 tokens
+  # 11768  S_sem=0.277  concept=renal_disease  fires on 986/225248 tokens
+  # 14817  S_sem=0.277  concept=age  fires on 355/225248 tokens
+  #  9978  S_sem=0.276  concept=age  fires on 278/225248 tokens
+  #  4539  S_sem=0.272  concept=age  fires on 288/225248 tokens
+  # 10255  S_sem=0.272  concept=age  fires on 320/225248 tokens
+  #  1033  S_sem=0.271  concept=creatinine  fires on 934/225248 tokens
+  #  1546  S_sem=0.270  concept=age  fires on 336/225248 tokens
+  # 12447  S_sem=0.263  concept=pregnancy  fires on 56/225248 tokens
+  # 14137  S_sem=0.260  concept=drug  fires on 3614/225248 tokens
+  #   687  S_sem=0.256  concept=age  fires on 304/225248 tokens
+  # 12319  S_sem=0.256  concept=creatinine  fires on 746/225248 tokens
+  # 12989  S_sem=0.252  concept=creatinine  fires on 958/225248 tokens
+  # 12987  S_sem=0.251  concept=drug  fires on 175/225248 tokens
+  # 11335  S_sem=0.251  concept=heart_rate  fires on 124/225248 tokens
+  # 12776  S_sem=0.250  concept=creatinine  fires on 750/225248 tokens
+  # 12158  S_sem=0.250  concept=asthma  fires on 22/225248 tokens
+  # 13808  S_sem=0.250  concept=inr  fires on 42/225248 tokens
+  #  3260  S_sem=0.242  concept=age  fires on 631/225248 tokens
+  # 13258  S_sem=0.236  concept=creatinine  fires on 943/225248 tokens
+  #  3741  S_sem=0.235  concept=creatinine  fires on 1379/225248 tokens
+  # 13126  S_sem=0.235  concept=age  fires on 244/225248 tokens
+  # 15806  S_sem=0.234  concept=age  fires on 3012/225248 tokens
+  #  4754  S_sem=0.233  concept=age  fires on 1048/225248 tokens
+  #   526  S_sem=0.230  concept=creatinine  fires on 2377/225248 tokens
+  #  3022  S_sem=0.222  concept=age  fires on 264/225248 tokens
+  # 10896  S_sem=0.222  concept=age  fires on 606/225248 tokens
+  #  4707  S_sem=0.220  concept=age  fires on 1897/225248 tokens
+  # 12790  S_sem=0.220  concept=drug  fires on 1214/225248 tokens
+  # 15302  S_sem=0.219  concept=drug  fires on 146/225248 tokens
+  # 13071  S_sem=0.218  concept=renal_disease  fires on 222/225248 tokens
+  # 11014  S_sem=0.215  concept=age  fires on 5401/225248 tokens
+  #  2023  S_sem=0.215  concept=age  fires on 709/225248 tokens
+  #  8057  S_sem=0.214  concept=heart_rate  fires on 100/225248 tokens
+  # 14658  S_sem=0.213  concept=creatinine  fires on 6210/225248 tokens
+  # 13423  S_sem=0.212  concept=creatinine  fires on 769/225248 tokens
+  # 10448  S_sem=0.211  concept=renal_disease  fires on 106/225248 tokens
+  #  8049  S_sem=0.210  concept=age  fires on 284/225248 tokens
+  #  6756  S_sem=0.207  concept=creatinine  fires on 1214/225248 tokens
+  #  4227  S_sem=0.207  concept=inr  fires on 332/225248 tokens
+  #  1923  S_sem=0.207  concept=age  fires on 199/225248 tokens
+  #  7658  S_sem=0.207  concept=creatinine  fires on 910/225248 tokens
+  #  1818  S_sem=0.206  concept=potassium  fires on 1187/225248 tokens
+  #  3879  S_sem=0.206  concept=drug  fires on 2153/225248 tokens
+  #  2229  S_sem=0.205  concept=drug  fires on 1233/225248 tokens
+  # 11222  S_sem=0.205  concept=age  fires on 744/225248 tokens
+  #  7954  S_sem=0.198  concept=creatinine  fires on 735/225248 tokens
+  #  4858  S_sem=0.198  concept=renal_disease  fires on 146/225248 tokens
+  #  2086  S_sem=0.198  concept=drug  fires on 2776/225248 tokens
+  #  3582  S_sem=0.197  concept=age  fires on 454/225248 tokens
+  knock-out on 60 items of split `heldout`
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/291 [00:00<00:01, 174.82it/s]Loading weights:  14%|█▎        | 40/291 [00:00<00:01, 168.04it/s]Loading weights:  23%|██▎       | 68/291 [00:00<00:01, 208.15it/s]Loading weights:  33%|███▎      | 95/291 [00:00<00:00, 224.29it/s]Loading weights:  41%|████      | 119/291 [00:00<00:00, 218.48it/s]Loading weights:  51%|█████     | 148/291 [00:00<00:00, 221.03it/s]Loading weights:  61%|██████    | 177/291 [00:00<00:00, 238.90it/s]Loading weights:  69%|██████▉   | 202/291 [00:00<00:00, 239.81it/s]Loading weights:  79%|███████▊  | 229/291 [00:01<00:00, 246.20it/s]Loading weights:  88%|████████▊ | 256/291 [00:01<00:00, 247.02it/s]Loading weights:  98%|█████████▊| 285/291 [00:01<00:00, 257.40it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 237.64it/s]
+  knock-out hook on layers[19], which produces hidden_states[20] -- the stream the SAE was fitted on
+  controls: 5 per feature, matched on firing rate (nearest 50 live features in log space); 4916/16384 dead features excluded
+  knock-out #13369: |Δ margin|=0.0000 (control mean 0.0052 ± 0.0116 over 5, worst log-ratio 0.02, excess -0.0052)
+  knock-out #13297: |Δ margin|=0.0104 (control mean 0.0015 ± 0.0033 over 5, worst log-ratio 0.02, excess +0.0090)
+  knock-out #14628: |Δ margin|=0.0000 (control mean 0.0048 ± 0.0107 over 5, worst log-ratio 0.04, excess -0.0048)
+  knock-out #4693: |Δ margin|=0.0260 (control mean 0.0092 ± 0.0205 over 5, worst log-ratio 0.03, excess +0.0169)
+  knock-out #1894: |Δ margin|=0.0302 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0302)
+  knock-out #10721: |Δ margin|=0.0000 (control mean 0.0092 ± 0.0126 over 5, worst log-ratio 0.01, excess -0.0092)
+  knock-out #7589: |Δ margin|=0.0240 (control mean 0.0133 ± 0.0126 over 5, worst log-ratio 0.02, excess +0.0106)
+  knock-out #7787: |Δ margin|=0.0042 (control mean 0.0052 ± 0.0111 over 5, worst log-ratio 0.01, excess -0.0010)
+  knock-out #9404: |Δ margin|=0.0094 (control mean 0.0094 ± 0.0137 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #13261: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #14577: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.00, excess +0.0000)
+  knock-out #4149: |Δ margin|=0.0000 (control mean 0.0008 ± 0.0019 over 5, worst log-ratio 0.01, excess -0.0008)
+  knock-out #11828: |Δ margin|=0.0229 (control mean 0.0281 ± 0.0037 over 5, worst log-ratio 0.03, excess -0.0052)
+  knock-out #7082: |Δ margin|=0.0250 (control mean 0.0133 ± 0.0183 over 5, worst log-ratio 0.01, excess +0.0117)
+  knock-out #14315: |Δ margin|=0.0000 (control mean 0.0056 ± 0.0126 over 5, worst log-ratio 0.01, excess -0.0056)
+  knock-out #10221: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #16268: |Δ margin|=0.0000 (control mean 0.0040 ± 0.0089 over 5, worst log-ratio 0.01, excess -0.0040)
+  knock-out #11780: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #16259: |Δ margin|=0.0104 (control mean 0.0104 ± 0.0147 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #11512: |Δ margin|=0.0187 (control mean 0.0183 ± 0.0172 over 5, worst log-ratio 0.04, excess +0.0004)
+  knock-out #6467: |Δ margin|=0.0000 (control mean 0.0052 ± 0.0116 over 5, worst log-ratio 0.01, excess -0.0052)
+  knock-out #14803: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #15148: |Δ margin|=0.0000 (control mean 0.0108 ± 0.0177 over 5, worst log-ratio 0.01, excess -0.0108)
+  knock-out #15184: |Δ margin|=0.0240 (control mean 0.0094 ± 0.0150 over 5, worst log-ratio 0.03, excess +0.0146)
+  knock-out #15987: |Δ margin|=0.0000 (control mean 0.0052 ± 0.0116 over 5, worst log-ratio 0.01, excess -0.0052)
+  knock-out #12137: |Δ margin|=0.0063 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0063)
+  knock-out #6999: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #9828: |Δ margin|=0.0042 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0042)
+  knock-out #10027: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #13471: |Δ margin|=0.0000 (control mean 0.0044 ± 0.0098 over 5, worst log-ratio 0.01, excess -0.0044)
+  knock-out #1814: |Δ margin|=0.0219 (control mean 0.0006 ± 0.0014 over 5, worst log-ratio 0.01, excess +0.0212)
+  knock-out #4999: |Δ margin|=0.0000 (control mean 0.0040 ± 0.0089 over 5, worst log-ratio 0.01, excess -0.0040)
+  knock-out #7423: |Δ margin|=0.0000 (control mean 0.0050 ± 0.0112 over 5, worst log-ratio 0.01, excess -0.0050)
+  knock-out #5438: |Δ margin|=0.0281 (control mean 0.0121 ± 0.0118 over 5, worst log-ratio 0.03, excess +0.0160)
+  knock-out #12245: |Δ margin|=0.0302 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0302)
+  knock-out #2077: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #7872: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #2823: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.00, excess +0.0000)
+  knock-out #2120: |Δ margin|=0.0000 (control mean 0.0135 ± 0.0185 over 5, worst log-ratio 0.03, excess -0.0135)
+  knock-out #69: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #2328: |Δ margin|=0.0281 (control mean 0.0037 ± 0.0084 over 5, worst log-ratio 0.03, excess +0.0244)
+  knock-out #13476: |Δ margin|=0.0187 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0187)
+  knock-out #1656: |Δ margin|=0.0250 (control mean 0.0185 ± 0.0173 over 5, worst log-ratio 0.01, excess +0.0065)
+  knock-out #2454: |Δ margin|=0.0000 (control mean 0.0042 ± 0.0093 over 5, worst log-ratio 0.01, excess -0.0042)
+  knock-out #5754: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #355: |Δ margin|=0.0000 (control mean 0.0044 ± 0.0098 over 5, worst log-ratio 0.01, excess -0.0044)
+  knock-out #12037: |Δ margin|=0.0271 (control mean 0.0054 ± 0.0121 over 5, worst log-ratio 0.02, excess +0.0217)
+  knock-out #1671: |Δ margin|=0.0000 (control mean 0.0271 ± 0.0082 over 5, worst log-ratio 0.49, excess -0.0271)
+  knock-out #15032: |Δ margin|=0.0000 (control mean 0.0027 ± 0.0061 over 5, worst log-ratio 0.02, excess -0.0027)
+  knock-out #5110: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #9976: |Δ margin|=0.0000 (control mean 0.0119 ± 0.0163 over 5, worst log-ratio 0.01, excess -0.0119)
+  knock-out #11768: |Δ margin|=0.0000 (control mean 0.0056 ± 0.0126 over 5, worst log-ratio 0.01, excess -0.0056)
+  knock-out #14817: |Δ margin|=0.0000 (control mean 0.0048 ± 0.0107 over 5, worst log-ratio 0.01, excess -0.0048)
+  knock-out #9978: |Δ margin|=0.0000 (control mean 0.0056 ± 0.0126 over 5, worst log-ratio 0.01, excess -0.0056)
+  knock-out #4539: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #10255: |Δ margin|=0.0000 (control mean 0.0173 ± 0.0159 over 5, worst log-ratio 0.01, excess -0.0173)
+  knock-out #1033: |Δ margin|=0.0000 (control mean 0.0110 ± 0.0159 over 5, worst log-ratio 0.02, excess -0.0110)
+  knock-out #1546: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #12447: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.00, excess +0.0000)
+  knock-out #14137: |Δ margin|=0.0000 (control mean 0.0217 ± 0.0123 over 5, worst log-ratio 0.04, excess -0.0217)
+  knock-out #687: |Δ margin|=0.0135 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0135)
+  knock-out #12319: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #12989: |Δ margin|=0.0000 (control mean 0.0065 ± 0.0144 over 5, worst log-ratio 0.02, excess -0.0065)
+  knock-out #12987: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #11335: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #12776: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #12158: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.00, excess +0.0000)
+  knock-out #13808: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.00, excess +0.0000)
+  knock-out #3260: |Δ margin|=0.0000 (control mean 0.0102 ± 0.0140 over 5, worst log-ratio 0.01, excess -0.0102)
+  knock-out #13258: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #3741: |Δ margin|=0.0000 (control mean 0.0063 ± 0.0140 over 5, worst log-ratio 0.02, excess -0.0063)
+  knock-out #13126: |Δ margin|=0.0000 (control mean 0.0013 ± 0.0028 over 5, worst log-ratio 0.01, excess -0.0013)
+  knock-out #15806: |Δ margin|=0.0344 (control mean 0.0169 ± 0.0136 over 5, worst log-ratio 0.02, excess +0.0175)
+  knock-out #4754: |Δ margin|=0.0073 (control mean 0.0250 ± 0.0492 over 5, worst log-ratio 0.03, excess -0.0177)
+  knock-out #526: |Δ margin|=0.0000 (control mean 0.0067 ± 0.0149 over 5, worst log-ratio 0.02, excess -0.0067)
+  knock-out #3022: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #10896: |Δ margin|=0.0177 (control mean 0.0044 ± 0.0098 over 5, worst log-ratio 0.01, excess +0.0133)
+  knock-out #4707: |Δ margin|=0.0000 (control mean 0.0181 ± 0.0394 over 5, worst log-ratio 0.02, excess -0.0181)
+  knock-out #12790: |Δ margin|=0.0250 (control mean 0.0165 ± 0.0227 over 5, worst log-ratio 0.02, excess +0.0085)
+  knock-out #15302: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #13071: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+  knock-out #11014: |Δ margin|=0.0281 (control mean 0.0169 ± 0.0155 over 5, worst log-ratio 0.04, excess +0.0112)
+  knock-out #2023: |Δ margin|=0.0292 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0292)
+  knock-out #8057: |Δ margin|=0.0219 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0219)
+  knock-out #14658: |Δ margin|=0.0281 (control mean 0.0154 ± 0.0122 over 5, worst log-ratio 0.09, excess +0.0127)
+  knock-out #13423: |Δ margin|=0.0021 (control mean 0.0054 ± 0.0121 over 5, worst log-ratio 0.01, excess -0.0033)
+  knock-out #10448: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #8049: |Δ margin|=0.0031 (control mean 0.0119 ± 0.0155 over 5, worst log-ratio 0.01, excess -0.0088)
+  knock-out #6756: |Δ margin|=0.0000 (control mean 0.0067 ± 0.0149 over 5, worst log-ratio 0.02, excess -0.0067)
+  knock-out #4227: |Δ margin|=0.0000 (control mean 0.0127 ± 0.0152 over 5, worst log-ratio 0.01, excess -0.0127)
+  knock-out #1923: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #7658: |Δ margin|=0.0250 (control mean 0.0048 ± 0.0107 over 5, worst log-ratio 0.01, excess +0.0202)
+  knock-out #1818: |Δ margin|=0.0000 (control mean 0.0060 ± 0.0107 over 5, worst log-ratio 0.02, excess -0.0060)
+  knock-out #3879: |Δ margin|=0.0000 (control mean 0.0094 ± 0.0130 over 5, worst log-ratio 0.02, excess -0.0094)
+  knock-out #2229: |Δ margin|=0.0000 (control mean 0.0046 ± 0.0102 over 5, worst log-ratio 0.01, excess -0.0046)
+  knock-out #11222: |Δ margin|=0.0031 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0031)
+  knock-out #7954: |Δ margin|=0.0000 (control mean 0.0050 ± 0.0112 over 5, worst log-ratio 0.02, excess -0.0050)
+  knock-out #4858: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.01, excess +0.0000)
+  knock-out #2086: |Δ margin|=0.0312 (control mean 0.0096 ± 0.0134 over 5, worst log-ratio 0.03, excess +0.0217)
+  knock-out #3582: |Δ margin|=0.0000 (control mean 0.0000 ± 0.0000 over 5, worst log-ratio 0.02, excess +0.0000)
+
+wrote results/sae_heldout/sae_topk_L20_fis.json

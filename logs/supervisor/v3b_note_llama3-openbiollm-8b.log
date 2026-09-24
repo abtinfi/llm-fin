@@ -19,3 +19,17 @@
 [v3b:note:llama3-openbiollm-8b][run ] eval_heldout_nsai  2026-09-24T12:26:56+03:00
 [v3b:note:llama3-openbiollm-8b][ok  ] eval_heldout_nsai  717s
 [v3b:note:llama3-openbiollm-8b][run ] eval_heldout_rag  2026-09-24T12:38:53+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] eval_heldout_rag  719s
+[v3b:note:llama3-openbiollm-8b][run ] eval_heldout_uq  2026-09-24T12:50:52+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] eval_heldout_uq  481s
+[v3b:note:llama3-openbiollm-8b][run ] eval_heldout_nsai_uq  2026-09-24T12:58:53+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] eval_heldout_nsai_uq  1198s
+[v3b:note:llama3-openbiollm-8b][run ] table_test  2026-09-24T13:18:51+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] table_test  2s
+[v3b:note:llama3-openbiollm-8b][run ] coverage_test  2026-09-24T13:18:53+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] coverage_test  1s
+[v3b:note:llama3-openbiollm-8b][run ] table_heldout  2026-09-24T13:18:54+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] table_heldout  1s
+[v3b:note:llama3-openbiollm-8b][run ] coverage_heldout  2026-09-24T13:18:55+03:00
+[v3b:note:llama3-openbiollm-8b][ok  ] coverage_heldout  0s
+[v3b:note:llama3-openbiollm-8b] done, 0 stage(s) failed  2026-09-24T13:18:55+03:00
