@@ -14,7 +14,15 @@ fig_risk_coverage   `<model>/table_mimic3b_<split>_riskcov_<row>.csv`, the
                     distinct uncertainty value, over the items UQ governs (the
                     gate-decided ones are never deferred), error = the MODEL'S
                     OWN answer's. The deployed point is where the calibrated
-                    threshold tau (summary row) falls on that curve.
+                    threshold tau (summary row) falls on that curve. The
+                    table under the panels gives, per tau, the calibration
+                    evidence that certified it (`calib_error_at_tau`,
+                    `calib_cp_upper_at_tau`): the Clopper-Pearson bound is
+                    evaluated point-wise per candidate tau on the calibration
+                    split during selection. No CP band is drawn on the test
+                    curves: test prompts repeat ~9.5x across items, so an
+                    item-level binomial bound there would be far tighter than
+                    the data supports, and it is not the bound the rule uses.
 fig_sae_contraction the top-25 L20 TopK features, knock-out effect against
                     the old control (one feature drawn uniformly over the
                     dictionary, dead ones included) and the S1-fixed control
@@ -121,12 +129,53 @@ def operating_point(curve, tau):
     return kept[-1]["coverage"], kept[-1]["error"]
 
 
+def deployed_table(deployed, alpha, delta):
+    """One line per deployed tau: the calibration evidence that certified it
+    (selective error and its one-sided Clopper-Pearson upper bound, the number
+    the selection rule compared against alpha), then where it landed on the
+    test and held-out curves."""
+    def at(op):
+        if op is None:
+            return f"{'—':>7}  {'':8}"
+        c, e = op
+        risk = {"none": "(τ=−∞)", "below": "(τ<all u)"}.get(e) \
+            if isinstance(e, str) else f"{e:.3f}"
+        return f"{1 - c:>7.1%}  {risk:<8}"
+
+    lines = [
+        f"Deployed τ (markers). Each τ is the largest threshold whose "
+        f"one-sided Clopper–Pearson upper bound (δ = {delta:.2f}) on the",
+        f"calibration split's selective error is ≤ α = {alpha:.2f}. The bound "
+        f"is evaluated point-wise, once per candidate τ, during selection;",
+        "it is not a band on the curves above, which are test and held-out "
+        "data. — : the gate decides every held-out item.",
+        "",
+        f"{'':38}{'calibration at τ':<27}{'test at τ':<18}held-out at τ",
+        f"{'Model':<21}{'Row':<17}{'n':>6}  {'risk':>5}  {'CP upper':>8}   "
+        f"{'defers':>7}  {'risk':<8} {'defers':>7}  risk",
+    ]
+    for (model, name), _ in zip(MODELS, SERIES):
+        for row, rlab, _ in UQ_ROWS:
+            d = deployed.get((model, row))
+            if not d:
+                continue
+            s = d["summary"]
+            if s.get("calib_certifiable"):
+                cal = (f"{s['calib_error_at_tau']:>5.3f}  "
+                       f"{s['calib_cp_upper_at_tau']:>8.3f}")
+            else:
+                cal = f"{'—':>5}  {'none ≤ α':>8}"
+            lines.append(f"{name:<21}{rlab:<17}{s.get('calib_n', 0):>6,}  "
+                         f"{cal}   {at(d.get('test'))} {at(d.get('heldout'))}")
+    return "\n".join(lines)
+
+
 def fig_risk_coverage():
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
     used_rows = set()
+    deployed = {}                  # (model, row) -> summary + op per split
+    alpha, delta = 0.10, 0.10
     for ax, (split, title) in zip(axes, SPLITS):
-        alpha = 0.10
-        ops = []
         for (model, name), color in zip(MODELS, SERIES):
             for row, rlab, ls in UQ_ROWS:
                 curve = read_curve(model, split, row)
@@ -134,6 +183,7 @@ def fig_risk_coverage():
                     continue
                 s = summary_row(model, split, row) or {}
                 alpha = s.get("calib_target_alpha", alpha)
+                delta = s.get("calib_delta", delta)
                 cov = [0.0] + [p["coverage"] for p in curve]
                 err = [curve[0]["error"]] + [p["error"] for p in curve]
                 ax.plot(cov, err, color=color, lw=1.6, ls=ls,
@@ -146,11 +196,7 @@ def fig_risk_coverage():
                 ax.plot([c], [e if isinstance(e, float) else 0.0],
                         marker="o", ms=5.5, color=color, mec=SURFACE,
                         mew=1.2, zorder=5)
-                why = {"none": " (τ = −∞)",
-                       "below": " (τ below all u)"}
-                ops.append(f"{name}, {rlab}: defers {1 - c:.1%}"
-                           + (why[e] if isinstance(e, str)
-                              else f", risk {e:.3f}"))
+                deployed.setdefault((model, row), {"summary": s})[split] = op
         ax.axhline(alpha, color=INK2, lw=0.9, ls=(0, (4, 3)), zorder=1)
         ax.text(1.0, alpha + 0.01, f"target risk α = {alpha:.2f}",
                 ha="right", va="bottom", fontsize=7, color=INK2)
@@ -162,12 +208,13 @@ def fig_risk_coverage():
         ax.set_title(title, loc="left", color=INK)
         ax.set_xlim(0, 1.02)
         ax.set_ylim(0, 1.0)
-        ax.text(0.0, -0.27, "Deployed τ (markers):\n" + "\n".join(ops),
-                transform=ax.transAxes, ha="left", va="top", fontsize=6.6,
-                color=INK2, linespacing=1.35)
     axes[0].set_ylabel("Selective risk\n(error of the model's own answer)")
     fig.supxlabel("Coverage (share of UQ-governed items answered)",
                   fontsize=8.5, color=INK2, y=-0.04)
+    fig.text(axes[0].get_position().x0, -0.11,
+             deployed_table(deployed, alpha, delta), ha="left", va="top",
+             family="DejaVu Sans Mono", fontsize=6.0, color=INK2,
+             linespacing=1.4)
     handles = [Line2D([], [], color=c, lw=2, label=n)
                for (_, n), c in zip(MODELS, SERIES)]
     handles += [Line2D([], [], color=INK2, lw=1.4, ls=ls, label=lab)
