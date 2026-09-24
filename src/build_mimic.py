@@ -87,6 +87,25 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from renal import ckd_epi, implausible          # noqa: E402
 
+# Provenance labels, keyed by --source. Stamped into every item and into
+# build_meta.json. These used to be hard-coded to the Demo, so the first build
+# from full MIMIC-IV v3.1 labelled all 369,354 of its items "Demo v2.2 (ODbL)"
+# and its build_meta.json "credentialed: false" -- i.e. credentialed data
+# carrying a label that says it may be redistributed. main() now refuses a
+# build whose patient count contradicts the label (see DEMO_PATIENTS).
+DATA_SOURCES = {
+    "demo": dict(item="MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                 source="MIMIC-IV Clinical Database Demo v2.2",
+                 licence="ODbL", credentialed=False,
+                 url="https://physionet.org/content/mimic-iv-demo/2.2/"),
+    "v3.1": dict(item="MIMIC-IV v3.1 (PhysioNet credentialed DUA)",
+                 source="MIMIC-IV v3.1",
+                 licence="PhysioNet Credentialed Health Data License 1.5.0",
+                 credentialed=True,
+                 url="https://physionet.org/content/mimiciv/3.1/"),
+}
+DEMO_PATIENTS = 100      # the Demo is a fixed 100-patient subset
+
 AGE_RANGE = (18, 91)   # MIMIC caps de-identified ages at 91; CKD-EPI needs 18+
 
 
@@ -292,7 +311,7 @@ def crosses(op, thr, u, s):
     return (u < thr <= s) if op == "<" else (u > thr >= s)
 
 
-def render(age, sex, value, spec):
+def render(age, sex, value, spec, fam=None):
     """
     Phrasing matters, not just content: src/components.py's SymbolicGate
     extracts facts with LITERAL regexes -- "potassium is X", "INR is X" (see
@@ -314,17 +333,51 @@ def render(age, sex, value, spec):
                 f"{spec['drug'].capitalize()} is being considered.")
     lab_txt = (f"a serum {spec['lab_name']} of "
               f"{value:.{spec['render_precision']}f} {spec['render_unit']}")
-    return (f"A {age}-year-old {who} has {lab_txt}. "
-            f"{spec['drug'].capitalize()} is being considered.")
+    action = f"{spec['drug'].capitalize()} is being considered."
+    if QUESTION_VERSION == "v2" and fam in V2_WORDING:
+        action = V2_WORDING[fam][0]
+    return f"A {age}-year-old {who} has {lab_txt}. {action}"
 
 
 PROMPT = ("You are reviewing a proposed prescription for safety.\n"
           "Answer with exactly one word on the first line: SAFE or UNSAFE.\n\n"
           "{vignette}\n\nIs it safe to prescribe {drug}?")
 
+# --question_version v2: a DIFFERENT clinical question for each metformin
+# family, taken from the FDA label itself.
+#
+# WHY. Under v1 metformin_egfr30 and metformin_egfr45 render the identical
+# prompt ("... serum creatinine of X mg/dL. Metformin is being considered.")
+# and apply thresholds 30 and 45. For eGFR in [30, 45) one prompt is SAFE in
+# one family and UNSAFE in the other: on v3.1, 21% of test items sat on such a
+# prompt and any model had to be wrong on one copy (src/audit_mimic_dupes.py).
+# The two thresholds are in fact answers to two different questions on the
+# label: eGFR < 30 is a CONTRAINDICATION (stop / do not continue), eGFR < 45
+# is "not recommended to INITIATE". v2 asks exactly those, so each prompt has
+# one correct answer and each label says what the label says.
+#
+# v1 stays the default so data/mimic and data/mimic_v2 rebuild byte for byte.
+# Kept out of FAMILIES on purpose: FAMILIES is written into build_meta.json.
+V2_WORDING = {
+    "metformin_egfr30": (
+        "The patient already takes metformin; continuing it is being considered.",
+        "Is it safe to continue metformin?"),
+    "metformin_egfr45": (
+        "The patient does not take metformin yet; starting it is being considered.",
+        "Is it safe to start metformin?"),
+}
+QUESTION_VERSION = "v1"        # set from --question_version in main()
+
+
+def make_prompt(fam, vig, spec):
+    if QUESTION_VERSION == "v2" and fam in V2_WORDING:
+        return (PROMPT.rsplit("\n\n", 1)[0].format(vignette=vig)
+                + "\n\n" + V2_WORDING[fam][1])
+    return PROMPT.format(vignette=vig, drug=spec["drug"])
+
 
 def build_family_items(fam, spec, pats, mode, eligible_patients=None,
-                       src="data/mimic_demo"):
+                       src="data/mimic_demo", source="demo"):
     """
     All pairs for one family, restricted to `eligible_patients` if given.
 
@@ -352,8 +405,14 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
             skipped["no_straddling_pair"] += 1
             continue
         (t_u, v_u, q_u), (t_s, v_s, q_s) = chosen
-        q_u_r = spec["convert"](round(v_u, 2), age, sex)
-        q_s_r = spec["convert"](round(v_s, 2), age, sex)
+        # Round to the precision the value is PRINTED at, not to 2 decimals:
+        # potassium and INR are printed with 1, so an INR stored as 4.04 was
+        # labelled UNSAFE (> 4.0) while the prompt showed "4.0". The v3.1
+        # build shipped one such warfarin pair (src/audit_mimic_labels.py);
+        # the Demo, whose lab values carry one decimal natively, had none.
+        pp = spec["render_precision"]
+        q_u_r = spec["convert"](round(v_u, pp), age, sex)
+        q_s_r = spec["convert"](round(v_s, pp), age, sex)
         q_u_r, q_s_r = round(q_u_r, 2), round(q_s_r, 2)
         if not crosses(spec["op"], spec["threshold"], q_u_r, q_s_r):
             skipped["rounding_crossed_threshold"] += 1
@@ -367,7 +426,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
         for arm, v, q, t, label in (
                 ("unsafe", v_u, q_u_r, t_u, "UNSAFE"),
                 ("safe",   v_s, q_s_r, t_s, "SAFE")):
-            vig = render(age, sex, v, spec)
+            vig = render(age, sex, v, spec, fam)
             items.append({
                 "id": f"{pair_id}__{arm}",
                 "pair_id": pair_id,
@@ -392,9 +451,9 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
                 "facts": {"lab_raw": v, "lab_name": spec["lab_name"],
                           "lab_unit": spec["render_unit"] or "ratio",
                           "age": age, "sex": sex.capitalize(), "race": None},
-                "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
+                "prompt": make_prompt(fam, vig, spec),
                 "provenance": {
-                    "source": "MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                    "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
                     "threshold_source": spec["threshold_source"],
                     "threshold_status": spec["threshold_status"],
@@ -411,8 +470,9 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
             skipped["no_same_side_control_pair"] += 1
             continue
         (t_a, v_a, _), (t_b, v_b, _), c_label = ctrl
-        q_a = round(spec["convert"](round(v_a, 2), age, sex), 2)
-        q_b = round(spec["convert"](round(v_b, 2), age, sex), 2)
+        pp = spec["render_precision"]      # printed precision, as above
+        q_a = round(spec["convert"](round(v_a, pp), age, sex), 2)
+        q_b = round(spec["convert"](round(v_b, pp), age, sex), 2)
         # Rounding must not push either arm across; if it does this is not a
         # control pair any more and is dropped rather than silently relabelled.
         if crosses(spec["op"], spec["threshold"], q_a, q_b) or \
@@ -422,7 +482,7 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
         c_pair = f"{fam}__mimic-{sid}__ctrl"
         for arm, v, q, t in (("ctrl_a", v_a, q_a, t_a),
                              ("ctrl_b", v_b, q_b, t_b)):
-            vig = render(age, sex, v, spec)
+            vig = render(age, sex, v, spec, fam)
             items.append({
                 "id": f"{c_pair}__{arm}",
                 "pair_id": c_pair,
@@ -447,9 +507,9 @@ def build_family_items(fam, spec, pats, mode, eligible_patients=None,
                 "facts": {"lab_raw": v, "lab_name": spec["lab_name"],
                           "lab_unit": spec["render_unit"] or "ratio",
                           "age": age, "sex": sex.capitalize(), "race": None},
-                "prompt": PROMPT.format(vignette=vig, drug=spec["drug"]),
+                "prompt": make_prompt(fam, vig, spec),
                 "provenance": {
-                    "source": "MIMIC-IV Clinical Database Demo v2.2 (ODbL)",
+                    "source": DATA_SOURCES[source]["item"],
                     "table": "hosp/labevents", "itemid": spec["itemid"],
                     "threshold_source": spec["threshold_source"],
                     "threshold_status": spec["threshold_status"],
@@ -479,6 +539,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="data/mimic_demo")
     ap.add_argument("--out", default="data/mimic")
+    ap.add_argument("--source", choices=sorted(DATA_SOURCES), default="demo",
+                    help="which MIMIC release --src holds; sets the licence "
+                         "and credentialed labels on every emitted item")
+    ap.add_argument("--question_version", choices=["v1", "v2"], default="v1",
+                    help="v2 asks the metformin families different questions "
+                         "(continue vs start); see V2_WORDING")
     ap.add_argument("--mode", choices=["nearest", "extreme"], default="nearest")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--test_frac", type=float, default=0.5)
@@ -486,7 +552,18 @@ def main():
     args = ap.parse_args()
 
     pats = load_patients(args.src)
-    print(f"patients={len(pats)}")
+    global QUESTION_VERSION
+    QUESTION_VERSION = args.question_version
+    print(f"patients={len(pats)}  source={args.source}  "
+          f"question_version={args.question_version}")
+    # Refuse a label the data contradicts. A mislabel here is not cosmetic: it
+    # is what tells a reader whether the emitted files may be redistributed.
+    if args.source == "demo" and len(pats) != DEMO_PATIENTS:
+        sys.exit(f"--source demo but {args.src} holds {len(pats)} patients; "
+                 f"the Demo has exactly {DEMO_PATIENTS}. Pass --source v3.1.")
+    if args.source != "demo" and len(pats) == DEMO_PATIENTS:
+        sys.exit(f"--source {args.source} but {args.src} holds the Demo's "
+                 f"{DEMO_PATIENTS} patients. Pass --source demo.")
 
     # One pass over labevents for every itemid the families need, before any
     # family is built. See prime_lab_cache().
@@ -501,7 +578,8 @@ def main():
     for fam, spec in held_specs.items():
         items, straddling, skipped = build_family_items(fam, spec, pats,
                                                          args.mode,
-                                                         src=args.src)
+                                                         src=args.src,
+                                                         source=args.source)
         print(f"[heldout] {fam}: {dict(skipped)}")
         heldout_items += items
         heldout_patients |= straddling
@@ -514,11 +592,12 @@ def main():
         # eligible_patients=None on the first call to find who straddles;
         # then explicitly re-run EXCLUDING heldout patients.
         _, straddling_all, _ = build_family_items(fam, spec, pats, args.mode,
-                                                  src=args.src)
+                                                  src=args.src,
+                                                  source=args.source)
         eligible = straddling_all - heldout_patients
         items, straddling, skipped = build_family_items(
             fam, spec, pats, args.mode, eligible_patients=eligible,
-            src=args.src)
+            src=args.src, source=args.source)
         print(f"[trainable] {fam}: eligible_after_excluding_heldout="
               f"{len(eligible)}  {dict(skipped)}")
         for it in items:
@@ -608,13 +687,19 @@ def main():
             fh.write(json.dumps(d) + "\n")
     print(f"  {out}/rag_corpus.jsonl: {len(corpus)} passages")
 
-    meta = {"source": "MIMIC-IV Clinical Database Demo v2.2",
-            "licence": "ODbL", "credentialed": False,
-            "url": "https://physionet.org/content/mimic-iv-demo/2.2/",
+    ds = DATA_SOURCES[args.source]
+    meta = {"source": ds["source"],
+            "licence": ds["licence"], "credentialed": ds["credentialed"],
+            "url": ds["url"],
             "families": {k: {kk: vv for kk, vv in v.items()
                              if kk != "convert"}
                         for k, v in FAMILIES.items()},
             "pair_selection": args.mode, "seed": args.seed,
+            # Written only for v2, so a v1 build_meta.json is unchanged.
+            **({"question_version": "v2",
+                "v2_wording": {k: {"action": a, "question": q}
+                               for k, (a, q) in V2_WORDING.items()}}
+               if args.question_version == "v2" else {}),
             "both_arms_real": True,
             "caveat": "The two arms are different TIMEPOINTS in the same "
                       "real patient, so the clinical state genuinely "

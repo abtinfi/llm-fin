@@ -126,12 +126,24 @@ exits non-zero under `--strict`. It runs as stage 0 of `run_full_pipeline.sh`.
 | `data/medcalc/` | no | **Real clinical prose** — 680 items from MedCalc-Bench PMC case reports |
 | `data/external/` | no | MedCalc-Bench source CSVs; open download, git-ignored (54 MB) |
 | `data/umls/` | **to rebuild only** | Causal graph + cached UMLS responses. Running makes zero HTTP calls; rebuilding needs a free UTS key in `../.env` |
+| `data/mimic/`, `data/mimic_v2/` | no | MIMIC-IV **Demo** v2.2 (ODbL, 100 patients): 71 / 142 pairs, both arms real measurements. Tracked. |
+| `data/mimic_v3/` | **yes — optional arm** | Full MIMIC-IV **v3.1** via BigQuery (`src/fetch_mimic_bq.py`): 64,601 patients, 184,677 pairs. Git-ignored under the PhysioNet DUA, as are its per-patient predictions. |
 
-**MIMIC-IV / PhysioNet is not a dependency.** The proposal names MIMIC-IV in
-§4.6, but no loader, data path or token check exists anywhere in `src/` — it is
-an *unimplemented proposal element*, not a blocked one, and every Aim 1–4 stage
-runs without it. The real-clinical-text arm of every benchmark is
-`data/medcalc`, which is open access.
+**MIMIC-IV is loaded, and it is still not a dependency.** `src/build_mimic.py`
+builds the Demo arm (open access) and, since 2026-09-20, a full MIMIC-IV v3.1
+arm (credentialed). Every Aim 1–4 stage runs without the v3.1 arm;
+`check_data.py` marks it `optional-arm`, so its absence fails nothing. The
+real-clinical-*prose* arm of every benchmark is still `data/medcalc`: MIMIC's
+notes are rendered from structured fields.
+
+(This paragraph used to say no loader for MIMIC-IV exists in `src/`. That was
+written before `build_mimic.py` and was stale from 2026-09-02.)
+
+**Credentialed data never leaves this machine through the repo.** Raw v3.1
+tables, `data/mimic_v3/`, and every `preds_*.jsonl` or log derived from them
+are git-ignored; only aggregate summaries and tables are tracked. Do not paste
+row-level v3.1 output into any online service, including an LLM assistant:
+PhysioNet's responsible-use guidance forbids it.
 
 (The repo previously said "600 items" in several places; the directory holds
 680. `check_data.py` now counts the splits instead of quoting a figure, so this

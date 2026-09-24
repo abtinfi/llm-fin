@@ -1,0 +1,108 @@
+{
+  "source": "MIMIC-IV v3.1 + MIMIC-IV-Note v2.2",
+  "licence": "PhysioNet Credentialed Health Data License 1.5.0",
+  "credentialed": true,
+  "url": "https://physionet.org/content/mimiciv/3.1/",
+  "families": {
+    "metformin_egfr30": {
+      "itemid": "50912",
+      "lo": 0.1,
+      "hi": 25.0,
+      "plausible_key": "creatinine_mgdl",
+      "threshold": 30.0,
+      "op": "<",
+      "drug": "metformin",
+      "lab_name": "creatinine",
+      "render_unit": "mg/dL",
+      "render_precision": 2,
+      "threshold_source": "openfda",
+      "threshold_status": "attested_exact",
+      "threshold_evidence": "FDA label, CONTRAINDICATIONS: 'Severe renal impairment: (eGFR below 30 mL/min/1.73 m2)'",
+      "held_out": false,
+      "calculator": "ckd_epi"
+    },
+    "metformin_egfr45": {
+      "itemid": "50912",
+      "lo": 0.1,
+      "hi": 25.0,
+      "plausible_key": "creatinine_mgdl",
+      "threshold": 45.0,
+      "op": "<",
+      "drug": "metformin",
+      "lab_name": "creatinine",
+      "render_unit": "mg/dL",
+      "render_precision": 2,
+      "threshold_source": "openfda",
+      "threshold_status": "attested_exact",
+      "threshold_evidence": "FDA label, DOSAGE AND ADMINISTRATION: 'not recommended in patients with an eGFR between 30 and less than 45 mL/min/1.73 m2' -- a NOT-RECOMMENDED-TO-INITIATE zone, weaker than the eGFR<30 contraindication; do not conflate the two families in prose",
+      "held_out": false,
+      "calculator": "ckd_epi"
+    },
+    "spironolactone_k5_5": {
+      "itemid": "50971",
+      "lo": 0.5,
+      "hi": 12.0,
+      "plausible_key": "potassium_mEqL",
+      "threshold": 5.5,
+      "op": ">",
+      "drug": "spironolactone",
+      "lab_name": "potassium",
+      "render_unit": "mEq/L",
+      "render_precision": 1,
+      "threshold_source": "UNSOURCED",
+      "threshold_status": "construct_mismatch",
+      "threshold_evidence": "rules.py's own audited status (results/threshold_provenance.md): the FDA label's potassium <=5.0 mEq/L is a heart-failure INITIATION criterion, not this contraindication ceiling. Built anyway and flagged, not hidden.",
+      "held_out": false,
+      "calculator": "direct_lab_value"
+    },
+    "warfarin_inr4": {
+      "itemid": "51237",
+      "lo": 0.1,
+      "hi": 15.0,
+      "plausible_key": "inr",
+      "threshold": 4.0,
+      "op": ">",
+      "drug": "warfarin",
+      "lab_name": "INR",
+      "render_unit": "",
+      "render_precision": 1,
+      "threshold_source": "openfda",
+      "threshold_status": "attested_exact",
+      "threshold_evidence": "FDA label, WARNINGS AND CAUTIONS: 'high intensity of anticoagulation (INR > 4)'",
+      "held_out": true,
+      "calculator": "direct_lab_value"
+    }
+  },
+  "pair_selection": "nearest",
+  "seed": 0,
+  "both_arms_real": true,
+  "caveat": "The two arms are different TIMEPOINTS in the same real patient, so the clinical state genuinely differed. The rendered note is minimal (age, sex, one lab value, drug) so the prompts differ in exactly one number, and both numbers are real measurements. metformin_egfr30 and metformin_egfr45 share the same underlying creatinine measurements at two thresholds of differing clinical severity -- do not report them as independent evidence. NOTE ARM: the excerpt is the same real Brief Hospital Course text in both arms, so the pair still differs in one number; the prose may state OTHER values, including of the same lab. Drawn only from patients with an inpatient discharge note -- a sicker sub-population than data/mimic_v3.",
+  "counts": {
+    "test": 3916,
+    "heldout": 1978,
+    "calib": 1174,
+    "train": 1164
+  },
+  "note_url": "https://physionet.org/content/mimic-iv-note/2.2/",
+  "derived_from": "/home/asosoft/abtin/paper/csai/data/mimic_v3",
+  "max_chars": 2000,
+  "max_gap_days": 30,
+  "pairs_sampled": {
+    "test": 1000,
+    "heldout": 500,
+    "calib": 300,
+    "train": 300
+  },
+  "note_build": {
+    "kept_patients": 2100,
+    "skips": {
+      "skip_no_bhc_section": 250,
+      "skip_bhc_too_short": 163
+    },
+    "gap_days_median": 4,
+    "gap_days_p90": 16,
+    "excerpt_chars_median": 1887,
+    "excerpt_mentions_drug_rate": 0.0676,
+    "excerpt_leaks_section_header_rate": 0.0033
+  }
+}
