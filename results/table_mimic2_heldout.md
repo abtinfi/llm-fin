@@ -6,19 +6,19 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 
 | Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
 |---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
-| (1) Base LLM | YES | - | - | - | - | 0.312 | +0.000 | 0.000 | -0.062 | 0.000 | 1.000 | 0.000 |
-| (2) + RAG | YES | YES | - | - | - | 0.312 | +0.000 | 0.000 | -0.062 | 0.000 | 1.000 | 0.000 |
-| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.688 | 1.000 | +0.938 | 0.000 | 1.000 | 1.000 |
-| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.688 | 1.000 | +0.938 | 0.000 | 1.000 | 1.000 |
-| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.688 | 1.000 | +0.938 | 0.000 | 1.000 | 1.000 |
-| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.312 | 0.000 | -0.062 | 0.000 | 0.000 | 0.000 |
+| (1) Base LLM | YES | - | - | - | - | 0.312 | +0.000 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.312 | +0.000 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.688 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.688 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.688 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.312 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
 
 ### 95% bootstrap CI over items (seed 0)
 
 | Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
 |---|---|---|---|---|
-| (1) Base LLM | 0.312 | [0.156, 0.469] | 0.062 | [0.000, 0.188] |
-| (2) + RAG | 0.312 | [0.156, 0.469] | 0.062 | [0.000, 0.188] |
+| (1) Base LLM | 0.312 | [0.156, 0.469] | 0.000 | [0.000, 0.000] |
+| (2) + RAG | 0.312 | [0.156, 0.469] | 0.000 | [0.000, 0.000] |
 | (3) + Symbolic Gate (NS-AI) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |

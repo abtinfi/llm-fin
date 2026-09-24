@@ -6,23 +6,23 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 
 | Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
 |---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
-| (1) Base LLM | YES | - | - | - | - | 0.621 | +0.000 | 0.069 | -0.276 | 0.867 | 1.000 | 0.000 |
-| (2) + RAG | YES | YES | - | - | - | 0.440 | -0.181 | 0.000 | -0.345 | 0.000 | 1.000 | 0.000 |
-| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.681 | +0.060 | 0.379 | +0.034 | 0.000 | 1.000 | 0.379 |
-| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.414 | -0.207 | 0.379 | +0.034 | 0.000 | 0.414 | 0.379 |
-| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.741 | +0.121 | 0.379 | +0.034 | 0.667 | 1.000 | 0.379 |
-| (6) Base + UQ only | YES | - | - | YES | - | 0.052 | -0.569 | 0.000 | -0.345 | 0.044 | 0.069 | 0.000 |
+| (1) Base LLM | YES | - | - | - | - | 0.621 | +0.000 | 0.069 | +0.000 | 0.867 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.440 | -0.181 | 0.000 | -0.069 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 0.681 | +0.060 | 0.379 | +0.310 | 0.000 | 1.000 | 0.379 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 0.414 | -0.207 | 0.379 | +0.310 | 0.000 | 0.414 | 0.379 |
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.741 | +0.121 | 0.379 | +0.310 | 0.667 | 1.000 | 0.379 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.052 | -0.569 | 0.000 | -0.069 | 0.044 | 0.069 | 0.000 |
 
 ### 95% bootstrap CI over items (seed 0)
 
 | Variant | Accuracy | 95% CI | Causal Consistency | 95% CI |
 |---|---|---|---|---|
-| (1) Base LLM | 0.621 | [0.534, 0.707] | 0.345 | [0.224, 0.466] |
-| (2) + RAG | 0.440 | [0.353, 0.534] | 0.138 | [0.052, 0.224] |
-| (3) + Symbolic Gate (NS-AI) | 0.681 | [0.595, 0.767] | 0.483 | [0.362, 0.603] |
-| (4) + UQ Engine (NS-AI+UQ) | 0.414 | [0.328, 0.509] | 0.379 | [0.259, 0.500] |
-| (5) Base + Symbolic Gate only | 0.741 | [0.664, 0.819] | 0.586 | [0.466, 0.707] |
-| (6) Base + UQ only | 0.052 | [0.017, 0.095] | 0.017 | [0.000, 0.052] |
+| (1) Base LLM | 0.621 | [0.534, 0.707] | 0.069 | [0.000, 0.172] |
+| (2) + RAG | 0.440 | [0.353, 0.534] | 0.000 | [0.000, 0.000] |
+| (3) + Symbolic Gate (NS-AI) | 0.681 | [0.595, 0.767] | 0.379 | [0.207, 0.552] |
+| (4) + UQ Engine (NS-AI+UQ) | 0.414 | [0.328, 0.509] | 0.379 | [0.207, 0.552] |
+| (5) Base + Symbolic Gate only | 0.741 | [0.664, 0.819] | 0.379 | [0.207, 0.552] |
+| (6) Base + UQ only | 0.052 | [0.017, 0.095] | 0.000 | [0.000, 0.000] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
