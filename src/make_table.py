@@ -76,16 +76,39 @@ def load_preds(results, split, variant, seed, tag=""):
     return [json.loads(l) for l in p.open()]
 
 
+def restore_control_flag(recs, data_dir, split):
+    """Preds written before 2026-09-07 carry no `is_control`; it is a property
+    of the dataset, so join it back on `id` (as make_comparison.enrich does --
+    not imported from there, which imports this module)."""
+    if not recs or "is_control" in recs[0] or not data_dir:
+        return recs
+    p = Path(data_dir) / f"counterfactual_{split}.jsonl"
+    if not p.is_absolute() and not p.is_file():
+        p = Path(__file__).resolve().parent.parent / p
+    if not p.is_file():
+        return recs
+    ctrl = {r["id"] for r in map(json.loads, p.open()) if r.get("is_control")}
+    for r in recs:
+        r["is_control"] = r["id"] in ctrl
+    return recs
+
+
 def correct_flags(recs):
     return [(not r["abstained"]) and r["pred"] == r["label"] for r in recs]
 
 
 def pair_flags(recs):
+    # Control pairs are excluded, exactly as in metrics.score: without this the
+    # "Δ CC vs base" column and the CI table measured a different quantity
+    # from the Causal Consistency column they sit next to (on mimic_v3b base,
+    # 0.080 here against 0.000 there -- a constant answer gets control pairs
+    # right for free).
     pairs = defaultdict(list)
     for r in recs:
         pairs[r["pair_id"]].append(r)
     return [all((not a["abstained"]) and a["pred"] == a["label"] for a in arms)
-            for arms in pairs.values() if len(arms) == 2]
+            for arms in pairs.values()
+            if len(arms) == 2 and not any(a.get("is_control") for a in arms)]
 
 
 def fmt(rows, key, multi_seed):
@@ -121,8 +144,9 @@ def main():
     preds = {}
     for v in present:
         try:
-            preds[v] = load_preds(args.results, args.split, v, seeds[0],
-                                  args.tag)
+            preds[v] = restore_control_flag(
+                load_preds(args.results, args.split, v, seeds[0], args.tag),
+                by_variant[v][0].get("data"), args.split)
         except FileNotFoundError:
             pass
 
