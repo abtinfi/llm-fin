@@ -4,16 +4,26 @@ UQ engine defers on **`decision_entropy`**  (Eq. (2) restricted to the decision 
 
 Single seed. Decoding is greedy and therefore deterministic: another seed reproduces this run exactly, so no seed-to-seed spread is reported. The uncertainty that does exist is over items, and is given as a bootstrap CI in the next table.
 
-| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
-|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|
-| (1) Base LLM | YES | - | - | - | - | 0.556 | +0.000 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
-| (2) + RAG | YES | YES | - | - | - | 0.444 | -0.111 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
-| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 | +0.444 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
-| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 | +0.444 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
-| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 | +0.444 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
-| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.556 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
-| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.889 | +0.333 | 0.767 | +0.767 | 0.104 | 1.000 | 0.000 |
-| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 | +0.444 | 1.000 | +1.000 | 0.000 | 1.000 | 1.000 |
+### Primary: the section 4.6 ablation ladder
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Model's own answer acc. | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|---|
+| (1) Base LLM | YES | - | - | - | - | 0.556 | +0.000 | 0.556 | 0.000 | +0.000 | 1.000 | 1.000 | 0.000 |
+| (2) + RAG | YES | YES | - | - | - | 0.444 | -0.111 | 0.444 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
+| (3) + Symbolic Gate (NS-AI) | YES | YES | YES | - | - | 1.000 † | +0.444 | 0.444 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
+| (4) + UQ Engine (NS-AI+UQ) | YES | YES | YES | YES | - | 1.000 † | +0.444 | 0.444 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
+
+**Model's own answer acc.** is the decision word parsed from the model's generation, before the gate overrides it and before UQ defers it: what the LLM itself concluded under that row's prompt. † Accuracy and CC on gate-fired items are an identity check, not a measurement: the gate applies the rule and threshold the labels were generated from. With the gate firing on every item, that row's accuracy is 1.000 by construction; read the model's own column, and the adherence table below, for what the model knows.
+
+
+### Supplementary ablations: one contribution added to the base model
+
+| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | Δ Acc vs base | Model's own answer acc. | Causal Consistency | Δ CC vs base | Violation Rate | Coverage | Gate fired |
+|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|---|
+| (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 † | +0.444 | 0.556 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
+| (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.556 | 0.556 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.889 | +0.333 | 0.889 | 0.767 | +0.767 | 0.104 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 † | +0.444 | 0.861 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -54,17 +64,42 @@ This is the supervisor's question: what does adding this contribution to the bas
 
 The gate's accuracy on items it fires on is partly circular: it applies the same rule and threshold the labels were generated from, and on the MedCalc benchmark the same extractor that filters the data runs inside the gate. Splitting the split by whether the gate fired separates the circular part from the part that is not: on gate-declined items the row IS the neural pathway, so any difference there is real.
 
-| Variant | subset | n | accuracy | base accuracy on the same subset |
-|---|---|---|---|---|
-| (3) + Symbolic Gate (NS-AI) | gate fired | 108 | 1.000 | 0.556 |
-| (4) + UQ Engine (NS-AI+UQ) | gate fired | 108 | 1.000 | 0.556 |
-| (5) Base + Symbolic Gate only | gate fired | 108 | 1.000 | 0.556 |
-| (8) All four contributions | gate fired | 108 | 1.000 | 0.556 |
+On gate-fired items the three accuracy columns separate the two things the question conflates. *Final* is the rule checking itself (identity). *Model's own answer* is whether the LLM, given that row's prompt, reached the guideline's conclusion without the rule's help: that is guideline adherence. *Agrees with gate* is how often the gate merely confirmed the model rather than overruled it.
+
+| Variant | subset | n | Final accuracy | Model's own answer acc. | Base accuracy, same items | Model agrees with gate |
+|---|---|---|---|---|---|---|
+| (3) + Symbolic Gate (NS-AI) | gate fired | 108 | 1.000 (identity) | 0.444 | 0.556 | 0.444 |
+| (4) + UQ Engine (NS-AI+UQ) | gate fired | 108 | 1.000 (identity) | 0.444 | 0.556 | 0.444 |
+| (5) Base + Symbolic Gate only | gate fired | 108 | 1.000 (identity) | 0.556 | 0.556 | 0.556 |
+| (8) All four contributions | gate fired | 108 | 1.000 (identity) | 0.861 | 0.556 | 0.861 |
+
+**No non-circular evidence on this split for (3) + Symbolic Gate (NS-AI), (4) + UQ Engine (NS-AI+UQ), (5) Base + Symbolic Gate only, (8) All four contributions:** the gate fired on every item, so there is no gate-declined subset on which the row's accuracy measures anything but the rule. The gate's contribution here must be reported as its coverage, and the model's own answer as the accuracy.
+
 
 ### Why a UQ row can read 0.000 coverage
 
-Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 124 items no threshold reaches that target, because the model it is governing is near chance. The method then falls back to its most conservative threshold, which retains 2.4% of the calibration items, and on the test split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
+Split conformal picks the largest uncertainty threshold whose error rate on the calibration split is at most alpha = 0.10. On this calibration split of 124 items no threshold reaches that target (the risk-coverage table below shows how far off it is on these items). The method then falls back to its most conservative threshold, which retains 2.4% of the calibration items, and on the `heldout` split retains none. **That is the method behaving correctly, not a failure to run**: a 10% error target is unreachable for a model at this accuracy, so the only way to honour it is to answer nothing. It is also the exact situation Adaptive Conformal Inference exists for -- see `results/uq_coverage_*.md`, where the threshold is allowed to move.
 
+
+### Risk-coverage of the UQ signal, (6) Base + UQ only (seed 0)
+
+Every threshold a deferral rule could pick, on the 108 items the UQ engine governs here (gate-decided items are never deferred and are excluded). Error is of the model's own answer on the items kept. The signal (`decision_entropy`) takes 7 distinct values, so 7 operating points exist; the rows below are those nearest each coverage level. Full curve: `table_medcalc2_heldout_riskcov_uq.csv`.
+
+| Coverage target | Threshold | Coverage | Error | Items kept |
+|---|---|---|---|---|
+| 100% | 0.6811 | 1.000 | 0.444 | 108 |
+| 90% | 0.6698 | 0.870 | 0.426 | 94 |
+| 75% | 0.6628 | 0.769 | 0.398 | 83 |
+| 50% | 0.6551 | 0.435 | 0.298 | 47 |
+| 25% | 0.6466 | 0.139 | 0.333 | 15 |
+| 10% | 0.6466 | 0.139 | 0.333 | 15 |
+| 5% | 0.6374 | 0.037 | 0.000 | 4 |
+| 1% | 0.6374 | 0.037 | 0.000 | 4 |
+
+- AURC (area under the risk-coverage curve, lower is better): **0.356**; a signal that ranks at random scores the full-coverage error, 0.444.
+- Lowest error at ≥1% coverage: **0.000** (coverage 0.037).
+- Target error α = 0.10: reachable on these items up to coverage **0.037**.
+- Deployed threshold τ = 0.5029, set on the calibration split (coverage there 0.024); here it keeps 0.000 of all items. The calibration split holds the training families, so on the held-out family τ is transferred, not fitted.
 
 ### Notes
 
