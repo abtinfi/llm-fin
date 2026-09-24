@@ -22,6 +22,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 |---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|---|
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 0.794 † | +0.148 | 0.647 | 0.396 † | +0.377 | 0.640 | 1.000 | 0.390 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.089 | -0.557 | 0.647 | 0.000 | -0.019 | 0.029 | 0.099 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.906 | +0.259 | 0.906 | 0.769 | +0.750 | 0.090 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 0.466 † | -0.180 | 0.698 | 0.395 † | +0.376 | 0.000 | 0.474 | 0.390 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -33,6 +35,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 0.555 | [0.553, 0.558] | 0.399 | [0.394, 0.403] |
 | (5) Base + Symbolic Gate only | 0.794 | [0.793, 0.796] | 0.396 | [0.391, 0.400] |
 | (6) Base + UQ only | 0.089 | [0.088, 0.091] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.906 | [0.904, 0.907] | 0.769 | [0.765, 0.773] |
+| (8) All four contributions | 0.466 | [0.464, 0.469] | 0.395 | [0.390, 0.400] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
@@ -45,6 +49,8 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 32446 | 47639 | 0 | 0 |
 | base→sym | 24544 | 0 | 0 | 0 |
 | base→uq | 0 | 92677 | 0 | 0 |
+| base→cl | 53916 | 10912 | 0 | 0 |
+| base→nsai_uq_cl | 29126 | 59121 | 0 | 0 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
@@ -68,6 +74,8 @@ On gate-fired items the three accuracy columns separate the two things the quest
 | (4) + UQ Engine (NS-AI+UQ) | gate declined | 101438 | 0.271 | 0.663 | 0.663 | — |
 | (5) Base + Symbolic Gate only | gate fired | 64826 | 1.000 (identity) | 0.621 | 0.621 | 0.621 |
 | (5) Base + Symbolic Gate only | gate declined | 101438 | 0.663 | 0.663 | 0.663 | — |
+| (8) All four contributions | gate fired | 64826 | 1.000 (identity) | 0.811 | 0.621 | 0.811 |
+| (8) All four contributions | gate declined | 101438 | 0.125 | 0.626 | 0.663 | — |
 
 ### Risk-coverage of the UQ signal, (4) + UQ Engine (NS-AI+UQ) (seed 0)
 
@@ -108,6 +116,26 @@ Every threshold a deferral rule could pick, on the 166264 items the UQ engine go
 - Lowest error at ≥1% coverage: **0.000** (coverage 0.010).
 - Target error α = 0.10: reachable on these items up to coverage **0.106**.
 - Deployed threshold τ = 7.452e-07, set on the calibration split (coverage there 0.099; certifiable: True); here it keeps 0.099 of all items.
+
+### Risk-coverage of the UQ signal, (8) All four contributions (seed 0)
+
+Every threshold a deferral rule could pick, on the 101438 items the UQ engine governs here (gate-decided items are never deferred and are excluded). Error is of the model's own answer on the items kept. The signal (`decision_entropy`) takes 230 distinct values, so 230 operating points exist; the rows below are those nearest each coverage level. Full curve: `table_mimic3b_test_riskcov_nsai_uq_cl.csv`.
+
+| Coverage target | Threshold | Coverage | Error | Items kept |
+|---|---|---|---|---|
+| 100% | 0.6931 | 1.000 | 0.374 | 101438 |
+| 90% | 0.6275 | 0.899 | 0.367 | 91216 |
+| 75% | 0.4471 | 0.739 | 0.355 | 74933 |
+| 50% | 0.2685 | 0.507 | 0.275 | 51471 |
+| 25% | 0.03264 | 0.253 | 0.169 | 25634 |
+| 10% | 0.004965 | 0.097 | 0.032 | 9797 |
+| 5% | 0.001827 | 0.049 | 0.006 | 4937 |
+| 1% | 0.0001687 | 0.010 | 0.000 | 1043 |
+
+- AURC (area under the risk-coverage curve, lower is better): **0.244**; a signal that ranks at random scores the full-coverage error, 0.374.
+- Lowest error at ≥1% coverage: **0.000** (coverage 0.010).
+- Target error α = 0.10: reachable on these items up to coverage **0.174**.
+- Deployed threshold τ = 0.008584, set on the calibration split (coverage there 0.140; certifiable: True); here it keeps 0.474 of all items.
 
 ### Notes
 

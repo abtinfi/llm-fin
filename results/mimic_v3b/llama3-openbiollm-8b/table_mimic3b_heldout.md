@@ -22,6 +22,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 |---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|---|
 | (5) Base + Symbolic Gate only | YES | - | YES | - | - | 1.000 † | +0.333 | 0.667 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
 | (6) Base + UQ only | YES | - | - | YES | - | 0.000 | -0.667 | 0.667 | 0.000 | +0.000 | 0.000 | 0.000 | 0.000 |
+| (7) Base + Constraint Layer only | YES | - | - | - | YES | 0.333 | -0.334 | 0.333 | 0.000 | +0.000 | 0.000 | 1.000 | 0.000 |
+| (8) All four contributions | YES | YES | YES | YES | YES | 1.000 † | +0.333 | 0.333 | 1.000 † | +1.000 | 0.000 | 1.000 | 1.000 |
 
 ### 95% bootstrap CI over items (seed 0)
 
@@ -33,6 +35,8 @@ Single seed. Decoding is greedy and therefore deterministic: another seed reprod
 | (4) + UQ Engine (NS-AI+UQ) | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (5) Base + Symbolic Gate only | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 | (6) Base + UQ only | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] |
+| (7) Base + Constraint Layer only | 0.333 | [0.328, 0.338] | 0.000 | [0.000, 0.000] |
+| (8) All four contributions | 1.000 | [1.000, 1.000] | 1.000 | [1.000, 1.000] |
 
 ### Paired McNemar of each contribution **against the baseline** (seed 0, item-level correctness)
 
@@ -45,6 +49,8 @@ This is the supervisor's question: what does adding this contribution to the bas
 | base→nsai_uq | 12171 | 0 | 0 | 0 |
 | base→sym | 12171 | 0 | 0 | 0 |
 | base→uq | 0 | 24371 | 0 | 0 |
+| base→cl | 12171 | 24371 | 0 | 0 |
+| base→nsai_uq_cl | 12171 | 0 | 0 | 0 |
 
 ### Paired McNemar along the cumulative ladder (seed 0)
 
@@ -65,8 +71,9 @@ On gate-fired items the three accuracy columns separate the two things the quest
 | (3) + Symbolic Gate (NS-AI) | gate fired | 36542 | 1.000 (identity) | 0.667 | 0.667 | 0.667 |
 | (4) + UQ Engine (NS-AI+UQ) | gate fired | 36542 | 1.000 (identity) | 0.667 | 0.667 | 0.667 |
 | (5) Base + Symbolic Gate only | gate fired | 36542 | 1.000 (identity) | 0.667 | 0.667 | 0.667 |
+| (8) All four contributions | gate fired | 36542 | 1.000 (identity) | 0.333 | 0.667 | 0.333 |
 
-**No non-circular evidence on this split for (3) + Symbolic Gate (NS-AI), (4) + UQ Engine (NS-AI+UQ), (5) Base + Symbolic Gate only:** the gate fired on every item, so there is no gate-declined subset on which the row's accuracy measures anything but the rule. The gate's contribution here must be reported as its coverage, and the model's own answer as the accuracy.
+**No non-circular evidence on this split for (3) + Symbolic Gate (NS-AI), (4) + UQ Engine (NS-AI+UQ), (5) Base + Symbolic Gate only, (8) All four contributions:** the gate fired on every item, so there is no gate-declined subset on which the row's accuracy measures anything but the rule. The gate's contribution here must be reported as its coverage, and the model's own answer as the accuracy.
 
 
 ### Why a UQ row can read 0.000 coverage

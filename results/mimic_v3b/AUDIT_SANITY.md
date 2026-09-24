@@ -40,11 +40,11 @@ greedy decoding emits the argmax token, so at the step the margin is read from, 
 
 | model | file tag | rows | margin present | sign agrees with parsed text | disagree | H recomputed = stored (|Δ|<1e-6) |
 |---|---|---|---|---|---|---|
-| biomistral-7b | _mimic3b | 1,216,836 | 1,187,985 | 1,187,985 | 0 | 1,187,985/1,187,985 |
+| biomistral-7b | _mimic3b | 1,622,448 | 1,591,506 | 1,591,506 | 0 | 1,591,506/1,591,506 |
 | biomistral-7b | _mimic3bswap | 166,264 | 160,616 | 160,616 | 0 | 160,616/160,616 |
-| llama3-openbiollm-8b | _mimic3b | 1,216,836 | 837,630 | 837,630 | 0 | 837,630/837,630 |
+| llama3-openbiollm-8b | _mimic3b | 1,622,448 | 1,218,390 | 1,218,390 | 0 | 1,218,390/1,218,390 |
 | llama3-openbiollm-8b | _mimic3bswap | 166,264 | 100,784 | 100,784 | 0 | 100,784/100,784 |
-| mistral-7b-instruct-v0-2 | _mimic3b | 1,216,836 | 1,213,683 | 1,213,683 | 0 | 1,213,683/1,213,683 |
+| mistral-7b-instruct-v0-2 | _mimic3b | 1,622,448 | 1,616,407 | 1,616,407 | 0 | 1,616,407/1,616,407 |
 | mistral-7b-instruct-v0-2 | _mimic3bswap | 166,264 | 166,028 | 166,028 | 0 | 166,028/166,028 |
 
 Total disagreements: **0**.
@@ -54,13 +54,12 @@ Total disagreements: **0**.
 | model | file | model answers UNSAFE | of which no margin | UQ-governed rows deferred only for this |
 |---|---|---|---|---|
 | llama3-openbiollm-8b | preds_heldout_base_seed0_mimic3bnote.jsonl | 2 | 59 | 0 |
+| llama3-openbiollm-8b | preds_heldout_sym_seed0_mimic3bnote.jsonl | 2 | 59 | 0 |
 | llama3-openbiollm-8b | preds_test_base_seed0_mimic3bnote.jsonl | 38 | 340 | 0 |
 | llama3-openbiollm-8b | preds_test_base_seed0_mimic3bswap.jsonl | 75,327 | 64,827 | 0 |
 | llama3-openbiollm-8b | preds_test_nsai_seed0_mimic3bnote.jsonl | 357 | 34 | 0 |
-| llama3-openbiollm-8b | preds_test_nsai_uq_seed0_mimic3bnote.jsonl | 357 | 34 | 17 |
 | llama3-openbiollm-8b | preds_test_rag_seed0_mimic3bnote.jsonl | 357 | 34 | 0 |
 | llama3-openbiollm-8b | preds_test_sym_seed0_mimic3bnote.jsonl | 38 | 340 | 0 |
-| llama3-openbiollm-8b | preds_test_uq_seed0_mimic3bnote.jsonl | 38 | 340 | 340 |
 
 No main-arm (`_mimic3b`) file of any model is affected: OpenBioLLM never answers UNSAFE there. Accuracy, CC and every prediction are parsed from the text, so the swap result is unaffected; only the margin (hence UQ) is.
 
