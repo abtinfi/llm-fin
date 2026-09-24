@@ -13,8 +13,10 @@ hand-maintained manuscript would still be quoting the old ones.
 """
 
 import argparse
+import csv
 import glob
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -56,6 +58,372 @@ def by_variant(summary):
     """summary_*.json is a list of per-variant blocks; index it."""
     return {b["variant"]: b for b in summary if isinstance(b, dict)
             and "variant" in b}
+
+
+def need(pattern, text, what):
+    """A regex match in a generated report, or a failed build."""
+    m = re.search(pattern, text or "")
+    if not m:
+        raise Missing(f"could not read {what} from its report; regenerate "
+                      f"the v3b reports before building the manuscript.")
+    return m
+
+
+def span(xs, fmt=f3):
+    """'lo–hi' over a list of numbers, or the single value if they agree."""
+    lo, hi = fmt(min(xs)), fmt(max(xs))
+    return lo if lo == hi else f"{lo}–{hi}"
+
+
+# ---------------- MIMIC-IV v3.1 (`mimic_v3b`) ----------------
+V3 = "mimic_v3b"
+V3_MODELS = [("biomistral-7b", "BioMistral-7B"),
+             ("llama3-openbiollm-8b", "OpenBioLLM-8B"),
+             ("mistral-7b-instruct-v0-2", "Mistral-7B-Instruct")]
+V3_UQ_ROWS = [("uq", "Base + UQ"), ("nsai_uq", "NS-AI + UQ"),
+              ("nsai_uq_cl", "NS-AI + UQ + CL")]
+
+
+def md_table(text, section):
+    """Data rows of the table under the `## <section>...` heading of a
+    generated markdown report (CONSOLIDATED_MIMIC3B.md has one per split)."""
+    rows, on = [], False
+    for line in text.splitlines():
+        if line.startswith("## "):
+            on = line.startswith(f"## {section}")
+            continue
+        if on and line.startswith("| ") and not line.startswith("| Model"):
+            rows.append([c.strip() for c in line.strip().strip("|")
+                         .split("|")])
+    if not rows:
+        raise Missing(f"no `{section}` table in the consolidated report")
+    return rows
+
+
+def riskcov_at_tau(model, split, row, tau):
+    """(coverage of UQ-governed items, selective risk) where tau lands on the
+    risk-coverage curve make_table.py wrote; None if nothing is governed."""
+    p = R / V3 / model / f"table_mimic3b_{split}_riskcov_{row}.csv"
+    if not p.is_file():
+        return None
+    with p.open() as f:
+        curve = [{k: float(v) for k, v in r.items()}
+                 for r in csv.DictReader(f)]
+    if not curve:
+        return None
+    kept = [q for q in curve if tau is not None and q["threshold"] <= tau]
+    return (kept[-1]["coverage"], kept[-1]["error"]) if kept else (0.0, None)
+
+
+def sae_contraction(old_rel, new_rel):
+    """Σ S_causal over the top-25 features against the old single uniform
+    control and against the matched controls, with the per-feature values."""
+    old, new = art(old_rel), art(new_rel)
+    rows = []
+    for f in old["features"][:25]:
+        k = str(f["feature"])
+        n = new["causal"]["per_feature"].get(k)
+        if n is None:
+            continue
+        rows.append({"feature": f["feature"], "concept": f["concept"],
+                     "old": max(old["causal"]["per_feature"][k]["excess"], 0),
+                     "new": max(n["excess"], 0)})
+    o, n = sum(r["old"] for r in rows), sum(r["new"] for r in rows)
+    return {"rows": rows, "old": o, "new": n,
+            "cut": (1 - n / o) if o else None,
+            "n_items": new["causal"]["n_items"],
+            "n_controls": new["causal"].get("n_controls"),
+            "mode": new["causal"].get("control_mode")}
+
+
+def v3b_section(A, v3):
+    """§5.9: the MIMIC-IV v3.1 replication, its tables, figures 2-3, and the
+    caveats that bound it."""
+    VS = v3["s"]
+    names = dict(V3_MODELS)
+
+    def col(split, row, key):
+        return [VS[m, split][row][key] for m, _ in V3_MODELS]
+
+    fam = v3["meta"]["families"]
+    trained = [k for k, v in fam.items() if not v["held_out"]]
+    held = [k for k, v in fam.items() if v["held_out"]]
+    A("### 5.9 Replication at scale: MIMIC-IV v3.1 (`mimic_v3b`)")
+    A("")
+    A(f"The MIMIC-IV rows of §5.1 come from the public Demo and have at "
+      f"most a few hundred items. This arm rebuilds the benchmark from the full credentialed "
+      f"{v3['meta']['source']}: {v3['test_items']} test items "
+      f"({v3['test_distinct']} distinct prompts, {v3['test_patients']} "
+      f"patients) over {len(trained)} trainable families "
+      f"({', '.join(f'`{k}`' for k in trained)}), and "
+      f"{v3['heldout_items']} items on the held-out family "
+      f"{', '.join(f'`{k}`' for k in held)}, which no component was trained "
+      f"or calibrated on. Both arms of every pair are real measurements, and "
+      f"train, calibration, test and held-out are patient-disjoint (audit: "
+      f"**{'PASS' if v3['disjoint'] else 'FAIL'}**). All three models run "
+      f"the same rows with greedy decoding and one seed. CIs resample "
+      f"distinct prompts, not items, because a prompt recurs "
+      f"{v3['dup_ratio']}× on average.")
+    A("")
+    A("**Model's own** is the answer parsed from the model's generation "
+      "before the gate overrides it or UQ defers it. † marks a row where "
+      "the gate fired: there, strict accuracy and CC are partly an identity "
+      "with the labelling rule, not a measurement. **Violation** is the "
+      "share of UNSAFE items answered SAFE; **Coverage** the share "
+      "answered. `cl` is the Aim 3 residual adapter h' = h + α·P_causal(h) "
+      "(rank 32, layer 30, α = 1) on the frozen model; *unseen pairs* "
+      "restricts it to test pairs none of whose prompts it trained on. "
+      "Source: `results/mimic_v3b/CONSOLIDATED_MIMIC3B.md`.")
+    for split, rows, title in (
+            ("test", v3["test_rows"], "Test split (metformin ×2, "
+                                      "spironolactone)"),
+            ("heldout", v3["heldout_rows"], "Held-out family (warfarin, "
+                                            "INR > 4)")):
+        A("")
+        A(f"**{title}**")
+        A("")
+        A("| Model | Row | Kind | Strict accuracy [95% CI] | Model's own | "
+          "CC [95% CI] | Coverage | Violation |")
+        A("|---|---|---|---|---|---|---|---|")
+        for r in rows:
+            A("| " + " | ".join([names.get(r[0], r[0])] + r[1:]) + " |")
+    A("")
+
+    base_cc, base_acc = col("test", "base", "causal_consistency"), \
+        col("test", "base", "accuracy")
+    ob = VS["llama3-openbiollm-8b", "test"]
+    A(f"**No model reads the lab value unaided.** Base CC is "
+      f"{span(base_cc)}, and base accuracy ({span(base_acc)}) sits at or "
+      f"near the always-SAFE rate of {v3['safe_share'] / 100:.3f}: "
+      f"OpenBioLLM-8B answers SAFE to every UNSAFE item (violation "
+      f"{f3(ob['base']['violation_rate'])}).")
+    A("")
+    unseen = [float(r[5].split()[0]) for r in v3["test_rows"]
+              if r[1].startswith("Base + constraint") and "unseen" in r[1]]
+    A(f"**The constraint layer is the one component that changes the "
+      f"model's own answer.** On the frozen model it reaches strict accuracy "
+      f"{span(col('test', 'cl', 'accuracy'))} and CC "
+      f"{span(col('test', 'cl', 'causal_consistency'))} on test, with "
+      f"violation {span(col('test', 'cl', 'violation_rate'))}. On test pairs "
+      f"none of whose prompts it trained on, CC is {span(unseen)} — no "
+      f"lower — so the gain is not memorised prompts. Against its "
+      f"shuffled-label control, on the adapter's own evaluation (argmax over "
+      f"the two answer logits, `constraint_mimic3b{{,_shuffled}}.json`):")
+    A("")
+    A("| model | frozen base, test CC | rule labels | shuffled labels | "
+      "frozen base, held-out CC | rule labels | shuffled labels |")
+    A("|---|---|---|---|---|---|---|")
+    beat = []
+    for m, name in V3_MODELS:
+        rule, shuf = v3["cl"][m]
+        A(f"| {name} | {f3(rule['base']['test_cc'])} | "
+          f"**{f3(rule['adapted']['test_cc'])}** | "
+          f"{f3(shuf['adapted']['test_cc'])} | "
+          f"{f3(rule['base']['heldout_cc'])} | "
+          f"{f3(rule['adapted']['heldout_cc'])} | "
+          f"{f3(shuf['adapted']['heldout_cc'])} |")
+        if shuf["adapted"]["heldout_cc"] > rule["adapted"]["heldout_cc"]:
+            beat.append((name, shuf["adapted"]["heldout_cc"],
+                         rule["adapted"]["heldout_cc"]))
+    A("")
+    A("On test the shuffled adapter recovers little of the gain, so what the "
+      "rule-trained adapter learned is the rule and not the act of "
+      "perturbing the residual stream.")
+    A("")
+    gate = col("test", "nsai", "gate_fired_rate")
+    A(f"**The gate and UQ buy safety with coverage.** The gate fires on "
+      f"{span(gate, lambda x: f'{x:.1%}')} of test items and, applying the "
+      f"labelling rule itself, is exact where it fires. NS-AI + UQ "
+      f"reaches violation {span(col('test', 'nsai_uq', 'violation_rate'))} "
+      f"at coverage {span(col('test', 'nsai_uq', 'coverage'))}; on the "
+      f"held-out family the gate decides every item, so every gated row "
+      f"scores 1.000† there.")
+    A("")
+    A(f"**Every UQ row is calibrated by the conformal rule** "
+      f"({v3['n_conformal']} of {v3['n_uq_rows']} UQ rows carry "
+      f"`calib_rule = conformal`; none falls back to the legacy "
+      f"point-estimate rule). τ is the largest threshold whose one-sided "
+      f"Clopper–Pearson upper bound (δ = 0.10) on the calibration split's "
+      f"selective error is ≤ α = 0.10. The bound is evaluated point-wise, "
+      f"once per candidate τ, during selection; Figure 2 reports it beside "
+      f"each deployed point rather than drawing it as a band over the test "
+      f"curves, where prompt repetition would make an item-level binomial "
+      f"bound far tighter than the data supports. τ = −∞ means no threshold "
+      f"was certifiable and the row defers everything — the conservative "
+      f"outcome, not a failure.")
+    A("")
+    A("| model | row | calibration n | calibration risk at τ | CP upper "
+      "bound | test coverage (UQ-governed) | test risk at τ |")
+    A("|---|---|---|---|---|---|---|")
+    over, alpha = [], 0.10
+    for name, lab, s, op in v3["uq"]:
+        cert = s.get("calib_certifiable")
+        cal = (f"{f3(s['calib_error_at_tau'])} | "
+               f"{f3(s['calib_cp_upper_at_tau'])}") if cert else \
+            "— | none ≤ α (τ = −∞)"
+        cov, risk = op if op else (None, None)
+        A(f"| {name} | {lab} | {s['calib_n']:,} | {cal} | "
+          f"{'—' if cov is None else f'{cov:.1%}'} | {f3(risk)} |")
+        alpha = s.get("calib_target_alpha", alpha)
+        if risk is not None and risk > alpha:
+            over.append((name, lab, s["calib_cp_upper_at_tau"], risk))
+    A("")
+    for name, lab, cp, risk in over:
+        A(f"{name}, {lab} was certified at a Clopper–Pearson upper bound of "
+          f"{f3(cp)} on calibration and realised {f3(risk)} on test, "
+          f"{risk - alpha:.3f} above α. The guarantee is a calibration-split "
+          f"statement that holds with probability 1 − δ, and it carries to "
+          f"test only as far as test is exchangeable with calibration.")
+        A("")
+    A("![Figure 2](results/mimic_v3b/figures/fig_risk_coverage.png)")
+    A("")
+    A("*Figure 2. Selective risk of the model's own answer against coverage "
+      "of the UQ-governed items (gate-decided items are never deferred), per "
+      "model and UQ row; markers are the deployed τ, and the table under "
+      "the panels gives the calibration evidence that certified each one. "
+      "Vector version: `results/mimic_v3b/figures/fig_risk_coverage.pdf`.*")
+    A("")
+    parts, ccs = [], []
+    for m, name in V3_MODELS:
+        o, s = VS[m, "test"]["base"], v3["swap"][m]["base"]
+        parts.append(f"{name} {f3(o['accuracy'])} → {f3(s['accuracy'])}")
+        ccs += [o["causal_consistency"], s["causal_consistency"]]
+    A(f"**The base models answer partly by position.** Listing UNSAFE "
+      f"first instead of SAFE moves base accuracy {'; '.join(parts)}, "
+      f"toward chance, while CC stays at or below {f3(max(ccs))} in both "
+      f"orders (Figure 3). "
+      f"A model that read the value would not care which option comes first; "
+      f"these models' SAFE-leaning answers are in part a first-option "
+      f"preference.")
+    A("")
+    A("![Figure 3](results/mimic_v3b/figures/fig_option_order.png)")
+    A("")
+    A("*Figure 3. Base model on the test split with the answer options in "
+      "the original and in swapped order: accuracy and CC with "
+      "prompt-resampled CIs, and the share of answers that are UNSAFE. "
+      "Vector version: `results/mimic_v3b/figures/fig_option_order.pdf`.*")
+    A("")
+    A("#### Caveats specific to this arm")
+    A("")
+    obh = VS["llama3-openbiollm-8b", "heldout"]
+    A(f"1. **OpenBioLLM-8B mostly does not answer when retrieved context is "
+      f"in the prompt.** Its RAG rows return no parsable SAFE/UNSAFE on "
+      f"{ob['rag']['unparsable_rate']:.1%} of test items (base: "
+      f"{ob['base']['unparsable_rate']:.1%}), and "
+      f"{ob['nsai']['unparsable_rate']:.1%} of its NS-AI rows remain "
+      f"unparsable after the gate fills in the items it fires on. A "
+      f"non-answer scores as wrong, so its RAG ({f3(ob['rag']['accuracy'])}) "
+      f"and NS-AI ({f3(ob['nsai']['accuracy'])}) accuracies measure an "
+      f"answer-format failure under long context more than clinical "
+      f"reasoning, and its NS-AI *model's own* column inherits the RAG "
+      f"failure. The held-out split is unaffected "
+      f"({obh['rag']['unparsable_rate']:.1%} non-answers). These rows should "
+      f"not be quoted as evidence that retrieval harms this model's "
+      f"clinical judgement.")
+    cl_h = col("heldout", "cl", "causal_consistency")
+    base_h = col("heldout", "base", "causal_consistency")
+    rule_h = [v3["cl"][m][0]["adapted"]["heldout_cc"] for m, _ in V3_MODELS]
+    beat_txt = "".join(
+        f" For {n} the shuffled-label adapter scores higher on held-out "
+        f"({f3(a)} against {f3(b)}), so no held-out movement can be credited "
+        f"to the rule." for n, a, b in beat)
+    A(f"2. **The constraint layer does not transfer to warfarin.** Held-out "
+      f"CC with the adapter is {span(cl_h)} (frozen base {span(base_h)}); on "
+      f"the adapter's own evaluation it is {span(rule_h)}.{beat_txt} The "
+      f"1.000† of every gated held-out row is the gate applying the INR > 4 "
+      f"rule the label was generated from — an identity, not transfer. The "
+      f"adapter generalised to the held-out QT family of §5.6 and not to "
+      f"this one, so held-out transfer is a property of the family pair, "
+      f"not a guarantee of the method.")
+    A(f"3. **Prompt rendering produces duplicates.** The note prints only "
+      f"age, sex, one lab value and the drug, so different patients yield "
+      f"identical text: {v3['test_items']} test items collapse to "
+      f"{v3['test_distinct']} distinct prompts, and {v3['overlap']} of those "
+      f"{v3['overlap_of']} also occur verbatim in calibration (the patients "
+      f"remain disjoint). This is why CIs resample prompts rather than "
+      f"items. It also makes the calibration-to-test agreement of the UQ "
+      f"rows optimistic: much of the test text is text the threshold was "
+      f"fitted on, and genuinely novel presentations would be less "
+      f"exchangeable with calibration.")
+    for k, v in v3["flagged"].items():
+        A(f"4. **`{k}` rests on a threshold the audit flags "
+          f"`{v['threshold_status']}`**: no FDA label states it as a "
+          f"contraindication (`results/threshold_provenance.md`). It is "
+          f"built and reported rather than hidden; results on it should not "
+          f"be quoted as label-attested.")
+    note_n = art(f"{V3}/biomistral-7b/summary_test_mimic3bnote.json")[0]["n"]
+    A(f"5. **Scope.** The SAE analyses (§5.3, Figure 1) were run on "
+      f"BioMistral-7B over the real-notes benchmark, not on this arm; the "
+      f"figure is stored with the v3b figures but is not a MIMIC "
+      f"measurement. A companion arm on real MIMIC-IV-Note text "
+      f"({note_n:,} test items) is reported in "
+      f"`results/mimic_v3b/COMPARISON_MIMIC3BNOTE.md` and not discussed "
+      f"here.")
+    A("")
+
+
+def load_v3b():
+    """Everything §5.9 says, read from the committed v3b aggregates. The
+    per-item prediction logs are gitignored (credentialed data), so nothing
+    here needs them."""
+    cons = txt(f"{V3}/CONSOLIDATED_MIMIC3B.md")
+    ladder = txt(f"{V3}/LADDER_MIMIC3B.md")
+    sanity = txt(f"{V3}/AUDIT_SANITY.md")
+    checks = txt(f"{V3}/AUDIT_CHECKS.md")
+    for name, t in (("CONSOLIDATED_MIMIC3B.md", cons),
+                    ("LADDER_MIMIC3B.md", ladder),
+                    ("AUDIT_SANITY.md", sanity),
+                    ("AUDIT_CHECKS.md", checks)):
+        if t is None:
+            raise Missing(f"required artifact missing: {R / V3 / name}")
+    d = {"test_rows": md_table(cons, "test"),
+         "heldout_rows": md_table(cons, "held-out")}
+    d["s"] = {(m, sp): by_variant(art(f"{V3}/{m}/summary_{sp}_mimic3b.json"))
+              for m, _ in V3_MODELS for sp in ("test", "heldout")}
+    d["swap"] = {m: by_variant(art(f"{V3}/{m}/summary_test_mimic3bswap.json"))
+                 for m, _ in V3_MODELS}
+    d["cl"] = {m: (art(f"{V3}/{m}/constraint_mimic3b.json"),
+                   art(f"{V3}/{m}/constraint_mimic3b_shuffled.json"))
+               for m, _ in V3_MODELS}
+    uq_rows = [r for m, _ in V3_MODELS for sp in ("test", "heldout")
+               for r in d["s"][m, sp].values() if "uq" in r["variant"]]
+    d["n_uq_rows"] = len(uq_rows)
+    d["n_conformal"] = sum(r.get("calib_rule") == "conformal"
+                           for r in uq_rows)
+    t = need(r"test\s+items=\s*([\d,]+)\s+distinct=\s*([\d,]+)\s+"
+             r"ratio=\s*([\d.]+)x", checks, "the test item/prompt ratio")
+    d["test_items"], d["test_distinct"], d["dup_ratio"] = t.groups()
+    h = need(r"heldout\s+items=\s*([\d,]+)\s+distinct=\s*([\d,]+)", checks,
+             "the held-out item count")
+    d["heldout_items"] = h.group(1)
+    o = need(r"([\d,]+) of ([\d,]+) distinct test prompts also occur, as "
+             r"text, in calibration", sanity, "the calibration/test overlap")
+    d["overlap"], d["overlap_of"] = o.groups()
+    d["disjoint"] = "**PASS**" in need(r"Assertions \(train∩test.*", sanity,
+                                       "the patient-disjointness verdict"
+                                       ).group(0)
+    p = need(r"\| mimic_v3b \| train \| test \| ([\d,]+) \| ([\d,]+) \|",
+             sanity, "the test patient count")
+    d["test_patients"] = p.group(2)
+    d["safe_share"] = float(need(r"The label is SAFE on ([\d.]+)% of them",
+                                 ladder, "the test SAFE share").group(1))
+    meta = json.loads(Path("data/mimic_v3b/build_meta.json").read_text())
+    d["meta"] = meta
+    d["flagged"] = {k: v for k, v in meta["families"].items()
+                    if v.get("threshold_status") != "attested_exact"}
+    d["uq"] = []
+    for m, name in V3_MODELS:
+        for row, lab in V3_UQ_ROWS:
+            s = d["s"][m, "test"][row]
+            d["uq"].append((name, lab, s,
+                            riskcov_at_tau(m, "test", row, s.get("tau"))))
+    d["sae"] = [
+        ("test", sae_contraction("pre_s1s3_20260908/sae_topk_L20_fis.json",
+                                 "sae/sae_topk_L20_fis.json")),
+        ("held-out",
+         sae_contraction("pre_s1s3_20260908/sae_heldout_topk_L20_fis.json",
+                         "sae_heldout/sae_topk_L20_fis.json"))]
+    return d
 
 
 def main():
@@ -124,6 +492,19 @@ def main():
     other_models = sorted(glob.glob("results/models/*/summary_test_medcalc.json"))
     other_slugs = [Path(p).parent.name for p in other_models]
 
+    v3 = load_v3b()
+    VS = v3["s"]
+
+    def v3col(split, row, key):
+        return [VS[m, split][row][key] for m, _ in V3_MODELS]
+
+    v3_base_cc = v3col("test", "base", "causal_consistency")
+    v3_cl_cc = v3col("test", "cl", "causal_consistency")
+    v3_cl_h_cc = v3col("heldout", "cl", "causal_consistency")
+    v3_rule_cc = [v3["cl"][m][0]["adapted"]["test_cc"] for m, _ in V3_MODELS]
+    v3_shuf_cc = [v3["cl"][m][1]["adapted"]["test_cc"] for m, _ in V3_MODELS]
+    sae_t, sae_h = dict(v3["sae"])["test"], dict(v3["sae"])["held-out"]
+
     # ---------------- prose ----------------
     L = []
     A = L.append
@@ -179,6 +560,17 @@ def main():
       f"at all**, which falls as the rule needs more variables and collapses "
       f"when a variable is a clinical judgement rather than a number.")
     A("")
+    A(f"**At scale, the adapter holds on the rules it was trained on and not "
+      f"on a new one.** Replicated on the full, credentialed MIMIC-IV v3.1 — "
+      f"{v3['test_items']} test items from {v3['test_patients']} patients, "
+      f"three models — the residual adapter lifts test Causal Consistency "
+      f"from {span(v3_base_cc)} to {span(v3_cl_cc)} on every model (on its "
+      f"own evaluation, {span(v3_rule_cc)} for rule labels against "
+      f"{span(v3_shuf_cc)} for shuffled ones), but on the held-out warfarin "
+      f"family it stays at {span(v3_cl_h_cc)}. Re-scoring the SAE knock-outs "
+      f"against firing-rate-matched controls removes {sae_t['cut']:.0%} of "
+      f"the summed causal score.")
+    A("")
     A("---")
     A("")
     A("## 1. Introduction")
@@ -205,8 +597,10 @@ def main():
       "Necessity, sufficiency and knock-out all land ~100× below the "
       "threshold for a decision flip |")
     A("| RQ3 | Do symbolic constraints improve consistency without harming "
-      "language ability? | **Yes.** Consistency rises on a held-out family; "
-      "perplexity does not degrade |")
+      "language ability? | **Yes on the trained families; transfer depends "
+      "on the family.** Consistency rises on the held-out QT family with "
+      "perplexity unchanged, and on the MIMIC-IV v3.1 test split for all "
+      "three models, but not on the held-out warfarin family (§5.9) |")
     A("")
     A("A methodological point runs through all three. Counterfactual "
       "consistency on flip-only pairs cannot distinguish a model that "
@@ -308,7 +702,9 @@ def main():
     A("")
     A("## 4. Benchmarks")
     A("")
-    A("Three arms, each making a different trade, none dominating.")
+    A("Three arms, each making a different trade, none dominating; the "
+      "third is also rebuilt at full scale from the credentialed database "
+      "(§5.9).")
     A("")
     A("| arm | text | numbers | note |")
     A("|---|---|---|---|")
@@ -321,6 +717,9 @@ def main():
     A("| MIMIC-IV | minimal rendered note | **both arms real** | no number is "
       "invented, but the two arms are different *timepoints*, so the clinical "
       "state genuinely differed |")
+    A(f"| MIMIC-IV v3.1 (§5.9) | minimal rendered note | **both arms real** "
+      f"| the full credentialed database, {v3['test_items']} test items; "
+      f"per-item rows never leave the machine that ran them |")
     A("")
     A("Ground truth is programmatic throughout: no LLM-as-judge, no human "
       "annotation. Every threshold is audited against FDA labelling by "
@@ -331,7 +730,11 @@ def main():
     A(f"The pipeline runs end to end with **no credentialed data source**. "
       f"`src/check_data.py --strict` is stage 0 and fails the run if that "
       f"ever stops being true; its provenance record covers "
-      f"{len(prov.get('required', []))} required artifacts.")
+      f"{len(prov.get('required', []))} required artifacts. The one "
+      f"exception is the MIMIC-IV v3.1 replication of §5.9, which requires "
+      f"PhysioNet credentialing: it is a separate arm outside this check, "
+      f"its datasets and per-item prediction logs are gitignored, and only "
+      f"aggregate summaries, tables and figures are committed.")
     A("")
     A("## 5. Results")
     A("")
@@ -432,6 +835,33 @@ def main():
       "`qt_interval`, `egfr`, `inr`, `potassium`, `pregnancy`, `asthma` or "
       "`renal_disease`. Any statement about what the model represents is "
       "bounded by what the dictionary was scored for.")
+    A("")
+    top = max(sae_t["rows"], key=lambda r: r["new"])
+    top_h = next((r for r in sae_h["rows"]
+                  if r["feature"] == top["feature"]), None)
+    A(f"**How much of S_causal survives a fair control.** The first "
+      f"knock-out compared each feature with a single control feature drawn "
+      f"uniformly over the dictionary, dead features included — a control "
+      f"that rarely fires, and so understates what touching any live feature "
+      f"does. Against the mean of {sae_t['n_controls']} live features "
+      f"matched on firing rate, Σ S_causal over the top 25 falls from "
+      f"{sae_t['old']:.3f} to {sae_t['new']:.3f} on the test split "
+      f"(−{sae_t['cut']:.1%}) and from {sae_h['old']:.3f} to "
+      f"{sae_h['new']:.3f} on held-out (−{sae_h['cut']:.1%}). The largest "
+      f"surviving effect is `#{top['feature']}` ({top['concept']}), "
+      f"{top['old']:.4f} → {top['new']:.4f} on test"
+      + (f" and {top_h['old']:.4f} → {top_h['new']:.4f} on held-out"
+         if top_h else "")
+      + ". The S_causal column above is already the matched one.")
+    A("")
+    A("![Figure 1](results/mimic_v3b/figures/fig_sae_contraction.png)")
+    A("")
+    A(f"*Figure 1. Knock-out effect of the top-25 layer-20 TopK features "
+      f"(BioMistral-7B, real-notes benchmark, {sae_t['n_items']} test / "
+      f"{sae_h['n_items']} held-out items): raw, in excess of the old uniform "
+      f"control, and in excess of {sae_t['n_controls']} firing-rate-matched "
+      f"controls (bars ± their sd). Vector version: "
+      f"`results/mimic_v3b/figures/fig_sae_contraction.pdf`.*")
     A("")
     A("### 5.4 Aim 2 — the intervention null")
     A("")
@@ -732,6 +1162,7 @@ def main():
           "`results/models/<slug>/` and `results/layers/L<n>/` and will be "
           "filled in on the next build.*")
     A("")
+    v3b_section(A, v3)
     A("## 6. Limitations")
     A("")
     A("1. **The symbolic gate's accuracy is partly circular.** It applies the "
@@ -760,6 +1191,11 @@ def main():
     A("6. **The second arm of every real-notes pair is synthetic** — a real "
       "note with one number changed. It is physiologically plausible and "
       "internally consistent, but the patient was not observed.")
+    A(f"7. **The MIMIC-IV v3.1 replication is one seed on minimal rendered "
+      f"notes.** Its prompts repeat {v3['dup_ratio']}× on average and "
+      f"largely recur in calibration, OpenBioLLM's RAG and NS-AI rows are "
+      f"dominated by non-answers, and the constraint layer does not "
+      f"transfer to its held-out warfarin family (§5.9).")
     A("")
     A("## 7. Conclusion")
     A("")
@@ -781,6 +1217,13 @@ def main():
       "family it never saw. Both are useful. Neither is evidence that the "
       "network reasons over the constraint.")
     A("")
+    A(f"The MIMIC-IV v3.1 replication qualifies the last of these rather "
+      f"than extending it. Across {v3['test_items']} real-value items and three "
+      f"models, the adapter lifts consistency on the families it was trained "
+      f"on, well clear of a shuffled-label control, but not on the held-out "
+      f"warfarin family. Transfer to an unseen rule is a property of some "
+      f"family pairs, not yet a property of the method.")
+    A("")
     A("---")
     A("")
     A("### Reproducing")
@@ -789,6 +1232,11 @@ def main():
     A("python src/check_data.py --strict     # stage 0; no credentialed source")
     A("bash run_scaled_pipeline.sh           # both lanes + join, checkpointed")
     A("bash run_attribution.sh               # section 4.2")
+    A("# section 5.9 (needs credentialed MIMIC-IV v3.1), per model:")
+    A("MODEL_ID=... MODEL_TAG=... ARM=main bash run_v3b.sh   # also ARM=note")
+    A("MODEL_ID=... MODEL_TAG=... bash run_v3b_cl.sh")
+    A("bash run_v3b_report.sh                # tables and audits")
+    A("/usr/bin/python3 src/generate_paper_plots.py   # figures 1-3")
     A("python src/make_comparison.py")
     A("python src/make_paper.py")
     A("```")

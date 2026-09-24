@@ -10,6 +10,8 @@ Three findings are positive and three are negative, and the negative ones are th
 
 Against that: **intervening on those features does not move the decision.** Activation patching yields at most 0.0221 logits over matched controls, feature knock-out and feature injection replicate the null (0.0646 logits), and a decision flip needs 1–5. **The proposal's uncertainty term measures the wrong quantity** — whole-vocabulary entropy reaches AUROC 0.525 [0.511, 0.539] over 6,456 items, while the identical entropy restricted to the decision tokens reaches 0.687 [0.675, 0.700]. And **the symbolic gate's accuracy is bounded not by its precision but by how often it can fire at all**, which falls as the rule needs more variables and collapses when a variable is a clinical judgement rather than a number.
 
+**At scale, the adapter holds on the rules it was trained on and not on a new one.** Replicated on the full, credentialed MIMIC-IV v3.1 — 166,264 test items from 27,672 patients, three models — the residual adapter lifts test Causal Consistency from 0.000–0.110 to 0.769–0.855 on every model (on its own evaluation, 0.772–0.848 for rule labels against 0.084–0.250 for shuffled ones), but on the held-out warfarin family it stays at 0.000–0.088. Re-scoring the SAE knock-outs against firing-rate-matched controls removes 52% of the summed causal score.
+
 ---
 
 ## 1. Introduction
@@ -22,7 +24,7 @@ Three research questions follow, and each is answered here with a measurement ra
 |---|---|---|
 | RQ1 | Do sparse latent features map to biomedical concepts with semantic coherence? | **Yes, partially.** Best CUI-anchored feature F1 0.634 (`creatinine`); the highest-scoring feature overall is `age` at 0.693, which has no CUI and must not be quoted as a biomedical concept |
 | RQ2 | Do targeted interventions on those features produce predictable, causally consistent changes? | **No, on this model.** Necessity, sufficiency and knock-out all land ~100× below the threshold for a decision flip |
-| RQ3 | Do symbolic constraints improve consistency without harming language ability? | **Yes.** Consistency rises on a held-out family; perplexity does not degrade |
+| RQ3 | Do symbolic constraints improve consistency without harming language ability? | **Yes on the trained families; transfer depends on the family.** Consistency rises on the held-out QT family with perplexity unchanged, and on the MIMIC-IV v3.1 test split for all three models, but not on the held-out warfarin family (§5.9) |
 
 A methodological point runs through all three. Counterfactual consistency on flip-only pairs cannot distinguish a model that responds to the clinical variable from one that responds to any prompt edit. On 8,000 MCQ items this model's discrimination was **−0.013 [−0.037, +0.013]** — it changed its answer at the same rate whether or not the truth changed.
 
@@ -69,17 +71,18 @@ UMLS atoms alone are not enough. They are terminology-normalised while notes wri
 
 ## 4. Benchmarks
 
-Three arms, each making a different trade, none dominating.
+Three arms, each making a different trade, none dominating; the third is also rebuilt at full scale from the credentialed database (§5.9).
 
 | arm | text | numbers | note |
 |---|---|---|---|
 | synthetic control | templated vignette | invented | control arm: shows what the pipeline does when the causal factor is stated cleanly and the label is guaranteed |
 | real notes (MedCalc) | real PMC case-report prose | one arm real, one **edited** | half of every pair has its driving number changed to cross the threshold |
 | MIMIC-IV | minimal rendered note | **both arms real** | no number is invented, but the two arms are different *timepoints*, so the clinical state genuinely differed |
+| MIMIC-IV v3.1 (§5.9) | minimal rendered note | **both arms real** | the full credentialed database, 166,264 test items; per-item rows never leave the machine that ran them |
 
 Ground truth is programmatic throughout: no LLM-as-judge, no human annotation. Every threshold is audited against FDA labelling by `src/curate_thresholds.py`, and the audit is reported honestly — 5 of 10 attested, and two of the failures are the dangerous kind where a number **is** present in the label and encodes something else.
 
-The pipeline runs end to end with **no credentialed data source**. `src/check_data.py --strict` is stage 0 and fails the run if that ever stops being true; its provenance record covers 11 required artifacts.
+The pipeline runs end to end with **no credentialed data source**. `src/check_data.py --strict` is stage 0 and fails the run if that ever stops being true; its provenance record covers 11 required artifacts. The one exception is the MIMIC-IV v3.1 replication of §5.9, which requires PhysioNet credentialing: it is a separate arm outside this check, its datasets and per-item prediction logs are gitignored, and only aggregate summaries, tables and figures are committed.
 
 ## 5. Results
 
@@ -363,6 +366,12 @@ The TopK dictionary reaches FVU 0.051 at L0 31.731, with 6,851 of 16,384 feature
 
 **A caveat that decides how these features may be described.** The top-25 selection by S_semantic is not balanced across concepts. It yields twelve `age` features and, after clipping features whose knock-out does not beat their matched control, **none** for `qt_interval`, `egfr`, `inr`, `potassium`, `pregnancy`, `asthma` or `renal_disease`. Any statement about what the model represents is bounded by what the dictionary was scored for.
 
+**How much of S_causal survives a fair control.** The first knock-out compared each feature with a single control feature drawn uniformly over the dictionary, dead features included — a control that rarely fires, and so understates what touching any live feature does. Against the mean of 5 live features matched on firing rate, Σ S_causal over the top 25 falls from 0.371 to 0.178 on the test split (−52.0%) and from 0.205 to 0.093 on held-out (−54.5%). The largest surviving effect is `#10721` (drug), 0.0573 → 0.0418 on test and 0.0000 → 0.0000 on held-out. The S_causal column above is already the matched one.
+
+![Figure 1](results/mimic_v3b/figures/fig_sae_contraction.png)
+
+*Figure 1. Knock-out effect of the top-25 layer-20 TopK features (BioMistral-7B, real-notes benchmark, 180 test / 60 held-out items): raw, in excess of the old uniform control, and in excess of 5 firing-rate-matched controls (bars ± their sd). Vector version: `results/mimic_v3b/figures/fig_sae_contraction.pdf`.*
+
 ### 5.4 Aim 2 — the intervention null
 
 | test | largest |excess| over a matched control |
@@ -470,6 +479,124 @@ The two halves disagree, and the disagreement is the result. **Which concepts th
 
 That is the right way round for the claims here, which are all at concept level, and it is a warning for anything said about an individual feature: `#14294` is a fact about one training run, not about the model. One seed also surfaces `inr` and `pregnancy` that the other two miss, so concept coverage — the thing the section 4.2 layer is bounded by — varies with the seed as well as with the layer.
 
+### 5.9 Replication at scale: MIMIC-IV v3.1 (`mimic_v3b`)
+
+The MIMIC-IV rows of §5.1 come from the public Demo and have at most a few hundred items. This arm rebuilds the benchmark from the full credentialed MIMIC-IV v3.1: 166,264 test items (17,550 distinct prompts, 27,672 patients) over 3 trainable families (`metformin_egfr30`, `metformin_egfr45`, `spironolactone_k5_5`), and 36,542 items on the held-out family `warfarin_inr4`, which no component was trained or calibrated on. Both arms of every pair are real measurements, and train, calibration, test and held-out are patient-disjoint (audit: **PASS**). All three models run the same rows with greedy decoding and one seed. CIs resample distinct prompts, not items, because a prompt recurs 9.5× on average.
+
+**Model's own** is the answer parsed from the model's generation before the gate overrides it or UQ defers it. † marks a row where the gate fired: there, strict accuracy and CC are partly an identity with the labelling rule, not a measurement. **Violation** is the share of UNSAFE items answered SAFE; **Coverage** the share answered. `cl` is the Aim 3 residual adapter h' = h + α·P_causal(h) (rank 32, layer 30, α = 1) on the frozen model; *unseen pairs* restricts it to test pairs none of whose prompts it trained on. Source: `results/mimic_v3b/CONSOLIDATED_MIMIC3B.md`.
+
+**Test split (metformin ×2, spironolactone)**
+
+| Model | Row | Kind | Strict accuracy [95% CI] | Model's own | CC [95% CI] | Coverage | Violation |
+|---|---|---|---|---|---|---|---|
+| BioMistral-7B | Base LLM | tier 1 | 0.688 [0.670, 0.706] | 0.688 | 0.110 [0.103, 0.117] | 1.000 | 0.871 |
+| BioMistral-7B | + RAG | tier 2 | 0.342 [0.324, 0.360] | 0.342 | 0.000 [0.000, 0.000] | 1.000 | 0.000 |
+| BioMistral-7B | NS-AI (+ gate) | tier 3 | 0.606 † [0.587, 0.625] | 0.342 | 0.395 † [0.372, 0.417] | 1.000 | 0.000 |
+| BioMistral-7B | NS-AI + UQ | tier 4 | 0.414 † [0.399, 0.431] | 0.342 | 0.394 † [0.372, 0.417] | 0.415 | 0.000 |
+| BioMistral-7B | Base + gate (`sym`) | ablation | 0.787 † [0.769, 0.805] | 0.688 | 0.394 † [0.372, 0.417] | 1.000 | 0.662 |
+| BioMistral-7B | Base + UQ (`uq`) | ablation | 0.000 [0.000, 0.000] | 0.688 | 0.000 [0.000, 0.000] | 0.000 | 0.000 |
+| BioMistral-7B | Base + constraint layer (`cl`, internal) | ablation | 0.951 [0.940, 0.961] | 0.951 | 0.855 [0.831, 0.876] | 1.000 | 0.093 |
+| BioMistral-7B | NS-AI + UQ + CL | ablation | 0.657 † [0.637, 0.677] | 0.834 | 0.399 † [0.376, 0.422] | 0.684 | 0.082 |
+| BioMistral-7B | Base + constraint layer (`cl`, internal), unseen pairs | ablation | 0.966 [0.957, 0.974] | 0.966 | 0.881 [0.857, 0.903] | 1.000 | 0.051 |
+| BioMistral-7B | NS-AI + UQ + CL, unseen pairs | ablation | 0.750 † [0.735, 0.764] | 0.921 | 0.583 † [0.561, 0.604] | 0.754 | 0.014 |
+| OpenBioLLM-8B | Base LLM | tier 1 | 0.679 [0.660, 0.696] | 0.679 | 0.000 [0.000, 0.000] | 1.000 | 1.000 |
+| OpenBioLLM-8B | + RAG | tier 2 | 0.221 [0.211, 0.233] | 0.221 | 0.000 [0.000, 0.000] | 1.000 | 0.058 |
+| OpenBioLLM-8B | NS-AI (+ gate) | tier 3 | 0.431 † [0.415, 0.449] | 0.221 | 0.394 † [0.372, 0.417] | 1.000 | 0.051 |
+| OpenBioLLM-8B | NS-AI + UQ | tier 4 | 0.396 † [0.381, 0.413] | 0.221 | 0.394 † [0.372, 0.417] | 0.396 | 0.000 |
+| OpenBioLLM-8B | Base + gate (`sym`) | ablation | 0.787 † [0.769, 0.805] | 0.679 | 0.394 † [0.372, 0.417] | 1.000 | 0.662 |
+| OpenBioLLM-8B | Base + UQ (`uq`) | ablation | 0.076 [0.065, 0.090] | 0.679 | 0.000 [0.000, 0.000] | 0.081 | 0.016 |
+| OpenBioLLM-8B | Base + constraint layer (`cl`, internal) | ablation | 0.900 [0.886, 0.913] | 0.900 | 0.769 [0.744, 0.793] | 1.000 | 0.060 |
+| OpenBioLLM-8B | NS-AI + UQ + CL | ablation | 0.441 † [0.425, 0.458] | 0.397 | 0.394 † [0.372, 0.417] | 0.447 | 0.000 |
+| OpenBioLLM-8B | Base + constraint layer (`cl`, internal), unseen pairs | ablation | 0.936 [0.926, 0.946] | 0.936 | 0.816 [0.794, 0.837] | 1.000 | 0.056 |
+| OpenBioLLM-8B | NS-AI + UQ + CL, unseen pairs | ablation | 0.568 † [0.554, 0.582] | 0.380 | 0.572 † [0.551, 0.594] | 0.573 | 0.000 |
+| Mistral-7B-Instruct | Base LLM | tier 1 | 0.647 [0.628, 0.664] | 0.647 | 0.019 [0.017, 0.021] | 1.000 | 0.959 |
+| Mistral-7B-Instruct | + RAG | tier 2 | 0.741 [0.721, 0.760] | 0.741 | 0.383 [0.361, 0.406] | 1.000 | 0.233 |
+| Mistral-7B-Instruct | NS-AI (+ gate) | tier 3 | 0.795 † [0.775, 0.813] | 0.741 | 0.522 † [0.493, 0.552] | 1.000 | 0.228 |
+| Mistral-7B-Instruct | NS-AI + UQ | tier 4 | 0.555 † [0.536, 0.576] | 0.741 | 0.399 † [0.376, 0.422] | 0.571 | 0.000 |
+| Mistral-7B-Instruct | Base + gate (`sym`) | ablation | 0.794 † [0.776, 0.812] | 0.647 | 0.396 † [0.373, 0.419] | 1.000 | 0.640 |
+| Mistral-7B-Instruct | Base + UQ (`uq`) | ablation | 0.089 [0.083, 0.097] | 0.647 | 0.000 [0.000, 0.000] | 0.099 | 0.029 |
+| Mistral-7B-Instruct | Base + constraint layer (`cl`, internal) | ablation | 0.906 [0.891, 0.920] | 0.906 | 0.769 [0.740, 0.796] | 1.000 | 0.090 |
+| Mistral-7B-Instruct | NS-AI + UQ + CL | ablation | 0.466 † [0.449, 0.484] | 0.698 | 0.395 † [0.373, 0.418] | 0.474 | 0.000 |
+| Mistral-7B-Instruct | Base + constraint layer (`cl`, internal), unseen pairs | ablation | 0.945 [0.934, 0.955] | 0.945 | 0.840 [0.817, 0.861] | 1.000 | 0.043 |
+| Mistral-7B-Instruct | NS-AI + UQ + CL, unseen pairs | ablation | 0.609 † [0.594, 0.623] | 0.740 | 0.573 † [0.552, 0.595] | 0.617 | 0.000 |
+
+**Held-out family (warfarin, INR > 4)**
+
+| Model | Row | Kind | Strict accuracy [95% CI] | Model's own | CC [95% CI] | Coverage | Violation |
+|---|---|---|---|---|---|---|---|
+| BioMistral-7B | Base LLM | tier 1 | 0.333 [0.316, 0.351] | 0.333 | 0.000 [0.000, 0.000] | 1.000 | 0.000 |
+| BioMistral-7B | + RAG | tier 2 | 0.333 [0.316, 0.351] | 0.333 | 0.000 [0.000, 0.000] | 1.000 | 0.000 |
+| BioMistral-7B | NS-AI (+ gate) | tier 3 | 1.000 † [1.000, 1.000] | 0.333 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| BioMistral-7B | NS-AI + UQ | tier 4 | 1.000 † [1.000, 1.000] | 0.333 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| BioMistral-7B | Base + gate (`sym`) | ablation | 1.000 † [1.000, 1.000] | 0.333 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| BioMistral-7B | Base + UQ (`uq`) | ablation | 0.000 [0.000, 0.000] | 0.333 | 0.000 [0.000, 0.000] | 0.000 | 0.000 |
+| BioMistral-7B | Base + constraint layer (`cl`, internal) | ablation | 0.464 [0.446, 0.482] | 0.464 | 0.088 [0.079, 0.096] | 1.000 | 0.078 |
+| BioMistral-7B | NS-AI + UQ + CL | ablation | 1.000 † [1.000, 1.000] | 0.609 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| OpenBioLLM-8B | Base LLM | tier 1 | 0.667 [0.649, 0.684] | 0.667 | 0.000 [0.000, 0.000] | 1.000 | 1.000 |
+| OpenBioLLM-8B | + RAG | tier 2 | 0.667 [0.649, 0.684] | 0.667 | 0.000 [0.000, 0.000] | 1.000 | 1.000 |
+| OpenBioLLM-8B | NS-AI (+ gate) | tier 3 | 1.000 † [1.000, 1.000] | 0.667 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| OpenBioLLM-8B | NS-AI + UQ | tier 4 | 1.000 † [1.000, 1.000] | 0.667 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| OpenBioLLM-8B | Base + gate (`sym`) | ablation | 1.000 † [1.000, 1.000] | 0.667 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| OpenBioLLM-8B | Base + UQ (`uq`) | ablation | 0.000 [0.000, 0.000] | 0.667 | 0.000 [0.000, 0.000] | 0.000 | 0.000 |
+| OpenBioLLM-8B | Base + constraint layer (`cl`, internal) | ablation | 0.333 [0.316, 0.351] | 0.333 | 0.000 [0.000, 0.000] | 1.000 | 0.000 |
+| OpenBioLLM-8B | NS-AI + UQ + CL | ablation | 1.000 † [1.000, 1.000] | 0.333 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| Mistral-7B-Instruct | Base LLM | tier 1 | 0.704 [0.686, 0.721] | 0.704 | 0.032 [0.028, 0.036] | 1.000 | 0.889 |
+| Mistral-7B-Instruct | + RAG | tier 2 | 0.844 [0.827, 0.860] | 0.844 | 0.550 [0.533, 0.569] | 1.000 | 0.274 |
+| Mistral-7B-Instruct | NS-AI (+ gate) | tier 3 | 1.000 † [1.000, 1.000] | 0.844 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| Mistral-7B-Instruct | NS-AI + UQ | tier 4 | 1.000 † [1.000, 1.000] | 0.844 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| Mistral-7B-Instruct | Base + gate (`sym`) | ablation | 1.000 † [1.000, 1.000] | 0.704 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+| Mistral-7B-Instruct | Base + UQ (`uq`) | ablation | 0.003 [0.003, 0.004] | 0.704 | 0.000 [0.000, 0.000] | 0.003 | 0.000 |
+| Mistral-7B-Instruct | Base + constraint layer (`cl`, internal) | ablation | 0.412 [0.394, 0.431] | 0.412 | 0.007 [0.006, 0.009] | 1.000 | 0.000 |
+| Mistral-7B-Instruct | NS-AI + UQ + CL | ablation | 1.000 † [1.000, 1.000] | 0.844 | 1.000 † [1.000, 1.000] | 1.000 | 0.000 |
+
+**No model reads the lab value unaided.** Base CC is 0.000–0.110, and base accuracy (0.647–0.688) sits at or near the always-SAFE rate of 0.679: OpenBioLLM-8B answers SAFE to every UNSAFE item (violation 1.000).
+
+**The constraint layer is the one component that changes the model's own answer.** On the frozen model it reaches strict accuracy 0.900–0.951 and CC 0.769–0.855 on test, with violation 0.060–0.093. On test pairs none of whose prompts it trained on, CC is 0.816–0.881 — no lower — so the gain is not memorised prompts. Against its shuffled-label control, on the adapter's own evaluation (argmax over the two answer logits, `constraint_mimic3b{,_shuffled}.json`):
+
+| model | frozen base, test CC | rule labels | shuffled labels | frozen base, held-out CC | rule labels | shuffled labels |
+|---|---|---|---|---|---|---|
+| BioMistral-7B | 0.098 | **0.848** | 0.250 | 0.000 | 0.086 | 0.000 |
+| OpenBioLLM-8B | 0.000 | **0.772** | 0.084 | 0.000 | 0.000 | 0.000 |
+| Mistral-7B-Instruct | 0.017 | **0.772** | 0.185 | 0.026 | 0.010 | 0.384 |
+
+On test the shuffled adapter recovers little of the gain, so what the rule-trained adapter learned is the rule and not the act of perturbing the residual stream.
+
+**The gate and UQ buy safety with coverage.** The gate fires on 39.0% of test items and, applying the labelling rule itself, is exact where it fires. NS-AI + UQ reaches violation 0.000 at coverage 0.396–0.571; on the held-out family the gate decides every item, so every gated row scores 1.000† there.
+
+**Every UQ row is calibrated by the conformal rule** (18 of 18 UQ rows carry `calib_rule = conformal`; none falls back to the legacy point-estimate rule). τ is the largest threshold whose one-sided Clopper–Pearson upper bound (δ = 0.10) on the calibration split's selective error is ≤ α = 0.10. The bound is evaluated point-wise, once per candidate τ, during selection; Figure 2 reports it beside each deployed point rather than drawing it as a band over the test curves, where prompt repetition would make an item-level binomial bound far tighter than the data supports. τ = −∞ means no threshold was certifiable and the row defers everything — the conservative outcome, not a failure.
+
+| model | row | calibration n | calibration risk at τ | CP upper bound | test coverage (UQ-governed) | test risk at τ |
+|---|---|---|---|---|---|---|
+| BioMistral-7B | Base + UQ | 66,938 | — | none ≤ α (τ = −∞) | 0.0% | — |
+| BioMistral-7B | NS-AI + UQ | 41,140 | 0.024 | 0.030 | 3.5% | 0.019 |
+| BioMistral-7B | NS-AI + UQ + CL | 41,140 | 0.092 | 0.094 | 48.1% | 0.090 |
+| OpenBioLLM-8B | Base + UQ | 66,938 | 0.062 | 0.066 | 8.1% | 0.062 |
+| OpenBioLLM-8B | NS-AI + UQ | 3,827 | 0.000 | 0.006 | 0.8% | 0.000 |
+| OpenBioLLM-8B | NS-AI + UQ + CL | 41,140 | 0.086 | 0.092 | 8.6% | 0.101 |
+| Mistral-7B-Instruct | Base + UQ | 66,938 | 0.094 | 0.099 | 9.7% | 0.091 |
+| Mistral-7B-Instruct | NS-AI + UQ | 41,140 | 0.086 | 0.090 | 29.8% | 0.088 |
+| Mistral-7B-Instruct | NS-AI + UQ + CL | 41,140 | 0.095 | 0.100 | 13.8% | 0.087 |
+
+OpenBioLLM-8B, NS-AI + UQ + CL was certified at a Clopper–Pearson upper bound of 0.092 on calibration and realised 0.101 on test, 0.001 above α. The guarantee is a calibration-split statement that holds with probability 1 − δ, and it carries to test only as far as test is exchangeable with calibration.
+
+![Figure 2](results/mimic_v3b/figures/fig_risk_coverage.png)
+
+*Figure 2. Selective risk of the model's own answer against coverage of the UQ-governed items (gate-decided items are never deferred), per model and UQ row; markers are the deployed τ, and the table under the panels gives the calibration evidence that certified each one. Vector version: `results/mimic_v3b/figures/fig_risk_coverage.pdf`.*
+
+**The base models answer partly by position.** Listing UNSAFE first instead of SAFE moves base accuracy BioMistral-7B 0.688 → 0.515; OpenBioLLM-8B 0.679 → 0.496; Mistral-7B-Instruct 0.647 → 0.521, toward chance, while CC stays at or below 0.110 in both orders (Figure 3). A model that read the value would not care which option comes first; these models' SAFE-leaning answers are in part a first-option preference.
+
+![Figure 3](results/mimic_v3b/figures/fig_option_order.png)
+
+*Figure 3. Base model on the test split with the answer options in the original and in swapped order: accuracy and CC with prompt-resampled CIs, and the share of answers that are UNSAFE. Vector version: `results/mimic_v3b/figures/fig_option_order.pdf`.*
+
+#### Caveats specific to this arm
+
+1. **OpenBioLLM-8B mostly does not answer when retrieved context is in the prompt.** Its RAG rows return no parsable SAFE/UNSAFE on 76.0% of test items (base: 0.0%), and 55.2% of its NS-AI rows remain unparsable after the gate fills in the items it fires on. A non-answer scores as wrong, so its RAG (0.221) and NS-AI (0.431) accuracies measure an answer-format failure under long context more than clinical reasoning, and its NS-AI *model's own* column inherits the RAG failure. The held-out split is unaffected (0.0% non-answers). These rows should not be quoted as evidence that retrieval harms this model's clinical judgement.
+2. **The constraint layer does not transfer to warfarin.** Held-out CC with the adapter is 0.000–0.088 (frozen base 0.000–0.032); on the adapter's own evaluation it is 0.000–0.086. For Mistral-7B-Instruct the shuffled-label adapter scores higher on held-out (0.384 against 0.010), so no held-out movement can be credited to the rule. The 1.000† of every gated held-out row is the gate applying the INR > 4 rule the label was generated from — an identity, not transfer. The adapter generalised to the held-out QT family of §5.6 and not to this one, so held-out transfer is a property of the family pair, not a guarantee of the method.
+3. **Prompt rendering produces duplicates.** The note prints only age, sex, one lab value and the drug, so different patients yield identical text: 166,264 test items collapse to 17,550 distinct prompts, and 11,101 of those 17,550 also occur verbatim in calibration (the patients remain disjoint). This is why CIs resample prompts rather than items. It also makes the calibration-to-test agreement of the UQ rows optimistic: much of the test text is text the threshold was fitted on, and genuinely novel presentations would be less exchangeable with calibration.
+4. **`spironolactone_k5_5` rests on a threshold the audit flags `construct_mismatch`**: no FDA label states it as a contraindication (`results/threshold_provenance.md`). It is built and reported rather than hidden; results on it should not be quoted as label-attested.
+5. **Scope.** The SAE analyses (§5.3, Figure 1) were run on BioMistral-7B over the real-notes benchmark, not on this arm; the figure is stored with the v3b figures but is not a MIMIC measurement. A companion arm on real MIMIC-IV-Note text (3,916 test items) is reported in `results/mimic_v3b/COMPARISON_MIMIC3BNOTE.md` and not discussed here.
+
 ## 6. Limitations
 
 1. **The symbolic gate's accuracy is partly circular.** It applies the same rule and threshold the labels were generated from, and on the real-notes benchmark the same extractor that filtered the dataset runs inside the gate. The number to quote is coverage, not accuracy.
@@ -478,12 +605,15 @@ That is the right way round for the claims here, which are all at concept level,
 4. **`S_human` is not measured**, so the FIS is a two-term score and §4.4's fallback criterion cannot be evaluated. The instrument is built and blinded (`HUMAN_EVAL_PROTOCOL.md`); it needs clinicians.
 5. **Greedy decoding makes seed variance zero by construction.** Reporting "5 seeds, ± 0.000" would imply variability was measured when it was not; the uncertainty that exists is over items and is reported as a bootstrap CI.
 6. **The second arm of every real-notes pair is synthetic** — a real note with one number changed. It is physiologically plausible and internally consistent, but the patient was not observed.
+7. **The MIMIC-IV v3.1 replication is one seed on minimal rendered notes.** Its prompts repeat 9.5× on average and largely recur in calibration, OpenBioLLM's RAG and NS-AI rows are dominated by non-answers, and the constraint layer does not transfer to its held-out warfarin family (§5.9).
 
 ## 7. Conclusion
 
 The representations are there and they can be found. A sparse dictionary recovers features that select single clinical quantities without supervision, and an attribution layer built on them points at the token a clinical decision turns on far above chance. What does not follow is control: intervening on those same features — by patching, by knock-out, by injection — moves the decision about two orders of magnitude less than a flip requires.
 
 The gap between those two results is the finding. Identifying the representation of a clinical fact is not the same as showing the model uses it, and a mechanistic-interpretability programme that reports the first as if it implied the second will overstate what it has established. What did work is the part that does not go through the model's own causal structure: a symbolic gate makes no errors when it fires, and a trained residual adapter raises consistency on a rule family it never saw. Both are useful. Neither is evidence that the network reasons over the constraint.
+
+The MIMIC-IV v3.1 replication qualifies the last of these rather than extending it. Across 166,264 real-value items and three models, the adapter lifts consistency on the families it was trained on, well clear of a shuffled-label control, but not on the held-out warfarin family. Transfer to an unseen rule is a property of some family pairs, not yet a property of the method.
 
 ---
 
@@ -493,6 +623,11 @@ The gap between those two results is the finding. Identifying the representation
 python src/check_data.py --strict     # stage 0; no credentialed source
 bash run_scaled_pipeline.sh           # both lanes + join, checkpointed
 bash run_attribution.sh               # section 4.2
+# section 5.9 (needs credentialed MIMIC-IV v3.1), per model:
+MODEL_ID=... MODEL_TAG=... ARM=main bash run_v3b.sh   # also ARM=note
+MODEL_ID=... MODEL_TAG=... bash run_v3b_cl.sh
+bash run_v3b_report.sh                # tables and audits
+/usr/bin/python3 src/generate_paper_plots.py   # figures 1-3
 python src/make_comparison.py
 python src/make_paper.py
 ```
