@@ -41,6 +41,7 @@ from pathlib import Path
 import numpy as np
 
 from metrics import bootstrap_ci, holm_bonferroni, mcnemar
+from model import parse_answer
 
 # display order; rows absent from the summary are skipped
 # display order = the numbering in LABELS, so the table reads 1..8
@@ -95,6 +96,47 @@ def restore_control_flag(recs, data_dir, split):
 
 def correct_flags(recs):
     return [(not r["abstained"]) and r["pred"] == r["label"] for r in recs]
+
+
+def model_correct_flags(recs):
+    """Correctness of the model's OWN answer: the decision parsed from its
+    generation, ignoring the gate's override and UQ's deferral."""
+    return [parse_answer(r.get("raw") or "") == r["label"] for r in recs]
+
+
+def risk_coverage(recs):
+    """One operating point per distinct uncertainty value, over the items the
+    UQ engine governs (not gate-decided). A threshold keeps u <= t, so ties
+    are kept or deferred together -- sorting items and cutting inside a tie
+    would report points no threshold can reach."""
+    items = [r for r in recs if not r.get("gate_fired")]
+    if not items or all(r.get("uq_uncertainty") is None for r in items):
+        return []
+    u = np.array([np.inf if r.get("uq_uncertainty") is None
+                  else r["uq_uncertainty"] for r in items])
+    ok = np.array(model_correct_flags(items), dtype=float)
+    order = np.argsort(u, kind="stable")
+    u, ok = u[order], ok[order]
+    ends = np.r_[np.nonzero(u[1:] != u[:-1])[0], len(u) - 1]  # last per tie
+    cum = np.cumsum(ok)
+    return [{"threshold": float(u[e]), "kept": int(e + 1),
+             "coverage": (e + 1) / len(u), "error": 1 - cum[e] / (e + 1),
+             "n_items": len(u)} for e in ends]
+
+
+def curve_steps(curve):
+    """The curve as a step function on a uniform coverage grid, for AURC."""
+    grid = np.linspace(0.001, 1.0, 1000)
+    cov = np.array([p["coverage"] for p in curve])
+    return [curve[min(np.searchsorted(cov, g), len(curve) - 1)] for g in grid]
+
+
+def write_curve_csv(curve, path):
+    with open(path, "w") as f:
+        f.write("threshold,kept,coverage,error\n")
+        for p in curve:
+            f.write(f"{p['threshold']:.6g},{p['kept']},{p['coverage']:.6f},"
+                    f"{p['error']:.6f}\n")
 
 
 def pair_flags(recs):
@@ -181,24 +223,50 @@ def main():
     base_acc = (np.mean(correct_flags(preds["base"])) if "base" in preds
                 else None)
 
-    lines.append("| Variant | Base | RAG | Sym | UQ | CL | Accuracy (strict) | "
-                 "Δ Acc vs base | Causal Consistency | Δ CC vs base | "
-                 "Violation Rate | Coverage | Gate fired |")
-    lines.append("|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|")
-    for v in present:
-        rows = by_variant[v]
-        c = COMPONENTS[v]
-        acc = np.mean([r["accuracy"] for r in rows])
-        cc = np.mean([r["causal_consistency"] for r in rows])
-        d_acc = "—" if base_acc is None else f"{acc - base_acc:+.3f}"
-        d_cc = "—" if base_cc is None else f"{cc - base_cc:+.3f}"
-        gate = np.mean([r.get("gate_fired_rate", 0.0) for r in rows])
-        lines.append(
-            f"| {LABELS[v]} | {c[0]} | {c[1]} | {c[2]} | {c[3]} | {c[4]} | "
-            f"{fmt(rows, 'accuracy', multi_seed)} | {d_acc} | "
-            f"{fmt(rows, 'causal_consistency', multi_seed)} | {d_cc} | "
-            f"{fmt(rows, 'violation_rate', multi_seed)} | "
-            f"{fmt(rows, 'coverage', multi_seed)} | {gate:.3f} |")
+    # The proposal's section 4.6 matrix is the four-tier ladder; the isolated
+    # and constraint-layer rows answer a different question and are kept
+    # apart so the primary comparison reads as the proposal defines it.
+    def matrix(variants):
+        lines.append("| Variant | Base | RAG | Sym | UQ | CL | "
+                     "Accuracy (strict) | Δ Acc vs base | "
+                     "Model's own answer acc. | Causal Consistency | "
+                     "Δ CC vs base | Violation Rate | Coverage | Gate fired |")
+        lines.append("|---|:-:|:-:|:-:|:-:|:-:|---|---|---|---|---|---|---|---|")
+        for v in variants:
+            rows = by_variant[v]
+            c = COMPONENTS[v]
+            acc = np.mean([r["accuracy"] for r in rows])
+            cc = np.mean([r["causal_consistency"] for r in rows])
+            d_acc = "—" if base_acc is None else f"{acc - base_acc:+.3f}"
+            d_cc = "—" if base_cc is None else f"{cc - base_cc:+.3f}"
+            gate = np.mean([r.get("gate_fired_rate", 0.0) for r in rows])
+            own = ("—" if v not in preds else
+                   f"{np.mean(model_correct_flags(preds[v])):.3f}")
+            mark = " †" if gate > 0 else ""
+            lines.append(
+                f"| {LABELS[v]} | {c[0]} | {c[1]} | {c[2]} | {c[3]} | {c[4]} | "
+                f"{fmt(rows, 'accuracy', multi_seed)}{mark} | {d_acc} | {own} | "
+                f"{fmt(rows, 'causal_consistency', multi_seed)}{mark} | {d_cc} | "
+                f"{fmt(rows, 'violation_rate', multi_seed)} | "
+                f"{fmt(rows, 'coverage', multi_seed)} | {gate:.3f} |")
+
+    primary = [v for v in LADDER if v in present]
+    supplementary = [v for v in present if v not in LADDER]
+    lines.append("### Primary: the section 4.6 ablation ladder\n")
+    matrix(primary)
+    lines.append("\n**Model's own answer acc.** is the decision word parsed "
+                 "from the model's generation, before the gate overrides it "
+                 "and before UQ defers it: what the LLM itself concluded under "
+                 "that row's prompt. † Accuracy and CC on gate-fired items are "
+                 "an identity check, not a measurement: the gate applies the "
+                 "rule and threshold the labels were generated from. With the "
+                 "gate firing on every item, that row's accuracy is 1.000 by "
+                 "construction; read the model's own column, and the "
+                 "adherence table below, for what the model knows.\n")
+    if supplementary:
+        lines.append("\n### Supplementary ablations: one contribution added "
+                     "to the base model\n")
+        matrix(supplementary)
 
     # ---- bootstrap CIs over items -------------------------------------
     lines.append("\n### 95% bootstrap CI over items (seed "
@@ -270,20 +338,44 @@ def main():
                      "separates the circular part from the part that is not: "
                      "on gate-declined items the row IS the neural pathway, so "
                      "any difference there is real.\n")
-        lines.append("| Variant | subset | n | accuracy | base accuracy on "
-                     "the same subset |")
-        lines.append("|---|---|---|---|---|")
+        lines.append("On gate-fired items the three accuracy columns separate "
+                     "the two things the question conflates. *Final* is the "
+                     "rule checking itself (identity). *Model's own answer* "
+                     "is whether the LLM, given that row's prompt, reached the "
+                     "guideline's conclusion without the rule's help: that is "
+                     "guideline adherence. *Agrees with gate* is how often the "
+                     "gate merely confirmed the model rather than overruled "
+                     "it.\n")
+        lines.append("| Variant | subset | n | Final accuracy | Model's own "
+                     "answer acc. | Base accuracy, same items | Model agrees "
+                     "with gate |")
+        lines.append("|---|---|---|---|---|---|---|")
         base_by_id = {r["id"]: r for r in preds["base"]}
+        no_declined = []
         for v in gate_rows:
             for fired in (True, False):
                 sub = [r for r in preds[v] if r["gate_fired"] is fired]
                 if not sub:
+                    if not fired:
+                        no_declined.append(LABELS[v])
                     continue
                 bsub = [base_by_id[r["id"]] for r in sub]
+                agree = (f"{np.mean([parse_answer(r.get('raw') or '') == r['pred'] for r in sub]):.3f}"
+                         if fired else "—")
                 lines.append(
                     f"| {LABELS[v]} | gate {'fired' if fired else 'declined'} "
-                    f"| {len(sub)} | {np.mean(correct_flags(sub)):.3f} | "
-                    f"{np.mean(correct_flags(bsub)):.3f} |")
+                    f"| {len(sub)} | {np.mean(correct_flags(sub)):.3f}"
+                    f"{' (identity)' if fired else ''} | "
+                    f"{np.mean(model_correct_flags(sub)):.3f} | "
+                    f"{np.mean(correct_flags(bsub)):.3f} | {agree} |")
+        if no_declined:
+            lines.append(f"\n**No non-circular evidence on this split for "
+                         f"{', '.join(no_declined)}:** the gate fired on every "
+                         f"item, so there is no gate-declined subset on which "
+                         f"the row's accuracy measures anything but the rule. "
+                         f"The gate's contribution here must be reported as "
+                         f"its coverage, and the model's own answer as the "
+                         f"accuracy.\n")
 
     # ---- explain a degenerate UQ row instead of leaving it looking broken --
     degenerate = [v for v in present
@@ -296,16 +388,77 @@ def main():
             f"error rate on the calibration split is at most alpha = "
             f"{r.get('calib_target_alpha', 0.1):.2f}. On this calibration "
             f"split of {r.get('calib_n', 0)} items no threshold reaches that "
-            f"target, because the model it is governing is near chance. The "
+            f"target (the risk-coverage table below shows how far off it "
+            f"is on these items). The "
             f"method then falls back to its most conservative threshold, which "
             f"retains {r.get('calib_coverage_at_tau', 0.0):.1%} of the "
-            f"calibration items, and on the test split retains none. "
+            f"calibration items, and on the `{args.split}` split retains "
+            f"none. "
             f"**That is the method behaving correctly, not a failure to run**: "
             f"a 10% error target is unreachable for a model at this accuracy, "
             f"so the only way to honour it is to answer nothing. It is also "
             f"the exact situation Adaptive Conformal Inference exists for -- "
             f"see `results/uq_coverage_*.md`, where the threshold is allowed "
             f"to move.\n")
+
+    # ---- risk-coverage: what the UQ signal could buy at ANY threshold ------
+    uq_rows = [v for v in present if v in preds and COMPONENTS[v][3] == "YES"]
+    for v in uq_rows:
+        curve = risk_coverage(preds[v])
+        if not curve:
+            continue
+        s = by_variant[v][0]
+        alpha = s.get("calib_target_alpha", 0.1)
+        n_items = curve[0]["n_items"]
+        lines.append(f"\n### Risk-coverage of the UQ signal, {LABELS[v]} "
+                     f"(seed {seeds[0]})\n")
+        lines.append(
+            f"Every threshold a deferral rule could pick, on the {n_items} "
+            f"items the UQ engine governs here (gate-decided items are never "
+            f"deferred and are excluded). Error is of the model's own answer "
+            f"on the items kept. The signal (`{s.get('uq_signal')}`) takes "
+            f"{len(curve)} distinct values, so {len(curve)} operating points "
+            f"exist; the rows below are those nearest each coverage level. "
+            f"Full curve: `{Path(args.out).stem}_riskcov_{v}.csv`.\n")
+        lines.append("| Coverage target | Threshold | Coverage | Error | "
+                     "Items kept |")
+        lines.append("|---|---|---|---|---|")
+        for target in (1.0, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0.01):
+            p = min(curve, key=lambda p: abs(p["coverage"] - target))
+            lines.append(f"| {target:.0%} | {p['threshold']:.4g} | "
+                         f"{p['coverage']:.3f} | {p['error']:.3f} | "
+                         f"{p['kept']} |")
+        aurc = float(np.mean([p["error"] for p in curve_steps(curve)]))
+        reach = [p for p in curve if p["error"] <= alpha]
+        floor = min((p for p in curve if p["coverage"] >= 0.01),
+                    key=lambda p: p["error"], default=None)
+        lines.append("")
+        lines.append(f"- AURC (area under the risk-coverage curve, lower is "
+                     f"better): **{aurc:.3f}**; a signal that ranks at random "
+                     f"scores the full-coverage error, "
+                     f"{curve[-1]['error']:.3f}.")
+        if floor:
+            lines.append(f"- Lowest error at ≥1% coverage: **{floor['error']:.3f}** "
+                         f"(coverage {floor['coverage']:.3f}).")
+        lines.append(
+            f"- Target error α = {alpha:.2f}: "
+            + (f"reachable on these items up to coverage "
+               f"**{max(p['coverage'] for p in reach):.3f}**."
+               if reach else "**not reachable at any threshold** on these "
+               "items -- so a rule that must honour α can only abstain."))
+        tau = s.get("tau")
+        if tau is not None:
+            cert = s.get("calib_certifiable")
+            lines.append(
+                f"- Deployed threshold τ = {tau:.4g}, set on the calibration "
+                f"split (coverage there {s.get('calib_coverage_at_tau', 0):.3f}"
+                + ("" if cert is None else f"; certifiable: {cert}")
+                + f"); here it keeps {s.get('coverage', 0):.3f} of all items."
+                + (" The calibration split holds the training families, so "
+                   "on the held-out family τ is transferred, not fitted."
+                   if args.split == "heldout" else ""))
+        write_curve_csv(curve, Path(args.out).with_name(
+            f"{Path(args.out).stem}_riskcov_{v}.csv"))
 
     lines.append("\n### Notes\n")
     lines.append("- Causal Consistency is pair-level: both counterfactual arms "
